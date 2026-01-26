@@ -47,7 +47,7 @@ static int color_inited;
 GdkRGBA gn_white, gn_black, gn_light_gray;
 GdkRGBA gn_dark_gray, gn_blue, gn_red, gn_yellow;
 
-static GHashTable *color_hash_table = NULL;
+static GHashTable *color_hash_table = nullptr;
 
 static guint
 color_hash (gconstpointer v)
@@ -79,7 +79,7 @@ gnucash_color_argb_to_gdk (guint32 argb)
     const guint32 key = argb;
     guint32 *newkey;
 
-    color = g_hash_table_lookup (color_hash_table, &key);
+    color = static_cast<GdkRGBA *>(g_hash_table_lookup (color_hash_table, &key));
 
     if (color)
         return color;

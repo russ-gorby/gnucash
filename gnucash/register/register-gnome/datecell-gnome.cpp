@@ -33,10 +33,10 @@
 
 #include <config.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -106,8 +106,8 @@ check_readonly_threshold (const gchar *datestr, GDate *d, gboolean warn)
                           "this book. This setting can be changed in "
                           "File->Properties->Accounts, resetting to the threshold.");
             gchar *dialog_title = _("Cannot store a transaction at this date");
-            GtkWidget *dialog = gtk_message_dialog_new(gnc_ui_get_main_window (NULL),
-                                   0,
+            GtkWidget *dialog = gtk_message_dialog_new(gnc_ui_get_main_window (nullptr),
+                                   static_cast<GtkDialogFlags>(0),
                                    GTK_MESSAGE_ERROR,
                                    GTK_BUTTONS_OK,
                                    "%s", dialog_title);
@@ -150,7 +150,7 @@ gnc_parse_date (struct tm *parsed, const char * datestr, gboolean warn)
         year = tm_today.tm_year + 1900;
     }
 
-    test_date = g_date_new_dmy (day, month, year);
+    test_date = g_date_new_dmy (day, static_cast<GDateMonth>(month), year);
 
     if (!gnc_gdate_in_valid_range (test_date, warn))
     {
@@ -164,7 +164,7 @@ gnc_parse_date (struct tm *parsed, const char * datestr, gboolean warn)
     // older than the threshold.
     if (use_autoreadonly)
     {
-        g_date_set_dmy (test_date, day, month, year);
+        g_date_set_dmy (test_date, day, static_cast<GDateMonth>(month), year);
         if (check_readonly_threshold (datestr, test_date, warn))
         {
             day = g_date_get_day (test_date);
@@ -190,7 +190,7 @@ gnc_parse_date (struct tm *parsed, const char * datestr, gboolean warn)
 static void
 gnc_date_cell_print_date (DateCell *cell, char *buff)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     qof_print_date_dmy_buff (buff, MAX_DATE_LENGTH,
                              box->date.tm_mday,
@@ -219,15 +219,15 @@ gnc_date_cell_init (DateCell *cell)
 
     box = g_new0 (PopBox, 1);
 
-    box->sheet = NULL;
-    box->item_edit = NULL;
-    box->date_picker = NULL;
+    box->sheet = nullptr;
+    box->item_edit = nullptr;
+    box->date_picker = nullptr;
 
     box->signals_connected = FALSE;
     box->calendar_popped = FALSE;
     box->in_date_select = FALSE;
 
-    cell->cell.gui_private = box;
+    cell->cell.gui_private = static_cast<gpointer>(box);
 
     /* default value is today's date */
     gnc_time (&secs);
@@ -252,8 +252,8 @@ gnc_date_cell_new (void)
 static void
 date_picked_cb (GNCDatePicker *gdp, gpointer data)
 {
-    DateCell *cell = data;
-    PopBox *box = cell->cell.gui_private;
+    DateCell *cell = static_cast<DateCell *>(data);
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     guint day, month, year;
     char buffer[DATE_BUF];
 
@@ -272,8 +272,8 @@ date_picked_cb (GNCDatePicker *gdp, gpointer data)
 static void
 date_selected_cb (GNCDatePicker *gdp, gpointer data)
 {
-    DateCell *cell = data;
-    PopBox *box = cell->cell.gui_private;
+    DateCell *cell = static_cast<DateCell *>(data);
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     guint day, month, year;
     char buffer[DATE_BUF];
 
@@ -289,8 +289,8 @@ date_selected_cb (GNCDatePicker *gdp, gpointer data)
 static void
 key_press_item_cb (GNCDatePicker *gdp, GdkEventKey *event, gpointer data)
 {
-    DateCell *cell = data;
-    PopBox *box = cell->cell.gui_private;
+    DateCell *cell = static_cast<DateCell *>(data);
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     switch (event->keyval)
     {
@@ -308,13 +308,13 @@ key_press_item_cb (GNCDatePicker *gdp, GdkEventKey *event, gpointer data)
 static void
 date_picker_disconnect_signals (DateCell *cell)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     if (!box->signals_connected)
         return;
 
     g_signal_handlers_disconnect_matched (box->date_picker, G_SIGNAL_MATCH_DATA,
-                                          0, 0, NULL, NULL, cell);
+                                          0, 0, nullptr, nullptr, cell);
 
     box->signals_connected = FALSE;
 }
@@ -322,7 +322,7 @@ date_picker_disconnect_signals (DateCell *cell)
 static void
 date_picker_connect_signals (DateCell *cell)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     if (box->signals_connected)
         return;
@@ -342,48 +342,48 @@ date_picker_connect_signals (DateCell *cell)
 static void
 block_picker_signals (DateCell *cell)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     if (!box->signals_connected)
         return;
 
     g_signal_handlers_block_matched (box->date_picker, G_SIGNAL_MATCH_DATA,
-                                     0, 0, NULL, NULL, cell);
+                                     0, 0, nullptr, nullptr, cell);
 }
 
 static void
 unblock_picker_signals (DateCell *cell)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     if (!box->signals_connected)
         return;
 
     g_signal_handlers_unblock_matched (box->date_picker, G_SIGNAL_MATCH_DATA,
-                                       0, 0, NULL, NULL, cell);
+                                       0, 0, nullptr, nullptr, cell);
 }
 
 static void
 gnc_date_cell_gui_destroy (BasicCell *bcell)
 {
-    PopBox *box = bcell->gui_private;
+    PopBox *box = static_cast<PopBox *>(bcell->gui_private);
     DateCell *cell = (DateCell *) bcell;
 
-    if (cell->cell.gui_realize == NULL)
+    if (cell->cell.gui_realize == nullptr)
     {
-        if (box != NULL && box->date_picker != NULL)
+        if (box != nullptr && box->date_picker != nullptr)
         {
             date_picker_disconnect_signals (cell);
             g_object_unref (box->date_picker);
-            box->date_picker = NULL;
+            box->date_picker = nullptr;
         }
 
         /* allow the widget to be shown again */
         cell->cell.gui_realize = gnc_date_cell_realize;
-        cell->cell.gui_move = NULL;
-        cell->cell.enter_cell = NULL;
-        cell->cell.leave_cell = NULL;
-        cell->cell.gui_destroy = NULL;
+        cell->cell.gui_move = nullptr;
+        cell->cell.enter_cell = nullptr;
+        cell->cell.leave_cell = nullptr;
+        cell->cell.gui_destroy = nullptr;
     }
 }
 
@@ -391,20 +391,20 @@ static void
 gnc_date_cell_destroy (BasicCell *bcell)
 {
     DateCell *cell = (DateCell *) bcell;
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     gnc_date_cell_gui_destroy (&(cell->cell));
 
     g_free (box);
 
-    cell->cell.gui_private = NULL;
-    cell->cell.gui_realize = NULL;
+    cell->cell.gui_private = nullptr;
+    cell->cell.gui_realize = nullptr;
 }
 
 void
 gnc_date_cell_set_value (DateCell *cell, int day, int mon, int year)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     struct tm dada;
     char buff[DATE_BUF];
 
@@ -434,7 +434,7 @@ gnc_date_cell_set_value (DateCell *cell, int day, int mon, int year)
 void
 gnc_date_cell_set_value_secs (DateCell *cell, time64 secs)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     char buff[DATE_BUF];
 
     gnc_localtime_r (&secs, &(box->date));
@@ -460,7 +460,7 @@ gnc_date_cell_set_value_secs (DateCell *cell, time64 secs)
 void
 gnc_date_cell_commit (DateCell *cell)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     char buff[DATE_BUF];
 
     if (!cell)
@@ -494,8 +494,8 @@ gnc_date_cell_direct_update (BasicCell *bcell,
                              void *gui_data)
 {
     DateCell *cell = (DateCell *) bcell;
-    PopBox *box = cell->cell.gui_private;
-    GdkEventKey *event = gui_data;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
+    GdkEventKey *event = static_cast<GdkEventKey *>(gui_data);
     char buff[DATE_BUF];
 
     if (!gnc_handle_date_accelerator (event, &(box->date), bcell->value))
@@ -535,7 +535,7 @@ gnc_date_cell_modify_verify (BasicCell *_cell,
                              int *end_selection)
 {
     DateCell *cell = (DateCell *) _cell;
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     gboolean accept = FALSE;
 
     if (box->in_date_select)
@@ -545,7 +545,7 @@ gnc_date_cell_modify_verify (BasicCell *_cell,
     }
 
     /* if user hit backspace, accept the change */
-    if (change == NULL)
+    if (change == nullptr)
         accept = TRUE;
     else if (change_len == 0)
         accept = TRUE;
@@ -614,10 +614,10 @@ gnc_date_cell_modify_verify (BasicCell *_cell,
 static void
 gnc_date_cell_realize (BasicCell *bcell, gpointer data)
 {
-    GnucashSheet *sheet = data;
+    GnucashSheet *sheet = static_cast<GnucashSheet *>(data);
     GncItemEdit *item_edit = gnucash_sheet_get_item_edit (sheet);
     DateCell *cell = (DateCell *) bcell;
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
 
     /* initialize gui-specific, private data */
     box->sheet = sheet;
@@ -627,7 +627,7 @@ gnc_date_cell_realize (BasicCell *bcell, gpointer data)
     g_object_ref_sink(box->date_picker);
 
     /* to mark cell as realized, remove the realize method */
-    cell->cell.gui_realize = NULL;
+    cell->cell.gui_realize = nullptr;
     cell->cell.gui_move = gnc_date_cell_move;
     cell->cell.enter_cell = gnc_date_cell_enter;
     cell->cell.leave_cell = gnc_date_cell_leave;
@@ -636,12 +636,12 @@ gnc_date_cell_realize (BasicCell *bcell, gpointer data)
 static void
 gnc_date_cell_move (BasicCell *bcell)
 {
-    PopBox *box = bcell->gui_private;
+    PopBox *box = static_cast<PopBox *>(bcell->gui_private);
 
     date_picker_disconnect_signals ((DateCell *) bcell);
 
-    gnc_item_edit_set_popup (box->item_edit, NULL, NULL,
-                             NULL, NULL, NULL, NULL, NULL);
+    gnc_item_edit_set_popup (box->item_edit, nullptr, nullptr,
+                             nullptr, nullptr, nullptr, nullptr, nullptr);
 
     box->calendar_popped = FALSE;
 }
@@ -658,7 +658,7 @@ popup_get_height (GtkWidget *widget,
     req.height = 0;
     req.width = 0;
 
-    gtk_widget_get_preferred_size (cal, &req, NULL);
+    gtk_widget_get_preferred_size (cal, &req, nullptr);
 
     return req.height;
 }
@@ -677,11 +677,11 @@ gnc_date_cell_enter (BasicCell *bcell,
                      int *end_selection)
 {
     DateCell *cell = (DateCell *) bcell;
-    PopBox *box = bcell->gui_private;
+    PopBox *box = static_cast<PopBox *>(bcell->gui_private);
 
     gnc_item_edit_set_popup (box->item_edit, GTK_WIDGET (box->date_picker),
-                             popup_get_height, NULL, popup_set_focus,
-                             NULL, NULL, NULL);
+                             popup_get_height, nullptr, popup_set_focus,
+                             nullptr, nullptr, nullptr);
 
     block_picker_signals (cell);
     gnc_date_picker_set_date (box->date_picker,
@@ -702,12 +702,12 @@ static void
 gnc_date_cell_leave (BasicCell *bcell)
 {
     time64 time;
-    PopBox *box = bcell->gui_private;
+    PopBox *box = static_cast<PopBox *>(bcell->gui_private);
 
     date_picker_disconnect_signals ((DateCell *) bcell);
 
-    gnc_item_edit_set_popup (box->item_edit, NULL, NULL,
-                             NULL, NULL, NULL, NULL, NULL);
+    gnc_item_edit_set_popup (box->item_edit, nullptr, nullptr,
+                             nullptr, nullptr, nullptr, nullptr, nullptr);
 
     box->calendar_popped = FALSE;
 
@@ -719,7 +719,7 @@ gnc_date_cell_leave (BasicCell *bcell)
 void
 gnc_date_cell_get_date (DateCell *cell, time64 *time, gboolean warn)
 {
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     if (!cell || !time)
         return;
 
@@ -731,7 +731,7 @@ static void
 gnc_date_cell_set_value_internal (BasicCell *_cell, const char *str)
 {
     DateCell *cell = (DateCell *) _cell;
-    PopBox *box = cell->cell.gui_private;
+    PopBox *box = static_cast<PopBox *>(cell->cell.gui_private);
     char buff[DATE_BUF];
 
     gnc_parse_date (&(box->date), str, FALSE);

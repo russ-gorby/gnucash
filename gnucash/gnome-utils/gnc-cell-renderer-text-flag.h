@@ -28,10 +28,17 @@
 
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define GNC_TYPE_CELL_RENDERER_TEXT_FLAG		(gnc_cell_renderer_text_flag_get_type ())
 G_DECLARE_FINAL_TYPE (GncCellRendererTextFlag, gnc_cell_renderer_text_flag, GNC, CELL_RENDERER_TEXT_FLAG, GtkCellRendererText)
 
 GtkCellRenderer *gnc_cell_renderer_text_flag_new(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_CELL_RENDERER_TEXT_FLAG_H__ */

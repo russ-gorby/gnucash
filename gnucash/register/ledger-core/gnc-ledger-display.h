@@ -25,11 +25,6 @@
 #ifndef GNC_LEDGER_DISPLAY_H
 #define GNC_LEDGER_DISPLAY_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include <glib.h>
 
 #include "Account.h"
@@ -37,6 +32,10 @@ extern "C"
 #include "split-register.h"
 #include "SchedXaction.h"
 #include "Transaction.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** @ingroup Register
  * @addtogroup Gnome
@@ -64,7 +63,7 @@ typedef enum
 } GNCLedgerDisplayType;
 
 
-/** returns the 'lead' account of a ledger display, or NULL if none. */
+/** returns the 'lead' account of a ledger display, or nullptr if none. */
 Account* gnc_ledger_display_leader (GNCLedgerDisplay* ld);
 
 GNCLedgerDisplayType gnc_ledger_display_type (GNCLedgerDisplay* ld);
@@ -118,7 +117,7 @@ void gnc_ledger_display_set_query (GNCLedgerDisplay* ledger_display,
 Query* gnc_ledger_display_get_query (GNCLedgerDisplay* ld);
 
 /** If the given ledger display still exists, return it. Otherwise,
- * return NULL */
+ * return nullptr */
 GNCLedgerDisplay* gnc_ledger_display_find_by_query (Query* q);
 
 /** redisplay/redraw only the indicated window. Both routines do same
@@ -139,5 +138,7 @@ gboolean gnc_ledger_display_default_double_line (GNCLedgerDisplay* gld);
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
 
 #endif

@@ -1,23 +1,23 @@
 include(CheckSymbolExists)
 
 set (register_gnome_SOURCES
-  combocell-gnome.c
-  completioncell-gnome.c
-  datecell-gnome.c
-  formulacell-gnome.c
-  gnucash-color.c
-  gnucash-cursor.c
-  gnucash-date-picker.c
-  gnucash-header.c
-  gnucash-item-edit.c
-  gnucash-item-list.c
-  gnucash-register.c
-  gnucash-sheet-private.c
-  gnucash-sheet.c
-  gnucash-style.c
-  pricecell-gnome.c
-  quickfillcell-gnome.c
-  table-gnome.c
+  combocell-gnome.cpp
+  completioncell-gnome.cpp
+  datecell-gnome.cpp
+  formulacell-gnome.cpp
+  gnucash-color.cpp
+  gnucash-cursor.cpp
+  gnucash-date-picker.cpp
+  gnucash-header.cpp
+  gnucash-item-edit.cpp
+  gnucash-item-list.cpp
+  gnucash-register.cpp
+  gnucash-sheet-private.cpp
+  gnucash-sheet.cpp
+  gnucash-style.cpp
+  pricecell-gnome.cpp
+  quickfillcell-gnome.cpp
+  table-gnome.cpp
 )
 
 set (register_gnome_noinst_HEADERS
@@ -41,6 +41,20 @@ set (register_gnome_noinst_HEADERS
 set_source_files_properties (${register_gnome_SOURCES} PROPERTIES OBJECT_DEPENDS ${CONFIG_H})
 
 add_library (gnc-register-gnome ${register_gnome_SOURCES} ${register_gnome_noinst_HEADERS})
+
+if (MINGW)
+  # ensure no C compilation
+  set_target_properties(gnc-register-gnome PROPERTIES
+        CMAKE_C_COMPILER_LAUNCHER "false"
+  )
+  # remove -DWINVER=0x0500 -D_EMULATE_GLIBC=0 and add C++ options from non-MINGW compile
+  # By default target_compile_options() adds its flags AFTER CMAKE_CXX_FLAGS
+  set(NEW_CXX_COMPILE_FLAGS "-Werror" "-Wall" "-Wmissing-declarations"
+    "-UWINVER" "-U_EMULATE_GLIBC")
+  # set target compile options
+  target_compile_options(gnc-register-gnome PRIVATE ${NEW_CXX_COMPILE_FLAGS}
+  )
+endif()
 
 target_link_libraries(gnc-register-gnome gnc-register-core PkgConfig::GTK3)
 

@@ -29,6 +29,10 @@
 #include "gnc-dense-cal-model.h"
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 G_BEGIN_DECLS
 
 #define GNC_TYPE_DENSE_CAL (gnc_dense_cal_get_type ())
@@ -53,5 +57,9 @@ guint gnc_dense_cal_get_num_months (GncDenseCal *dcal);
 void gnc_dense_cal_set_months_per_col (GncDenseCal *dcal, guint monthsPerCol);
 
 G_END_DECLS
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _GNC_DENSE_CAL_H */

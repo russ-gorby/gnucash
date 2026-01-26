@@ -25,6 +25,10 @@
 
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -103,4 +107,9 @@ GtkListStore * gnc_item_list_disconnect_store (GncItemList *item_list);
 void gnc_item_list_connect_store (GncItemList *item_list, GtkListStore *store);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNUCASH_ITEM_LIST_H */

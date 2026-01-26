@@ -139,9 +139,9 @@ static const char * get_iacct_entry (VirtualLocation virt_loc,
                                      gboolean *conditionally_changed,
                                      gpointer user_data)
 {
-    static char *name = NULL;
+    static char *name = nullptr;
 
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -156,9 +156,9 @@ static const char * get_bacct_entry (VirtualLocation virt_loc,
                                      gboolean *conditionally_changed,
                                      gpointer user_data)
 {
-    static char *name = NULL;
+    static char *name = nullptr;
 
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -173,7 +173,7 @@ static const char * get_actn_entry (VirtualLocation virt_loc,
                                     gboolean *conditionally_changed,
                                     gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -185,7 +185,7 @@ static const char * get_date_entry (VirtualLocation virt_loc,
                                     gboolean *conditionally_changed,
                                     gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
     time64 time = gncEntryGetDate (entry);
     static gchar dateBuff [MAX_DATE_LENGTH+1];
@@ -199,7 +199,7 @@ static const char * get_desc_entry (VirtualLocation virt_loc,
                                     gboolean *conditionally_changed,
                                     gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -211,14 +211,14 @@ static const char * get_disc_entry (VirtualLocation virt_loc,
                                     gboolean *conditionally_changed,
                                     gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     gnc_numeric discount;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
     discount = gncEntryGetInvDiscount (entry);
     if (gnc_numeric_zero_p (discount))
-        return NULL;
+        return nullptr;
 
     return xaccPrintAmount (discount, gnc_default_print_info (FALSE));
 }
@@ -228,11 +228,10 @@ static const char * get_distype_entry (VirtualLocation virt_loc,
                                        gboolean *conditionally_changed,
                                        gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
-    GncEntry *entry;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     char type;
 
-    entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
+    GncEntry *entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
     type = gncEntryGetInvDiscountType (entry);
 
     if (translate)
@@ -253,7 +252,7 @@ static const char * get_dishow_entry (VirtualLocation virt_loc,
                                       gboolean *conditionally_changed,
                                       gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     char type;
 
@@ -278,7 +277,7 @@ static const char * get_pric_entry (VirtualLocation virt_loc,
                                     gboolean *conditionally_changed,
                                     gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     gnc_numeric price;
     gnc_commodity *curr;
@@ -291,7 +290,7 @@ static const char * get_pric_entry (VirtualLocation virt_loc,
         price = gncEntryGetBillPrice (entry);
 
     if (gnc_numeric_zero_p (price))
-        return NULL;
+        return nullptr;
 
     curr = gncInvoiceGetCurrency (ledger->invoice);
     print_info = gnc_default_price_print_info (curr);
@@ -304,7 +303,7 @@ static const char * get_qty_entry (VirtualLocation virt_loc,
                                    gboolean *conditionally_changed,
                                    gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     gnc_numeric qty;
 
@@ -312,7 +311,7 @@ static const char * get_qty_entry (VirtualLocation virt_loc,
     qty = gncEntryGetDocQuantity (entry, ledger->is_credit_note);
 
     if (gnc_numeric_zero_p (qty))
-        return NULL;
+        return nullptr;
 
     return xaccPrintAmount (qty, gnc_default_print_info (FALSE));
 }
@@ -322,7 +321,7 @@ static const char * get_taxable_entry (VirtualLocation virt_loc,
                                        gboolean *conditionally_changed,
                                        gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     gboolean taxable;
 
@@ -341,7 +340,7 @@ gnc_entry_ledger_get_taxable_value (VirtualLocation virt_loc,
                                     gboolean *conditionally_changed,
                                     gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     gboolean is_current;
 
     is_current = virt_cell_loc_equal(ledger->table->current_cursor_loc.vcell_loc,
@@ -364,7 +363,7 @@ static const char * get_taxtable_entry (VirtualLocation virt_loc,
                                         gboolean *conditionally_changed,
                                         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     GncTaxTable *table;
     gboolean taxable;
@@ -376,7 +375,7 @@ static const char * get_taxtable_entry (VirtualLocation virt_loc,
                   conditionally_changed,
                   user_data);
         if (!taxable)
-            return NULL;
+            return nullptr;
     }
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -393,7 +392,7 @@ static const char * get_taxincluded_entry (VirtualLocation virt_loc,
         gboolean *conditionally_changed,
         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     gboolean taxable, taxincluded;
 
@@ -404,7 +403,7 @@ static const char * get_taxincluded_entry (VirtualLocation virt_loc,
                   conditionally_changed,
                   user_data);
         if (!taxable)
-            return NULL;
+            return nullptr;
     }
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -421,12 +420,12 @@ static const char * get_inv_entry (VirtualLocation virt_loc,
                                    gboolean *conditionally_changed,
                                    gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
 
-    return gnc_checkbox_cell_get_string (gncEntryGetInvoice (entry) != NULL);
+    return gnc_checkbox_cell_get_string (gncEntryGetInvoice (entry) != nullptr);
 
     /* XXX: what if this entry doesn't belong to this invoice?
      * Or, better question, what if this is the blank_entry on
@@ -440,7 +439,7 @@ static const char * get_value_entry (VirtualLocation virt_loc,
                                      gboolean *conditionally_changed,
                                      gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     gnc_numeric value;
 
     /* Check if this is the current cursor */
@@ -450,14 +449,14 @@ static const char * get_value_entry (VirtualLocation virt_loc,
         /* Sign attention: this function works with values as seen
          * on-screen in the ledger, so they are always in the proper sign.
          */
-        gnc_entry_ledger_compute_value (ledger, &value, NULL);
+        gnc_entry_ledger_compute_value (ledger, &value, nullptr);
     }
     else
     {
         GncEntry *entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
 
         if (entry == gnc_entry_ledger_get_blank_entry (ledger))
-            return NULL;
+            return nullptr;
 
         /* Ledger should display values with the same sign as on the document
          * so get the document value instead of the internal value here.
@@ -473,7 +472,7 @@ static const char * get_taxval_entry (VirtualLocation virt_loc,
                                       gboolean *conditionally_changed,
                                       gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     gnc_numeric value;
 
     /* Check if this is the current cursor */
@@ -483,14 +482,14 @@ static const char * get_taxval_entry (VirtualLocation virt_loc,
         /* Sign attention: this function works with values as seen
          * on-screen in the ledger, so they are always in the proper sign.
          */
-        gnc_entry_ledger_compute_value (ledger, NULL, &value);
+        gnc_entry_ledger_compute_value (ledger, nullptr, &value);
     }
     else
     {
         GncEntry *entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
 
         if (entry == gnc_entry_ledger_get_blank_entry (ledger))
-            return NULL;
+            return nullptr;
 
         /* Ledger should display values with the same sign as on the document
          * so get the document value instead of the internal value here.
@@ -506,7 +505,7 @@ static const char * get_billable_entry (VirtualLocation virt_loc,
                                         gboolean *conditionally_changed,
                                         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
 
     entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
@@ -518,7 +517,7 @@ static const char * get_payment_entry (VirtualLocation virt_loc,
                                        gboolean *conditionally_changed,
                                        gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     GncEntryPaymentType type;
 
@@ -546,7 +545,7 @@ static const char * get_payment_entry (VirtualLocation virt_loc,
 static char * get_acct_help (VirtualLocation virt_loc, gpointer user_data)
 {
     const char *help;
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
     if (!help || *help == '\0')
@@ -558,7 +557,7 @@ static char * get_acct_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_actn_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -570,13 +569,13 @@ static char * get_actn_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_date_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     BasicCell *cell;
     time64 cell_time;
 
     cell = gnc_table_get_cell (ledger->table, virt_loc);
     if (!cell || !cell->value || *cell->value == '\0')
-        return NULL;
+        return nullptr;
 
     gnc_date_cell_get_date ((DateCell *) cell, &cell_time, FALSE);
     return gnc_print_time64 (cell_time, _("%A %d %B %Y"));
@@ -584,7 +583,7 @@ static char * get_date_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_desc_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -596,7 +595,7 @@ static char * get_desc_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_disc_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
     gint type;
 
@@ -620,7 +619,7 @@ static char * get_disc_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_distype_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
     gint type;
 
@@ -643,7 +642,7 @@ static char * get_distype_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_dishow_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
     gint type;
 
@@ -669,7 +668,7 @@ static char * get_dishow_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_pric_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -681,7 +680,7 @@ static char * get_pric_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_qty_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -693,7 +692,7 @@ static char * get_qty_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_taxtable_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -723,7 +722,7 @@ static char * get_taxincluded_help (VirtualLocation virt_loc, gpointer user_data
 
 static char * get_inv_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     switch (ledger->type)
@@ -759,7 +758,7 @@ static char * get_inv_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_value_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -771,7 +770,7 @@ static char * get_value_help (VirtualLocation virt_loc, gpointer user_data)
 
 static char * get_taxval_help (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     const char *help;
 
     help = gnc_table_get_entry (ledger->table, virt_loc);
@@ -804,7 +803,7 @@ static char * get_payment_help (VirtualLocation virt_loc, gpointer user_data)
 static CellIOFlags get_standard_io_flags (VirtualLocation virt_loc,
         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     switch (ledger->type)
     {
     case GNCENTRY_ORDER_ENTRY:
@@ -818,7 +817,7 @@ static CellIOFlags get_standard_io_flags (VirtualLocation virt_loc,
          * If the type is an order_entry and the entry was invoiced,
          * make the entry immutable
          */
-        if (gncEntryGetInvoice (entry) != NULL)
+        if (gncEntryGetInvoice (entry) != nullptr)
             return XACC_CELL_ALLOW_SHADOW;
     }
     /* FALL THROUGH */
@@ -830,14 +829,16 @@ static CellIOFlags get_standard_io_flags (VirtualLocation virt_loc,
 static CellIOFlags get_typecell_io_flags (VirtualLocation virt_loc,
         gpointer user_data)
 {
-    return (get_standard_io_flags (virt_loc, user_data) |
-            XACC_CELL_ALLOW_EXACT_ONLY);
+    CellIOFlags flags = static_cast<CellIOFlags>(get_standard_io_flags (virt_loc,       
+        user_data) |
+        XACC_CELL_ALLOW_EXACT_ONLY);
+    return (flags);
 }
 
 static CellIOFlags get_inv_io_flags (VirtualLocation virt_loc,
                                      gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
 
     switch (ledger->type)
     {
@@ -849,8 +850,9 @@ static CellIOFlags get_inv_io_flags (VirtualLocation virt_loc,
          */
         GncEntry * entry = gnc_entry_ledger_get_entry (ledger, virt_loc.vcell_loc);
 
-        if ((gncEntryGetOrder (entry) != NULL) || (gncEntryGetBill (entry) != NULL))
-            return XACC_CELL_ALLOW_ALL | XACC_CELL_ALLOW_EXACT_ONLY;
+        if ((gncEntryGetOrder (entry) != nullptr) || (gncEntryGetBill (entry) != nullptr))
+            return static_cast<CellIOFlags>(XACC_CELL_ALLOW_ALL |   
+                XACC_CELL_ALLOW_EXACT_ONLY);
 
     }
     /* FALL THROUGH */
@@ -868,7 +870,7 @@ static CellIOFlags get_value_io_flags (VirtualLocation virt_loc,
 static CellIOFlags get_tax_io_flags (VirtualLocation virt_loc,
                                      gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     gboolean taxable;
 
     taxable = gnc_entry_ledger_get_checkmark (ledger, ENTRY_TAXABLE_CELL);
@@ -887,12 +889,12 @@ static CellIOFlags get_taxincluded_io_flags (VirtualLocation virt_loc,
     CellIOFlags flags = get_tax_io_flags (virt_loc, user_data);
     if (flags == XACC_CELL_ALLOW_SHADOW)
         return flags;
-    return flags | XACC_CELL_ALLOW_EXACT_ONLY;
+    return static_cast<CellIOFlags>(flags | XACC_CELL_ALLOW_EXACT_ONLY);
 }
 
 static CellIOFlags get_qty_io_flags (VirtualLocation virt_loc, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry;
     CellIOFlags flags = get_standard_io_flags (virt_loc, user_data);
 
@@ -955,7 +957,7 @@ static guint32
 gnc_entry_ledger_get_cell_color (VirtualLocation virt_loc,
                                  gboolean *hatching, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
 
     if (hatching)
         *hatching = FALSE;
@@ -968,10 +970,10 @@ gnc_entry_ledger_get_cell_color (VirtualLocation virt_loc,
 static void gnc_entry_ledger_save_cells (gpointer save_data,
         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
-    GncEntry *entry = save_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
+    GncEntry *entry = static_cast<GncEntry *>(save_data);
 
-    g_return_if_fail (entry != NULL);
+    g_return_if_fail (entry != nullptr);
 
     /* copy the contents from the cursor to the split */
 
@@ -982,7 +984,7 @@ static void gnc_entry_ledger_save_cells (gpointer save_data,
 
         acc = gnc_entry_ledger_get_account (ledger, ENTRY_IACCT_CELL);
 
-        if (acc != NULL)
+        if (acc != nullptr)
             gncEntrySetInvAccount (entry, acc);
     }
 
@@ -993,7 +995,7 @@ static void gnc_entry_ledger_save_cells (gpointer save_data,
 
         acc = gnc_entry_ledger_get_account (ledger, ENTRY_BACCT_CELL);
 
-        if (acc != NULL)
+        if (acc != nullptr)
             gncEntrySetBillAccount (entry, acc);
     }
 
@@ -1051,7 +1053,7 @@ static void gnc_entry_ledger_save_cells (gpointer save_data,
         type = gnc_entry_ledger_get_type (ledger, ENTRY_DISTYPE_CELL);
 
         if (type != -1)
-            gncEntrySetInvDiscountType (entry, type);
+            gncEntrySetInvDiscountType (entry, static_cast<GncAmountType>(type));
     }
 
     if (gnc_table_layout_get_cell_changed (ledger->table->layout,
@@ -1062,7 +1064,7 @@ static void gnc_entry_ledger_save_cells (gpointer save_data,
         type = gnc_entry_ledger_get_type (ledger, ENTRY_DISHOW_CELL);
 
         if (type != -1)
-            gncEntrySetInvDiscountHow (entry, type);
+            gncEntrySetInvDiscountHow (entry, static_cast<GncDiscountHow>(type));
     }
 
     if (gnc_table_layout_get_cell_changed (ledger->table->layout,
@@ -1165,15 +1167,15 @@ static void gnc_entry_ledger_save_cells (gpointer save_data,
         if (inv_value)
         {
             /* Add this to the invoice (if it's not already attached) */
-            if (gncEntryGetInvoice (entry) == NULL)
+            if (gncEntryGetInvoice (entry) == nullptr)
                 gncInvoiceAddEntry (ledger->invoice, entry);
 
         }
         else
         {
             /* Remove from the invoice iff we're attached to an order or bill */
-            if ((gncEntryGetOrder (entry) != NULL) ||
-                    (gncEntryGetBill (entry) != NULL))
+            if ((gncEntryGetOrder (entry) != nullptr) ||
+                    (gncEntryGetBill (entry) != nullptr))
                 gncInvoiceRemoveEntry (ledger->invoice, entry);
         }
     }
@@ -1187,30 +1189,120 @@ static void gnc_entry_ledger_model_new_handlers (TableModel *model,
     struct model_desc
     {
         const char * cell;
-        gpointer entry_handler;
-        gpointer label_handler;
-        gpointer help_handler;
-        gpointer io_flags_handler;
+        TableGetEntryHandler entry_handler;
+        TableGetLabelHandler label_handler;
+        TableGetHelpHandler help_handler;
+        TableGetCellIOFlagsHandler io_flags_handler;
     } models[] =
     {
-        { ENTRY_IACCT_CELL, get_iacct_entry, get_iacct_label, get_acct_help, get_standard_io_flags },
-        { ENTRY_BACCT_CELL, get_bacct_entry, get_bacct_label, get_acct_help, get_standard_io_flags },
-        { ENTRY_ACTN_CELL, get_actn_entry, get_actn_label, get_actn_help, get_standard_io_flags },
-        { ENTRY_DATE_CELL, get_date_entry, get_date_label, get_date_help, get_standard_io_flags },
-        { ENTRY_DESC_CELL, get_desc_entry, get_desc_label, get_desc_help, get_standard_io_flags },
-        { ENTRY_DISC_CELL, get_disc_entry, get_disc_label, get_disc_help, get_standard_io_flags },
-        { ENTRY_DISTYPE_CELL, get_distype_entry, get_distype_label, get_distype_help,  get_typecell_io_flags },
-        { ENTRY_DISHOW_CELL, get_dishow_entry, get_dishow_label, get_dishow_help, get_typecell_io_flags },
-        { ENTRY_PRIC_CELL, get_pric_entry, get_pric_label, get_pric_help, get_standard_io_flags },
-        { ENTRY_QTY_CELL, get_qty_entry, get_qty_label, get_qty_help, get_qty_io_flags },
-        { ENTRY_TAXABLE_CELL, get_taxable_entry, get_taxable_label, get_taxable_help,  get_typecell_io_flags },
-        { ENTRY_TAXTABLE_CELL, get_taxtable_entry, get_taxtable_label, get_taxtable_help, get_tax_io_flags },
-        { ENTRY_TAXINCLUDED_CELL, get_taxincluded_entry, get_taxincluded_label, get_taxincluded_help, get_taxincluded_io_flags },
-        { ENTRY_INV_CELL, get_inv_entry, get_inv_label, get_inv_help, get_inv_io_flags },
-        { ENTRY_VALUE_CELL, get_value_entry, get_value_label, get_value_help, get_value_io_flags },
-        { ENTRY_TAXVAL_CELL, get_taxval_entry, get_taxval_label, get_taxval_help, get_value_io_flags },
-        { ENTRY_BILLABLE_CELL, get_billable_entry, get_billable_label, get_billable_help, get_typecell_io_flags },
-        { ENTRY_PAYMENT_CELL, get_payment_entry, get_payment_label, get_payment_help, get_standard_io_flags },
+        { ENTRY_IACCT_CELL,
+            get_iacct_entry,
+            get_iacct_label,
+            get_acct_help,
+            get_standard_io_flags
+        },
+        { ENTRY_BACCT_CELL,
+            get_bacct_entry,
+            get_bacct_label,
+            get_acct_help,
+            get_standard_io_flags
+        },
+        { ENTRY_ACTN_CELL,
+            get_actn_entry,
+            get_actn_label,
+            get_actn_help,
+            get_standard_io_flags
+        },
+        { ENTRY_DATE_CELL,
+            get_date_entry,
+            get_date_label,
+            get_date_help,
+            get_standard_io_flags
+        },
+        { ENTRY_DESC_CELL,
+            get_desc_entry,
+            get_desc_label,
+            get_desc_help,
+            get_standard_io_flags
+        },
+        { ENTRY_DISC_CELL,
+            get_disc_entry,
+            get_disc_label,
+            get_disc_help,
+            get_standard_io_flags
+        },
+        { ENTRY_DISTYPE_CELL,
+            get_distype_entry,
+            get_distype_label,
+            get_distype_help,
+            get_typecell_io_flags
+        },
+        { ENTRY_DISHOW_CELL,
+            get_dishow_entry,
+            get_dishow_label,
+            get_dishow_help,
+            get_typecell_io_flags
+        },
+        { ENTRY_PRIC_CELL,
+            get_pric_entry,
+            get_pric_label,
+            get_pric_help,
+            get_standard_io_flags
+        },
+        { ENTRY_QTY_CELL,
+            get_qty_entry,
+            get_qty_label,
+            get_qty_help,
+            get_qty_io_flags
+        },
+        { ENTRY_TAXABLE_CELL,
+            get_taxable_entry,
+            get_taxable_label,
+            get_taxable_help,
+            get_typecell_io_flags
+        },
+        { ENTRY_TAXTABLE_CELL,
+            get_taxtable_entry,
+            get_taxtable_label,
+            get_taxtable_help,
+            get_tax_io_flags
+        },
+        { ENTRY_TAXINCLUDED_CELL,
+            get_taxincluded_entry,
+            get_taxincluded_label,
+            get_taxincluded_help,
+            get_taxincluded_io_flags
+        },
+        { ENTRY_INV_CELL,
+            get_inv_entry,
+            get_inv_label,
+            get_inv_help,
+            get_inv_io_flags
+        },
+        { ENTRY_VALUE_CELL,
+            get_value_entry,
+            get_value_label,
+            get_value_help,
+            get_value_io_flags
+        },
+        { ENTRY_TAXVAL_CELL,
+            get_taxval_entry,
+            get_taxval_label,
+            get_taxval_help,
+            get_value_io_flags
+        },
+        { ENTRY_BILLABLE_CELL,
+            get_billable_entry,
+            get_billable_label,
+            get_billable_help,
+            get_typecell_io_flags
+        },
+        { ENTRY_PAYMENT_CELL,
+            get_payment_entry,
+            get_payment_label,
+            get_payment_help,
+            get_standard_io_flags
+        },
     };
     unsigned int i;
 

@@ -2,21 +2,21 @@
 add_subdirectory(test)
 
 set (ledger_core_SOURCES
-  gnc-ledger-display.c
-  split-register.c
+  gnc-ledger-display.cpp
+  split-register.cpp
   split-register-control.cpp
-  split-register-copy-ops.c
-  split-register-layout.c
-  split-register-load.c
-  split-register-model.c
-  split-register-model-save.c
-  split-register-util.c
-  gncEntryLedger.c
-  gncEntryLedgerControl.c
-  gncEntryLedgerDisplay.c
-  gncEntryLedgerLayout.c
-  gncEntryLedgerLoad.c
-  gncEntryLedgerModel.c
+  split-register-copy-ops.cpp
+  split-register-layout.cpp
+  split-register-load.cpp
+  split-register-model.cpp
+  split-register-model-save.cpp
+  split-register-util.cpp
+  gncEntryLedger.cpp
+  gncEntryLedgerControl.cpp
+  gncEntryLedgerDisplay.cpp
+  gncEntryLedgerLayout.cpp
+  gncEntryLedgerLoad.cpp
+  gncEntryLedgerModel.cpp
 )
 
 
@@ -40,6 +40,20 @@ set (ledger_core_HEADERS
 set_source_files_properties (${ledger_core_SOURCES} PROPERTIES OBJECT_DEPENDS ${CONFIG_H})
 
 add_library (gnc-ledger-core ${ledger_core_SOURCES} ${ledger_core_HEADERS})
+
+if (MINGW)
+  # ensure no C compilation
+  set_target_properties(gnc-ledger-core PROPERTIES
+        CMAKE_C_COMPILER_LAUNCHER "false"
+  )
+  # remove -DWINVER=0x0500 -D_EMULATE_GLIBC=0 and add C++ options from non-MINGW compile
+  # By default target_compile_options() adds its flags AFTER CMAKE_CXX_FLAGS
+  set(NEW_CXX_COMPILE_FLAGS "-Werror" "-Wall" "-Wmissing-declarations"
+    "-UWINVER" "-U_EMULATE_GLIBC")
+  # set target compile options
+  target_compile_options(gnc-ledger-core PRIVATE ${NEW_CXX_COMPILE_FLAGS}
+  )
+endif()
 
 target_link_libraries(gnc-ledger-core gnc-register-gnome gnc-register-core gnc-gnome-utils
         gnc-engine gnc-core-utils PkgConfig::GTK3)

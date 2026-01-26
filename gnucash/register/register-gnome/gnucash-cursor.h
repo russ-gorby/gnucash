@@ -24,6 +24,10 @@
 #include <glib.h>
 #include "gnucash-sheet.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -90,4 +94,9 @@ void gnucash_cursor_set_style (GnucashCursor  *cursor, SheetBlockStyle *style);
 void gnucash_cursor_configure (GnucashCursor *cursor);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNUCASH_CURSOR_H */

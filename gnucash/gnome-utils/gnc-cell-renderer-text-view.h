@@ -25,10 +25,17 @@
 #include <pango/pango.h>
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GNC_TYPE_CELL_RENDERER_TEXT_VIEW            (gnc_cell_renderer_text_view_get_type ())
 G_DECLARE_FINAL_TYPE (GncCellRendererTextView, gnc_cell_renderer_text_view, GNC, CELL_RENDERER_TEXT_VIEW, GtkCellRendererText)
 
 GtkCellRenderer *gnc_cell_renderer_text_view_new (void);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_CELL_RENDERER_TEXT_VIEW_H__ */

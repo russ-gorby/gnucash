@@ -129,10 +129,10 @@ void         gnc_quickfill_insert (QuickFill *root, const char *text,
 void         gnc_quickfill_remove (QuickFill *root, const gchar *text,
                                    QuickFillSort sort_code);
 
-/** @} */
-/** @} */
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* QUICKFILL_H */
+/** @} */
+/** @} */

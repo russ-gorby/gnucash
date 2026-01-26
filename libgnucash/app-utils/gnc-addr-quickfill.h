@@ -33,6 +33,10 @@
 #include "qof.h"
 #include "QuickFill.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Create/fetch a quickfill GncAddress description strings on the Addr2 part.
  *
  *  Multiple, distinct quickfills, for different uses, are allowed.
@@ -75,7 +79,10 @@ QuickFill * gnc_get_shared_address_addr3_quickfill (QofBook *book,
 QuickFill * gnc_get_shared_address_addr4_quickfill (QofBook *book,
         const char * key);
 
+#ifdef __cplusplus
+}
 #endif
 
-/** @} */
+#endif
+
 /** @} */

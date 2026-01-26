@@ -42,7 +42,7 @@ gnc_split_register_init_info (SplitRegister *reg)
 {
     SRInfo *info;
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return;
 
     info = g_new0 (SRInfo, 1);
@@ -66,9 +66,9 @@ SRInfo *
 gnc_split_register_get_info (SplitRegister *reg)
 {
     if (!reg)
-        return NULL;
+        return nullptr;
 
-    if (reg->sr_info == NULL)
+    if (reg->sr_info == nullptr)
         gnc_split_register_init_info (reg);
 
     return reg->sr_info;
@@ -79,11 +79,11 @@ gnc_split_register_get_parent (SplitRegister *reg)
 {
     SRInfo *info = gnc_split_register_get_info (reg);
 
-    if (reg == NULL)
-        return NULL;
+    if (reg == nullptr)
+        return nullptr;
 
-    if (info->get_parent == NULL)
-        return NULL;
+    if (info->get_parent == nullptr)
+        return nullptr;
 
     return info->get_parent (info->user_data);
 }
@@ -94,12 +94,13 @@ gnc_split_register_get_split (SplitRegister *reg,
 {
     GncGUID *guid;
 
-    if (reg == NULL)
-        return NULL;
+    if (reg == nullptr)
+        return nullptr;
 
-    guid = gnc_table_get_vcell_data (reg->table, vcell_loc);
-    if (guid == NULL)
-        return NULL;
+    guid = static_cast<GncGUID *>(gnc_table_get_vcell_data (static_cast<Table *>(
+        reg->table), vcell_loc));
+    if (guid == nullptr)
+        return nullptr;
 
     return xaccSplitLookup (guid, gnc_get_current_book ());
 }
@@ -119,7 +120,7 @@ gnc_split_register_set_template_account (SplitRegister *reg,
 {
     SRInfo *info = gnc_split_register_get_info (reg);
 
-    g_return_if_fail (reg != NULL);
+    g_return_if_fail (reg != nullptr);
 
     info->template_account = *xaccAccountGetGUID (template_account);
 }
@@ -131,11 +132,11 @@ gnc_split_register_get_trans (SplitRegister *reg,
     Split *split;
 
     if (!reg || !reg->table)
-        return NULL;
+        return nullptr;
 
     split = gnc_split_register_get_split (reg, vcell_loc);
 
-    if (split != NULL)
+    if (split != nullptr)
         return xaccSplitGetParent(split);
 
     /* Split is blank. Assume it is the blank split of a multi-line
@@ -144,9 +145,9 @@ gnc_split_register_get_trans (SplitRegister *reg,
 
     split = gnc_split_register_get_split (reg, vcell_loc);
 
-    /* This split could be NULL during register initialization. */
-    if (split == NULL)
-        return NULL;
+    /* This split could be nullptr during register initialization. */
+    if (split == nullptr)
+        return nullptr;
 
     return xaccSplitGetParent(split);
 }
@@ -158,15 +159,15 @@ gnc_split_register_get_trans_split (SplitRegister *reg,
 {
     CursorClass cursor_class;
 
-    if (reg == NULL)
-        return NULL;
+    if (reg == nullptr)
+        return nullptr;
 
     while (TRUE)
     {
         if ((0 > vcell_loc.virt_row) || (0 > vcell_loc.virt_col))
         {
             PERR ("bad row\n");
-            return NULL;
+            return nullptr;
         }
 
         cursor_class = gnc_split_register_get_cursor_class (reg, vcell_loc);
@@ -189,8 +190,8 @@ gnc_split_register_get_current_trans_split(
 {
     VirtualCellLocation vcell_loc;
 
-    if (reg == NULL)
-        return NULL;
+    if (reg == nullptr)
+        return nullptr;
 
     vcell_loc = reg->table->current_cursor_loc.vcell_loc;
 
@@ -242,7 +243,7 @@ gnc_split_register_find_split (SplitRegister *reg,
                         /* We're looking for a transaction split and this is the split we're looking for
                            or there is only one entry for this transaction in this register (since it's
                            a journal style register) so we must return the only transaction split there is. */
-                        if (vcell_loc != NULL)
+                        if (vcell_loc != nullptr)
                             *vcell_loc = vc_loc;
                         return TRUE;
                     }
@@ -260,7 +261,7 @@ gnc_split_register_find_split (SplitRegister *reg,
             {
                 /* We're on the right transaction, but perhaps not the copy of it we want, and
                    this is the correct split, return it if we don't find anything better. */
-                if (vcell_loc != NULL)
+                if (vcell_loc != nullptr)
                     *vcell_loc = vc_loc;
 
                 found_something = TRUE;
@@ -271,7 +272,7 @@ gnc_split_register_find_split (SplitRegister *reg,
                 /* We're on the right copy of the right transaction, and this is the split we
                    want, return it (it should be the right class since if we wanted a transaction
                    split we would have returned it above. */
-                if (vcell_loc != NULL)
+                if (vcell_loc != nullptr)
                     *vcell_loc = vc_loc;
 
                 if (cursor_class == find_class)
@@ -433,7 +434,7 @@ gnc_split_register_set_cell_fractions (SplitRegister *reg, Split *split)
 CellBlock *
 gnc_split_register_get_passive_cursor (SplitRegister *reg)
 {
-    const char *cursor_name = NULL;
+    const char *cursor_name = nullptr;
 
     switch (reg->style)
     {
@@ -456,7 +457,7 @@ gnc_split_register_get_passive_cursor (SplitRegister *reg)
     if (!cursor_name)
     {
         PWARN ("bad register style");
-        return NULL;
+        return nullptr;
     }
 
     return gnc_table_layout_get_cursor (reg->table->layout, cursor_name);
@@ -466,7 +467,7 @@ CellBlock *
 gnc_split_register_get_active_cursor (SplitRegister *reg)
 {
     SRInfo *info = gnc_split_register_get_info (reg);
-    const char *cursor_name = NULL;
+    const char *cursor_name = nullptr;
 
     switch (reg->style)
     {
@@ -493,7 +494,7 @@ gnc_split_register_get_active_cursor (SplitRegister *reg)
     if (!cursor_name)
     {
         PWARN ("bad register style");
-        return NULL;
+        return nullptr;
     }
 
     return gnc_table_layout_get_cursor (reg->table->layout, cursor_name);
@@ -515,7 +516,7 @@ static CursorClass
 gnc_split_register_cursor_class (SplitRegister *reg,
                                  CellBlock *cursor)
 {
-    if (cursor == NULL)
+    if (cursor == nullptr)
         return CURSOR_CLASS_NONE;
 
     return gnc_split_register_cursor_name_to_class (cursor->cursor_name);
@@ -528,15 +529,15 @@ gnc_split_register_get_cursor_class (SplitRegister *reg,
     VirtualCell *vcell;
     Table *table;
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return CURSOR_CLASS_NONE;
 
     table = reg->table;
-    if (table == NULL)
+    if (table == nullptr)
         return CURSOR_CLASS_NONE;
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return CURSOR_CLASS_NONE;
 
     return gnc_split_register_cursor_class (reg, vcell->cellblock);
@@ -547,11 +548,11 @@ gnc_split_register_get_current_cursor_class (SplitRegister *reg)
 {
     Table *table;
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return CURSOR_CLASS_NONE;
 
     table = reg->table;
-    if (table == NULL)
+    if (table == nullptr)
         return CURSOR_CLASS_NONE;
 
     return gnc_split_register_cursor_class (reg, table->current_cursor);
@@ -560,7 +561,7 @@ gnc_split_register_get_current_cursor_class (SplitRegister *reg)
 CursorClass
 gnc_split_register_cursor_name_to_class (const char *cursor_name)
 {
-    if (cursor_name == NULL)
+    if (cursor_name == nullptr)
         return CURSOR_CLASS_NONE;
 
     if (strcmp (cursor_name, CURSOR_SINGLE_LEDGER) == 0  ||

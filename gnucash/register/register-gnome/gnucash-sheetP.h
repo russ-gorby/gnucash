@@ -26,6 +26,10 @@
 #include "gnucash-item-edit.h"
 #include "gnucash-cursor.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -125,4 +129,9 @@ gboolean gnucash_sheet_draw_internal (GnucashSheet *sheet, cairo_t *cr,
 void gnucash_sheet_draw_cursor (GnucashCursor *cursor, cairo_t *cr);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

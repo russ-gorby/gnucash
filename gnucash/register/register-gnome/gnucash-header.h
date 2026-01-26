@@ -23,6 +23,10 @@
 
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -80,4 +84,9 @@ gint gnc_header_get_cell_offset (GncHeader *header,
                                  gint *cell_width);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNUCASH_HEADER_H */

@@ -33,6 +33,10 @@
 #include "qof.h"
 #include "QuickFill.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Create/fetch a quickfill GncEntry description strings.
  *
  *  Multiple, distinct quickfills, for different uses, are allowed.
@@ -61,7 +65,10 @@
 QuickFill * gnc_get_shared_entry_desc_quickfill (QofBook *book,
         const char * key, gboolean use_invoices);
 
+#ifdef __cplusplus
+}
 #endif
 
-/** @} */
+#endif
+
 /** @} */

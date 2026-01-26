@@ -58,7 +58,7 @@ gnc_entry_ledger_save (GncEntryLedger *ledger, gboolean do_commit)
     blank_entry = gnc_entry_ledger_get_blank_entry (ledger);
 
     entry = gnc_entry_ledger_get_current_entry (ledger);
-    if (entry == NULL) return FALSE;
+    if (entry == nullptr) return FALSE;
 
     /* Try to avoid heavy-weight updates if nothing has changed */
     if (!gnc_table_current_cursor_changed (ledger->table, FALSE))
@@ -72,7 +72,7 @@ gnc_entry_ledger_save (GncEntryLedger *ledger, gboolean do_commit)
                 ledger->last_date_entered = gncEntryGetDateGDate (entry);
                 ledger->blank_entry_guid = *guid_null ();
                 ledger->blank_entry_edited = FALSE;
-                blank_entry = NULL;
+                blank_entry = nullptr;
             }
             else
                 return FALSE;
@@ -90,7 +90,7 @@ gnc_entry_ledger_save (GncEntryLedger *ledger, gboolean do_commit)
 
     if (entry == blank_entry)
     {
-        time64 time = gnc_time (NULL);
+        time64 time = gnc_time (nullptr);
         gncEntrySetDateEntered (blank_entry, time);
 
         switch (ledger->type)
@@ -122,7 +122,7 @@ gnc_entry_ledger_save (GncEntryLedger *ledger, gboolean do_commit)
         if (do_commit)
         {
             ledger->blank_entry_guid = *guid_null ();
-            blank_entry = NULL;
+            blank_entry = nullptr;
             ledger->last_date_entered = gncEntryGetDateGDate (entry);
         }
         else
@@ -171,7 +171,7 @@ gnc_entry_ledger_verify_can_save (GncEntryLedger *ledger)
     gnc_numeric value;
 
     /* Compute the value and tax value of the current cursor */
-    gnc_entry_ledger_compute_value (ledger, &value, NULL);
+    gnc_entry_ledger_compute_value (ledger, &value, nullptr);
 
     /* If there is a value, make sure there is an account */
     if (! gnc_numeric_zero_p (value))
@@ -204,7 +204,7 @@ gnc_entry_ledger_verify_can_save (GncEntryLedger *ledger)
 static void gnc_entry_ledger_move_cursor (VirtualLocation *p_new_virt_loc,
         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     VirtualLocation new_virt_loc = *p_new_virt_loc;
     GncEntry *new_entry;
     GncEntry *old_entry;
@@ -251,10 +251,10 @@ static void gnc_entry_ledger_move_cursor (VirtualLocation *p_new_virt_loc,
  * DATE_ENTERED. */
 static QofQuery *new_query_for_entry_desc(GncEntryLedger *reg, const char* desc, gboolean use_invoice)
 {
-    QofQuery *query = NULL;
-    QofQueryPredData *predData = NULL;
-    GSList *param_list = NULL;
-    GSList *primary_sort_params = NULL;
+    QofQuery *query = nullptr;
+    QofQueryPredData *predData = nullptr;
+    GSList *param_list = nullptr;
+    GSList *primary_sort_params = nullptr;
     const char* should_be_null = (use_invoice ? ENTRY_BILL : ENTRY_INVOICE);
 
     g_assert(reg);
@@ -271,21 +271,21 @@ static QofQuery *new_query_for_entry_desc(GncEntryLedger *reg, const char* desc,
                                     QOF_STRING_MATCH_CASEINSENSITIVE, FALSE);
 
     /* Search Parameter: We want to query on the ENTRY_DESC column */
-    param_list = qof_query_build_param_list (ENTRY_DESC, NULL);
+    param_list = qof_query_build_param_list (ENTRY_DESC, nullptr);
 
     /* Register this in the query */
     qof_query_add_term (query, param_list, predData, QOF_QUERY_FIRST_TERM);
 
-    /* For invoice entries, Entry->Bill must be NULL, and vice versa */
+    /* For invoice entries, Entry->Bill must be nullptr, and vice versa */
     qof_query_add_guid_match (query,
                               qof_query_build_param_list (should_be_null,
-                                      QOF_PARAM_GUID, NULL),
-                              NULL, QOF_QUERY_AND);
+                                      QOF_PARAM_GUID, nullptr),
+                              nullptr, QOF_QUERY_AND);
 
     /* Set the sort order: By DATE_ENTERED, increasing, and returning
      * only one single resulting item. */
-    primary_sort_params = qof_query_build_param_list(ENTRY_DATE_ENTERED, NULL);
-    qof_query_set_sort_order (query, primary_sort_params, NULL, NULL);
+    primary_sort_params = qof_query_build_param_list(ENTRY_DATE_ENTERED, nullptr);
+    qof_query_set_sort_order (query, primary_sort_params, nullptr, nullptr);
     qof_query_set_sort_increasing (query, TRUE, TRUE, TRUE);
 
     qof_query_set_max_results(query, 1);
@@ -298,10 +298,10 @@ static QofQuery *new_query_for_entry_desc(GncEntryLedger *reg, const char* desc,
 static GncEntry*
 find_entry_in_book_by_desc(GncEntryLedger *reg, const char* desc)
 {
-    GncEntry *result = NULL;
+    GncEntry *result = nullptr;
     gboolean use_invoice;
     QofQuery *query;
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     switch (reg->type)
     {
@@ -345,12 +345,12 @@ gnc_find_entry_in_reg_by_desc(GncEntryLedger *reg, const char* desc)
     g_assert(reg);
     g_assert(reg->table);
     if (!reg || !reg->table)
-        return NULL;
+        return nullptr;
 
     num_rows = reg->table->num_virt_rows;
     num_cols = reg->table->num_virt_cols;
 
-    last_entry = NULL;
+    last_entry = nullptr;
 
     for (virt_row = num_rows - 1; virt_row >= 0; virt_row--)
         for (virt_col = num_cols - 1; virt_col >= 0; virt_col--)
@@ -369,7 +369,7 @@ gnc_find_entry_in_reg_by_desc(GncEntryLedger *reg, const char* desc)
             last_entry = entry;
         }
 
-    return NULL;
+    return nullptr;
 }
 #endif
 
@@ -406,8 +406,8 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
     GncEntry *auto_entry;
     const char* cell_name;
     const char *desc;
-    BasicCell *cell = NULL;
-    char *account_name = NULL;
+    BasicCell *cell = nullptr;
+    char *account_name = nullptr;
 
     g_assert(ledger);
     g_assert(ledger->table);
@@ -418,7 +418,7 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
         return FALSE;
 
     entry = gnc_entry_ledger_get_current_entry (ledger);
-    if (entry == NULL)
+    if (entry == nullptr)
         return FALSE;
 
     cell_name = gnc_table_get_current_cell_name (ledger->table);
@@ -440,7 +440,7 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
 
     /* Further conditions before we actually do auto-completion: */
     /* There must be a blank entry */
-    if (blank_entry == NULL)
+    if (blank_entry == nullptr)
         return FALSE;
 
     /* we must be on the blank entry */
@@ -492,7 +492,7 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
 
     /* to a non-empty value */
     desc = gnc_table_layout_get_cell_value (ledger->table->layout, ENTRY_DESC_CELL);
-    if ((desc == NULL) || (*desc == '\0'))
+    if ((desc == nullptr) || (*desc == '\0'))
         return FALSE;
 
     /* Ok, we are sure we want to trigger auto-completion. Now find an
@@ -501,7 +501,7 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
         /* Use this for book-wide auto-completion of the invoice entries */
         find_entry_in_book_by_desc(ledger, desc);
 
-    if (auto_entry == NULL)
+    if (auto_entry == nullptr)
         return FALSE;
 
     /* now perform the completion */
@@ -528,8 +528,8 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
         break;
     case GNCENTRY_ORDER_ENTRY:
     default:
-        cell = NULL;
-        account_name = NULL;
+        cell = nullptr;
+        account_name = nullptr;
         break;
     }
     set_value_combo_cell (cell, account_name);
@@ -579,7 +579,7 @@ gnc_entry_ledger_auto_completion (GncEntryLedger *ledger,
     /* Taxable?, Tax-include?, Tax table */
     {
         gboolean taxable = FALSE, taxincluded = FALSE;
-        GncTaxTable *taxtable = NULL;
+        GncTaxTable *taxtable = nullptr;
         switch (ledger->type)
         {
         case GNCENTRY_INVOICE_ENTRY:
@@ -645,7 +645,7 @@ static gboolean gnc_entry_ledger_traverse (VirtualLocation *p_new_virt_loc,
         gncTableTraversalDir dir,
         gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
     GncEntry *entry, *new_entry;
     gint response;
     VirtualLocation virt_loc;
@@ -675,7 +675,7 @@ static gboolean gnc_entry_ledger_traverse (VirtualLocation *p_new_virt_loc,
     {
         ComboCell *cell;
         char *name;
-        char *cell_name = NULL;
+        const char *cell_name = nullptr;
 
         switch (ledger->type)
         {
@@ -882,7 +882,7 @@ static gboolean gnc_entry_ledger_traverse (VirtualLocation *p_new_virt_loc,
         {
         case GNCENTRY_INVOICE_ENTRY:
         case GNCENTRY_CUST_CREDIT_NOTE_ENTRY:
-            if (gncEntryGetOrder (entry) != NULL)
+            if (gncEntryGetOrder (entry) != nullptr)
             {
                 dialog = gtk_message_dialog_new(GTK_WINDOW(ledger->parent),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -895,7 +895,7 @@ static gboolean gnc_entry_ledger_traverse (VirtualLocation *p_new_virt_loc,
                                        _("_Don't Record"), GTK_RESPONSE_REJECT,
                                        _("_Cancel"), GTK_RESPONSE_CANCEL,
                                        _("_Record"), GTK_RESPONSE_ACCEPT,
-                                       NULL);
+                                       nullptr);
                 response = gnc_dialog_run(GTK_DIALOG(dialog), GNC_PREF_WARN_INV_ENTRY_MOD);
                 gtk_widget_destroy(dialog);
                 break;
@@ -957,7 +957,7 @@ void gnc_entry_ledger_cancel_cursor_changes (GncEntryLedger *ledger)
 {
     VirtualLocation virt_loc;
 
-    if (ledger == NULL)
+    if (ledger == nullptr)
         return;
 
     virt_loc = ledger->table->current_cursor_loc;
@@ -1005,7 +1005,7 @@ gnc_entry_ledger_commit_entry (GncEntryLedger *ledger)
 {
     if (!ledger) return TRUE;
 
-    return gnc_entry_ledger_check_close_internal (NULL, ledger, TRUE);
+    return gnc_entry_ledger_check_close_internal (nullptr, ledger, TRUE);
 }
 
 gboolean

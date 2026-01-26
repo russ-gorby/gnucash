@@ -44,7 +44,7 @@ gnc_entry_ledger_get_entries (GncEntryLedger *ledger)
         return qof_query_run (ledger->query);
 
     //  g_warning ("No query to run?");
-    return NULL;
+    return nullptr;
 }
 
 static void
@@ -75,7 +75,7 @@ gnc_entry_ledger_refresh_internal (GncEntryLedger *ledger, GList *entries)
 static void
 gnc_entry_ledger_pref_changed (gpointer prefs, gchar *pref, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
 
     g_return_if_fail (ledger && pref);
 
@@ -93,7 +93,7 @@ static void
 gnc_entry_ledger_set_watches (GncEntryLedger *ledger, GList *entries)
 {
     GList *node;
-    QofIdType type = NULL;
+    QofIdType type = nullptr;
 
     gnc_gui_component_clear_watches (ledger->component_id);
 
@@ -158,7 +158,7 @@ gnc_entry_ledger_set_watches (GncEntryLedger *ledger, GList *entries)
 
     for (node = entries; node; node = node->next)
     {
-        GncEntry *entry = node->data;
+        GncEntry *entry = static_cast<GncEntry *>(node->data);
         gnc_gui_component_watch_entity (ledger->component_id,
                                         gncEntryGetGUID (entry),
                                         QOF_EVENT_MODIFY);
@@ -168,7 +168,7 @@ gnc_entry_ledger_set_watches (GncEntryLedger *ledger, GList *entries)
 static void
 refresh_handler (GHashTable *changes, gpointer user_data)
 {
-    GncEntryLedger *ledger = user_data;
+    GncEntryLedger *ledger = static_cast<GncEntryLedger *>(user_data);
 
     gnc_entry_ledger_display_refresh (ledger);
 }
@@ -181,9 +181,9 @@ gnc_entry_ledger_display_init (GncEntryLedger *ledger)
     ledger->full_refresh = TRUE;
     ledger->component_id = gnc_register_gui_component (ENTRYLEDGER_CLASS,
                            refresh_handler,
-                           NULL, ledger);
+                           nullptr, ledger);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL, GNC_PREF_ACCOUNT_SEPARATOR,
-                           gnc_entry_ledger_pref_changed, ledger);
+                           reinterpret_cast<gpointer>(gnc_entry_ledger_pref_changed), ledger);
 
     gnc_entry_ledger_display_refresh (ledger);
 }
@@ -195,7 +195,8 @@ gnc_entry_ledger_display_fini (GncEntryLedger *ledger)
 
     gnc_unregister_gui_component (ledger->component_id);
     gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL, GNC_PREF_ACCOUNT_SEPARATOR,
-                                 gnc_entry_ledger_pref_changed, ledger);
+                                 reinterpret_cast<gpointer>(gnc_entry_ledger_pref_changed),
+                                 ledger);
 }
 
 void

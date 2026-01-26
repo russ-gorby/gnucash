@@ -29,7 +29,7 @@
 
 #include <config.h>
 
-#include <string.h>
+#include <cstring>
 #include <gdk/gdkkeysyms.h>
 
 #include "quickfillcell.h"
@@ -44,7 +44,7 @@ gnc_quickfill_cell_direct_update (BasicCell *bcell,
                                   void *gui_data)
 {
     QuickFillCell *cell = (QuickFillCell *) bcell;
-    GdkEventKey *event = gui_data;
+    GdkEventKey *event = static_cast<GdkEventKey *>(gui_data);
     const char *match_str;
     QuickFill *match;
     int prefix_len;
@@ -77,16 +77,16 @@ gnc_quickfill_cell_direct_update (BasicCell *bcell,
     match = gnc_quickfill_get_string_len_match (cell->qf, bcell->value,
             *cursor_position);
 
-    if (match == NULL)
+    if (match == nullptr)
         return TRUE;
 
     match = gnc_quickfill_get_unique_len_match (match, &prefix_len);
-    if (match == NULL)
+    if (match == nullptr)
         return TRUE;
 
     match_str = gnc_quickfill_string (match);
 
-    if ((match_str != NULL) &&
+    if ((match_str != nullptr) &&
             (strncmp (match_str, bcell->value, strlen (bcell->value)) == 0) &&
             (strcmp (match_str, bcell->value) != 0))
         gnc_basic_cell_set_value (bcell, match_str);

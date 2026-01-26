@@ -24,6 +24,10 @@
 #ifndef __GNC_HELP_UTILS_H__
 #define __GNC_HELP_UTILS_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Launch HTML Help Viewer and open a given CHM file.  Use HtmlHelpW
  *  if available, or fallback to spawning hh.exe.  Possibly scroll to a
  *  given anchor within the document.
@@ -33,5 +37,9 @@
  *  @param anchor The anchor the help browser should scroll to.
  */
 void gnc_show_htmlhelp(const gchar *chmfile, const gchar *anchor);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_HELP_UTILS_H__ */

@@ -25,6 +25,10 @@
 #include <pango/pango.h>
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GNC_TYPE_CELL_VIEW            (gnc_cell_view_get_type ())
 #define GNC_CELL_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GNC_TYPE_CELL_VIEW, GncCellView))
 #define GNC_CELL_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GNC_TYPE_CELL_VIEW, GncCellViewClass))
@@ -61,5 +65,9 @@ GtkWidget   *gnc_cell_view_new (void);
 void         gnc_cell_view_set_text (GncCellView *cv, const gchar *text);
 
 gchar       *gnc_cell_view_get_text (GncCellView *cv);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_CELL_VIEW_H__ */

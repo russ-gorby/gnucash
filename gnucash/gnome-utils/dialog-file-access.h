@@ -25,6 +25,10 @@
 #ifndef DIALOG_FILE_ACCESS_H
 #define DIALOG_FILE_ACCESS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup GUI
     @{ */
 /** @file dialog-file-access.h
@@ -34,18 +38,15 @@
  *  loading/open and for saving.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void gnc_ui_file_access_for_open (GtkWindow *parent);
 void gnc_ui_file_access_for_save_as (GtkWindow *parent);
 void gnc_ui_file_access_for_export (GtkWindow *parent);
 
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
-
-/** @} */
 
 #endif /* DIALOG_FILE_ACCESS_H */

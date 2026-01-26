@@ -29,6 +29,11 @@
 
 #include "Query.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _DialogQueryView DialogQueryView;
 
 typedef void (*GNCDisplayViewCB)(GtkWindow *dialog, gpointer obj, gpointer user_data);
@@ -61,5 +66,8 @@ gnc_dialog_query_view_create (GtkWindow *parent, GList *param_list, Query *q,
                               GNCDisplayViewButton *buttons,
                               const gchar *pref_group, gpointer user_data);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GNC_DIALOG_QUERY_VIEW_H */

@@ -32,6 +32,10 @@
 #include "gnc-numeric.h"
 #include "SchedXaction.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 G_BEGIN_DECLS
 
 #define GNC_TYPE_SX_INSTANCE_MODEL	      (gnc_sx_instance_model_get_type ())
@@ -231,5 +235,8 @@ GList *gnc_sx_instance_model_get_sx_instances_list (GncSxInstanceModel *model);
 
 G_END_DECLS
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _GNC_SX_INSTANCE_MODEL_H

@@ -28,6 +28,11 @@
 #include "gncEntry.h"
 #include "gncOrder.h"
 #include "table-allgui.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup BusinessRegister Business Register
  * @brief A specialized register for Accounts Payable and Accounts Receivable.
@@ -121,7 +126,7 @@ gboolean gnc_entry_ledger_check_close (GtkWidget *parent, GncEntryLedger *ledger
 
 void gnc_entry_ledger_reset_query (GncEntryLedger *ledger);
 
-/** Returns the GncEntry at the given location, or NULL if the
+/** Returns the GncEntry at the given location, or nullptr if the
  * location is not valid. */
 GncEntry * gnc_entry_ledger_get_entry (GncEntryLedger *ledger,
                                        VirtualCellLocation vcell_loc);
@@ -132,7 +137,7 @@ GncEntry * gnc_entry_ledger_get_blank_entry (GncEntryLedger *ledger);
 
 /** Looks up the cell location of the given "entry" and writes the
  * location into the variable pointed to by vcell_loc (which must be
- * non-NULL). Returns TRUE if the entry was found, otherwise FALSE. */
+ * non-nullptr). Returns TRUE if the entry was found, otherwise FALSE. */
 gboolean gnc_entry_ledger_get_entry_virt_loc (GncEntryLedger *ledger,
         const GncEntry *entry,
         VirtualCellLocation *vcell_loc);
@@ -153,5 +158,11 @@ void gnc_entry_ledger_move_current_entry_updown (GncEntryLedger *ledger,
 QofQuery * gnc_entry_ledger_get_query (GncEntryLedger *ledger);
 
 void gnc_entry_ledger_set_prefs_group (GncEntryLedger *ledger, const gchar *string);
+
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNC_ENTRY_LEDGER_H */

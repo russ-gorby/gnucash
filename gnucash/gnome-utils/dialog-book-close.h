@@ -27,6 +27,10 @@
 #ifndef DIALOG_BOOK_CLOSE_H
 #define DIALOG_BOOK_CLOSE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup GUI
     @{ */
 /** @file dialog-book-close.h
@@ -46,5 +50,9 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent);
 
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DIALOG_BOOK_CLOSE_H */

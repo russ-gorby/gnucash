@@ -183,11 +183,12 @@ void gnc_account_renumber_create_dialog (GtkWidget *window, Account *account);
 
 void gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account);
 
+/** @} */
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
 
-/** @} */
-/** @} */
 
 #endif

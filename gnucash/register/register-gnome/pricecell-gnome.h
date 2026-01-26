@@ -29,6 +29,10 @@
 #include <glib.h>
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 BasicCell * gnc_price_cell_gnome_new (void);
 
 /* fixme: find a better home for this. */
@@ -37,5 +41,9 @@ void gnc_basic_cell_insert_decimal(BasicCell *cell,
                                    int *cursor_position,
                                    int *start_selection,
                                    int *end_selection);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -24,6 +24,11 @@
 #define SPLIT_REGISTER_MODEL_H
 
 #include "table-model.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup SplitRegister
  * @{
  */
@@ -33,4 +38,9 @@
 TableModel * gnc_split_register_model_new (void);
 TableModel * gnc_template_register_model_new (void);
 /* @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

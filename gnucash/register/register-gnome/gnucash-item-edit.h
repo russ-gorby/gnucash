@@ -25,6 +25,11 @@
 #include "gnucash-date-picker.h"
 #include "gnucash-item-list.h"
 #include "gnucash-sheet.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -172,4 +177,9 @@ GType gnc_item_edit_tb_get_type (void);
 GtkWidget *gnc_item_edit_tb_new (GnucashSheet *sheet);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNUCASH_ITEM_EDIT_H */

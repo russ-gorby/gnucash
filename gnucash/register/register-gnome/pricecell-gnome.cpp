@@ -28,7 +28,7 @@
 
 #include <config.h>
 
-#include <locale.h>
+#include <clocale>
 #include <gdk/gdkkeysyms.h>
 
 #include "gnc-locale-utils.h"
@@ -49,7 +49,7 @@ gnc_price_cell_direct_update (BasicCell *bcell,
                               void *gui_data)
 {
     PriceCell *cell = (PriceCell *) bcell;
-    GdkEventKey *event = gui_data;
+    GdkEventKey *event = static_cast<GdkEventKey *>(gui_data);
     struct lconv *lc;
     gboolean is_return;
 
@@ -158,7 +158,7 @@ gnc_basic_cell_insert_decimal(BasicCell *bcell,
     end = MAX(*start_selection, *end_selection);
 
     /* length in bytes, not chars. do not use g_utf8_strlen. */
-    buf = g_malloc0(strlen(bcell->value) + 1);
+    buf = static_cast<gchar *>(g_malloc0(strlen(bcell->value) + 1));
     g_utf8_strncpy(buf, bcell->value, start);
     g_string_append(newval_gs, buf);
     g_free(buf);

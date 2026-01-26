@@ -45,6 +45,10 @@
 #include "Account.h"
 #include "QuickFill.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef gboolean (*AccountBoolCB) (Account*, gpointer);
 
 /** Create/fetch a quickfill of account names.
@@ -75,7 +79,12 @@ GtkListStore*
 gnc_get_shared_account_name_list_store (Account* root, const char* key,
                                         AccountBoolCB cb, gpointer cb_data);
 
+/** @} */
+/** @} */
+
+#ifdef __cplusplus
+}
 #endif
 
-/** @} */
-/** @} */
+#endif
+

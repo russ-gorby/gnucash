@@ -30,31 +30,31 @@
 /* accessors */
 Split *gnc_float_split_get_split (const FloatingSplit *fs)
 {
-    g_return_val_if_fail (fs, NULL);
+    g_return_val_if_fail (fs, nullptr);
     return fs->m_split;
 }
 
 Account *gnc_float_split_get_account (const FloatingSplit *fs) /* direct account pointer rather than account guid */
 {
-    g_return_val_if_fail (fs, NULL);
+    g_return_val_if_fail (fs, nullptr);
     return fs->m_account;
 }
 
 Transaction *gnc_float_split_get_transaction (const FloatingSplit *fs) /* direct transaction pointer rather than transaction guid */
 {
-    g_return_val_if_fail (fs, NULL);
+    g_return_val_if_fail (fs, nullptr);
     return fs->m_transaction;
 }
 
 const char *gnc_float_split_get_memo (const FloatingSplit *fs)
 {
-    g_return_val_if_fail (fs, NULL);
+    g_return_val_if_fail (fs, nullptr);
     return fs->m_memo;
 }
 
 const char *gnc_float_split_get_action (const FloatingSplit *fs)
 {
-    g_return_val_if_fail (fs, NULL);
+    g_return_val_if_fail (fs, nullptr);
     return fs->m_action;
 }
 
@@ -235,7 +235,7 @@ FloatingSplit *gnc_split_to_float_split (Split *split, gboolean is_template)
 {
     FloatingSplit *fs;
 
-    g_return_val_if_fail (split, NULL);
+    g_return_val_if_fail (split, nullptr);
 
     fs = g_new0 (FloatingSplit, 1);
     fs->m_split = split;
@@ -362,13 +362,13 @@ void gnc_float_split_free (FloatingSplit *fs)
 /* accessors */
 Transaction *gnc_float_txn_get_txn (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_txn;
 }
 
 gnc_commodity *gnc_float_txn_get_currency (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_currency;
 }
 
@@ -386,54 +386,54 @@ time64 gnc_float_txn_get_date_posted (const FloatingTxn *ft)
 
 const char *gnc_float_txn_get_num (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_num;
 }
 
 const char *gnc_float_txn_get_description (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_description;
 }
 
 const char *gnc_float_txn_get_notes (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_notes;
 }
 
 const char *gnc_float_txn_get_doclink (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_doclink;
 }
 
 SplitList *gnc_float_txn_get_splits (const FloatingTxn *ft)
 {
-    g_return_val_if_fail (ft, NULL);
+    g_return_val_if_fail (ft, nullptr);
     return ft->m_splits;
 }
 
 FloatingSplit *gnc_float_txn_get_float_split (const FloatingTxn *ft, guint index)
 {
-    g_return_val_if_fail (ft, NULL);
-    g_return_val_if_fail (ft->m_splits, NULL);
-    g_return_val_if_fail (index < g_list_length (ft->m_splits) , NULL);
-    return g_list_nth_data (ft->m_splits, index);
+    g_return_val_if_fail (ft, nullptr);
+    g_return_val_if_fail (ft->m_splits, nullptr);
+    g_return_val_if_fail (index < g_list_length (ft->m_splits) , nullptr);
+    return static_cast<FloatingSplit *>(g_list_nth_data (ft->m_splits, index));
 }
 
 FloatingSplit *gnc_float_txn_get_other_float_split (const FloatingTxn *ft, FloatingSplit *fs)
 {
     guint other = 0;
 
-    g_return_val_if_fail (ft, NULL);
-    g_return_val_if_fail (ft->m_splits, NULL);
-    g_return_val_if_fail (g_list_length (ft->m_splits) == 2 , NULL);
+    g_return_val_if_fail (ft, nullptr);
+    g_return_val_if_fail (ft->m_splits, nullptr);
+    g_return_val_if_fail (g_list_length (ft->m_splits) == 2 , nullptr);
 
     if (g_list_nth_data (ft->m_splits, 0) == fs)
         other = 1;
 
-    return g_list_nth_data (ft->m_splits, other);
+    return static_cast<FloatingSplit *>(g_list_nth_data (ft->m_splits, other));
 }
 
 /* modifiers */
@@ -520,7 +520,7 @@ FloatingTxn *gnc_txn_to_float_txn (Transaction *txn, gboolean use_cut_semantics,
 
     for (iter = xaccTransGetSplitList (txn); iter ; iter = iter->next)
     {
-        Split *split = iter->data;
+        Split *split = static_cast<Split *>(iter->data);
         if (split && xaccTransStillHasSplit (txn, split))
         {
             FloatingSplit *fs = gnc_split_to_float_split (split, is_template);
@@ -532,84 +532,15 @@ FloatingTxn *gnc_txn_to_float_txn (Transaction *txn, gboolean use_cut_semantics,
     return ft;
 }
 
-gboolean
-gnc_float_txn_has_template (const FloatingTxn *ft)
-{
-    GList *iter;
-    gboolean ftsd_exists = FALSE;
-
-    g_return_val_if_fail (ft, FALSE);
-
-    for (iter = ft->m_splits; iter; iter = iter->next)
-    {
-        FloatingSplit *fs = iter->data;
-        if (!fs)
-            continue;
-        if (fs->m_template_sx_data)
-            ftsd_exists = TRUE;
-    }
-    return ftsd_exists;
-}
-
-void
-gnc_float_txn_to_template_txn (const FloatingTxn *ft, Transaction *txn, Account *template_account, gboolean do_commit)
-{
-    GList *iter;
-
-    g_return_if_fail (ft);
-    g_return_if_fail (txn);
-
-    if (!xaccTransIsOpen (txn))
-        xaccTransBeginEdit (txn);
-
-    if (ft->m_currency)
-        xaccTransSetCurrency (txn, ft->m_currency);
-    if (ft->m_description)
-        xaccTransSetDescription (txn, ft->m_description);
-    if (ft->m_num)
-        xaccTransSetNum (txn, ft->m_num);
-    if (ft->m_notes)
-        xaccTransSetNotes (txn, ft->m_notes);
-    if (ft->m_doclink)
-        xaccTransSetDocLink (txn, ft->m_doclink);
-    if (ft->m_date_posted)
-        xaccTransSetDatePostedSecs (txn, ft->m_date_posted);
-
-    /* strip off the old splits */
-    xaccTransClearSplits(txn);
-
-    /* and put on the new ones! Please note they go in the *same*
-       order as in the original transaction. This is important. */
-    for (iter = ft->m_splits; iter; iter = iter->next)
-    {
-        FloatingSplit *fs = iter->data;
-        if (!fs)
-            continue;
-
-        Split *split = xaccMallocSplit (xaccTransGetBook (txn));
-
-        gnc_float_split_to_split (fs, split, template_account);
-
-        xaccSplitSetParent (split, txn);
-    }
-
-    /* close the transaction */
-    if (do_commit)
-        xaccTransCommitEdit (txn);
-}
-
-
 void gnc_float_txn_to_txn (const FloatingTxn *ft, Transaction *txn, gboolean do_commit)
 {
-    gnc_float_txn_to_txn_swap_accounts (ft, txn, NULL, NULL, do_commit);
+    gnc_float_txn_to_txn_swap_accounts (ft, txn, nullptr, nullptr, do_commit);
 }
 
 /* Copy a temporary representation of a transaction onto a real transaction.
  I f they exist the two account*s (acct1 and acct2) are used to swap accounts
  when when creating splits. */
-void gnc_float_txn_to_txn_swap_accounts (const FloatingTxn *ft, Transaction *txn,
-                                         Account *acct1, Account *acct2,
-                                         gboolean do_commit)
+void gnc_float_txn_to_txn_swap_accounts (const FloatingTxn *ft, Transaction *txn, Account *acct1, Account *acct2, gboolean do_commit)
 {
     GList *iter;
 
@@ -641,7 +572,7 @@ void gnc_float_txn_to_txn_swap_accounts (const FloatingTxn *ft, Transaction *txn
     {
         Account *old_acc, *new_acc;
         Split *split;
-        FloatingSplit *fs = iter->data;
+        FloatingSplit *fs = static_cast<FloatingSplit *>(iter->data);
         if (!fs)
             continue;
 

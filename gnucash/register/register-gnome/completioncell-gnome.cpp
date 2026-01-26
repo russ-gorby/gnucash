@@ -116,11 +116,11 @@ gnc_completion_cell_init (CompletionCell* cell)
 
     PopBox* box = g_new0 (PopBox, 1);
 
-    box->sheet = NULL;
-    box->item_edit = NULL;
-    box->item_list = NULL;
-    box->item_store = NULL;
-
+    box->sheet = nullptr;
+    box->item_edit = nullptr;
+    box->item_list = nullptr;
+    box->item_store = gtk_list_store_new (4, G_TYPE_STRING, G_TYPE_STRING,
+                                             G_TYPE_INT, G_TYPE_INT);
     box->signals_connected = FALSE;
     box->list_popped = FALSE;
     box->autosize = FALSE;
@@ -134,7 +134,7 @@ gnc_completion_cell_init (CompletionCell* cell)
     box->in_list_select = FALSE;
     box->occurrence = 0;
 
-    box->item_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+    box->item_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, nullptr);
 }
 
 static void
@@ -147,8 +147,8 @@ hide_popup (PopBox* box)
 static void
 select_item_cb (GncItemList* item_list, char* item_string, gpointer user_data)
 {
-    CompletionCell* cell = user_data;
-    PopBox* box = cell->cell.gui_private;
+    CompletionCell* cell = static_cast<CompletionCell *>(user_data);
+    PopBox* box = static_cast<PopBox *>(cell->cell.gui_private);
 
     box->in_list_select = TRUE;
     gnucash_sheet_modify_current_cell (box->sheet, item_string);
@@ -162,7 +162,7 @@ text_width (PangoLayout *layout)
 {
     PangoRectangle logical_rect;
     pango_layout_set_width (layout, -1);
-    pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+    pango_layout_get_pixel_extents (layout, nullptr, &logical_rect);
     return logical_rect.width;
 }
 
@@ -209,8 +209,8 @@ horizontal_scroll_to_found_text (PopBox* box, char* item_string, gint found_loca
 static void
 change_item_cb (GncItemList* item_list, char* item_string, gpointer user_data)
 {
-    CompletionCell* cell = user_data;
-    PopBox* box = cell->cell.gui_private;
+    CompletionCell* cell = static_cast<CompletionCell *>(user_data);
+    PopBox* box = static_cast<PopBox *>(cell->cell.gui_private);
 
     box->in_list_select = TRUE;
     gnucash_sheet_modify_current_cell (box->sheet, item_string);
@@ -230,48 +230,48 @@ change_item_cb (GncItemList* item_list, char* item_string, gpointer user_data)
 static void
 activate_item_cb (GncItemList* item_list, char* item_string, gpointer user_data)
 {
-    CompletionCell* cell = user_data;
-    PopBox* box = cell->cell.gui_private;
+    CompletionCell* cell = static_cast<CompletionCell *>(user_data);
+    PopBox* box = static_cast<PopBox *>(cell->cell.gui_private);
     hide_popup (box);
 }
 
 static void
 block_list_signals (CompletionCell* cell)
 {
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (!box->signals_connected)
         return;
 
     g_signal_handlers_block_matched (G_OBJECT(box->item_list),
                                      G_SIGNAL_MATCH_DATA,
-                                     0, 0, NULL, NULL, cell);
+                                     0, 0, nullptr, nullptr, cell);
 }
 
 static void
 unblock_list_signals (CompletionCell* cell)
 {
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (!box->signals_connected)
         return;
 
     g_signal_handlers_unblock_matched (G_OBJECT(box->item_list),
                                        G_SIGNAL_MATCH_DATA,
-                                       0, 0, NULL, NULL, cell);
+                                       0, 0, nullptr, nullptr, cell);
 }
 
 static void
 key_press_item_cb (GncItemList* item_list, GdkEventKey* event, gpointer user_data)
 {
-    CompletionCell* cell = user_data;
-    PopBox* box = cell->cell.gui_private;
+    CompletionCell* cell = static_cast<CompletionCell *>(user_data);
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     switch (event->keyval)
     {
     case GDK_KEY_Escape:
         block_list_signals (cell); // Prevent recursion, unselect all
-        gnc_item_list_select (box->item_list, NULL);
+        gnc_item_list_select (box->item_list, nullptr);
         unblock_list_signals (cell);
         hide_popup (box);
         break;
@@ -286,14 +286,14 @@ key_press_item_cb (GncItemList* item_list, GdkEventKey* event, gpointer user_dat
 static void
 completion_disconnect_signals (CompletionCell* cell)
 {
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (!box->signals_connected)
         return;
 
     g_signal_handlers_disconnect_matched (G_OBJECT(box->item_list),
                                           G_SIGNAL_MATCH_DATA,
-                                          0, 0, NULL, NULL, cell);
+                                          0, 0, nullptr, nullptr, cell);
 
     box->signals_connected = FALSE;
 }
@@ -301,7 +301,7 @@ completion_disconnect_signals (CompletionCell* cell)
 static void
 completion_connect_signals (CompletionCell* cell)
 {
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (box->signals_connected)
         return;
@@ -328,27 +328,19 @@ gnc_completion_cell_gui_destroy (BasicCell* bcell)
 
     if (!cell->cell.gui_realize)
     {
-        PopBox* box = bcell->gui_private;
-        if (box)
+        PopBox* box = static_cast<PopBox *>(bcell->gui_private);
+        if (box && box->item_list)
         {
-            if (box->item_list)
-            {
-                completion_disconnect_signals (cell);
-                g_object_unref (box->item_list);
-                box->item_list = NULL;
-            }
-            if (box->item_store)
-            {
-                g_object_unref (box->item_store);
-                box->item_store = NULL;
-            }
+            completion_disconnect_signals (cell);
+            g_object_unref (box->item_list);
+            box->item_list = nullptr;
         }
         /* allow the widget to be shown again */
         cell->cell.gui_realize = gnc_completion_cell_gui_realize;
-        cell->cell.gui_move = NULL;
-        cell->cell.enter_cell = NULL;
-        cell->cell.leave_cell = NULL;
-        cell->cell.gui_destroy = NULL;
+        cell->cell.gui_move = nullptr;
+        cell->cell.enter_cell = nullptr;
+        cell->cell.leave_cell = nullptr;
+        cell->cell.gui_destroy = nullptr;
     }
 }
 
@@ -356,7 +348,7 @@ static void
 gnc_completion_cell_destroy (BasicCell* bcell)
 {
     CompletionCell* cell = (CompletionCell*) bcell;
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     gnc_completion_cell_gui_destroy (& (cell->cell));
 
@@ -366,10 +358,10 @@ gnc_completion_cell_destroy (BasicCell* bcell)
             g_hash_table_destroy (box->item_hash);
 
         g_free (box);
-        cell->cell.gui_private = NULL;
+        cell->cell.gui_private = nullptr;
     }
-    cell->cell.gui_private = NULL;
-    cell->cell.gui_realize = NULL;
+    cell->cell.gui_private = nullptr;
+    cell->cell.gui_realize = nullptr;
 }
 
 static gint
@@ -396,7 +388,7 @@ gnc_completion_cell_set_sort_enabled (CompletionCell* cell,
     if (!cell)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
     box->sort_enabled = enabled;
 }
 
@@ -406,7 +398,7 @@ set_sort_column_enabled (PopBox* box, gboolean enable)
     if (enable)
     {
         gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE(box->item_list->list_store),
-                                         WEIGHT_COL, sort_func, box->item_list, NULL);
+                                         WEIGHT_COL, sort_func, box->item_list, nullptr);
 
         gnc_item_list_set_sort_column (box->item_list, WEIGHT_COL);
     }
@@ -420,7 +412,7 @@ item_store_clear (CompletionCell* cell)
     if (!cell)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     // disconnect list store from tree view
     gnc_item_list_disconnect_store (box->item_list);
@@ -449,7 +441,7 @@ gnc_completion_cell_clear_menu (CompletionCell* cell)
     if (!cell)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
     if (!box)
         return;
 
@@ -468,7 +460,7 @@ gnc_completion_cell_add_menu_item (CompletionCell* cell,
     if (!cell || !menustr)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (box->item_hash)
     {
@@ -566,7 +558,8 @@ test_and_add (PopBox* box, const gchar *text, gint start_pos,
             if (gnc_unicode_compare_base_chars (sub_text, box->newval) == 0) // exact match
                 weight = 1;
 
-            list_store_append (box->item_store, key, markup, weight, found_location);
+            list_store_append (box->item_store, static_cast<char *>(key),
+                markup, weight, found_location);
         }
         g_free (markup);
         g_free (prefix);
@@ -580,8 +573,8 @@ test_and_add (PopBox* box, const gchar *text, gint start_pos,
 static void
 add_item (gpointer key, gpointer value, gpointer user_data)
 {
-    PopBox* box = user_data;
-    gchar *hash_entry = g_strdup (key);
+    PopBox* box = static_cast<PopBox *>(user_data);
+    gchar *hash_entry = static_cast<gchar *>(g_strdup (static_cast<const char *>(key)));
 
     if (hash_entry && *hash_entry)
     {
@@ -622,7 +615,7 @@ select_first_entry_in_list (PopBox* box)
 
     GtkTreePath* path = gtk_tree_path_new_first ();
     gtk_tree_view_scroll_to_cell (box->item_list->tree_view,
-                                  path, NULL, TRUE, 0.5, 0.0);
+                                  path, nullptr, TRUE, 0.5, 0.0);
     gtk_tree_path_free (path);
     g_free (string);
 }
@@ -630,7 +623,7 @@ select_first_entry_in_list (PopBox* box)
 static void
 populate_list_store (CompletionCell* cell, gchar* str)
 {
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     box->in_list_select = FALSE;
     box->item_edit->popup_allocation_height = -1;
@@ -654,7 +647,7 @@ populate_list_store (CompletionCell* cell, gchar* str)
 
     // add the don't first entry
     gchar *markup = g_markup_printf_escaped ("<i>%s</i>", DONT_TEXT);
-    list_store_append (box->item_store, DONT_TEXT, markup, 0, 0);
+    list_store_append (box->item_store, const_cast<char *>(DONT_TEXT), markup, 0, 0);
     g_free (markup);
 
     // add to the list store
@@ -673,7 +666,7 @@ populate_list_store (CompletionCell* cell, gchar* str)
                                        box->item_list->tree_view, TEXT_COL));
 
     // if no entries, do not show popup
-    if (gtk_tree_model_iter_n_children (GTK_TREE_MODEL(box->item_store), NULL) == 1)
+    if (gtk_tree_model_iter_n_children (GTK_TREE_MODEL(box->item_store), nullptr) == 1)
     {
         hide_popup (box);
     }
@@ -698,7 +691,7 @@ gnc_completion_cell_modify_verify (BasicCell* bcell,
                                    int* end_selection)
 {
     CompletionCell* cell = (CompletionCell*) bcell;
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (box->in_list_select)
     {
@@ -712,7 +705,7 @@ gnc_completion_cell_modify_verify (BasicCell* bcell,
     }
 
     // Are were deleting or inserting in the middle.
-    if (change == NULL || *cursor_position < bcell->value_chars)
+    if (change == nullptr || static_cast<guint>(*cursor_position) < bcell->value_chars)
         *start_selection = *end_selection = *cursor_position;
 
     gchar *start_of_text = g_utf8_substring (newval, 0, *cursor_position);
@@ -722,7 +715,7 @@ gnc_completion_cell_modify_verify (BasicCell* bcell,
     if (g_strcmp0 (newval, "") == 0)
     {
         block_list_signals (cell); // Prevent recursion, unselect all
-        gnc_item_list_select (box->item_list, NULL);
+        gnc_item_list_select (box->item_list, nullptr);
         unblock_list_signals (cell);
         hide_popup (box);
     }
@@ -733,18 +726,18 @@ static char*
 get_entry_from_hash_if_size_is_one (CompletionCell* cell)
 {
     if (!cell)
-        return NULL;
+        return nullptr;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (box->item_hash && (g_hash_table_size (box->item_hash) == 1))
     {
         GList *keys = g_hash_table_get_keys (box->item_hash);
-        char *ret = g_strdup (keys->data);
+        char *ret = g_strdup (static_cast<const char *>(keys->data));
         g_list_free (keys);
         return ret;
     }
-    return NULL;
+    return nullptr;
 }
 
 static gboolean
@@ -755,8 +748,8 @@ gnc_completion_cell_direct_update (BasicCell* bcell,
                                    void* gui_data)
 {
     CompletionCell* cell = (CompletionCell*) bcell;
-    PopBox* box = cell->cell.gui_private;
-    GdkEventKey* event = gui_data;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
+    GdkEventKey* event = static_cast<GdkEventKey *>(gui_data);
 
     if (event->type != GDK_KEY_PRESS)
         return FALSE;
@@ -807,7 +800,7 @@ gnc_completion_cell_reverse_sort (CompletionCell* cell, gboolean is_reversed)
     if (!cell)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     if (is_reversed != box->register_is_reversed)
     {
@@ -820,10 +813,10 @@ gnc_completion_cell_reverse_sort (CompletionCell* cell, gboolean is_reversed)
 static void
 gnc_completion_cell_gui_realize (BasicCell* bcell, gpointer data)
 {
-    GnucashSheet* sheet = data;
+    GnucashSheet* sheet = static_cast<GnucashSheet *>(data);
     GncItemEdit* item_edit = gnucash_sheet_get_item_edit (sheet);
     CompletionCell* cell = (CompletionCell*) bcell;
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
 
     /* initialize gui-specific, private data */
     box->sheet = sheet;
@@ -840,7 +833,7 @@ gnc_completion_cell_gui_realize (BasicCell* bcell, gpointer data)
     g_object_ref_sink (box->item_list);
 
     /* to mark cell as realized, remove the realize method */
-    cell->cell.gui_realize = NULL;
+    cell->cell.gui_realize = nullptr;
     cell->cell.gui_move = gnc_completion_cell_gui_move;
     cell->cell.enter_cell = gnc_completion_cell_enter;
     cell->cell.leave_cell = gnc_completion_cell_leave;
@@ -852,7 +845,7 @@ gnc_completion_cell_gui_realize (BasicCell* bcell, gpointer data)
 static void
 reset_item_list_to_default_setup (BasicCell* bcell)
 {
-    PopBox* box = bcell->gui_private;
+    PopBox* box = static_cast<PopBox *>(bcell->gui_private);
     PopupToggle popup_toggle;
 
     item_store_clear ((CompletionCell*) bcell);
@@ -872,12 +865,12 @@ reset_item_list_to_default_setup (BasicCell* bcell)
 static void
 gnc_completion_cell_gui_move (BasicCell* bcell)
 {
-    PopBox* box = bcell->gui_private;
+    PopBox* box = static_cast<PopBox *>(bcell->gui_private);
 
     completion_disconnect_signals ((CompletionCell*) bcell);
 
-    gnc_item_edit_set_popup (box->item_edit, NULL, NULL,
-                             NULL, NULL, NULL, NULL, NULL);
+    gnc_item_edit_set_popup (box->item_edit, nullptr, nullptr,
+                             nullptr, nullptr, nullptr, nullptr, nullptr);
 
     reset_item_list_to_default_setup (bcell);
 }
@@ -888,7 +881,7 @@ popup_get_height (GtkWidget* widget,
                   G_GNUC_UNUSED int row_height,
                   gpointer user_data)
 {
-    PopBox* box = user_data;
+    PopBox* box = static_cast<PopBox *>(user_data);
     GtkScrolledWindow* scrollwin = GNC_ITEM_LIST(widget)->scrollwin;
     int height;
 
@@ -922,7 +915,7 @@ popup_autosize (GtkWidget* widget,
                 int max_width,
                 gpointer user_data)
 {
-    PopBox* box = user_data;
+    PopBox* box = static_cast<PopBox *>(user_data);
 
     if (!box || !box->autosize)
         return max_width;
@@ -969,7 +962,7 @@ tree_view_size_allocate_cb (GtkWidget *widget,
     GtkTreeIter iter;
     if (gtk_tree_selection_get_selected (selection, &model, &iter))
     {
-        PopBox* box = user_data;
+        PopBox* box = static_cast<PopBox *>(user_data);
         gint found_location;
         gchar *item_text;
         gtk_tree_model_get (model, &iter, TEXT_COL, &item_text,
@@ -986,7 +979,7 @@ gnc_completion_cell_enter (BasicCell* bcell,
                            int* end_selection)
 {
     CompletionCell* cell = (CompletionCell*) bcell;
-    PopBox* box = bcell->gui_private;
+    PopBox* box = static_cast<PopBox *>(bcell->gui_private);
     PopupToggle popup_toggle;
 
     gnc_item_edit_set_popup (box->item_edit,
@@ -1020,12 +1013,12 @@ gnc_completion_cell_enter (BasicCell* bcell,
 static void
 gnc_completion_cell_leave (BasicCell* bcell)
 {
-    PopBox* box = bcell->gui_private;
+    PopBox* box = static_cast<PopBox *>(bcell->gui_private);
 
     completion_disconnect_signals ((CompletionCell*) bcell);
 
-    gnc_item_edit_set_popup (box->item_edit, NULL, NULL,
-                             NULL, NULL, NULL, NULL, NULL);
+    gnc_item_edit_set_popup (box->item_edit, nullptr, nullptr,
+                             nullptr, nullptr, nullptr, nullptr, nullptr);
 
     reset_item_list_to_default_setup (bcell);
 
@@ -1039,7 +1032,7 @@ gnc_completion_cell_set_strict (CompletionCell* cell, gboolean strict)
     if (!cell)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
     if (!box)
         return;
 
@@ -1052,7 +1045,7 @@ gnc_completion_cell_set_autosize (CompletionCell* cell, gboolean autosize)
     if (!cell)
         return;
 
-    PopBox* box = cell->cell.gui_private;
+    PopBox* box = static_cast<PopBox*>(cell->cell.gui_private);
     if (!box)
         return;
 

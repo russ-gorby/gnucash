@@ -27,6 +27,11 @@
 #include "qof.h"
 #include "table-allgui.h"
 #include "gncEntryLedger.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup BusinessRegister
  * @{
@@ -94,4 +99,9 @@ void gnc_entry_ledger_compute_value (GncEntryLedger *ledger,
                                      gnc_numeric *value,
                                      gnc_numeric *tax_value);
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNC_ENTRY_LEDGERP_H */

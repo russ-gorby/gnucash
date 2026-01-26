@@ -213,9 +213,10 @@ gboolean gnc_split_register_split_needs_amount(
 gboolean gnc_split_register_needs_conv_rate(
     SplitRegister *reg, Transaction *txn, Account *acc);
 
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
 
-/** @} */
 #endif

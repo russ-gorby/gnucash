@@ -25,6 +25,10 @@
 
 #include <gdk/gdk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -40,4 +44,9 @@ GdkRGBA  *gnucash_color_argb_to_gdk (guint32 argb);
 extern GdkRGBA gn_white, gn_light_gray, gn_dark_gray;
 extern GdkRGBA gn_black, gn_blue, gn_red, gn_yellow;
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNUCASH_COLOR_H */

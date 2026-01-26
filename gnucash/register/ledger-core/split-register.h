@@ -27,6 +27,10 @@
 #include "Transaction.h"
 #include "table-allgui.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup GUI
  *  @{
  */
@@ -394,7 +398,7 @@ CursorClass gnc_split_register_get_cursor_class
  *
  *  @param reg a ::SplitRegister
  *
- *  @return the ::Transaction at the cursor location, or @c NULL
+ *  @return the ::Transaction at the cursor location, or @c nullptr
  */
 Transaction* gnc_split_register_get_current_trans (SplitRegister* reg);
 
@@ -425,7 +429,7 @@ Split* gnc_split_register_get_current_split (SplitRegister* reg);
  *
  *  @param reg a ::SplitRegister
  *
- *  @return the ::Split used as the blank split, or @c NULL if
+ *  @return the ::Split used as the blank split, or @c nullptr if
  *  there currently isn't one
  */
 Split* gnc_split_register_get_blank_split (SplitRegister* reg);
@@ -467,7 +471,7 @@ gnc_split_register_get_split_amount_virt_loc (SplitRegister* reg, Split* split,
 /** Duplicates either the current transaction or the current split
  *    depending on the register mode and cursor position. Returns the
  *    split just created, or the 'main' split of the transaction just
- *    created, or NULL if nothing happened. */
+ *    created, or nullptr if nothing happened. */
 Split* gnc_split_register_duplicate_current (SplitRegister* reg);
 
 /** Return TRUE if copied_item holds a transaction or split.
@@ -487,24 +491,24 @@ void gnc_split_register_cut_current (SplitRegister* reg);
 void gnc_split_register_paste_current (SplitRegister* reg);
 
 /** Deletes the split associated with the current cursor, if both are
- *    non-NULL. Deleting the blank split just clears cursor values. */
+ *    non-nullptr. Deleting the blank split just clears cursor values. */
 void gnc_split_register_delete_current_split (SplitRegister* reg);
 
 /** Deletes the transaction associated with the current cursor, if both
- *    are non-NULL. */
+ *    are non-nullptr. */
 void gnc_split_register_delete_current_trans (SplitRegister* reg);
 
 /** Voids the transaction associated with the current cursor, if
- *    non-NULL. */
+ *    non-nullptr. */
 void gnc_split_register_void_current_trans (SplitRegister* reg,
                                             const char* reason);
 
 /** Unvoids the transaction associated with the current cursor, if
- *    non-NULL. */
+ *    non-nullptr. */
 void gnc_split_register_unvoid_current_trans (SplitRegister* reg);
 
 /** Deletes the non-transaction splits associated with the current
- *    cursor, if both are non-NULL. */
+ *    cursor, if both are non-nullptr. */
 void gnc_split_register_empty_current_trans_except_split (SplitRegister* reg,
                                                           Split* split);
 void gnc_split_register_empty_current_trans (SplitRegister* reg);
@@ -613,5 +617,9 @@ void gnc_copy_trans_onto_trans (Transaction* from, Transaction* to,
                                 gboolean use_cut_semantics,
                                 Account *template_account,
                                 gboolean do_commit);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

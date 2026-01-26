@@ -25,6 +25,11 @@
 #define GNC_ENTRY_LEDGER_CONTROL_H
 
 #include "gncEntryLedger.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup BusinessRegister
  * @{
@@ -32,5 +37,12 @@
 /** @file gncEntryLedgerControl.h
  */
 TableControl * gnc_entry_ledger_control_new (void);
+
+
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNC_ENTRY_LEDGER_CONTROL_H */

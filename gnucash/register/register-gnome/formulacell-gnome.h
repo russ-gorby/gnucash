@@ -29,6 +29,15 @@
 #ifndef FORMULACELL_GNOME_H
 #define FORMULACELL_GNOME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 BasicCell * gnc_formula_cell_gnome_new( void );
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif /* !FORMULACELL_GNOME_H */

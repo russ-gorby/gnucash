@@ -25,8 +25,7 @@
 #include <config.h>
 
 #include <glib/gi18n.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "Account.h"
 #include "Transaction.h"
@@ -153,7 +152,7 @@ gnc_split_register_load_desc_cells (SplitRegister* reg)
  *  - To find the virtual cell for a particular split, set @a find_split to
  *    the target ::Split and @a find_class to ::CURSOR_CLASS_SPLIT.
  *  - To find the empty row, set @a find_trans equal to @a trans, @a find_split
- *    to @c NULL, and @a find_class to ::CURSOR_CLASS_SPLIT.
+ *    to @c nullptr, and @a find_class to ::CURSOR_CLASS_SPLIT.
  *  - The leading virtual cell is always placed in the row specified by
  *    @a vcell_loc, but this will not be returned in @a new_split_row unless
  *    @a find_split is set to the anchoring split and @a find_class is not
@@ -222,7 +221,7 @@ gnc_split_register_add_transaction (SplitRegister* reg,
      * split in the transaction. */
     for (node = xaccTransGetSplitList (trans); node; node = node->next)
     {
-        Split* secondary = node->data;
+        Split* secondary = static_cast<Split *>(node->data);
 
         if (!xaccTransStillHasSplit (trans, secondary)) continue;
         if (secondary == find_split && find_class == CURSOR_CLASS_SPLIT)
@@ -237,11 +236,11 @@ gnc_split_register_add_transaction (SplitRegister* reg,
     /* If requested, add an empty split row at the end. */
     if (add_empty)
     {
-        if (find_trans == trans && find_split == NULL &&
+        if (find_trans == trans && find_split == nullptr &&
             find_class == CURSOR_CLASS_SPLIT)
             *new_split_row = vcell_loc->virt_row;
 
-        gnc_table_set_vcell (reg->table, split_cursor, xaccSplitGetGUID (NULL),
+        gnc_table_set_vcell (reg->table, split_cursor, xaccSplitGetGUID (nullptr),
                              FALSE, TRUE, *vcell_loc);
         vcell_loc->virt_row++;
     }
@@ -271,7 +270,7 @@ add_quickfill_completions (TableLayout* layout, Transaction* trans,
 
     for (GList *n = xaccTransGetSplitList (trans); n; n = n->next)
     {
-        Split *s = n->data;
+        Split *s = static_cast<Split *>(n->data);
 
         if (!xaccTransStillHasSplit (trans, s))
             continue;
@@ -286,18 +285,18 @@ static Split*
 create_blank_split (Account* default_account, SRInfo* info)
 {
     gboolean currency_from_account = TRUE;
-    Split* blank_split = NULL;
+    Split* blank_split = nullptr;
     /* Determine the proper currency to use for this transaction.
-     * if default_account != NULL and default_account->commodity is
+     * if default_account != nullptr and default_account->commodity is
      * a currency, then use that.  Otherwise use the default currency.
      */
     gnc_commodity* currency = gnc_account_or_default_currency (default_account,
                                                                &currency_from_account);
 
-    if (default_account != NULL && !currency_from_account)
+    if (default_account != nullptr && !currency_from_account)
     {
         /* If we don't have a currency then pop up a warning dialog */
-        gnc_info_dialog (NULL, "%s",
+        gnc_info_dialog (nullptr, "%s",
                          _ ("Could not determine the account currency. "
                             "Using the default currency provided by your system."));
     }
@@ -362,7 +361,7 @@ update_info (SRInfo* info, SplitRegister* reg)
     info->cursor_hint_trans = gnc_split_register_get_current_trans (reg);
     info->cursor_hint_split = gnc_split_register_get_current_split (reg);
     info->cursor_hint_trans_split =
-        gnc_split_register_get_current_trans_split (reg, NULL);
+        gnc_split_register_get_current_trans_split (reg, nullptr);
     info->cursor_hint_cursor_class =
         gnc_split_register_get_current_cursor_class (reg);
 
@@ -385,7 +384,7 @@ add_completions_from_pre_filter_slist (TableLayout* layout, GList *pre_filter_sl
 
     for (node = pre_filter_slist; node; node = node->next)
     {
-        Split *split = node->data;
+        Split *split = static_cast<Split *>(node->data);
         Transaction *trans = xaccSplitGetParent (split);
 
         gnc_completion_cell_add_menu_item (
@@ -404,7 +403,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
     SRInfo* info;
     Transaction* pending_trans;
     CursorBuffer* cursor_buffer;
-    GHashTable* trans_table = NULL;
+    GHashTable* trans_table = nullptr;
     CellBlock* cursor_header;
     CellBlock* lead_cursor;
     CellBlock* split_cursor;
@@ -418,7 +417,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
     Split* split;
     Table* table;
     GList* node;
-    gnc_commodity *account_comm = NULL;
+    gnc_commodity *account_comm = nullptr;
 
     gboolean start_primary_color = TRUE;
     gboolean found_pending = FALSE;
@@ -507,7 +506,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
     if (info->traverse_to_new)
     {
         find_trans = blank_trans;
-        find_split = NULL;
+        find_split = nullptr;
         find_trans_split = blank_split;
         find_class = CURSOR_CLASS_SPLIT;
     }
@@ -530,7 +529,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
         gnc_table_save_current_cursor (table, cursor_buffer);
     }
     else
-        cursor_buffer = NULL;
+        cursor_buffer = nullptr;
 
     /* disable move callback -- we don't want the cascade of
      * callbacks while we are fiddling with loading the register */
@@ -548,7 +547,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
     vcell_loc.virt_row = 0;
     vcell_loc.virt_col = 0;
     cursor_header = gnc_table_layout_get_cursor (table->layout, CURSOR_HEADER);
-    gnc_table_set_vcell (table, cursor_header, NULL, TRUE, TRUE, vcell_loc);
+    gnc_table_set_vcell (table, cursor_header, nullptr, TRUE, TRUE, vcell_loc);
     vcell_loc.virt_row++;
 
     /* get the current time and reset the dividing row */
@@ -556,7 +555,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
     if (use_autoreadonly)
     {
         GDate* d = qof_book_get_autoreadonly_gdate (gnc_get_current_book());
-        // "d" is NULL if use_autoreadonly is FALSE
+        // "d" is nullptr if use_autoreadonly is FALSE
         autoreadonly_time = d ? gdate_to_time64 (*d) : 0;
         g_date_free (d);
     }
@@ -594,17 +593,17 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
 
     // Ensure that the transaction and splits being edited are in the split
     // list we're about to load.
-    if (pending_trans != NULL)
+    if (pending_trans != nullptr)
     {
         for (node = xaccTransGetSplitList (pending_trans); node; node = node->next)
         {
             Split* pending_split = (Split*)node->data;
             if (!xaccTransStillHasSplit (pending_trans, pending_split)) continue;
-            if (g_list_find (slist, pending_split) != NULL)
+            if (g_list_find (slist, pending_split) != nullptr)
                 continue;
 
             if (g_list_find_custom (slist, pending_trans,
-                                    _find_split_with_parent_txn) != NULL)
+                                    _find_split_with_parent_txn) != nullptr)
                 continue;
 
             if (!we_own_slist)
@@ -672,7 +671,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
     /* populate the table */
     for (node = slist; node; node = node->next)
     {
-        split = node->data;
+        split = static_cast<Split *>(node->data);
         trans = xaccSplitGetParent (split);
 
         if (!xaccTransStillHasSplit (trans, split))
@@ -685,7 +684,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
          * we don't want to see it.
          */
         else if (xaccTransCountSplits (trans) == 1 &&
-                 xaccSplitGetAccount (split) == NULL)
+                 xaccSplitGetAccount (split) == nullptr)
             continue;
 
         /* Do not load splits from the blank transaction. */
@@ -838,7 +837,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
         else if (pending_trans)
             g_assert_not_reached();
 
-        pending_trans = NULL;
+        pending_trans = nullptr;
     }
 
     if (!added_blank_trans)
@@ -928,7 +927,7 @@ gnc_split_register_load (SplitRegister* reg, GList* slist,
         }
     }
     gnc_cursor_buffer_destroy (cursor_buffer);
-    cursor_buffer = NULL;
+    cursor_buffer = nullptr;
 
     update_info (info, reg);
 
@@ -974,20 +973,20 @@ skip_cb (Account* account, gpointer x)
 static void
 gnc_split_register_load_xfer_cells (SplitRegister* reg, Account* base_account)
 {
-    Account* root = NULL;
+    Account* root = nullptr;
     QuickFill* qf;
     ComboCell* cell;
     GtkListStore* store;
 
     if (base_account)
         root = gnc_account_get_root (base_account);
-    if (root == NULL)
+    if (root == nullptr)
         root = gnc_get_current_root_account();
-    if (root == NULL)
+    if (root == nullptr)
         return;
 
-    qf = gnc_get_shared_account_name_quickfill (root, QKEY, skip_cb, NULL);
-    store = gnc_get_shared_account_name_list_store (root, QKEY, skip_cb, NULL);
+    qf = gnc_get_shared_account_name_quickfill (root, QKEY, skip_cb, nullptr);
+    store = gnc_get_shared_account_name_list_store (root, QKEY, skip_cb, nullptr);
 
     cell = (ComboCell*)
            gnc_table_layout_get_cell (reg->table->layout, XFRM_CELL);

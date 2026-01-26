@@ -22,6 +22,11 @@
 #define GNUCASH_STYLE_H
 
 #include "gnucash-sheet.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -130,4 +135,9 @@ void gnucash_sheet_get_header_widths (GnucashSheet *sheet,
 void gnucash_sheet_set_header_widths (GnucashSheet *sheet,
                                       GNCHeaderWidths widths);
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

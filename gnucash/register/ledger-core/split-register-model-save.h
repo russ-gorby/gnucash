@@ -23,12 +23,12 @@
 #ifndef SPLIT_REGISTER_MODEL_SAVE_H
 #define SPLIT_REGISTER_MODEL_SAVE_H
 
+#include "Transaction.h"
+#include "table-model.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "Transaction.h"
-#include "table-model.h"
 
 /** @addtogroup SplitRegister
  * @{
@@ -48,9 +48,10 @@ SRSaveData * gnc_split_register_save_data_new (Transaction *trans,
 
 void gnc_split_register_save_data_destroy (SRSaveData *sd);
 
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
 
-/** @} */
 #endif

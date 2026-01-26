@@ -74,7 +74,7 @@ gnc_entry_ledger_clear_blank_entry (GncEntryLedger *ledger)
 GncEntry *
 gnc_entry_ledger_get_blank_entry (GncEntryLedger *ledger)
 {
-    if (!ledger) return NULL;
+    if (!ledger) return nullptr;
     return gncEntryLookup (ledger->book, &(ledger->blank_entry_guid));
 }
 
@@ -88,7 +88,7 @@ gnc_entry_ledger_get_account_by_name (GncEntryLedger *ledger, BasicCell * bcell,
     char *account_name;
     ComboCell *cell = (ComboCell *) bcell;
     Account *account;
-    GList *account_types = NULL;
+    GList *account_types = nullptr;
 
     /* Find the account */
     account = gnc_account_lookup_for_register (gnc_get_current_root_account (), name);
@@ -99,7 +99,7 @@ gnc_entry_ledger_get_account_by_name (GncEntryLedger *ledger, BasicCell * bcell,
     {
         /* Ask if they want to create a new one. */
         if (!gnc_verify_dialog (GTK_WINDOW (ledger->parent), TRUE, missing, name))
-            return NULL;
+            return nullptr;
 
         /* No changes, as yet. */
         *isnew = FALSE;
@@ -114,10 +114,10 @@ gnc_entry_ledger_get_account_by_name (GncEntryLedger *ledger, BasicCell * bcell,
             account_types = g_list_prepend (account_types, (gpointer)ACCT_TYPE_EXPENSE);
 
         account = gnc_ui_new_accounts_from_name_with_defaults (GTK_WINDOW (ledger->parent), name, account_types,
-                                                               NULL, NULL);
+                                                               nullptr, nullptr);
         g_list_free ( account_types );
         if (!account)
-            return NULL;
+            return nullptr;
         *isnew = TRUE;
     }
     
@@ -149,7 +149,7 @@ Account * gnc_entry_ledger_get_account (GncEntryLedger *ledger,
 
     cell = gnc_table_layout_get_cell (ledger->table->layout, cell_name);
     if (!cell)
-        return NULL;
+        return nullptr;
     name = gnc_basic_cell_get_value (cell);
     return gnc_entry_ledger_get_account_by_name (ledger, cell, name, &dummy);
 }
@@ -220,10 +220,10 @@ GncEntry * gnc_entry_ledger_get_entry (GncEntryLedger *ledger,
 {
     GncGUID *guid;
 
-    if (!ledger) return NULL;
+    if (!ledger) return nullptr;
 
-    guid = gnc_table_get_vcell_data (ledger->table, vcell_loc);
-    if (!guid) return NULL;
+    guid = static_cast<GncGUID *>(gnc_table_get_vcell_data (ledger->table, vcell_loc));
+    if (!guid) return nullptr;
 
     return gncEntryLookup (ledger->book, guid);
 }
@@ -231,7 +231,7 @@ GncEntry * gnc_entry_ledger_get_entry (GncEntryLedger *ledger,
 /* Returns the Entry where the cursor is currently located. */
 GncEntry * gnc_entry_ledger_get_current_entry (GncEntryLedger *ledger)
 {
-    if (!ledger) return NULL;
+    if (!ledger) return nullptr;
 
     return
         gnc_entry_ledger_get_entry (ledger,
@@ -275,14 +275,14 @@ GncEntryLedger * gnc_entry_ledger_new (QofBook *book, GncEntryLedgerType type)
 {
     GncEntryLedger *ledger;
 
-    if (!book) return NULL;
-    if (type < 0 || type >= GNCENTRY_NUM_REGISTER_TYPES) return NULL;
+    if (!book) return nullptr;
+    if (type < 0 || type >= GNCENTRY_NUM_REGISTER_TYPES) return nullptr;
 
     ledger = g_new0 (GncEntryLedger, 1);
     ledger->type = type;
     ledger->book = book;
     ledger->traverse_to_new = TRUE;
-    ledger->prefs_group = NULL;
+    ledger->prefs_group = nullptr;
 
     /* Orders and Invoices are "invoices" for lookups */
     switch (type)
@@ -317,7 +317,7 @@ GncEntryLedger * gnc_entry_ledger_new (QofBook *book, GncEntryLedgerType type)
     default:
 	PWARN ("Bad GncEntryLedgerType");
 	g_free (ledger);
-	return NULL;
+	return nullptr;
 	break;
     }
 
@@ -349,7 +349,7 @@ GncEntryLedger * gnc_entry_ledger_new (QofBook *book, GncEntryLedgerType type)
 
         header = gnc_table_layout_get_cursor (ledger->table->layout, CURSOR_HEADER);
 
-        gnc_table_set_vcell (ledger->table, header, NULL, TRUE, TRUE, vcell_loc);
+        gnc_table_set_vcell (ledger->table, header, nullptr, TRUE, TRUE, vcell_loc);
     }
 
     /* set up first initial row */
@@ -364,7 +364,7 @@ GncEntryLedger * gnc_entry_ledger_new (QofBook *book, GncEntryLedgerType type)
 
         cursor = gnc_table_layout_get_cursor (ledger->table->layout, "cursor");
 
-        gnc_table_set_vcell (ledger->table, cursor, NULL, TRUE, TRUE, vloc.vcell_loc);
+        gnc_table_set_vcell (ledger->table, cursor, nullptr, TRUE, TRUE, vloc.vcell_loc);
 
         if (gnc_table_find_close_valid_cell (ledger->table, &vloc, FALSE))
             gnc_table_move_cursor (ledger->table, vloc);
@@ -398,7 +398,7 @@ void gnc_entry_ledger_destroy (GncEntryLedger *ledger)
 
 Table * gnc_entry_ledger_get_table (GncEntryLedger *ledger)
 {
-    if (!ledger) return NULL;
+    if (!ledger) return nullptr;
     return ledger->table;
 }
 
@@ -412,11 +412,15 @@ void gnc_entry_ledger_set_default_order (GncEntryLedger *ledger,
     {
         ledger->query = qof_query_create_for (GNC_ENTRY_MODULE_NAME);
         qof_query_set_book (ledger->query, gncOrderGetBook (order));
-        qof_query_add_guid_match (ledger->query,
-                                  g_slist_prepend (g_slist_prepend (NULL,
-                                          QOF_PARAM_GUID),
-                                          ENTRY_ORDER),
-                                  gncOrderGetGUID (order), QOF_QUERY_AND);
+        gpointer qof_param_guid = const_cast<gpointer>(static_cast<gconstpointer>(
+            QOF_PARAM_GUID));
+        gpointer entry_order = const_cast<gpointer>(static_cast<gconstpointer>(
+            ENTRY_ORDER));
+        QofQueryParamList *param_list = static_cast<QofQueryParamList *>(
+            g_slist_prepend (g_slist_prepend (nullptr, qof_param_guid), entry_order));
+        qof_query_add_guid_match (ledger->query, param_list,
+                                  gncOrderGetGUID (order),
+                                  static_cast<QofQueryOp>(QOF_QUERY_AND));
     }
     gnc_entry_ledger_display_refresh (ledger);
 }
@@ -424,7 +428,7 @@ void gnc_entry_ledger_set_default_order (GncEntryLedger *ledger,
 static void create_invoice_query (GncEntryLedger *ledger)
 {
     QofQuery *q, *q1;
-    char * type = NULL;
+    const char * type = nullptr;
 
     if (!ledger->invoice)
         return;
@@ -438,11 +442,11 @@ static void create_invoice_query (GncEntryLedger *ledger)
      * 2.   ( Entry->I-TYPE == ledger->invoice
      * #if I-TYPE == Invoice/Cust Credit Note (entry only)
      *        OR
-     * 3.     ( Entry->Invoice == NULL AND
+     * 3.     ( Entry->Invoice == nullptr AND
      *          ( Entry->Billable == TRUE AND
      *            Entry->Bill->Is-Posted? == TRUE AND
      *            ( Entry->BillTo == Invoice->parent OR
-     *              ( Entry->BillTo == NULL AND Entry->Bill->BillTo == Invoice->parent ) ) )
+     *              ( Entry->BillTo == nullptr AND Entry->Bill->BillTo == Invoice->parent ) ) )
      *           OR
      *           ( Entry->Order->real-parent == Invoice->parent ) )
      * #endif
@@ -481,13 +485,13 @@ static void create_invoice_query (GncEntryLedger *ledger)
     }
 
     q = qof_query_create_for (GNC_ENTRY_MODULE_NAME);
-    qof_query_add_guid_match (q, qof_query_build_param_list (type, QOF_PARAM_GUID, NULL),
+    qof_query_add_guid_match (q, qof_query_build_param_list (type, QOF_PARAM_GUID, nullptr),
                               gncInvoiceGetGUID (ledger->invoice), QOF_QUERY_OR);
 
     /* Term 3 */
     if ((ledger->type == GNCENTRY_INVOICE_ENTRY ||
             ledger->type == GNCENTRY_CUST_CREDIT_NOTE_ENTRY) &&
-            gncOwnerGetEndGUID (gncInvoiceGetOwner (ledger->invoice)) != NULL)
+            gncOwnerGetEndGUID (gncInvoiceGetOwner (ledger->invoice)) != nullptr)
     {
 
         const GncGUID *invoice_parent =
@@ -496,35 +500,35 @@ static void create_invoice_query (GncEntryLedger *ledger)
 
         /*
          * Entry->BillTo == Invoice->parent OR
-         * ( Entry->BillTo == NULL AND Entry->Bill->BillTo == Invoice->parent )
+         * ( Entry->BillTo == nullptr AND Entry->Bill->BillTo == Invoice->parent )
          */
 
         qof_query_add_guid_match (q2, qof_query_build_param_list (ENTRY_BILLTO,
-                                  QOF_PARAM_GUID, NULL),
-                                  NULL, QOF_QUERY_AND);
+                                  QOF_PARAM_GUID, nullptr),
+                                  nullptr, QOF_QUERY_AND);
         qof_query_add_guid_match (q2, qof_query_build_param_list (ENTRY_BILL, INVOICE_BILLTO,
-                                  QOF_PARAM_GUID, NULL),
+                                  QOF_PARAM_GUID, nullptr),
                                   invoice_parent, QOF_QUERY_AND);
         qof_query_add_guid_match (q2, qof_query_build_param_list (ENTRY_BILLTO,
-                                  QOF_PARAM_GUID, NULL),
+                                  QOF_PARAM_GUID, nullptr),
                                   invoice_parent, QOF_QUERY_OR);
 
         /* Entry->Billable == TRUE AND Entry->Bill->Is-Posted? == TRUE */
-        qof_query_add_boolean_match (q2, qof_query_build_param_list (ENTRY_BILLABLE, NULL),
+        qof_query_add_boolean_match (q2, qof_query_build_param_list (ENTRY_BILLABLE, nullptr),
                                      TRUE, QOF_QUERY_AND);
         qof_query_add_boolean_match (q2, qof_query_build_param_list (ENTRY_BILL,
-                                     INVOICE_IS_POSTED, NULL),
+                                     INVOICE_IS_POSTED, nullptr),
                                      TRUE, QOF_QUERY_AND);
 
         /* Entry->Order->real-parent == Invoice->parent */
         qof_query_add_guid_match (q2, qof_query_build_param_list (ENTRY_ORDER, ORDER_OWNER,
-                                  OWNER_PARENTG, NULL),
+                                  OWNER_PARENTG, nullptr),
                                   invoice_parent, QOF_QUERY_OR);
 
-        /* Entry->Invoice == NULL */
+        /* Entry->Invoice == nullptr */
         qof_query_add_guid_match (q2, qof_query_build_param_list (ENTRY_INVOICE,
-                                  QOF_PARAM_GUID, NULL),
-                                  NULL, QOF_QUERY_AND);
+                                  QOF_PARAM_GUID, nullptr),
+                                  nullptr, QOF_QUERY_AND);
 
 
         /* Combine terms 2 and 3 */
@@ -594,7 +598,7 @@ gboolean gnc_entry_ledger_find_entry (GncEntryLedger *ledger, GncEntry *entry,
 
         if (e == entry)
         {
-            if (vcell_loc != NULL)
+            if (vcell_loc != nullptr)
                 *vcell_loc = vc_loc;
             return TRUE;
         }
@@ -710,7 +714,7 @@ gnc_entry_ledger_compute_value (GncEntryLedger *ledger,
     gint disc_type, disc_how;
     gboolean taxable, taxincluded;
     GncTaxTable *table;
-    GList *taxes = NULL;
+    GList *taxes = nullptr;
     int denom = 100;
     gnc_numeric value_unrounded, taxes_unrounded;
 	GncEntry *entry;
@@ -763,7 +767,7 @@ gnc_entry_ledger_compute_value (GncEntryLedger *ledger,
     {
         taxable = FALSE;
         taxincluded = FALSE;
-        table = NULL;
+        table = nullptr;
     }
 
     if (ledger->invoice)
@@ -773,9 +777,10 @@ gnc_entry_ledger_compute_value (GncEntryLedger *ledger,
             denom = gnc_commodity_get_fraction(currency);
     }
 
-    gncEntryComputeValue (qty, price, (taxable ? table : NULL), taxincluded,
-                          discount, disc_type, disc_how, 0,
-                          &value_unrounded, NULL, &taxes);
+    gncEntryComputeValue (qty, price, (taxable ? table : nullptr), taxincluded,
+                          discount, static_cast<GncAmountType>(disc_type),
+                          static_cast<GncDiscountHow>(disc_how), 0,
+                          &value_unrounded, nullptr, &taxes);
 
     if (value)
         *value = gnc_numeric_convert (value_unrounded, denom,
@@ -797,7 +802,7 @@ gnc_entry_ledger_get_entry_virt_loc (GncEntryLedger *ledger, const GncEntry *ent
     int v_row;
     int v_col;
 
-    if ((ledger == NULL) || (entry == NULL))
+    if ((ledger == nullptr) || (entry == nullptr))
         return FALSE;
     g_assert(vcell_loc);
 
@@ -813,13 +818,14 @@ gnc_entry_ledger_get_entry_virt_loc (GncEntryLedger *ledger, const GncEntry *ent
             GncEntry *e;
 
             vcell = gnc_table_get_virtual_cell (table, vc_loc);
-            if (vcell == NULL)
+            if (vcell == nullptr)
                 continue;
 
             if (!vcell->visible)
                 continue;
 
-            e = gncEntryLookup (ledger->book, vcell->vcell_data);
+            e = gncEntryLookup (ledger->book,
+                static_cast<const GncGUID *>(vcell->vcell_data));
 
             if (e == entry)
             {
@@ -925,7 +931,7 @@ gnc_entry_ledger_duplicate_current_entry (GncEntryLedger *ledger)
         gtk_dialog_add_buttons(GTK_DIALOG(dialog),
                                _("_Cancel"), GTK_RESPONSE_CANCEL,
                                _("_Record"), GTK_RESPONSE_ACCEPT,
-                               NULL);
+                               nullptr);
         response = gnc_dialog_run(GTK_DIALOG(dialog), GNC_PREF_WARN_INV_ENTRY_DUP);
         gtk_widget_destroy(dialog);
 
@@ -952,7 +958,7 @@ gnc_entry_ledger_duplicate_current_entry (GncEntryLedger *ledger)
 
         /* We also must set a new DateEntered on the new entry
          * because otherwise the ordering is not deterministic */
-        gncEntrySetDateEntered (new_entry, gnc_time (NULL));
+        gncEntrySetDateEntered (new_entry, gnc_time (nullptr));
 
         /* Set the hint for where to display on the refresh */
         ledger->hint_entry = new_entry;
@@ -966,7 +972,7 @@ QofQuery *
 gnc_entry_ledger_get_query (GncEntryLedger *ledger)
 {
     if (!ledger)
-        return NULL;
+        return nullptr;
 
     return ledger->query;
 }

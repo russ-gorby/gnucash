@@ -45,8 +45,8 @@ gnc_register_add_cell (TableLayout* layout,
 {
     BasicCell* cell;
 
-    g_return_if_fail (layout != NULL);
-    g_return_if_fail (cell_type_name != NULL);
+    g_return_if_fail (layout != nullptr);
+    g_return_if_fail (cell_type_name != nullptr);
 
     cell = gnc_register_make_cell (cell_type_name);
 
@@ -686,7 +686,7 @@ gnc_split_register_layout_add_cells (SplitRegister* reg,
     gnc_register_add_cell (layout,
                            RATE_CELL,
                            PRICE_CELL_TYPE_NAME,
-                           NULL,
+                           nullptr,
                            CELL_ALIGN_RIGHT,
                            FALSE,
                            FALSE);

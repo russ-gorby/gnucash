@@ -33,6 +33,10 @@
 #include "Account.h"
 #include "Transaction.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     GncGUID      *m_account_guid;
@@ -140,5 +144,9 @@ void gnc_float_txn_to_txn_swap_accounts (const FloatingTxn *ft, Transaction *txn
                                          gboolean do_commit);
 
 void gnc_float_txn_free (FloatingTxn *ft);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

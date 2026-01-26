@@ -23,11 +23,12 @@
 #ifndef SPLIT_REGISTER_CONTROL_H
 #define SPLIT_REGISTER_CONTROL_H
 
+#include "table-control.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "table-control.h"
 /** @addtogroup SplitRegister
  *  @{
  */
@@ -37,9 +38,10 @@ extern "C" {
 /** Create a new TableControl specialized for the SplitRegister. */
 TableControl * gnc_split_register_control_new (void);
 
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
 
-/** @} */
 #endif

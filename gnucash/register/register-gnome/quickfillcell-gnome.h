@@ -26,6 +26,14 @@
 #ifndef QUICKFILL_CELL_GNOME_H
 #define QUICKFILL_CELL_GNOME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 BasicCell * gnc_quickfill_cell_gnome_new (void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

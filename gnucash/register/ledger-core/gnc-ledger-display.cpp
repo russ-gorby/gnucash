@@ -110,7 +110,7 @@ Account*
 gnc_ledger_display_leader (GNCLedgerDisplay* ld)
 {
     if (!ld)
-        return NULL;
+        return nullptr;
 
     return xaccAccountLookup (&ld->leader, gnc_get_current_book());
 }
@@ -119,7 +119,7 @@ GNCLedgerDisplayType
 gnc_ledger_display_type (GNCLedgerDisplay* ld)
 {
     if (!ld)
-        return -1;
+        return static_cast<GNCLedgerDisplayType>(-1);
 
     return ld->ld_type;
 }
@@ -137,7 +137,7 @@ gpointer
 gnc_ledger_display_get_user_data (GNCLedgerDisplay* ld)
 {
     if (!ld)
-        return NULL;
+        return nullptr;
 
     return ld->user_data;
 }
@@ -158,7 +158,7 @@ SplitRegister*
 gnc_ledger_display_get_split_register (GNCLedgerDisplay* ld)
 {
     if (!ld)
-        return NULL;
+        return nullptr;
 
     return ld->reg;
 }
@@ -167,7 +167,7 @@ Query*
 gnc_ledger_display_get_query (GNCLedgerDisplay* ld)
 {
     if (!ld)
-        return NULL;
+        return nullptr;
 
     return ld->query;
 }
@@ -187,10 +187,10 @@ exclude_template_accounts (Query* q, GHashTable *excluded_template_acc_hash)
 
         for (node = al; node; node = next)
         {
-            Account *acc = node->data;
+            Account *acc = static_cast<Account *>(node->data);
             next = g_list_next (node);
 
-            if (g_hash_table_lookup (excluded_template_acc_hash, acc) != NULL)
+            if (g_hash_table_lookup (excluded_template_acc_hash, acc) != nullptr)
                 al = g_list_delete_link (al, node);
             else
                 g_hash_table_insert (excluded_template_acc_hash, acc, acc);
@@ -200,15 +200,15 @@ exclude_template_accounts (Query* q, GHashTable *excluded_template_acc_hash)
         xaccQueryAddAccountMatch (q, al, QOF_GUID_MATCH_NONE, QOF_QUERY_AND);
 
     g_list_free (al);
-    al = NULL;
-    tRoot = NULL;
+    al = nullptr;
+    tRoot = nullptr;
 }
 
 static gboolean
 find_by_leader (gpointer find_data, gpointer user_data)
 {
-    Account* account = find_data;
-    GNCLedgerDisplay* ld = user_data;
+    Account* account = static_cast<Account *>(find_data);
+    GNCLedgerDisplay* ld = static_cast<GNCLedgerDisplay *>(user_data);
 
     if (!account || !ld)
         return FALSE;
@@ -219,8 +219,8 @@ find_by_leader (gpointer find_data, gpointer user_data)
 static gboolean
 find_by_query (gpointer find_data, gpointer user_data)
 {
-    Query* q = find_data;
-    GNCLedgerDisplay* ld = user_data;
+    Query* q = static_cast<Query *>(find_data);
+    GNCLedgerDisplay* ld = static_cast<GNCLedgerDisplay *>(user_data);
 
     if (ld->reg->type != SEARCH_LEDGER)
         return FALSE;
@@ -234,8 +234,8 @@ find_by_query (gpointer find_data, gpointer user_data)
 static gboolean
 find_by_reg (gpointer find_data, gpointer user_data)
 {
-    SplitRegister* reg = find_data;
-    GNCLedgerDisplay* ld = user_data;
+    SplitRegister* reg = static_cast<SplitRegister *>(find_data);
+    GNCLedgerDisplay* ld = static_cast<GNCLedgerDisplay *>(user_data);
 
     if (!reg || !ld)
         return FALSE;
@@ -261,7 +261,7 @@ gnc_get_default_register_style (GNCAccountType type)
 static gpointer
 look_for_portfolio_cb (Account* account, gpointer data)
 {
-    return xaccAccountIsPriced (account) ? (gpointer) PORTFOLIO_LEDGER : NULL;
+    return xaccAccountIsPriced (account) ? (gpointer) PORTFOLIO_LEDGER : nullptr;
 }
 
 static SplitRegisterType
@@ -348,7 +348,7 @@ gnc_get_reg_type (Account* leader, GNCLedgerDisplayType ld_type)
         reg_type = GENERAL_JOURNAL;
 
         ret = gnc_account_foreach_descendant_until (leader, look_for_portfolio_cb,
-                                                    NULL);
+                                                    nullptr);
         if (ret) reg_type = PORTFOLIO_LEDGER;
         break;
     }
@@ -412,7 +412,7 @@ gnc_ledger_display_simple (Account* account)
 
     reg_type = gnc_get_reg_type (account, LD_SINGLE);
 
-    ld = gnc_ledger_display_internal (account, NULL, LD_SINGLE, reg_type,
+    ld = gnc_ledger_display_internal (account, nullptr, LD_SINGLE, reg_type,
                                       gnc_get_default_register_style (acc_type),
                                       use_double_line, FALSE, FALSE);
     LEAVE ("%p", ld);
@@ -432,7 +432,7 @@ gnc_ledger_display_subaccounts (Account* account,
 
     reg_type = gnc_get_reg_type (account, LD_SUBACCOUNT);
 
-    ld = gnc_ledger_display_internal (account, NULL, LD_SUBACCOUNT,
+    ld = gnc_ledger_display_internal (account, nullptr, LD_SUBACCOUNT,
                                       reg_type, REG_STYLE_JOURNAL, FALSE,
                                       FALSE, mismatched_commodities);
     LEAVE ("%p", ld);
@@ -474,7 +474,7 @@ gnc_ledger_display_gl (void)
                              FALSE, 0,
                              QOF_QUERY_AND);
 
-    ld = gnc_ledger_display_internal (NULL, query, LD_GL, GENERAL_JOURNAL,
+    ld = gnc_ledger_display_internal (nullptr, query, LD_GL, GENERAL_JOURNAL,
                                       REG_STYLE_JOURNAL, FALSE, FALSE, FALSE);
 
     ld->excluded_template_acc_hash = exclude_template_accounts_hash;
@@ -504,7 +504,7 @@ gnc_ledger_display_template_gl (char* id)
 
     ENTER ("id=%s", id ? id : "(null)");
 
-    acct = NULL;
+    acct = nullptr;
     isTemplateModeTrue = TRUE;
 
     q = qof_query_create_for (GNC_ID_SPLIT);
@@ -512,7 +512,7 @@ gnc_ledger_display_template_gl (char* id)
     book = gnc_get_current_book();
     qof_query_set_book (q, book);
 
-    if (id != NULL)
+    if (id != nullptr)
     {
         root = gnc_book_get_template_root (book);
         acct = gnc_account_lookup_by_name (root, id);
@@ -520,7 +520,7 @@ gnc_ledger_display_template_gl (char* id)
         xaccQueryAddSingleAccountMatch (q, acct, QOF_QUERY_AND);
     }
 
-    ld = gnc_ledger_display_internal (NULL, q, LD_GL,
+    ld = gnc_ledger_display_internal (nullptr, q, LD_GL,
                                       SEARCH_LEDGER,
                                       REG_STYLE_JOURNAL,
                                       FALSE,
@@ -542,11 +542,11 @@ gnc_ledger_display_template_gl (char* id)
 GtkWidget*
 gnc_ledger_display_get_parent (GNCLedgerDisplay* ld)
 {
-    if (ld == NULL)
-        return NULL;
+    if (ld == nullptr)
+        return nullptr;
 
-    if (ld->get_parent == NULL)
-        return NULL;
+    if (ld->get_parent == nullptr)
+        return nullptr;
 
     return ld->get_parent (ld);
 }
@@ -554,7 +554,7 @@ gnc_ledger_display_get_parent (GNCLedgerDisplay* ld)
 static GtkWidget*
 gnc_ledger_display_parent (void* user_data)
 {
-    GNCLedgerDisplay* ld = user_data;
+    GNCLedgerDisplay* ld = static_cast<GNCLedgerDisplay *>(user_data);
     return gnc_ledger_display_get_parent (ld);
 }
 
@@ -572,7 +572,7 @@ gnc_ledger_display_set_watches (GNCLedgerDisplay* ld, GList* splits)
 
     for (node = splits; node; node = node->next)
     {
-        Split* split = node->data;
+        Split* split = static_cast<Split *>(node->data);
         Transaction* trans = xaccSplitGetParent (split);
 
         gnc_gui_component_watch_entity (ld->component_id,
@@ -584,7 +584,7 @@ gnc_ledger_display_set_watches (GNCLedgerDisplay* ld, GList* splits)
 static void
 refresh_handler (GHashTable* changes, gpointer user_data)
 {
-    GNCLedgerDisplay* ld = user_data;
+    GNCLedgerDisplay* ld = static_cast<GNCLedgerDisplay *>(user_data);
     const EventInfo* info;
     gboolean has_leader;
 
@@ -635,7 +635,7 @@ refresh_handler (GHashTable* changes, gpointer user_data)
 static void
 close_handler (gpointer user_data)
 {
-    GNCLedgerDisplay* ld = user_data;
+    GNCLedgerDisplay* ld = static_cast<GNCLedgerDisplay *>(user_data);
 
     if (!ld)
         return;
@@ -647,17 +647,17 @@ close_handler (gpointer user_data)
         ld->destroy (ld);
 
     gnc_split_register_destroy (ld->reg);
-    ld->reg = NULL;
+    ld->reg = nullptr;
 
     // Destroy the excluded template account hash
     if (ld->excluded_template_acc_hash)
         g_hash_table_destroy (ld->excluded_template_acc_hash);
 
     qof_query_destroy (ld->query);
-    ld->query = NULL;
+    ld->query = nullptr;
 
     qof_query_destroy (ld->pre_filter_query);
-    ld->pre_filter_query = NULL;
+    ld->pre_filter_query = nullptr;
 
     g_free (ld);
 }
@@ -710,7 +710,7 @@ gnc_ledger_display_make_query (GNCLedgerDisplay* ld,
         ld->number_of_subaccounts = g_list_length (accounts);
     }
     else
-        accounts = NULL;
+        accounts = nullptr;
 
     accounts = g_list_prepend (accounts, leader);
 
@@ -729,7 +729,7 @@ gnc_ledger_display_query (Query* query, SplitRegisterType type,
 
     ENTER ("query=%p", query);
 
-    ld = gnc_ledger_display_internal (NULL, query, LD_GL, type, style,
+    ld = gnc_ledger_display_internal (nullptr, query, LD_GL, type, style,
                                       FALSE, FALSE, FALSE);
 
     ld->excluded_template_acc_hash = g_hash_table_new (g_direct_hash, g_direct_equal);
@@ -758,22 +758,23 @@ gnc_ledger_display_internal (Account* lead_account, Query* q,
         if (reg_type >= NUM_SINGLE_REGISTER_TYPES)
         {
             PERR ("single-account register with wrong split register type");
-            return NULL;
+            return nullptr;
         }
 
         if (!lead_account)
         {
             PERR ("single-account register with no account specified");
-            return NULL;
+            return nullptr;
         }
 
         if (q)
         {
             PWARN ("single-account register with external query");
-            q = NULL;
+            q = nullptr;
         }
 
-        ld = gnc_find_first_gui_component (klass, find_by_leader, lead_account);
+        ld = static_cast<GNCLedgerDisplay *>(gnc_find_first_gui_component (klass, 
+            find_by_leader, lead_account));
         if (ld)
             return ld;
 
@@ -785,16 +786,17 @@ gnc_ledger_display_internal (Account* lead_account, Query* q,
         if (!lead_account)
         {
             PERR ("sub-account register with no lead account");
-            return NULL;
+            return nullptr;
         }
 
         if (q)
         {
             PWARN ("account register with external query");
-            q = NULL;
+            q = nullptr;
         }
 
-        ld = gnc_find_first_gui_component (klass, find_by_leader, lead_account);
+        ld = static_cast<GNCLedgerDisplay *>(gnc_find_first_gui_component (klass, 
+            find_by_leader, lead_account));
         if (ld)
             return ld;
 
@@ -812,22 +814,22 @@ gnc_ledger_display_internal (Account* lead_account, Query* q,
 
     default:
         PERR ("bad ledger type: %d", ld_type);
-        return NULL;
+        return nullptr;
 
     }
 
     ld = g_new (GNCLedgerDisplay, 1);
 
     ld->leader = *xaccAccountGetGUID (lead_account);
-    ld->query = NULL;
+    ld->query = nullptr;
     ld->ld_type = ld_type;
     ld->loading = FALSE;
     ld->visible = FALSE;
     ld->needs_refresh = TRUE;
-    ld->destroy = NULL;
-    ld->get_parent = NULL;
-    ld->user_data = NULL;
-    ld->excluded_template_acc_hash = NULL;
+    ld->destroy = nullptr;
+    ld->get_parent = nullptr;
+    ld->user_data = nullptr;
+    ld->excluded_template_acc_hash = nullptr;
 
     limit = gnc_prefs_get_float (GNC_PREFS_GROUP_GENERAL_REGISTER,
                                  GNC_PREF_MAX_TRANS);
@@ -860,7 +862,7 @@ gnc_ledger_display_internal (Account* lead_account, Query* q,
      * the query when we're not in focus yet.
      */
     ld->loading = TRUE;
-    gnc_split_register_load (ld->reg, NULL, NULL, gnc_ledger_display_leader (ld));
+    gnc_split_register_load (ld->reg, nullptr, nullptr, gnc_ledger_display_leader (ld));
     ld->loading = FALSE;
     return ld;
 }
@@ -881,9 +883,10 @@ GNCLedgerDisplay*
 gnc_ledger_display_find_by_query (Query* q)
 {
     if (!q)
-        return NULL;
+        return nullptr;
 
-    return gnc_find_first_gui_component (REGISTER_GL_CM_CLASS, find_by_query, q);
+    return static_cast<GNCLedgerDisplay *>(gnc_find_first_gui_component(
+        REGISTER_GL_CM_CLASS, find_by_query, q));
 }
 
 /********************************************************************\
@@ -894,7 +897,7 @@ static void
 gnc_ledger_display_refresh_internal (GNCLedgerDisplay* ld)
 {
     GList* splits;
-    GList* pre_filter_splits = NULL;
+    GList* pre_filter_splits = nullptr;
 
     if (ld->loading)
         return;
@@ -947,7 +950,7 @@ gnc_ledger_display_refresh (GNCLedgerDisplay* ld)
         Account* leader = gnc_ledger_display_leader (ld);
         GList* accounts = gnc_account_get_descendants (leader);
 
-        if (g_list_length (accounts) != ld->number_of_subaccounts)
+        if (g_list_length (accounts) != static_cast<guint>(ld->number_of_subaccounts))
         {
             time64 start_time, end_time;
             xaccQueryGetDateMatchTT (ld->query, &start_time, &end_time);
@@ -1015,32 +1018,36 @@ gnc_ledger_display_refresh_by_split_register (SplitRegister* reg)
     if (!reg)
         return;
 
-    ld = gnc_find_first_gui_component (REGISTER_SINGLE_CM_CLASS,
-                                       find_by_reg, reg);
+    ld = static_cast<GNCLedgerDisplay *>(gnc_find_first_gui_component (
+        REGISTER_SINGLE_CM_CLASS,
+        find_by_reg, reg));
     if (ld)
     {
         gnc_ledger_display_refresh (ld);
         return;
     }
 
-    ld = gnc_find_first_gui_component (REGISTER_SUBACCOUNT_CM_CLASS,
-                                       find_by_reg, reg);
+    ld = static_cast<GNCLedgerDisplay *>(
+        gnc_find_first_gui_component (REGISTER_SUBACCOUNT_CM_CLASS,
+                                       find_by_reg, reg));
     if (ld)
     {
         gnc_ledger_display_refresh (ld);
         return;
     }
 
-    ld = gnc_find_first_gui_component (REGISTER_GL_CM_CLASS,
-                                       find_by_reg, reg);
+    ld = static_cast<GNCLedgerDisplay *>(
+        gnc_find_first_gui_component (REGISTER_GL_CM_CLASS,
+                                       find_by_reg, reg));
     if (ld)
     {
         gnc_ledger_display_refresh (ld);
         return;
     }
 
-    ld = gnc_find_first_gui_component (REGISTER_TEMPLATE_CM_CLASS,
-                                       find_by_reg, reg);
+    ld = static_cast<GNCLedgerDisplay *>(
+        gnc_find_first_gui_component (REGISTER_TEMPLATE_CM_CLASS,
+                                       find_by_reg, reg));
     if (ld)
     {
         gnc_ledger_display_refresh (ld);
@@ -1055,3 +1062,4 @@ gnc_ledger_display_close (GNCLedgerDisplay* ld)
 
     gnc_close_gui_component (ld->component_id);
 }
+

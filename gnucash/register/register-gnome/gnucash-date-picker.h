@@ -25,6 +25,10 @@
 
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -68,4 +72,9 @@ typedef struct
 } GNCDatePickerClass;
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GNUCASH_DATE_PICKER_H */

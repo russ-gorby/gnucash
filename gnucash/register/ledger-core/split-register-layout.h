@@ -25,6 +25,11 @@
 
 #include "table-layout.h"
 #include "split-register.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup SplitRegister
  *  @{
  */
@@ -46,6 +51,10 @@
 
 /** Generate the split register layout. */
 TableLayout * gnc_split_register_layout_new (SplitRegister *reg);
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 #endif

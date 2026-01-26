@@ -25,7 +25,15 @@
 #ifndef DIALOG_TOTD_H
 #define DIALOG_TOTD_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void gnc_totd_dialog (GtkWindow *parent, gboolean startup);
 void gnc_totd_dialog_reparent (void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

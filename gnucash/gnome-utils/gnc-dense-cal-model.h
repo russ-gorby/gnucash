@@ -27,6 +27,10 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 G_BEGIN_DECLS
 
 #define GNC_TYPE_DENSE_CAL_MODEL (gnc_dense_cal_model_get_type ())
@@ -55,5 +59,9 @@ void gnc_dense_cal_model_get_instance (GncDenseCalModel *model,
                                        GDate *date);
 
 G_END_DECLS
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _GNC_DENSE_CAL_MODEL_H

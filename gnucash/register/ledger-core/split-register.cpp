@@ -76,7 +76,7 @@ typedef struct
     gint anchor_split_index;
 } ft_fs_store;
 
-static ft_fs_store copied_item = { 0, { NULL } };
+static ft_fs_store copied_item = { 0, { nullptr } };
 
 /** static prototypes *****************************************************/
 
@@ -98,8 +98,8 @@ clear_copied_item()
     if (copied_item.ftype == GNC_TYPE_TRANSACTION)
         gnc_float_txn_free (copied_item.ft);
     copied_item.ftype = 0;
-    copied_item.fs = NULL;
-    copied_item.ft = NULL;
+    copied_item.fs = nullptr;
+    copied_item.ft = nullptr;
     copied_item.cursor_class = CURSOR_CLASS_NONE;
     copied_item.leader_guid = *guid_null();
     copied_item.anchor_split_index = 0;
@@ -119,7 +119,7 @@ gnc_copy_split_onto_split (Split* from, Split* to,
     FloatingSplit *fs;
     gboolean is_template = FALSE;
 
-    if ((from == NULL) || (to == NULL))
+    if ((from == nullptr) || (to == nullptr))
         return;
 
     if (template_account)
@@ -142,7 +142,7 @@ gnc_copy_trans_onto_trans (Transaction* from, Transaction* to,
     FloatingTxn *ft;
     gboolean is_template = FALSE;
 
-    if ((from == NULL) || (to == NULL))
+    if ((from == nullptr) || (to == nullptr))
         return;
 
     if (template_account)
@@ -226,7 +226,7 @@ gnc_split_register_begin_edit_or_warn (SRInfo* info, Transaction* trans)
         }
         else
         {
-            GtkWindow* parent = NULL;
+            GtkWindow* parent = nullptr;
             if (info->get_parent)
                 parent = GTK_WINDOW (info->get_parent (info->user_data));
             gnc_error_dialog (parent, "%s",
@@ -320,11 +320,11 @@ gnc_split_register_get_current_trans (SplitRegister* reg)
     Split* split;
     VirtualCellLocation vcell_loc;
 
-    if (reg == NULL)
-        return NULL;
+    if (reg == nullptr)
+        return nullptr;
 
     split = gnc_split_register_get_current_split (reg);
-    if (split != NULL)
+    if (split != nullptr)
         return xaccSplitGetParent (split);
 
     /* Split is blank. Assume it is the blank split of a multi-line
@@ -341,8 +341,8 @@ gnc_split_register_get_current_trans (SplitRegister* reg)
 Split*
 gnc_split_register_get_current_split (SplitRegister* reg)
 {
-    if (reg == NULL)
-        return NULL;
+    if (reg == nullptr)
+        return nullptr;
 
     return gnc_split_register_get_split (
         reg, reg->table->current_cursor_loc.vcell_loc);
@@ -353,7 +353,7 @@ gnc_split_register_get_blank_split (SplitRegister* reg)
 {
     SRInfo* info = gnc_split_register_get_info (reg);
 
-    if (!reg) return NULL;
+    if (!reg) return nullptr;
 
     return xaccSplitLookup (&info->blank_split_guid, gnc_get_current_book ());
 }
@@ -384,7 +384,8 @@ gnc_split_register_get_split_virt_loc (SplitRegister* reg, Split* split,
             if (!vcell || !vcell->visible)
                 continue;
 
-            s = xaccSplitLookup (vcell->vcell_data, gnc_get_current_book ());
+            s = xaccSplitLookup (static_cast<const GncGUID *>(vcell->vcell_data),   
+                gnc_get_current_book ());
 
             if (s == split)
             {
@@ -428,7 +429,7 @@ gnc_split_register_get_split_amount_virt_loc (SplitRegister* reg, Split* split,
                                       v_loc.vcell_loc, &v_loc))
         return FALSE;
 
-    if (virt_loc == NULL)
+    if (virt_loc == nullptr)
         return TRUE;
 
     *virt_loc = v_loc;
@@ -454,13 +455,13 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
                                    gnc_get_current_book ());
     split = gnc_split_register_get_current_split (reg);
     trans = gnc_split_register_get_current_trans (reg);
-    trans_split = gnc_split_register_get_current_trans_split (reg, NULL);
+    trans_split = gnc_split_register_get_current_trans_split (reg, nullptr);
 
     /* This shouldn't happen, but be paranoid. */
-    if (trans == NULL)
+    if (trans == nullptr)
     {
         LEAVE ("no transaction");
-        return NULL;
+        return nullptr;
     }
 
     cursor_class = gnc_split_register_get_current_cursor_class (reg);
@@ -469,24 +470,24 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
     if (cursor_class == CURSOR_CLASS_NONE)
     {
         LEAVE ("no cursor class");
-        return NULL;
+        return nullptr;
     }
 
     /* This shouldn't happen, but be paranoid. */
-    if ((split == NULL) && (cursor_class == CURSOR_CLASS_TRANS))
+    if ((split == nullptr) && (cursor_class == CURSOR_CLASS_TRANS))
     {
         LEAVE ("no split with transaction class");
-        return NULL;
+        return nullptr;
     }
 
     changed = gnc_table_current_cursor_changed (reg->table, FALSE);
 
     /* See if we were asked to duplicate an unchanged blank split.
      * There's no point in doing that! */
-    if (!changed && ((split == NULL) || (split == blank_split)))
+    if (!changed && ((split == nullptr) || (split == blank_split)))
     {
         LEAVE ("skip unchanged blank split");
-        return NULL;
+        return nullptr;
     }
 
     gnc_suspend_gui_refresh ();
@@ -520,16 +521,16 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
         {
             gnc_resume_gui_refresh ();
             LEAVE ("save cancelled");
-            return NULL;
+            return nullptr;
         }
 
         gnc_split_register_save (reg, TRUE);
 
-        /* If the split is NULL, then we were on a blank split row
+        /* If the split is nullptr, then we were on a blank split row
          * in an expanded transaction. The new split (created by
          * gnc_split_register_save above) will be the last split in the
          * current transaction, as it was just added. */
-        if (split == NULL)
+        if (split == nullptr)
             split = xaccTransGetSplit (trans, xaccTransCountSplits (trans) - 1);
     }
 
@@ -549,25 +550,25 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
          * split account not register account, which may be the same or not */
 
         if (!reg->use_tran_num_for_num_field
-            && gnc_strisnum (gnc_get_num_action (NULL, split)))
+            && gnc_strisnum (gnc_get_num_action (nullptr, split)))
         {
             Account* account = xaccSplitGetAccount (split);
-            const char* in_num = NULL;
+            const char* in_num = nullptr;
             const char* title = _ ("New Split Information");
             time64 date = info->last_date_entered;
 
             if (account)
                 in_num = xaccAccountGetLastNum (account);
             else
-                in_num = gnc_get_num_action (NULL, split);
+                in_num = gnc_get_num_action (nullptr, split);
 
             if (!gnc_dup_trans_dialog (gnc_split_register_get_parent (reg),
                                        title, FALSE, &date, in_num, &out_num,
-                                       NULL, NULL, NULL, NULL))
+                                       nullptr, nullptr, nullptr, nullptr))
             {
                 gnc_resume_gui_refresh ();
                 LEAVE ("dup cancelled");
-                return NULL;
+                return nullptr;
             }
             new_act_num = TRUE;
         }
@@ -582,7 +583,7 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
 
         gnc_copy_split_onto_split (split, new_split, template_account, FALSE);
         if (new_act_num) /* if new number supplied by user dialog */
-            gnc_set_num_action (NULL, new_split, out_num, NULL);
+            gnc_set_num_action (nullptr, new_split, out_num, nullptr);
 
         xaccTransCommitEdit (trans);
 
@@ -621,11 +622,11 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
         Transaction* new_trans;
         int trans_split_index;
         int split_index;
-        const char* in_num = NULL;
-        const char* in_tnum = NULL;
-        char* out_num = NULL;
-        char* out_tnum = NULL;
-        char* out_tdoclink = NULL;
+        const char* in_num = nullptr;
+        const char* in_tnum = nullptr;
+        char* out_num = nullptr;
+        char* out_tnum = nullptr;
+        char* out_tdoclink = nullptr;
         time64 date;
         gboolean use_autoreadonly = qof_book_uses_autoreadonly (
             gnc_get_current_book ());
@@ -642,17 +643,16 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
             in_num = gnc_get_num_action (trans, trans_split);
 
         in_tnum = (reg->use_tran_num_for_num_field
-                   ? NULL
-                   : gnc_get_num_action (trans, NULL));
+                   ? nullptr
+                   : gnc_get_num_action (trans, nullptr));
 
-        if (!gnc_dup_trans_dialog (gnc_split_register_get_parent (reg), NULL,
-                                   !reg->is_template, &date,
-                                   in_num, &out_num, in_tnum, &out_tnum,
+        if (!gnc_dup_trans_dialog (gnc_split_register_get_parent (reg), nullptr,
+                                   TRUE, &date, in_num, &out_num, in_tnum, &out_tnum,
                                    xaccTransGetDocLink (trans), &out_tdoclink))
         {
             gnc_resume_gui_refresh ();
             LEAVE ("dup cancelled");
-            return NULL;
+            return nullptr;
         }
 
         if (use_autoreadonly)
@@ -663,11 +663,9 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
             gnc_gdate_set_time64 (&d, date);
             if (g_date_compare (&d, readonly_threshold) < 0)
             {
-                GtkWidget* dialog = gtk_message_dialog_new (NULL,
-                                                            0,
-                                                            GTK_MESSAGE_ERROR,
-                                                            GTK_BUTTONS_OK,
-                                                            "%s", _ ("Cannot store a transaction at this date"));
+                GtkWidget* dialog = gtk_message_dialog_new (nullptr,
+                    static_cast<GtkDialogFlags>(0), GTK_MESSAGE_ERROR,
+                    GTK_BUTTONS_OK, "%s", _ ("Cannot store a transaction at this date"));
                 gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
                                                           "%s", _ ("The entered date of the duplicated transaction is older than the \"Read-Only Threshold\" set for this book. "
                                                                    "This setting can be changed in File->Properties->Accounts."));
@@ -675,7 +673,7 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
                 gtk_widget_destroy (dialog);
 
                 g_date_free (readonly_threshold);
-                return NULL;
+                return nullptr;
             }
             g_date_free (readonly_threshold);
         }
@@ -688,7 +686,7 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
         {
             gnc_resume_gui_refresh ();
             LEAVE ("no split");
-            return NULL;
+            return nullptr;
         }
 
         new_trans = xaccMallocTransaction (gnc_get_current_book ());
@@ -702,23 +700,23 @@ gnc_split_register_duplicate_current (SplitRegister* reg)
         xaccTransSetDatePostedSecsNormalized (new_trans, date);
         /* We also must set a new DateEntered on the new entry
          * because otherwise the ordering is not deterministic */
-        xaccTransSetDateEnteredSecs (new_trans, gnc_time (NULL));
+        xaccTransSetDateEnteredSecs (new_trans, gnc_time (nullptr));
 
-        /* clear the document link entry if returned value NULL */
-        if (out_tdoclink == NULL)
+        /* clear the document link entry if returned value nullptr */
+        if (out_tdoclink == nullptr)
             xaccTransSetDocLink (new_trans, "");
         else
             g_free (out_tdoclink);
 
         /* set per book option */
-        gnc_set_num_action (new_trans, NULL, out_num, out_tnum);
+        gnc_set_num_action (new_trans, nullptr, out_num, out_tnum);
         if (!reg->use_tran_num_for_num_field)
         {
             /* find split in new_trans that equals trans_split and set
              * split_action to out_num */
-            gnc_set_num_action (NULL,
+            gnc_set_num_action (nullptr,
                                 xaccTransGetSplit (new_trans, trans_split_index),
-                                out_num, NULL);
+                                out_num, nullptr);
             /* note that if the transaction has multiple splits to the register
              * account, only the anchor split will be set with user input. The
              * user will have to adjust other splits manually. */
@@ -766,8 +764,8 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
     Split* blank_split;
     gboolean changed;
     Split *split;
-    FloatingSplit *new_fs = NULL;
-    FloatingTxn *new_ft = NULL;
+    FloatingSplit *new_fs = nullptr;
+    FloatingTxn *new_ft = nullptr;
 
     g_return_if_fail (reg);
     ENTER ("reg=%p, use_cut_semantics=%s", reg,
@@ -779,7 +777,7 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
     trans = gnc_split_register_get_current_trans (reg);
 
     /* This shouldn't happen, but be paranoid. */
-    if (trans == NULL)
+    if (trans == nullptr)
     {
         LEAVE ("no trans");
         return;
@@ -795,7 +793,7 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
     }
 
     /* This shouldn't happen, but be paranoid. */
-    if ((split == NULL) && (cursor_class == CURSOR_CLASS_TRANS))
+    if ((split == nullptr) && (cursor_class == CURSOR_CLASS_TRANS))
     {
         g_warning ("BUG DETECTED: transaction cursor with no anchoring split!");
         LEAVE ("transaction cursor with no anchoring split");
@@ -805,7 +803,7 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
     changed = gnc_table_current_cursor_changed (reg->table, FALSE);
 
     /* See if we were asked to copy an unchanged blank split. Don't. */
-    if (!changed && ((split == NULL) || (split == blank_split)))
+    if (!changed && ((split == nullptr) || (split == blank_split)))
     {
         /* We're either on an unedited, brand-new split or an unedited, brand-new
          * transaction (the transaction anchored by the blank split.) */
@@ -831,7 +829,7 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
         if (new_fs)
         {
             if (changed)
-                gnc_split_register_save_to_copy_buffer (reg, NULL, new_fs,
+                gnc_split_register_save_to_copy_buffer (reg, nullptr, new_fs,
                                                         use_cut_semantics);
 
             copied_item.leader_guid = *guid_null ();
@@ -853,7 +851,7 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
                 if (split_index >= 0)
                     fs = gnc_float_txn_get_float_split (new_ft, split_index);
                 else
-                    fs = NULL;
+                    fs = nullptr;
 
                 gnc_split_register_save_to_copy_buffer (reg, new_ft, fs,
                                                         use_cut_semantics);
@@ -883,7 +881,7 @@ gnc_split_register_copy_current_internal (SplitRegister* reg,
     }
 
     copied_item.cursor_class = cursor_class;
-    gnc_hook_add_dangler (HOOK_BOOK_CLOSED, clear_copied_item, NULL, NULL);
+    gnc_hook_add_dangler (HOOK_BOOK_CLOSED, reinterpret_cast<GFunc>(clear_copied_item), nullptr, nullptr);
     LEAVE ("%s %s", use_cut_semantics ? "cut" : "copied",
            cursor_class == CURSOR_CLASS_SPLIT ? "split" : "transaction");
 }
@@ -910,7 +908,7 @@ gnc_split_register_cut_current (SplitRegister* reg)
     trans = gnc_split_register_get_current_trans (reg);
 
     /* This shouldn't happen, but be paranoid. */
-    if (trans == NULL)
+    if (trans == nullptr)
         return;
 
     cursor_class = gnc_split_register_get_current_cursor_class (reg);
@@ -920,13 +918,13 @@ gnc_split_register_cut_current (SplitRegister* reg)
         return;
 
     /* This shouldn't happen, but be paranoid. */
-    if ((split == NULL) && (cursor_class == CURSOR_CLASS_TRANS))
+    if ((split == nullptr) && (cursor_class == CURSOR_CLASS_TRANS))
         return;
 
     changed = gnc_table_current_cursor_changed (reg->table, FALSE);
 
     /* See if we were asked to cut an unchanged blank split. Don't. */
-    if (!changed && ((split == NULL) || (split == blank_split)))
+    if (!changed && ((split == nullptr) || (split == blank_split)))
         return;
 
     gnc_split_register_copy_current_internal (reg, TRUE);
@@ -963,13 +961,13 @@ gnc_split_register_paste_current (SplitRegister* reg)
     split = gnc_split_register_get_current_split (reg);
     trans = gnc_split_register_get_current_trans (reg);
 
-    trans_split = gnc_split_register_get_current_trans_split (reg, NULL);
+    trans_split = gnc_split_register_get_current_trans_split (reg, nullptr);
 
     template_account = xaccAccountLookup (&info->template_account,
                                           gnc_get_current_book ());
 
     /* This shouldn't happen, but be paranoid. */
-    if (trans == NULL)
+    if (trans == nullptr)
     {
         LEAVE ("no transaction");
         return;
@@ -985,7 +983,7 @@ gnc_split_register_paste_current (SplitRegister* reg)
     }
 
     /* This shouldn't happen, but be paranoid. */
-    if ((split == NULL) && (cursor_class == CURSOR_CLASS_TRANS))
+    if ((split == nullptr) && (cursor_class == CURSOR_CLASS_TRANS))
     {
         g_warning ("BUG DETECTED: transaction cursor with no anchoring split!");
         LEAVE ("transaction cursor with no anchoring split");
@@ -1009,11 +1007,11 @@ gnc_split_register_paste_current (SplitRegister* reg)
             return;
         }
 
-        if (split != NULL)
+        if (split != nullptr)
         {
             /* the General Journal does not have any anchoring splits */
             if ((reg->type != GENERAL_JOURNAL) &&
-                split == gnc_split_register_get_current_trans_split (reg, NULL))
+                split == gnc_split_register_get_current_trans_split (reg, nullptr))
             {
                 gnc_warning_dialog (GTK_WINDOW (gnc_split_register_get_parent (reg)),
                                     "%s", anchor_message);
@@ -1037,7 +1035,7 @@ gnc_split_register_paste_current (SplitRegister* reg)
 
         gnc_suspend_gui_refresh ();
 
-        if (split == NULL)
+        if (split == nullptr)
         {
             /* We are on a null split in an expanded transaction. */
             split = xaccMallocSplit (gnc_get_current_book ());
@@ -1193,7 +1191,7 @@ gnc_split_register_change_blank_split_ref (SplitRegister* reg, Split* split)
     // loop through splitlist looking for splits other than the blank_split
     for (GList *n = xaccTransGetSplitList (trans); n; n = n->next)
     {
-        Split *s = n->data;
+        Split *s = static_cast<Split *>(n->data);
         if (s != current_blank_split && xaccTransStillHasSplit (trans, s))
         {
             if (blank_split_account == xaccSplitGetAccount (s))
@@ -1203,9 +1201,9 @@ gnc_split_register_change_blank_split_ref (SplitRegister* reg, Split* split)
         }
     }
     // now change the saved blank split reference
-    if (pref_split != NULL)
+    if (pref_split != nullptr)
         info->blank_split_guid = *xaccSplitGetGUID (pref_split);
-    else if (other_split != NULL)
+    else if (other_split != nullptr)
         info->blank_split_guid = *xaccSplitGetGUID (other_split);
     else
       info->blank_split_guid = *guid_null();
@@ -1230,7 +1228,7 @@ gnc_split_register_delete_current_split (SplitRegister* reg)
 
     /* get the current split based on cursor position */
     split = gnc_split_register_get_current_split (reg);
-    if (split == NULL)
+    if (split == nullptr)
         return;
 
     /* If we are deleting the blank split, just cancel. The user is
@@ -1290,7 +1288,7 @@ gnc_split_register_delete_current_trans (SplitRegister* reg)
 
     /* get the current split based on cursor position */
     split = gnc_split_register_get_current_split (reg);
-    if (split == NULL)
+    if (split == nullptr)
     {
         LEAVE ("no split");
         return;
@@ -1318,7 +1316,7 @@ gnc_split_register_delete_current_trans (SplitRegister* reg)
     {
         DEBUG ("clearing pending trans");
         info->pending_trans_guid = *guid_null ();
-        pending_trans = NULL;
+        pending_trans = nullptr;
     }
 
     was_open = xaccTransIsOpen (trans);
@@ -1351,7 +1349,7 @@ gnc_split_register_void_current_trans (SplitRegister* reg, const char* reason)
 
     /* get the current split based on cursor position */
     split = gnc_split_register_get_current_split (reg);
-    if (split == NULL)
+    if (split == nullptr)
         return;
 
     /* Bail if trying to void the blank split. */
@@ -1373,7 +1371,7 @@ gnc_split_register_void_current_trans (SplitRegister* reg, const char* reason)
     if (trans == pending_trans)
     {
         info->pending_trans_guid = *guid_null ();
-        pending_trans = NULL;
+        pending_trans = nullptr;
     }
     if (xaccTransIsOpen (trans))
     {
@@ -1401,7 +1399,7 @@ gnc_split_register_unvoid_current_trans (SplitRegister* reg)
 
     /* get the current split based on cursor position */
     split = gnc_split_register_get_current_split (reg);
-    if (split == NULL)
+    if (split == nullptr)
         return;
 
     /* Bail if trying to unvoid the blank split. */
@@ -1424,7 +1422,7 @@ gnc_split_register_unvoid_current_trans (SplitRegister* reg)
     if (trans == pending_trans)
     {
         info->pending_trans_guid = *guid_null ();
-        pending_trans = NULL;
+        pending_trans = nullptr;
     }
 
     gnc_resume_gui_refresh ();
@@ -1440,7 +1438,7 @@ gnc_split_register_empty_current_trans_except_split (SplitRegister* reg,
     int i = 0;
     Split* s;
 
-    if ((reg == NULL)  || (split == NULL))
+    if ((reg == nullptr)  || (split == nullptr))
         return;
 
     gnc_suspend_gui_refresh ();
@@ -1462,7 +1460,7 @@ gnc_split_register_empty_current_trans_except_split (SplitRegister* reg,
     }
     else g_assert_not_reached ();
 
-    while ((s = xaccTransGetSplit (trans, i)) != NULL)
+    while ((s = xaccTransGetSplit (trans, i)) != nullptr)
     {
         if (s != split)
             xaccSplitDestroy (s);
@@ -1488,7 +1486,7 @@ gnc_split_register_cancel_cursor_split_changes (SplitRegister* reg)
 {
     VirtualLocation virt_loc;
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return;
 
     virt_loc = reg->table->current_cursor_loc;
@@ -1560,7 +1558,7 @@ gnc_split_register_save_to_copy_buffer (SplitRegister *reg,
                                         FloatingTxn *ft, FloatingSplit *fs,
                                         gboolean use_cut_semantics)
 {
-    FloatingSplit *other_fs = NULL;
+    FloatingSplit *other_fs = nullptr;
     Transaction *trans;
 
     /* use the changed flag to avoid heavy-weight updates
@@ -1571,7 +1569,7 @@ gnc_split_register_save_to_copy_buffer (SplitRegister *reg,
 
     /* get the handle to the current split and transaction */
     trans = gnc_split_register_get_current_trans (reg);
-    if (trans == NULL)
+    if (trans == nullptr)
         return FALSE;
 
     /* copy the contents from the cursor to the split */
@@ -1655,7 +1653,7 @@ gnc_split_register_save_to_copy_buffer (SplitRegister *reg,
 
         new_account = gnc_split_register_get_account (reg, XFRM_CELL);
 
-        if (new_account != NULL)
+        if (new_account != nullptr)
             gnc_float_split_set_account (fs, new_account);
     }
 
@@ -1686,7 +1684,7 @@ gnc_split_register_save_to_copy_buffer (SplitRegister *reg,
 
             new_account = gnc_split_register_get_account (reg, MXFRM_CELL);
 
-            if (new_account != NULL)
+            if (new_account != nullptr)
                 gnc_float_split_set_account (other_fs, new_account);
         }
     }
@@ -1755,14 +1753,14 @@ gnc_split_register_save_to_copy_buffer (SplitRegister *reg,
 static void
 unreconcile_splits (SplitRegister* reg)
 {
-    if (reg->unrecn_splits == NULL)
+    if (reg->unrecn_splits == nullptr)
         return; //Nothing to do.
     PINFO ("Unreconcile %d splits of reconciled transaction",
            g_list_length (reg->unrecn_splits));
 
     for (GList* node = reg->unrecn_splits; node; node = node->next)
     {
-        Split* split = node->data;
+        Split* split = static_cast<Split *>(node->data);
         Transaction* txn = xaccSplitGetParent (split);
         if (!xaccTransIsOpen (txn))
             PWARN ("Unreconcile of split failed because its parent transaction wasn't open for editing");
@@ -1770,7 +1768,7 @@ unreconcile_splits (SplitRegister* reg)
             xaccSplitSetReconcile (split, NREC);
     }
     g_list_free (reg->unrecn_splits);
-    reg->unrecn_splits = NULL;
+    reg->unrecn_splits = nullptr;
 }
 
 gboolean
@@ -1805,7 +1803,7 @@ gnc_split_register_save (SplitRegister* reg, gboolean do_commit)
     /* get the handle to the current split and transaction */
     split = gnc_split_register_get_current_split (reg);
     trans = gnc_split_register_get_current_trans (reg);
-    if (trans == NULL)
+    if (trans == nullptr)
     {
         LEAVE ("no transaction");
         return FALSE;
@@ -1954,10 +1952,10 @@ gnc_split_register_save (SplitRegister* reg, gboolean do_commit)
         account = gnc_split_register_get_default_account (reg);
         if (account)
             xaccSplitSetAccount (blank_split, account);
-        xaccTransSetDateEnteredSecs (trans, gnc_time (NULL));
+        xaccTransSetDateEnteredSecs (trans, gnc_time (nullptr));
     }
 
-    if (split == NULL)
+    if (split == nullptr)
     {
         /* If we were asked to save data for a row for which there is no
          * associated split, then assume that this was an "empty" row - see
@@ -1977,10 +1975,10 @@ gnc_split_register_save (SplitRegister* reg, gboolean do_commit)
                                       xaccSplitGetGUID (split));
         DEBUG ("assigned cell to new split=%p", split);
 
-        trans_split = gnc_split_register_get_current_trans_split (reg, NULL);
+        trans_split = gnc_split_register_get_current_trans_split (reg, nullptr);
         if ((info->cursor_hint_trans == trans) &&
             (info->cursor_hint_trans_split == trans_split) &&
-            (info->cursor_hint_split == NULL))
+            (info->cursor_hint_split == nullptr))
         {
             info->cursor_hint_split = split;
             info->cursor_hint_cursor_class = CURSOR_CLASS_SPLIT;
@@ -2007,7 +2005,7 @@ gnc_split_register_save (SplitRegister* reg, gboolean do_commit)
     PINFO ("finished saving split \"%s\" of trans \"%s\"", memo, desc);
 
     /* If the modified split is the "blank split", then it is now an
-     * official part of the account. Set the blank split to NULL, so we
+     * official part of the account. Set the blank split to nullptr, so we
      * can be sure of getting a new blank split. Also, save the date
      * for the new blank split. */
     if (trans == blank_trans)
@@ -2016,7 +2014,7 @@ gnc_split_register_save (SplitRegister* reg, gboolean do_commit)
         {
             info->blank_split_guid = *guid_null ();
             info->auto_complete = FALSE;
-            blank_split = NULL;
+            blank_split = nullptr;
             info->last_date_entered = xaccTransGetDate (trans);
         }
         else
@@ -2024,13 +2022,13 @@ gnc_split_register_save (SplitRegister* reg, gboolean do_commit)
     }
 
     /* If requested, commit the current transaction and set the pending
-     * transaction to NULL. */
+     * transaction to nullptr. */
     if (do_commit)
     {
         g_assert (trans == blank_trans || trans == pending_trans);
         if (pending_trans == trans)
         {
-            pending_trans = NULL;
+            pending_trans = nullptr;
             info->pending_trans_guid = *guid_null ();
         }
         unreconcile_splits (reg);
@@ -2061,7 +2059,7 @@ gnc_split_register_get_account_by_name (SplitRegister* reg, BasicCell* bcell,
     GtkWindow* parent = GTK_WINDOW (gnc_split_register_get_parent (reg));
 
     if (!name || (strlen (name) == 0))
-        return NULL;
+        return nullptr;
 
     /* Find the account */
     account = gnc_account_lookup_for_register (gnc_get_current_root_account (),
@@ -2077,13 +2075,13 @@ gnc_split_register_get_account_by_name (SplitRegister* reg, BasicCell* bcell,
     {
         /* Ask if they want to create a new one. */
         if (!gnc_verify_dialog (parent, TRUE, missing, name))
-            return NULL;
+            return nullptr;
         creating_account = TRUE;
         /* User said yes, they want to create a new account. */
         account = gnc_ui_new_accounts_from_name_window (parent, name);
         creating_account = FALSE;
         if (!account)
-            return NULL;
+            return nullptr;
     }
 
     if (!creating_account)
@@ -2106,7 +2104,7 @@ gnc_split_register_get_account_by_name (SplitRegister* reg, BasicCell* bcell,
             gnc_error_dialog (GTK_WINDOW (gnc_split_register_get_parent (reg)),
                               placeholder, fullname);
             g_free (fullname);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -2121,11 +2119,11 @@ gnc_split_register_get_account (SplitRegister* reg, const char* cell_name)
     const char* name;
 
     if (!gnc_table_layout_get_cell_changed (reg->table->layout, cell_name, TRUE))
-        return NULL;
+        return nullptr;
 
     cell = gnc_table_layout_get_cell (reg->table->layout, cell_name);
     if (!cell)
-        return NULL;
+        return nullptr;
     name = gnc_basic_cell_get_value (cell);
     return gnc_split_register_get_account_by_name (reg, cell, name);
 }
@@ -2155,7 +2153,7 @@ recalc_message_box (SplitRegister* reg, gboolean shares_changed,
     int choice;
     int default_value;
     GList* node;
-    GList* radio_list = NULL;
+    GList* radio_list = nullptr;
     const char* title = _ ("Recalculate Transaction");
     const char* message = _ ("The values entered for this transaction "
                              "are inconsistent. Which value would you "
@@ -2284,7 +2282,7 @@ recalculate_value (Split* split, SplitRegister* reg,
 static gboolean
 gnc_split_register_auto_calc (SplitRegister* reg, Split* split)
 {
-    PriceCell* cell = NULL;
+    PriceCell* cell = nullptr;
     gboolean recalc_shares = FALSE;
     gboolean recalc_price = FALSE;
     gboolean recalc_value = FALSE;
@@ -2501,7 +2499,7 @@ gnc_split_register_get_debit_string (SplitRegister* reg)
     SRInfo* info = gnc_split_register_get_info (reg);
 
     if (!reg)
-        return NULL;
+        return nullptr;
 
     if (info->debit_str)
         return info->debit_str;
@@ -2524,7 +2522,7 @@ gnc_split_register_get_credit_string (SplitRegister* reg)
     SRInfo* info = gnc_split_register_get_info (reg);
 
     if (!reg)
-        return NULL;
+        return nullptr;
 
     if (info->credit_str)
         return info->credit_str;
@@ -2549,7 +2547,7 @@ gnc_split_register_changed (SplitRegister* reg)
 
     ENTER ("reg=%p", reg);
 
-    if (reg == NULL)
+    if (reg == nullptr)
     {
         LEAVE ("no register");
         return FALSE;
@@ -2579,7 +2577,7 @@ gnc_split_register_show_present_divider (SplitRegister* reg,
 {
     SRInfo* info = gnc_split_register_get_info (reg);
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return;
 
     info->show_present_divider = show_present;
@@ -2801,11 +2799,11 @@ gnc_split_register_config_cells (SplitRegister* reg)
 static void
 split_register_pref_changed (gpointer prefs, gchar* pref, gpointer user_data)
 {
-    SplitRegister* reg = user_data;
+    SplitRegister* reg = static_cast<SplitRegister *>(user_data);
     SRInfo* info;
 
     g_return_if_fail (pref);
-    if (reg == NULL)
+    if (reg == nullptr)
         return;
 
     info = reg->sr_info;
@@ -2818,10 +2816,10 @@ split_register_pref_changed (gpointer prefs, gchar* pref, gpointer user_data)
         g_free (info->tdebit_str);
         g_free (info->tcredit_str);
 
-        info->debit_str = NULL;
-        info->tdebit_str = NULL;
-        info->credit_str = NULL;
-        info->tcredit_str = NULL;
+        info->debit_str = nullptr;
+        info->tdebit_str = nullptr;
+        info->credit_str = nullptr;
+        info->tcredit_str = nullptr;
 
     }
     else if (g_str_has_suffix (pref, GNC_PREF_ACCOUNT_SEPARATOR))
@@ -2847,10 +2845,10 @@ split_register_pref_changed (gpointer prefs, gchar* pref, gpointer user_data)
 static void
 split_register_book_option_changed (gpointer new_val, gpointer user_data)
 {
-    SplitRegister* reg = user_data;
+    SplitRegister* reg = static_cast<SplitRegister *>(user_data);
     gboolean* new_data = (gboolean*)new_val;
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return;
 
     reg->use_tran_num_for_num_field = (*new_data ? FALSE : TRUE);
@@ -2872,27 +2870,27 @@ gnc_split_register_init (SplitRegister* reg,
     /* Register 'destroy' callback */
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_ACCOUNTING_LABELS,
-                           split_register_pref_changed,
+                           reinterpret_cast<gpointer>(split_register_pref_changed),
                            reg);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_ACCOUNT_SEPARATOR,
-                           split_register_pref_changed,
+                           reinterpret_cast<gpointer>(split_register_pref_changed),
                            reg);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL_REGISTER,
                            GNC_PREF_SHOW_LEAF_ACCT_NAMES,
-                           split_register_pref_changed,
+                           reinterpret_cast<gpointer>(split_register_pref_changed),
                            reg);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL_REGISTER,
                            GNC_PREF_ALT_COLOR_BY_TRANS,
-                           split_register_pref_changed,
+                           reinterpret_cast<gpointer>(split_register_pref_changed),
                            reg);
     gnc_book_option_register_cb (OPTION_NAME_NUM_FIELD_SOURCE,
-                                 split_register_book_option_changed,
+                                 static_cast<GncBOCb>(split_register_book_option_changed),
                                  reg);
 
-    reg->sr_info = NULL;
+    reg->sr_info = nullptr;
 
-    reg->unrecn_splits = NULL;
+    reg->unrecn_splits = nullptr;
 
     reg->show_leaf_accounts = gnc_prefs_get_bool (GNC_PREFS_GROUP_GENERAL_REGISTER,
                                                   GNC_PREF_SHOW_LEAF_ACCT_NAMES);
@@ -2931,7 +2929,7 @@ gnc_split_register_init (SplitRegister* reg,
 
         header = gnc_table_layout_get_cursor (reg->table->layout, CURSOR_HEADER);
 
-        gnc_table_set_vcell (reg->table, header, NULL, TRUE, TRUE, vcell_loc);
+        gnc_table_set_vcell (reg->table, header, nullptr, TRUE, TRUE, vcell_loc);
     }
 
     /* Set up first and only initial row */
@@ -2947,7 +2945,7 @@ gnc_split_register_init (SplitRegister* reg,
         cursor = gnc_table_layout_get_cursor (reg->table->layout,
                                               CURSOR_SINGLE_LEDGER);
 
-        gnc_table_set_vcell (reg->table, cursor, NULL, TRUE, TRUE, vloc.vcell_loc);
+        gnc_table_set_vcell (reg->table, cursor, nullptr, TRUE, TRUE, vloc.vcell_loc);
 
         if (gnc_table_find_close_valid_cell (reg->table, &vloc, FALSE))
             gnc_table_move_cursor (reg->table, vloc);
@@ -3047,13 +3045,13 @@ gnc_split_register_destroy_info (SplitRegister* reg)
 {
     SRInfo* info;
 
-    if (reg == NULL)
+    if (reg == nullptr)
         return;
 
-    if (reg->unrecn_splits != NULL)
+    if (reg->unrecn_splits != nullptr)
     {
         g_list_free (reg->unrecn_splits);
-        reg->unrecn_splits =  NULL;
+        reg->unrecn_splits =  nullptr;
     }
 
     info = reg->sr_info;
@@ -3063,14 +3061,14 @@ gnc_split_register_destroy_info (SplitRegister* reg)
     g_free (info->tdebit_str);
     g_free (info->tcredit_str);
 
-    info->debit_str = NULL;
-    info->tdebit_str = NULL;
-    info->credit_str = NULL;
-    info->tcredit_str = NULL;
+    info->debit_str = nullptr;
+    info->tdebit_str = nullptr;
+    info->credit_str = nullptr;
+    info->tcredit_str = nullptr;
 
     g_free (reg->sr_info);
 
-    reg->sr_info = NULL;
+    reg->sr_info = nullptr;
 }
 
 void
@@ -3079,7 +3077,7 @@ gnc_split_register_set_data (SplitRegister* reg, void* user_data,
 {
     SRInfo* info = gnc_split_register_get_info (reg);
 
-    g_return_if_fail (reg != NULL);
+    g_return_if_fail (reg != nullptr);
 
     info->user_data = user_data;
     info->get_parent = get_parent;
@@ -3090,7 +3088,7 @@ gnc_split_register_cleanup (SplitRegister* reg)
 {
     SRInfo* info = gnc_split_register_get_info (reg);
     Transaction* pending_trans;
-    Transaction* blank_trans = NULL;
+    Transaction* blank_trans = nullptr;
     Split* blank_split;
 
     ENTER ("reg=%p", reg);
@@ -3106,7 +3104,7 @@ gnc_split_register_cleanup (SplitRegister* reg)
     /* Destroy the transaction containing the "blank split", which was only
      * created to support the area for entering a new transaction. Since the
      * register is closing, this transaction is no longer needed. */
-    if (blank_split != NULL)
+    if (blank_split != nullptr)
     {
         gboolean was_open;
 
@@ -3125,15 +3123,15 @@ gnc_split_register_cleanup (SplitRegister* reg)
         if (blank_trans == pending_trans)
         {
             info->pending_trans_guid = *guid_null ();
-            pending_trans = NULL;
+            pending_trans = nullptr;
         }
         info->blank_split_guid = *guid_null ();
         info->auto_complete = FALSE;
-        blank_split = NULL;
+        blank_split = nullptr;
     }
 
     /* be sure to take care of any open transactions */
-    if (pending_trans != NULL)
+    if (pending_trans != nullptr)
     {
         g_critical ("BUG DETECTED: pending_trans=%p, blank_split=%p, blank_trans=%p",
                     pending_trans, blank_split, blank_trans);
@@ -3146,7 +3144,7 @@ gnc_split_register_cleanup (SplitRegister* reg)
             xaccTransCommitEdit (pending_trans);
         else g_assert_not_reached ();
 
-        pending_trans = NULL;
+        pending_trans = nullptr;
     }
 
     gnc_split_register_destroy_info (reg);
@@ -3165,28 +3163,28 @@ gnc_split_register_destroy (SplitRegister* reg)
 
     gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                  GNC_PREF_ACCOUNTING_LABELS,
-                                 split_register_pref_changed,
+                                 reinterpret_cast<gpointer>(split_register_pref_changed),
                                  reg);
     gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                  GNC_PREF_ACCOUNT_SEPARATOR,
-                                 split_register_pref_changed,
+                                 reinterpret_cast<gpointer>(split_register_pref_changed),
                                  reg);
     gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL_REGISTER,
                                  GNC_PREF_SHOW_LEAF_ACCT_NAMES,
-                                 split_register_pref_changed,
+                                 reinterpret_cast<gpointer>(split_register_pref_changed),
                                  reg);
     gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL_REGISTER,
                                  GNC_PREF_ALT_COLOR_BY_TRANS,
-                                 split_register_pref_changed,
+                                 reinterpret_cast<gpointer>(split_register_pref_changed),
                                  reg);
     gnc_book_option_remove_cb (OPTION_NAME_NUM_FIELD_SOURCE,
-                               split_register_book_option_changed,
+                               static_cast<GncBOCb>(split_register_book_option_changed),
                                reg);
 
     gnc_split_register_cleanup (reg);
 
     gnc_table_destroy (reg->table);
-    reg->table = NULL;
+    reg->table = nullptr;
 
     /* free the memory itself */
     g_free (reg);

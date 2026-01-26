@@ -26,6 +26,14 @@
 
 #include "qof.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 gboolean gnc_xml_convert_single_file (const gchar *filename);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ASSISTANT_XML_ENCODING_H */

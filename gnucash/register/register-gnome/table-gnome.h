@@ -26,6 +26,14 @@
 #ifndef TABLE_GNOME_H
 #define TABLE_GNOME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void gnc_table_gnome_init (void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

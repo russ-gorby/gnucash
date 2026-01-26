@@ -193,11 +193,11 @@ load_xfer_type_cells (GncEntryLedger* ledger)
 {
     Account* root;
     ComboCell* cell;
-    QuickFill* qf = NULL;
-    GtkListStore* store = NULL;
+    QuickFill* qf = nullptr;
+    GtkListStore* store = nullptr;
 
     root = gnc_book_get_root_account (ledger->book);
-    if (root == NULL) return;
+    if (root == nullptr) return;
 
     /* Use a common, shared quickfill.  For the ORDER or INVOICE,
      * ledgers, we don't want expense-type accounts in the menu.
@@ -212,9 +212,9 @@ load_xfer_type_cells (GncEntryLedger* ledger)
     case GNCENTRY_CUST_CREDIT_NOTE_ENTRY:
     case GNCENTRY_CUST_CREDIT_NOTE_VIEWER:
         qf = gnc_get_shared_account_name_quickfill (root, IKEY,
-                                                    skip_expense_acct_cb, NULL);
+                                                    skip_expense_acct_cb, nullptr);
         store = gnc_get_shared_account_name_list_store (root, IKEY,
-                                                        skip_expense_acct_cb, NULL);
+                                                        skip_expense_acct_cb, nullptr);
         break;
 
     case GNCENTRY_BILL_ENTRY:
@@ -227,10 +227,10 @@ load_xfer_type_cells (GncEntryLedger* ledger)
     case GNCENTRY_EMPL_CREDIT_NOTE_VIEWER:
     case GNCENTRY_NUM_REGISTER_TYPES:
         qf = gnc_get_shared_account_name_quickfill (root, EKEY,
-                                                    skip_income_acct_cb, NULL);
+                                                    skip_income_acct_cb, nullptr);
         store = gnc_get_shared_account_name_list_store (root, EKEY,
                                                         skip_income_acct_cb,
-                                                        NULL);
+                                                        nullptr);
         break;
     default:
         PWARN ("Bad GncEntryLedgerType");
@@ -262,9 +262,9 @@ static void load_taxtable_type_cells (GncEntryLedger* ledger)
     list = gncTaxTableGetTables (ledger->book);
     for (; list ; list = list->next)
     {
-        GncTaxTable* table = list->data;
+        GncTaxTable* table = static_cast<GncTaxTable *>(list->data);
         const char* name = gncTaxTableGetName (table);
-        if (name != NULL)
+        if (name != nullptr)
             gnc_combo_cell_add_menu_item (cell, (char*)name);
     }
 }
@@ -349,10 +349,10 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
 
     blank_entry = gnc_entry_ledger_get_blank_entry (ledger);
 
-    if (blank_entry == NULL && ledger->invoice == NULL && entry_list == NULL)
+    if (blank_entry == nullptr && ledger->invoice == nullptr && entry_list == nullptr)
         return;
 
-    if (blank_entry == NULL && ledger->invoice)
+    if (blank_entry == nullptr && ledger->invoice)
     {
         switch (ledger->type)
         {
@@ -377,7 +377,7 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
             {
                 const GncOwner* owner = gncOwnerGetEndOwner (gncInvoiceGetOwner (
                                                                  ledger->invoice));
-                GncTaxTable* table = NULL;
+                GncTaxTable* table = nullptr;
                 GncTaxIncluded taxincluded_p = GNC_TAXINCLUDED_USEGLOBAL;
                 gboolean taxincluded = FALSE;
                 gnc_numeric discount = gnc_numeric_zero();
@@ -453,7 +453,7 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
 
                 if (ledger->is_cust_doc)
                 {
-                    gncEntrySetInvTaxable (blank_entry, table != NULL);
+                    gncEntrySetInvTaxable (blank_entry, table != nullptr);
                     gncEntrySetInvTaxTable (blank_entry, table);
                     gncEntrySetInvTaxIncluded (blank_entry, taxincluded);
                     gncEntrySetInvDiscount (blank_entry, discount);
@@ -461,7 +461,7 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
                 }
                 else
                 {
-                    gncEntrySetBillTaxable (blank_entry, table != NULL);
+                    gncEntrySetBillTaxable (blank_entry, table != nullptr);
                     gncEntrySetBillTaxTable (blank_entry, table);
                     gncEntrySetBillTaxIncluded (blank_entry, taxincluded);
                     gncEntrySetBillPrice (blank_entry, price);
@@ -505,7 +505,7 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
         gnc_table_save_current_cursor (table, cursor_buffer);
     }
     else
-        cursor_buffer = NULL;
+        cursor_buffer = nullptr;
 
     /* disable move callback -- we don't want the cascade of
      * callbacks while we are fiddling with loading the register */
@@ -527,7 +527,7 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
     vcell_loc.virt_row = 0;
     vcell_loc.virt_col = 0;
     cursor_header = gnc_table_layout_get_cursor (table->layout, CURSOR_HEADER);
-    gnc_table_set_vcell (table, cursor_header, NULL, TRUE, TRUE, vcell_loc);
+    gnc_table_set_vcell (table, cursor_header, nullptr, TRUE, TRUE, vcell_loc);
     vcell_loc.virt_row++;
 
     /* get the current time and reset the dividing row */
@@ -539,7 +539,7 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
     /* Populate the table */
     for (node = entry_list; node; node = node->next)
     {
-        GncEntry* entry = node->data;
+        GncEntry* entry = static_cast<GncEntry *>(node->data);
 
         /* Don't load the blank entry */
         if (entry == blank_entry)
@@ -589,11 +589,11 @@ void gnc_entry_ledger_load (GncEntryLedger* ledger, GList* entry_list)
     }
 
     gnc_cursor_buffer_destroy (cursor_buffer);
-    cursor_buffer = NULL;
+    cursor_buffer = nullptr;
 
     /* Reset the ledger */
     ledger->traverse_to_new = FALSE;
-    ledger->hint_entry = NULL;
+    ledger->hint_entry = nullptr;
 
     /* Set the cell fractions */
 
