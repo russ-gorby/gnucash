@@ -128,6 +128,10 @@ physical row 11   virtual row 9   B
 #include "table-layout.h"
 #include "table-model.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** holds information about each virtual cell. */
 typedef struct
 {
@@ -232,7 +236,7 @@ gboolean gnc_table_virtual_location_in_header (Table *table,
 
 
 /** returns the virtual cell associated with a particular virtual location. If
- * the location is out of bounds, NULL is * returned. */
+ * the location is out of bounds, nullptr is * returned. */
 VirtualCell *  gnc_table_get_virtual_cell (Table *table,
         VirtualCellLocation vcell_loc);
 
@@ -317,7 +321,7 @@ gboolean    gnc_table_verify_cursor_position (Table *table,
         VirtualLocation virt_loc);
 
 /** returns the virtual cell data associated with a cursor located at the given
- * virtual coords, or NULL if the coords are out of bounds. */
+ * virtual coords, or nullptr if the coords are out of bounds. */
 gpointer    gnc_table_get_vcell_data (Table *table,
                                       VirtualCellLocation vcell_loc);
 
@@ -416,6 +420,9 @@ gboolean     gnc_table_traverse_update(Table *table,
                                        VirtualLocation virt_loc,
                                        gncTableTraversalDir dir,
                                        VirtualLocation *dest_loc);
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TABLE_ALLGUI_H */
 /** @} */

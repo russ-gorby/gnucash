@@ -42,6 +42,10 @@
 
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     BasicCell cell;
@@ -74,6 +78,11 @@ void gnc_completion_cell_set_autosize (CompletionCell* cell, gboolean autosize);
 /** Register the sort direction. Used to determine in what order the completion should
  * present the list. FALSE by default */
 void gnc_completion_cell_reverse_sort (CompletionCell* cell, gboolean is_reversed);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 /** @} */
 #endif

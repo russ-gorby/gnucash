@@ -61,6 +61,10 @@
 
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define BASIC_CELL_TYPE_NAME     "basic-cell"
 #define COMBO_CELL_TYPE_NAME     "combo-cell"
 #define DATE_CELL_TYPE_NAME      "date-cell"
@@ -117,6 +121,10 @@ struct _VirtualLocation
 
 
 gboolean virt_loc_equal (VirtualLocation vl1, VirtualLocation vl2);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /** @} */

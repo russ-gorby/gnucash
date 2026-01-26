@@ -50,6 +50,10 @@
 
 #include "gtable.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     short num_rows;
@@ -82,7 +86,7 @@ void        gnc_cellblock_destroy (CellBlock *cellblock);
 /** Add a cell to the CellBlock at the specified coordinates. The CellBlock
  * takes ownership of the Cell. If there's already a Cell at the location it
  * will be leaked, so callers should first call gnc_cellblock_get_cell() and
- * delete the result if it's not NULL.
+ * delete the result if it's not nullptr.
  * @param cellblock The CellBlock
  * @param row The row at which to add the cell
  * @param col The column at which to add the cell
@@ -102,19 +106,19 @@ BasicCell * gnc_cellblock_get_cell (CellBlock *cellblock,
                                     int row, int col);
 
 /** Searches by name for a particular cell in a CellBlock. Parameters @c row
- *  and/or @c col may be @c NULL.
+ *  and/or @c col may be @c nullptr.
  *
  *  @param cellblock a ::CellBlock to search
  *
  *  @param cell_name the name of the cell to find
  *
  *  @param row pointer for returning the row in which the cell was
- *  found, or @c NULL
+ *  found, or @c nullptr
  *
  *  @param col pointer for returning the column in which the cell was
- *  found, or @c NULL
+ *  found, or @c nullptr
  *
- *  @return the matching cell, or @c NULL
+ *  @return the matching cell, or @c nullptr
  */
 BasicCell * gnc_cellblock_get_cell_by_name(CellBlock *cellblock,
         const char *cell_name,
@@ -132,6 +136,11 @@ int         gnc_cellblock_changed (CellBlock *cursor,
  * @param cursor The cellblock.
  */
 void        gnc_cellblock_clear_changes (CellBlock *cursor);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
 /** @} */

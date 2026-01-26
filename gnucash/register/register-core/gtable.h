@@ -33,6 +33,10 @@
  *
  */
 
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ 
 typedef struct GTable GTable;
 
 typedef void (*g_table_entry_constructor) (gpointer entry, gpointer user_data);
@@ -51,7 +55,7 @@ GTable * g_table_new (guint entry_size,
 void     g_table_destroy (GTable *gtable);
 
 /** Return the element at the given row and column. If the coordinates
- * are out-of-bounds, return NULL */
+ * are out-of-bounds, return nullptr */
 gpointer g_table_index (GTable *gtable, int row, int col);
 
 /** Resize the table, allocating and deallocating extra table
@@ -67,6 +71,10 @@ int      g_table_rows (GTable *gtable);
 
 /** Return the number of table columns. */
 int      g_table_cols (GTable *gtable);
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 #endif

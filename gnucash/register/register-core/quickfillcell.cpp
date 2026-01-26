@@ -36,13 +36,15 @@
 #include <config.h>
 
 #include <glib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "basiccell.h"
 #include "gnc-ui-util.h"
 #include "quickfillcell.h"
+
+#include "except-fence.hpp"
 
 
 static void gnc_quickfill_cell_set_original (QuickFillCell *cell,
@@ -70,7 +72,7 @@ gnc_quickfill_cell_enter (BasicCell *_cell,
     *start_selection = 0;
     *end_selection = -1;
 
-    gnc_quickfill_cell_set_original (cell, NULL);
+    gnc_quickfill_cell_set_original (cell, nullptr);
 
     return TRUE;
 }
@@ -101,7 +103,7 @@ utf8_caseequal (const char *s1, const char *s2)
 }
 
 static gboolean
-utf8_caseequal_len (const char *s1, const char *s2, guint len)
+utf8_caseequal_len (const char *s1, const char *s2, guint len_in)
 {
     gchar *s1new;
     gchar *s2new;
@@ -112,6 +114,7 @@ utf8_caseequal_len (const char *s1, const char *s2, guint len)
     glong s1_bytes_len;
     glong s2_bytes_len;
     gboolean equal = FALSE;
+    glong len = static_cast<glong>(len_in);
 
     if (len == 0)
         return TRUE;
@@ -171,13 +174,13 @@ gnc_quickfill_cell_modify_verify (BasicCell *_cell,
     newval_chars = g_utf8_strlen(newval, newval_len);
 
     /* If deleting, just accept */
-    if (change == NULL)
+    if (change == nullptr)
     {
         /* if the new value is a prefix of the original modulo case,
          * just truncate the end of the original. Otherwise, set it
-         * to NULL */
+         * to nullptr */
         if ((*cursor_position >= newval_chars) &&
-                (cell->original != NULL) &&
+                (cell->original != nullptr) &&
                 (g_utf8_strlen (cell->original, -1) >= newval_chars) &&
                 utf8_caseequal_len (cell->original, newval, newval_chars))
         {
@@ -186,7 +189,7 @@ gnc_quickfill_cell_modify_verify (BasicCell *_cell,
             g_free (temp);
         }
         else
-            gnc_quickfill_cell_set_original (cell, NULL);
+            gnc_quickfill_cell_set_original (cell, nullptr);
 
         gnc_basic_cell_set_value_internal (&cell->cell, newval);
         // Remove any selection.
@@ -198,11 +201,11 @@ gnc_quickfill_cell_modify_verify (BasicCell *_cell,
     if (*cursor_position < newval_chars)
     {
         gnc_basic_cell_set_value_internal (&cell->cell, newval);
-        gnc_quickfill_cell_set_original (cell, NULL);
+        gnc_quickfill_cell_set_original (cell, nullptr);
         return;
     }
 
-    if (cell->original == NULL)
+    if (cell->original == nullptr)
         cell->original = g_strdup (newval);
     else if (utf8_caseequal (cell->original, _cell->value))
     {
@@ -218,16 +221,16 @@ gnc_quickfill_cell_modify_verify (BasicCell *_cell,
     else
     {
         g_free (cell->original);
-        cell->original = NULL;
+        cell->original = nullptr;
     }
 
     match = gnc_quickfill_get_string_match (cell->qf, newval);
 
     match_str = gnc_quickfill_string (match);
 
-    if (match_str == NULL)
+    if (match_str == nullptr)
     {
-        if (cell->original != NULL)
+        if (cell->original != nullptr)
             newval = cell->original;
 
         gnc_basic_cell_set_value_internal (&cell->cell, newval);
@@ -259,15 +262,15 @@ gnc_quickfill_cell_destroy (BasicCell *bcell)
     {
         gnc_quickfill_destroy (cell->qf);
     }
-    cell->qf = NULL;
+    cell->qf = nullptr;
 
     g_free (cell->original);
-    cell->original = NULL;
+    cell->original = nullptr;
 
-    cell->cell.enter_cell    = NULL;
-    cell->cell.modify_verify = NULL;
-    cell->cell.leave_cell    = NULL;
-    cell->cell.set_value     = NULL;
+    cell->cell.enter_cell    = nullptr;
+    cell->cell.modify_verify = nullptr;
+    cell->cell.leave_cell    = nullptr;
+    cell->cell.set_value     = nullptr;
 }
 
 static void
@@ -278,7 +281,7 @@ gnc_quickfill_cell_init (QuickFillCell *cell)
     cell->qf = gnc_quickfill_new ();
     cell->use_quickfill_cache = FALSE;
     cell->sort = QUICKFILL_LIFO;
-    cell->original = NULL;
+    cell->original = nullptr;
 
     cell->cell.destroy = gnc_quickfill_cell_destroy;
 
@@ -288,8 +291,7 @@ gnc_quickfill_cell_init (QuickFillCell *cell)
     cell->cell.set_value     = gnc_quickfill_cell_set_value_internal;
 }
 
-BasicCell *
-gnc_quickfill_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_quickfill_cell_new)
 {
     QuickFillCell *cell;
 
@@ -300,20 +302,22 @@ gnc_quickfill_cell_new (void)
     return &cell->cell;
 }
 
-void
-gnc_quickfill_cell_set_value (QuickFillCell *cell, const char * value)
+SAFE_C_API_VOID_ARGS(gnc_quickfill_cell_set_value,
+    (QuickFillCell *cell, const char * value),
+    (cell, value))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     gnc_basic_cell_set_value_internal (&cell->cell, value);
     gnc_quickfill_insert (cell->qf, value, cell->sort);
 }
 
-void
-gnc_quickfill_cell_set_sort (QuickFillCell *cell, QuickFillSort sort)
+SAFE_C_API_VOID_ARGS(gnc_quickfill_cell_set_sort,
+    (QuickFillCell *cell, QuickFillSort sort),
+	(cell, sort))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     cell->sort = sort;
@@ -322,28 +326,30 @@ gnc_quickfill_cell_set_sort (QuickFillCell *cell, QuickFillSort sort)
 static void
 gnc_quickfill_cell_set_original (QuickFillCell *cell, const char *original)
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     g_free (cell->original);
 
-    if ((original != NULL) && (*original != 0))
+    if ((original != nullptr) && (*original != 0))
         cell->original = strdup (original);
     else
-        cell->original = NULL;
+        cell->original = nullptr;
 }
 
-void
-gnc_quickfill_cell_add_completion (QuickFillCell *cell, const char *completion)
+SAFE_C_API_VOID_ARGS(gnc_quickfill_cell_add_completion,
+    (QuickFillCell *cell, const char *completion),
+	(cell, completion))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     gnc_quickfill_insert (cell->qf, completion, cell->sort);
 }
 
-void
-gnc_quickfill_cell_use_quickfill_cache (QuickFillCell *cell, QuickFill *shared_qf)
+SAFE_C_API_VOID_ARGS(gnc_quickfill_cell_use_quickfill_cache,
+    (QuickFillCell *cell, QuickFill *shared_qf),
+	(cell, shared_qf))
 {
     g_assert(cell);
     g_assert(shared_qf);

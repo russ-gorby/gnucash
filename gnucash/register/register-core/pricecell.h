@@ -43,13 +43,13 @@
 #ifndef PRICE_CELL_H
 #define PRICE_CELL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "basiccell.h"
 #include "qof.h"
 #include "gnc-ui-util.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {

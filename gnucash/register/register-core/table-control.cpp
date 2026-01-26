@@ -26,9 +26,10 @@
 
 #include "table-control.h"
 
+#include "except-fence.hpp"
 
-TableControl *
-gnc_table_control_new (void)
+
+SAFE_C_API_NOARGS(TableControl *, gnc_table_control_new)
 {
     TableControl *control;
 
@@ -37,16 +38,15 @@ gnc_table_control_new (void)
     return control;
 }
 
-void
-gnc_table_control_destroy (TableControl *control)
+SAFE_C_API_VOID_ARGS(gnc_table_control_destroy, (TableControl *control), (control))
 {
     if (!control) return;
     g_free (control);
 }
 
-void
-gnc_table_control_allow_move (TableControl *control,
-                              gboolean allow_move)
+SAFE_C_API_VOID_ARGS(gnc_table_control_allow_move,
+    (TableControl *control, gboolean allow_move),
+	(control, allow_move))
 {
     if (!control) return;
     control->allow_move = allow_move;

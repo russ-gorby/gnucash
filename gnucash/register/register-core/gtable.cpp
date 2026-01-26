@@ -68,14 +68,14 @@ g_table_new (guint entry_size,
 void
 g_table_destroy (GTable *gtable)
 {
-    if (gtable == NULL)
+    if (gtable == nullptr)
         return;
 
     g_table_resize (gtable, 0, 0);
 
     g_array_free (gtable->array, TRUE);
 
-    gtable->array = NULL;
+    gtable->array = nullptr;
 
     g_free(gtable);
 }
@@ -86,17 +86,17 @@ g_table_index (GTable *gtable, int row, int col)
      guint index = row * gtable->cols + col;
      guint offset = index * gtable->entry_size;
 
-    if (gtable == NULL)
-        return NULL;
+    if (gtable == nullptr)
+        return nullptr;
     if ((row < 0) || (col < 0))
-        return NULL;
+        return nullptr;
     if (row >= gtable->rows)
-        return NULL;
+        return nullptr;
     if (col >= gtable->cols)
-        return NULL;
+        return nullptr;
 
-    g_return_val_if_fail (gtable->array != NULL, NULL);
-    g_return_val_if_fail (gtable->array->len > index, NULL);
+    g_return_val_if_fail (gtable->array != nullptr, nullptr);
+    g_return_val_if_fail (gtable->array->len > index, nullptr);
     return &gtable->array->data[offset];
 }
 
@@ -106,7 +106,7 @@ g_table_resize (GTable *gtable, int rows, int cols)
     guint old_len;
     guint new_len;
 
-    if (gtable == NULL)
+    if (gtable == nullptr)
         return;
     if ((rows < 0) || (cols < 0))
         return;
@@ -155,7 +155,7 @@ g_table_resize (GTable *gtable, int rows, int cols)
 int
 g_table_rows (GTable *gtable)
 {
-    if (gtable == NULL)
+    if (gtable == nullptr)
         return 0;
 
     return gtable->rows;
@@ -164,7 +164,7 @@ g_table_rows (GTable *gtable)
 int
 g_table_cols (GTable *gtable)
 {
-    if (gtable == NULL)
+    if (gtable == nullptr)
         return 0;
 
     return gtable->cols;

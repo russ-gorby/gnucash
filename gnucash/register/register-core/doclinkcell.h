@@ -43,6 +43,10 @@
 
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GLYPH_PAPERCLIP "\360\237\223\216" // Codepoint U+1F4CE
 #define GLYPH_LINK      "\360\237\224\227" // Codepoint U+1F517
 
@@ -55,9 +59,9 @@ typedef struct
 
     char flag; /** The actual flag value */
 
-    char * valid_flags;     /** The list of valid flags */
-    char * flag_order;      /** Automatic flag selection order */
-    char   default_flag;    /** Default flag for unknown user input */
+    const char * valid_flags;     /** The list of valid flags */
+    const char * flag_order;      /** Automatic flag selection order */
+    char default_flag;            /** Default flag for unknown user input */
 
     DoclinkcellStringGetter get_string;
     DoclinkcellConfirm confirm_cb;
@@ -68,7 +72,7 @@ typedef struct
 
 BasicCell * gnc_doclink_cell_new (void);
 
-void gnc_doclink_cell_set_flag (Doclinkcell *cell, char flag);
+void gnc_doclink_cell_set_flag (Doclinkcell *cell, const char flag);
 char gnc_doclink_cell_get_flag (Doclinkcell *cell);
 
 void gnc_doclink_cell_set_confirm_cb (Doclinkcell *cell,
@@ -95,6 +99,10 @@ void gnc_doclink_cell_set_use_glyphs (Doclinkcell *cell);
 gboolean gnc_doclink_get_use_glyphs (Doclinkcell *cell);
 
 const char * gnc_doclink_get_glyph_from_flag (char link_flag);
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 #endif

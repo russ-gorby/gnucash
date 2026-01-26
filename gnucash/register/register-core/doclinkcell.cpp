@@ -38,19 +38,22 @@
 
 #include <config.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 #include "basiccell.h"
 #include "gnc-engine.h"
 #include "doclinkcell.h"
 #include "gnc-ui-util.h"
 
-static void gnc_doclink_cell_set_value (BasicCell *_cell, const char *value);
+#include "except-fence.hpp"
 
-const char *
-gnc_doclink_get_glyph_from_flag (char link_flag)
+static void gnc_doclink_cell_set_value (BasicCell *_cell, const char *value);
+constexpr static const char *empty_str = "";
+
+extern "C" const char * test_gnc_doclink_get_glyph_from_flag (char link_flag);
+static const char * loc_test_gnc_doclink_get_glyph_from_flag (char link_flag); extern "C" const char * test_gnc_doclink_get_glyph_from_flag (char link_flag) { ExceptFence exf; return exf.forward_to(loc_test_gnc_doclink_get_glyph_from_flag, link_flag); } static const char * loc_test_gnc_doclink_get_glyph_from_flag (char link_flag)
 {
     switch (link_flag)
     {
@@ -61,7 +64,24 @@ gnc_doclink_get_glyph_from_flag (char link_flag)
     default:
         return " ";
     }
+    return " ";
 }
+
+SAFE_C_API_ARGS(const char *, gnc_doclink_get_glyph_from_flag,
+    (char link_flag), (link_flag))
+{
+    switch (link_flag)
+    {
+    case WLINK:
+        return GLYPH_LINK;
+    case FLINK:
+        return GLYPH_PAPERCLIP;
+    default:
+        return " ";
+    }
+    return " ";
+}
+
 
 static const char
 gnc_doclink_get_flag_from_glyph (const char *glyph)
@@ -70,12 +90,11 @@ gnc_doclink_get_flag_from_glyph (const char *glyph)
         return WLINK;
     else if (strcmp (glyph, GLYPH_PAPERCLIP) == 0)
         return FLINK;
-    else
-        return ' ';
+    return '\0'; // what is the right value to return here?
 }
 
-gboolean
-gnc_doclink_get_use_glyphs (Doclinkcell *cell)
+SAFE_C_API_ARGS(gboolean, gnc_doclink_get_use_glyphs,
+    (Doclinkcell *cell), (cell))
 {
     return cell->use_glyphs;
 }
@@ -88,7 +107,7 @@ gnc_doclink_cell_get_string (Doclinkcell *cell, char flag)
     if (cell->use_glyphs)
         return gnc_doclink_get_glyph_from_flag (flag);
 
-    if (cell->get_string != NULL)
+    if (cell->get_string != nullptr)
         return (cell->get_string)(flag);
 
     str[0] = flag;
@@ -113,9 +132,9 @@ gnc_doclink_cell_enter (BasicCell *_cell,
         return FALSE;
 
     /* Find the current flag in the list of flags */
-    this_flag = strchr (cell->flag_order, cell->flag);
+    this_flag = strchr (const_cast<char *>(cell->flag_order), cell->flag);
 
-    if (this_flag == NULL || *this_flag == '\0')
+    if (this_flag == nullptr || *this_flag == '\0')
     {
         /* If it's not there (or the list is empty) use default_flag */
         cell->flag = cell->default_flag;
@@ -144,10 +163,10 @@ gnc_doclink_cell_init (Doclinkcell *cell)
     gnc_basic_cell_init (&cell->cell);
 
     gnc_doclink_cell_set_flag (cell, '\0');
-    cell->confirm_cb = NULL;
-    cell->get_string = NULL;
-    cell->valid_flags = "";
-    cell->flag_order = "";
+    cell->confirm_cb = nullptr;
+    cell->get_string = nullptr;
+    cell->valid_flags = empty_str;
+    cell->flag_order = empty_str;
     cell->read_only = FALSE;
     cell->use_glyphs = FALSE;
 
@@ -155,8 +174,7 @@ gnc_doclink_cell_init (Doclinkcell *cell)
     cell->cell.set_value = gnc_doclink_cell_set_value;
 }
 
-BasicCell *
-gnc_doclink_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_doclink_cell_new)
 {
     Doclinkcell * cell;
 
@@ -177,7 +195,7 @@ gnc_doclink_cell_set_value (BasicCell *_cell, const char *value)
     if (!value || *value == '\0')
     {
         cell->flag = cell->default_flag;
-        gnc_basic_cell_set_value_internal (_cell, "");
+        gnc_basic_cell_set_value_internal (_cell, empty_str);
         return;
     }
 
@@ -186,18 +204,19 @@ gnc_doclink_cell_set_value (BasicCell *_cell, const char *value)
     else
     {
         flag = cell->default_flag;
-        if (strchr (cell->valid_flags, *value) != NULL)
+        if (strchr (cell->valid_flags, *value) != nullptr)
             flag = *value;
     }
     gnc_doclink_cell_set_flag (cell, flag);
 }
 
-void
-gnc_doclink_cell_set_flag (Doclinkcell *cell, char flag)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_flag,
+    (Doclinkcell *cell, const char flag),
+    (cell, flag))
 {
     const char *string;
 
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->flag = flag;
     string = gnc_doclink_cell_get_string (cell, flag);
@@ -205,63 +224,65 @@ gnc_doclink_cell_set_flag (Doclinkcell *cell, char flag)
     gnc_basic_cell_set_value_internal (&cell->cell, string);
 }
 
-char
-gnc_doclink_cell_get_flag (Doclinkcell *cell)
+SAFE_C_API_ARGS(char, gnc_doclink_cell_get_flag,
+    (Doclinkcell *cell), (cell))
 {
-    g_return_val_if_fail (cell != NULL, '\0');
+    g_return_val_if_fail (cell != nullptr, '\0');
 
     return cell->flag;
 }
 
-void
-gnc_doclink_cell_set_string_getter (Doclinkcell *cell,
-                                  DoclinkcellStringGetter get_string)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_string_getter,
+    (Doclinkcell *cell, DoclinkcellStringGetter get_string),
+    (cell, get_string))
 {
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->get_string = get_string;
 }
 
-void
-gnc_doclink_cell_set_confirm_cb (Doclinkcell *cell, DoclinkcellConfirm confirm_cb,
-                               gpointer data)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_confirm_cb,
+    (Doclinkcell *cell, DoclinkcellConfirm confirm_cb, gpointer data),
+    (cell, confirm_cb, data))
 {
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->confirm_cb = confirm_cb;
     cell->confirm_data = data;
 }
 
-void
-gnc_doclink_cell_set_valid_flags (Doclinkcell *cell, const char *flags,
-                                char default_flag)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_valid_flags,
+    (Doclinkcell *cell, const char *flags, const char default_flag),
+    (cell, flags, default_flag))
 {
-    g_return_if_fail (cell != NULL);
-    g_return_if_fail (flags != NULL);
+    g_return_if_fail (cell != nullptr);
+    g_return_if_fail (flags != nullptr);
 
     cell->valid_flags = (char *)flags;
     cell->default_flag = default_flag;
 }
 
-void
-gnc_doclink_cell_set_flag_order (Doclinkcell *cell, const char *flags)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_flag_order,
+    (Doclinkcell *cell, const char *flags),
+    (cell, flags))
 {
-    g_return_if_fail (cell != NULL);
-    g_return_if_fail (flags != NULL);
+    g_return_if_fail (cell != nullptr);
+    g_return_if_fail (flags != nullptr);
 
-    cell->flag_order = (char *)flags;
+    cell->flag_order = flags;
 }
 
-void
-gnc_doclink_cell_set_read_only (Doclinkcell *cell, gboolean read_only)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_read_only,
+    (Doclinkcell *cell, gboolean read_only),
+    (cell, read_only))
 {
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->read_only = read_only;
 }
 
-void
-gnc_doclink_cell_set_use_glyphs (Doclinkcell *cell)
+SAFE_C_API_VOID_ARGS(gnc_doclink_cell_set_use_glyphs,\
+    (Doclinkcell *cell), (cell))
 {
 #ifdef MAC_INTEGRATION
     cell->use_glyphs = FALSE;
@@ -272,10 +293,10 @@ gnc_doclink_cell_set_use_glyphs (Doclinkcell *cell)
     PangoLayout *test_layout;
     gint count;
 
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
-    label = gtk_label_new (NULL);
-    test_text = g_strconcat (GLYPH_LINK, ",", GLYPH_PAPERCLIP, NULL);
+    label = gtk_label_new (nullptr);
+    test_text = g_strconcat (GLYPH_LINK, ",", GLYPH_PAPERCLIP, nullptr);
     test_layout = gtk_widget_create_pango_layout (GTK_WIDGET (label), test_text);
 
     pango_layout_set_text (test_layout, test_text, strlen (test_text));

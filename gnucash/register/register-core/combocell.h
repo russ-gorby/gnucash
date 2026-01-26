@@ -40,14 +40,14 @@
 #ifndef COMBO_CELL_H
 #define COMBO_CELL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <glib.h>
 
 #include "basiccell.h"
 #include "QuickFill.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {

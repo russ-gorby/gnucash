@@ -25,6 +25,11 @@
 #define CELL_FACTORY_H
 
 #include "basiccell.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup Cell Cell
  * @{
  * @file cell-factory.h
@@ -40,6 +45,10 @@ void gnc_cell_factory_add_cell_type (CellFactory *cf,
 
 BasicCell * gnc_cell_factory_make_cell (CellFactory *cf,
                                         const char *cell_type_name);
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} @} */
 #endif

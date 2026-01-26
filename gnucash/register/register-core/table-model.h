@@ -30,6 +30,10 @@
 #include "basiccell.h"
 #include "register-common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup Table Table
  * @{
  * @file table-model.h
@@ -260,5 +264,10 @@ TableSaveHandler gnc_table_model_get_pre_save_handler
 (TableModel *model);
 TableSaveHandler gnc_table_model_get_post_save_handler
 (TableModel *model);
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif

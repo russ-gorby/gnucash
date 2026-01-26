@@ -41,6 +41,10 @@
 
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef const char * (*RecnCellStringGetter) (char flag);
 typedef gboolean (*RecnCellConfirm) (char old_flag, gpointer data);
 
@@ -50,8 +54,8 @@ typedef struct
 
     char flag; /** The actual flag value */
 
-    char * valid_flags;		/** The list of valid flags */
-    char * flag_order;		/** Automatic flag selection order */
+    const char * valid_flags;		/** The list of valid flags */
+    const char * flag_order;		/** Automatic flag selection order */
     char default_flag;		/** Default flag for unknown user input */
 
     RecnCellStringGetter get_string;
@@ -84,5 +88,10 @@ void gnc_recn_cell_set_valid_flags (RecnCell *cell, const char *flags,
 void gnc_recn_cell_set_flag_order (RecnCell *cell, const char *flags);
 
 void gnc_recn_cell_set_read_only (RecnCell *cell, gboolean read_only);
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif

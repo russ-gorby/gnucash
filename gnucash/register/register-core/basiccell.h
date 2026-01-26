@@ -87,7 +87,7 @@
  *
  *    The callback is also passed pointers to the cursor position
  *    and the start and end of the highlited region. If the callback
- *    returns NULL, it may also change these values and the GUI will
+ *    returns nullptr, it may also change these values and the GUI will
  *    update appropriately.
  *
  * The leave_cell() callback is called when the user exits
@@ -157,15 +157,15 @@
 #ifndef BASIC_CELL_H
 #define BASIC_CELL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <gdk/gdk.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 
 #include "gnc-ui-util.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct basic_cell BasicCell;
 

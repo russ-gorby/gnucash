@@ -25,12 +25,13 @@
 #include <config.h>
 
 #include <glib.h>
-#include <string.h>
+#include <cstring>
 
 #include "basiccell.h"
 #include "cellblock.h"
 #include "table-layout.h"
 
+#include "except-fence.hpp"
 
 struct table_layout_struct
 {
@@ -55,8 +56,7 @@ struct cursor_buffer_struct
 };
 
 
-TableLayout *
-gnc_table_layout_new (void)
+SAFE_C_API_NOARGS(TableLayout *, gnc_table_layout_new)
 {
     TableLayout *layout;
 
@@ -65,8 +65,7 @@ gnc_table_layout_new (void)
     return layout;
 }
 
-void
-gnc_table_layout_destroy (TableLayout *layout)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_destroy, (TableLayout *layout), (layout))
 {
     GList *node;
 
@@ -75,37 +74,37 @@ gnc_table_layout_destroy (TableLayout *layout)
 
     for (node = layout->cells; node; node = node->next)
     {
-        BasicCell *cell = node->data;
+        BasicCell *cell = static_cast<BasicCell *>(node->data);
 
         gnc_basic_cell_destroy (cell);
     }
     g_list_free (layout->cells);
-    layout->cells = NULL;
+    layout->cells = nullptr;
 
     for (node = layout->cursors; node; node = node->next)
     {
-        CellBlock *cursor = node->data;
+        CellBlock *cursor = static_cast<CellBlock *>(node->data);
 
         gnc_cellblock_destroy (cursor);
     }
     g_list_free (layout->cursors);
-    layout->cursors = NULL;
+    layout->cursors = nullptr;
 
     g_free (layout);
 }
 
-void
-gnc_table_layout_add_cell (TableLayout *layout,
-                           BasicCell *cell)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_add_cell,
+    (TableLayout *layout, BasicCell *cell),
+	(layout, cell))
 {
     GList *node;
 
-    g_return_if_fail (layout != NULL);
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (layout != nullptr);
+    g_return_if_fail (cell != nullptr);
 
     for (node = layout->cells; node; node = node->next)
     {
-        BasicCell *list_cell = node->data;
+        BasicCell *list_cell = static_cast<BasicCell *>(node->data);
 
         if (gnc_basic_cell_has_name (list_cell, cell->cell_name))
         {
@@ -123,45 +122,46 @@ gnc_table_layout_add_cell (TableLayout *layout,
         node->data = cell;
 }
 
-BasicCell *
-gnc_table_layout_get_cell (TableLayout *layout, const char *cell_name)
+SAFE_C_API_ARGS(BasicCell *, gnc_table_layout_get_cell,
+    (TableLayout *layout, const char *cell_name),
+	(layout, cell_name))
 {
     GList *node;
 
-    g_return_val_if_fail (layout != NULL, NULL);
+    g_return_val_if_fail (layout != nullptr, nullptr);
 
     for (node = layout->cells; node; node = node->next)
     {
-        BasicCell *list_cell = node->data;
+        BasicCell *list_cell = static_cast<BasicCell *>(node->data);
 
         if (gnc_basic_cell_has_name (list_cell, cell_name))
             return list_cell;
     }
 
-    return NULL;
+    return nullptr;
 }
 
-const char *
-gnc_table_layout_get_cell_value (TableLayout *layout, const char * cell_name)
+SAFE_C_API_ARGS(const char *, gnc_table_layout_get_cell_value,
+    (TableLayout *layout, const char * cell_name),
+	(layout, cell_name))
 {
     BasicCell *cell;
 
-    g_return_val_if_fail (layout != NULL, NULL);
+    g_return_val_if_fail (layout != nullptr, nullptr);
 
     cell = gnc_table_layout_get_cell (layout, cell_name);
-    if (!cell) return NULL;
+    if (!cell) return nullptr;
 
     return gnc_basic_cell_get_value (cell);
 }
 
-gboolean
-gnc_table_layout_get_cell_changed (TableLayout *layout,
-                                   const char *cell_name,
-                                   gboolean include_conditional)
+SAFE_C_API_ARGS(gboolean, gnc_table_layout_get_cell_changed,
+    (TableLayout *layout, const char *cell_name, gboolean include_conditional),
+	(layout, cell_name, include_conditional))
 {
     BasicCell *cell;
 
-    g_return_val_if_fail (layout != NULL, FALSE);
+    g_return_val_if_fail (layout != nullptr, FALSE);
 
     cell = gnc_table_layout_get_cell (layout, cell_name);
     if (!cell) return FALSE;
@@ -173,30 +173,29 @@ gnc_table_layout_get_cell_changed (TableLayout *layout,
                 gnc_basic_cell_get_conditionally_changed (cell));
 }
 
-GList *
-gnc_table_layout_get_cells (TableLayout *layout)
+SAFE_C_API_ARGS(GList *, gnc_table_layout_get_cells, (TableLayout *layout), (layout))
 {
     if (!layout)
-        return NULL;
+        return nullptr;
 
     return layout->cells;
 }
 
-void
-gnc_table_layout_add_cursor (TableLayout *layout,
-                             CellBlock *cursor)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_add_cursor,
+    (TableLayout *layout, CellBlock *cursor),
+	(layout, cursor))
 {
     GList *node;
 
-    g_return_if_fail (layout != NULL);
-    g_return_if_fail (cursor != NULL);
+    g_return_if_fail (layout != nullptr);
+    g_return_if_fail (cursor != nullptr);
 
     if (g_list_find (layout->cursors, cursor))
         return;
 
     for (node = layout->cursors; node; node = node->next)
     {
-        CellBlock *list_cursor = node->data;
+        CellBlock *list_cursor = static_cast<CellBlock *>(node->data);
 
         if (strcmp (list_cursor->cursor_name, cursor->cursor_name) == 0)
         {
@@ -209,56 +208,53 @@ gnc_table_layout_add_cursor (TableLayout *layout,
     layout->cursors = g_list_append (layout->cursors, cursor);
 }
 
-CellBlock *
-gnc_table_layout_get_cursor (TableLayout *layout,
-                             const char *cursor_name)
+SAFE_C_API_ARGS(CellBlock *, gnc_table_layout_get_cursor,
+    (TableLayout *layout, const char *cursor_name),
+	(layout, cursor_name))
 {
     GList *node;
 
-    g_return_val_if_fail (layout != NULL, NULL);
+    g_return_val_if_fail (layout != nullptr, nullptr);
 
     if (!cursor_name)
-        return NULL;
+        return nullptr;
 
     for (node = layout->cursors; node; node = node->next)
     {
-        CellBlock *cursor = node->data;
+        CellBlock *cursor = static_cast<CellBlock *>(node->data);
 
         if (strcmp (cursor_name, cursor->cursor_name) == 0)
             return cursor;
     }
 
-    return NULL;
+    return nullptr;
 }
 
-GList *
-gnc_table_layout_get_cursors (TableLayout *layout)
+SAFE_C_API_ARGS(GList *, gnc_table_layout_get_cursors, (TableLayout *layout), (layout))
 {
-    g_return_val_if_fail (layout != NULL, NULL);
+    g_return_val_if_fail (layout != nullptr, nullptr);
     return layout->cursors;
 }
 
-void
-gnc_table_layout_set_primary_cursor (TableLayout *layout,
-                                     CellBlock *cursor)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_set_primary_cursor,
+    (TableLayout *layout, CellBlock *cursor),
+	(layout, cursor))
 {
-    g_return_if_fail (layout != NULL);
+    g_return_if_fail (layout != nullptr);
     layout->primary_cursor = cursor;
 }
 
-void
-gnc_table_layout_set_cell (TableLayout *layout,
-                           CellBlock *cursor,
-                           const char *cell_name,
-                           int row, int col)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_set_cell,
+    (TableLayout *layout, CellBlock *cursor, const char *cell_name, int row, int col),
+	(layout, cursor, cell_name, row, col))
 {
     CellBlock *header;
     BasicCell *cell;
 
-    g_return_if_fail (layout != NULL);
-    g_return_if_fail (layout->primary_cursor != NULL);
-    g_return_if_fail (cursor != NULL);
-    g_return_if_fail (cell_name != NULL);
+    g_return_if_fail (layout != nullptr);
+    g_return_if_fail (layout->primary_cursor != nullptr);
+    g_return_if_fail (cursor != nullptr);
+    g_return_if_fail (cell_name != nullptr);
     g_return_if_fail (row >= 0);
     g_return_if_fail (col >= 0);
     g_return_if_fail (row < cursor->num_rows);
@@ -267,8 +263,8 @@ gnc_table_layout_set_cell (TableLayout *layout,
     header = gnc_table_layout_get_cursor (layout, CURSOR_HEADER);
     cell = gnc_table_layout_get_cell (layout, cell_name);
 
-    g_return_if_fail (header != NULL);
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (header != nullptr);
+    g_return_if_fail (cell != nullptr);
 
     cursor->start_col = MIN (cursor->start_col, col);
     cursor->stop_col  = MAX (cursor->stop_col,  col);
@@ -282,8 +278,7 @@ gnc_table_layout_set_cell (TableLayout *layout,
         gnc_cellblock_set_cell (header, row, col, cell);
 }
 
-CursorBuffer *
-gnc_cursor_buffer_new (void)
+SAFE_C_API_NOARGS(CursorBuffer *, gnc_cursor_buffer_new)
 {
     CursorBuffer *buffer;
 
@@ -295,14 +290,14 @@ gnc_cursor_buffer_new (void)
 static void
 destroy_cell_buffer (CellBuffer *cb)
 {
-    if (cb == NULL)
+    if (cb == nullptr)
         return;
 
     g_free (cb->cell_name);
-    cb->cell_name = NULL;
+    cb->cell_name = nullptr;
 
     g_free (cb->value);
-    cb->value = NULL;
+    cb->value = nullptr;
 
     g_free (cb);
 }
@@ -316,17 +311,16 @@ gnc_cursor_buffer_clear (CursorBuffer *buffer)
 
     for (node = buffer->cell_buffers; node; node = node->next)
     {
-        CellBuffer *cb = node->data;
+        CellBuffer *cb = static_cast<CellBuffer *>(node->data);
 
         destroy_cell_buffer (cb);
     }
 
     g_list_free (buffer->cell_buffers);
-    buffer->cell_buffers = NULL;
+    buffer->cell_buffers = nullptr;
 }
 
-void
-gnc_cursor_buffer_destroy (CursorBuffer *buffer)
+SAFE_C_API_VOID_ARGS(gnc_cursor_buffer_destroy, (CursorBuffer *buffer), (buffer))
 {
     if (!buffer) return;
 
@@ -341,7 +335,7 @@ save_cell (BasicCell *bcell)
     CellBuffer *cb;
 
     if (!bcell)
-        return NULL;
+        return nullptr;
 
     cb = g_new0 (CellBuffer, 1);
 
@@ -353,10 +347,9 @@ save_cell (BasicCell *bcell)
     return cb;
 }
 
-void
-gnc_table_layout_save_cursor (TableLayout *layout,
-                              CellBlock *cursor,
-                              CursorBuffer *buffer)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_save_cursor,
+    (TableLayout *layout, CellBlock *cursor, CursorBuffer *buffer),
+	(layout, cursor, buffer))
 {
     GList *node;
 
@@ -367,7 +360,7 @@ gnc_table_layout_save_cursor (TableLayout *layout,
 
     for (node = layout->cells; node; node = node->next)
     {
-        BasicCell *list_cell = node->data;
+        BasicCell *list_cell = static_cast<BasicCell *>(node->data);
         CellBuffer *cb;
 
         if (!gnc_basic_cell_get_changed (list_cell) &&
@@ -411,10 +404,9 @@ restore_cell (BasicCell *bcell, CellBuffer *cb, CellBlock *cursor)
         }
 }
 
-void
-gnc_table_layout_restore_cursor (TableLayout *layout,
-                                 CellBlock *cursor,
-                                 CursorBuffer *buffer)
+SAFE_C_API_VOID_ARGS(gnc_table_layout_restore_cursor,
+    (TableLayout *layout, CellBlock *cursor, CursorBuffer *buffer),
+	(layout, cursor, buffer))
 {
     GList *node;
 
@@ -423,7 +415,7 @@ gnc_table_layout_restore_cursor (TableLayout *layout,
 
     for (node = buffer->cell_buffers; node; node = node->next)
     {
-        CellBuffer *cb = node->data;
+        CellBuffer *cb = static_cast<CellBuffer *>(node->data);
         BasicCell *cell;
 
         cell = gnc_table_layout_get_cell (layout, cb->cell_name);

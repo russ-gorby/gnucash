@@ -36,7 +36,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <string.h>
+#include <cstring>
 
 #include "gnc-exp-parser.h"
 #include "gnc-engine.h"
@@ -47,7 +47,10 @@
 #include "pricecell.h"
 #include <qoflog.h>
 
+#include "except-fence.hpp"
+
 static const QofLogModule log_module = G_LOG_DOMAIN;
+static const char *empty_str = "";
 
 static void gnc_price_cell_init (PriceCell *cell);
 static void gnc_price_cell_set_value_internal (BasicCell *bcell,
@@ -80,7 +83,7 @@ gnc_price_cell_modify_verify (BasicCell *_cell,
 {
     PriceCell *cell = (PriceCell *) _cell;
     const char *toks = "+-*/=()_";
-    char *validated_newval = NULL;
+    char *validated_newval = nullptr;
 
     DEBUG("%s, %d, %s, %d, %d, %d, %d",
             change ? (gchar *)change : "(null)", change_len,
@@ -105,18 +108,18 @@ static gint
 gnc_price_cell_parse (PriceCell *cell, gboolean update_value)
 {
     const char *newval;
-    char *oldval;
+    const char *oldval;
     gnc_numeric amount;
 
     if (!cell->need_to_parse)
         return -1;
 
     oldval = cell->cell.value;
-    if (oldval == NULL)
-        oldval = "";
+    if (oldval == nullptr)
+        oldval = empty_str;
 
     {
-        char *err_location = NULL;
+        char *err_location = nullptr;
         if (strlen(g_strstrip(cell->cell.value)) == 0)
         {
             cell->amount = gnc_numeric_zero ();
@@ -157,15 +160,13 @@ gnc_price_cell_leave (BasicCell *_cell)
     error_position = gnc_price_cell_parse (cell, TRUE);
     if (error_position != -1)
     {
-        gnc_warning_dialog (gnc_ui_get_main_window (NULL),
+        gnc_warning_dialog (gnc_ui_get_main_window (nullptr),
                             _("An error occurred while processing '%s' at position %d"),
                             cell->cell.value, error_position);
     }
 
 }
-
-BasicCell *
-gnc_price_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_price_cell_new)
 {
     PriceCell *cell;
 
@@ -176,7 +177,7 @@ gnc_price_cell_new (void)
     return &cell->cell;
 }
 
-void
+static void
 gnc_price_cell_init (PriceCell *cell)
 {
     gnc_basic_cell_init (&(cell->cell));
@@ -199,15 +200,14 @@ static const char *
 gnc_price_cell_print_value (PriceCell *cell)
 {
     if (cell->blank_zero && gnc_numeric_zero_p (cell->amount))
-        return "";
+        return empty_str;
 
     return xaccPrintAmount (cell->amount, cell->print_info);
 }
 
-gnc_numeric
-gnc_price_cell_get_value (PriceCell *cell)
+SAFE_C_API_ARGS(gnc_numeric, gnc_price_cell_get_value, (PriceCell *cell), (cell))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return gnc_numeric_zero ();
 
     gnc_price_cell_parse (cell, FALSE);
@@ -215,12 +215,13 @@ gnc_price_cell_get_value (PriceCell *cell)
     return cell->amount;
 }
 
-gboolean
-gnc_price_cell_set_value (PriceCell * cell, gnc_numeric amount)
+SAFE_C_API_ARGS(gboolean, gnc_price_cell_set_value,
+    (PriceCell * cell, gnc_numeric amount),
+	(cell, amount))
 {
     const char *buff;
 
-    if (cell == NULL)
+    if (cell == nullptr)
         return FALSE;
 
     if (cell->fraction > 0)
@@ -238,49 +239,48 @@ gnc_price_cell_set_value (PriceCell * cell, gnc_numeric amount)
     return TRUE;
 }
 
-void
-gnc_price_cell_set_fraction (PriceCell *cell, int fraction)
+SAFE_C_API_VOID_ARGS(gnc_price_cell_set_fraction, (PriceCell *cell, int fraction), (cell, fraction))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     cell->fraction = ABS (fraction);
 }
 
-void
-gnc_price_cell_blank (PriceCell *cell)
+SAFE_C_API_VOID_ARGS(gnc_price_cell_blank, (PriceCell *cell), (cell))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     cell->amount = gnc_numeric_zero ();
     cell->need_to_parse = FALSE;
 
-    gnc_basic_cell_set_value_internal (&cell->cell, "");
+    gnc_basic_cell_set_value_internal (&cell->cell, empty_str);
 }
 
-void
-gnc_price_cell_set_blank_zero (PriceCell *cell, gboolean blank_zero)
+SAFE_C_API_VOID_ARGS(gnc_price_cell_set_blank_zero,
+    (PriceCell *cell, gboolean blank_zero),
+	(cell, blank_zero))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     cell->blank_zero = blank_zero;
 }
 
-void
-gnc_price_cell_set_print_info (PriceCell *cell, GNCPrintAmountInfo print_info)
+SAFE_C_API_VOID_ARGS(gnc_price_cell_set_print_info,
+    (PriceCell *cell, GNCPrintAmountInfo print_info),
+	(cell, print_info))
 {
-    if (cell == NULL)
+    if (cell == nullptr)
         return;
 
     cell->print_info = print_info;
 }
 
-void
-gnc_price_cell_set_debt_credit_value (PriceCell * debit,
-                                      PriceCell * credit,
-                                      gnc_numeric amount)
+SAFE_C_API_VOID_ARGS(gnc_price_cell_set_debt_credit_value,
+    (PriceCell * debit, PriceCell * credit, gnc_numeric amount),
+	(debit, credit, amount))
 {
     /* debits are positive, credits are negative */
     if (gnc_numeric_positive_p (amount))
@@ -301,11 +301,11 @@ gnc_price_cell_set_value_internal (BasicCell *_cell, const char *str)
     PriceCell *cell = (PriceCell *) _cell;
     gnc_numeric amount;
 
-    if (str == NULL)
-        str = "";
+    if (str == nullptr)
+        str = empty_str;
 
     if (*str == '\0')
         gnc_price_cell_set_value (cell, gnc_numeric_zero ());
-    else if (gnc_exp_parser_parse (str, &amount, NULL))
+    else if (gnc_exp_parser_parse (str, &amount, nullptr))
         gnc_price_cell_set_value (cell, amount);
 }

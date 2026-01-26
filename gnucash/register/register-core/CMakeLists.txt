@@ -1,20 +1,20 @@
 set (register_core_SOURCES
-  doclinkcell.c
-  basiccell.c
-  cell-factory.c
-  cellblock.c
-  formulacell.c
-  gtable.c
-  numcell.c
-  pricecell.c
-  quickfillcell.c
-  recncell.c
-  checkboxcell.c
-  register-common.c
-  table-allgui.c
-  table-control.c
-  table-layout.c
-  table-model.c
+  doclinkcell.cpp
+  basiccell.cpp
+  cell-factory.cpp
+  cellblock.cpp
+  formulacell.cpp
+  gtable.cpp
+  numcell.cpp
+  pricecell.cpp
+  quickfillcell.cpp
+  recncell.cpp
+  checkboxcell.cpp
+  register-common.cpp
+  table-allgui.cpp
+  table-control.cpp
+  table-layout.cpp
+  table-model.cpp
 )
 
 
@@ -44,6 +44,20 @@ set (register_core_HEADERS
 set_source_files_properties (${register_core_SOURCES} PROPERTIES OBJECT_DEPENDS ${CONFIG_H})
 
 add_library (gnc-register-core ${register_core_SOURCES} ${register_core_HEADERS})
+
+if (MINGW)
+  # ensure no C compilation
+  set_target_properties(gnc-register-core PROPERTIES
+        CMAKE_C_COMPILER_LAUNCHER "false"
+  )
+  # remove -DWINVER=0x0500 -D_EMULATE_GLIBC=0 and add C++ options from non-MINGW compile
+  # By default target_compile_options() adds its flags AFTER CMAKE_CXX_FLAGS
+  set(NEW_CXX_COMPILE_FLAGS "-Werror" "-Wall" "-Wmissing-declarations"
+    "-UWINVER" "-U_EMULATE_GLIBC")
+  # set target compile options
+  target_compile_options(gnc-register-core PRIVATE ${NEW_CXX_COMPILE_FLAGS}
+  )
+endif()
 
 target_link_libraries(gnc-register-core gnc-gnome-utils gnc-app-utils ${GMODULE_LDFLAGS})
 

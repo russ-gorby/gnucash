@@ -23,11 +23,11 @@
 #ifndef TABLE_CONTROL_H
 #define TABLE_CONTROL_H
 
+#include "register-common.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "register-common.h"
 
 /** @addtogroup Table Table
  * @{

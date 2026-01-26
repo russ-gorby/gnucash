@@ -78,15 +78,14 @@
 #ifndef DATE_CELL_H
 #define DATE_CELL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <time.h>
 
 #include "basiccell.h"
 #include "qof.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {

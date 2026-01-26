@@ -35,13 +35,15 @@
 
 #include <config.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 #include "basiccell.h"
 #include "gnc-engine.h"
 #include "checkboxcell.h"
+
+#include "except-fence.hpp"
 
 
 /* assumes we are given the untranslated form */
@@ -78,8 +80,7 @@ gnc_checkbox_cell_init (CheckboxCell *cell)
     cell->cell.set_value = gnc_checkbox_cell_set_value;
 }
 
-BasicCell *
-gnc_checkbox_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_checkbox_cell_new)
 {
     CheckboxCell * cell;
 
@@ -90,12 +91,11 @@ gnc_checkbox_cell_new (void)
     return &cell->cell;
 }
 
-void
-gnc_checkbox_cell_set_flag (CheckboxCell *cell, gboolean flag)
+SAFE_C_API_VOID_ARGS(gnc_checkbox_cell_set_flag, (CheckboxCell *cell, gboolean flag), (cell, flag))
 {
     const char *string;
 
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->flag = flag;
     string = gnc_checkbox_cell_get_string (flag);
@@ -103,17 +103,15 @@ gnc_checkbox_cell_set_flag (CheckboxCell *cell, gboolean flag)
     gnc_basic_cell_set_value_internal (&cell->cell, string);
 }
 
-gboolean
-gnc_checkbox_cell_get_flag (CheckboxCell *cell)
+SAFE_C_API_ARGS(gboolean, gnc_checkbox_cell_get_flag, (CheckboxCell *cell), (cell))
 {
-    g_return_val_if_fail (cell != NULL, '\0');
+    g_return_val_if_fail (cell != nullptr, '\0');
 
     return cell->flag;
 }
 
 #define UNICODE_CHECKMARK "\xe2\x9c\x93" // U+2716
-const char *
-gnc_checkbox_cell_get_string (gboolean flag)
+SAFE_C_API_ARGS(const char *, gnc_checkbox_cell_get_string, (gboolean flag), (flag))
 {
 #ifndef MAC_INTEGRATION
     const char* checked = UNICODE_CHECKMARK;

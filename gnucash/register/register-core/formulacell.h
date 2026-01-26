@@ -39,6 +39,10 @@
 #include "basiccell.h"
 #include "qof.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     BasicCell cell;
@@ -54,6 +58,11 @@ typedef struct
 BasicCell* gnc_formula_cell_new (void);
 
 void gnc_formula_cell_set_value( FormulaCell *fc, const char *newVal );
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif /* FORMULA_CELL_H */
 

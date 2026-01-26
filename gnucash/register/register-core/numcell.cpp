@@ -33,12 +33,14 @@
 
 #include <config.h>
 
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
+#include <climits>
+#include <cstdlib>
+#include <cstring>
 
 #include "numcell.h"
 #include "gnc-engine.h"
+
+#include "except-fence.hpp"
 
 static const QofLogModule log_module = G_LOG_DOMAIN;
 
@@ -56,18 +58,18 @@ gnc_parse_num (const char *string, long int *num)
 {
     long int number;
 
-    if (string == NULL)
+    if (string == nullptr)
         return FALSE;
 
     if (!gnc_strisnum (string))
         return FALSE;
 
-    number = strtol (string, NULL, 10);
+    number = strtol (string, nullptr, 10);
 
     if ((number == LONG_MIN) || (number == LONG_MAX))
         return FALSE;
 
-    if (num != NULL)
+    if (num != nullptr)
         *num = number;
 
     return TRUE;
@@ -90,7 +92,7 @@ gnc_num_cell_modify_verify (BasicCell *_cell,
     gunichar uc;
     glong change_chars;
 
-    if (change == NULL) /* if we are deleting */
+    if (change == nullptr) /* if we are deleting */
         /* then just accept the proposed change */
     {
         gnc_basic_cell_set_value_internal (&cell->cell, newval);
@@ -173,9 +175,7 @@ gnc_num_cell_modify_verify (BasicCell *_cell,
 
     gnc_basic_cell_set_value_internal (&cell->cell, newval);
 }
-
-BasicCell *
-gnc_num_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_num_cell_new)
 {
     NumCell *cell;
 
@@ -201,18 +201,16 @@ gnc_num_cell_set_value_internal (BasicCell *_cell, const char *str)
 
     gnc_basic_cell_set_value_internal (_cell, str);
 }
-
-void
-gnc_num_cell_set_value (NumCell *cell, const char *str)
+SAFE_C_API_VOID_ARGS(gnc_num_cell_set_value, (NumCell *cell, const char *str), (cell, str))
 {
     if (!cell)
         return;
 
     gnc_num_cell_set_value_internal (&cell->cell, str);
 }
-
-gboolean
-gnc_num_cell_set_last_num (NumCell *cell, const char *str)
+SAFE_C_API_ARGS(gboolean, gnc_num_cell_set_last_num,
+    (NumCell *cell, const char *str),
+	(cell, str))
 {
     long int number;
 

@@ -36,6 +36,10 @@
 
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     BasicCell cell;
@@ -47,5 +51,10 @@ BasicCell * gnc_num_cell_new (void);
 
 void      gnc_num_cell_set_value (NumCell *cell, const char *str);
 gboolean  gnc_num_cell_set_last_num (NumCell *cell, const char *str);
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif

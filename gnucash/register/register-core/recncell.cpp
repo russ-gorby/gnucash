@@ -36,16 +36,19 @@
 
 #include <config.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 #include "basiccell.h"
 #include "gnc-engine.h"
 #include "recncell.h"
 
+#include "except-fence.hpp"
+
 
 static void gnc_recn_cell_set_value (BasicCell *_cell, const char *value);
+static const char *empty_str = "";
 
 
 static const char *
@@ -53,7 +56,7 @@ gnc_recn_cell_get_string (RecnCell *cell, char flag)
 {
     static char str[2] = { 0, 0 };
 
-    if (cell->get_string != NULL)
+    if (cell->get_string != nullptr)
         return (cell->get_string)(flag);
 
     str[0] = flag;
@@ -78,9 +81,9 @@ gnc_recn_cell_enter (BasicCell *_cell,
         return FALSE;
 
     /* Find the current flag in the list of flags */
-    this_flag = strchr (cell->flag_order, cell->flag);
+    this_flag = strchr (const_cast<char *>(cell->flag_order), cell->flag);
 
-    if (this_flag == NULL || *this_flag == '\0')
+    if (this_flag == nullptr || *this_flag == '\0')
     {
         /* If it's not there (or the list is empty) use default_flag */
         cell->flag = cell->default_flag;
@@ -110,18 +113,17 @@ gnc_recn_cell_init (RecnCell *cell)
     gnc_basic_cell_init (&cell->cell);
 
     gnc_recn_cell_set_flag (cell, '\0');
-    cell->confirm_cb = NULL;
-    cell->get_string = NULL;
-    cell->valid_flags = "";
-    cell->flag_order = "";
+    cell->confirm_cb = nullptr;
+    cell->get_string = nullptr;
+    cell->valid_flags = empty_str;
+    cell->flag_order = empty_str;
     cell->read_only = FALSE;
 
     cell->cell.enter_cell = gnc_recn_cell_enter;
     cell->cell.set_value = gnc_recn_cell_set_value;
 }
 
-BasicCell *
-gnc_recn_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_recn_cell_new)
 {
     RecnCell * cell;
 
@@ -142,23 +144,22 @@ gnc_recn_cell_set_value (BasicCell *_cell, const char *value)
     if (!value || *value == '\0')
     {
         cell->flag = cell->default_flag;
-        gnc_basic_cell_set_value_internal (_cell, "");
+        gnc_basic_cell_set_value_internal (_cell, empty_str);
         return;
     }
 
     flag = cell->default_flag;
-    if (strchr (cell->valid_flags, *value) != NULL)
+    if (strchr (cell->valid_flags, *value) != nullptr)
         flag = *value;
 
     gnc_recn_cell_set_flag (cell, flag);
 }
 
-void
-gnc_recn_cell_set_flag (RecnCell *cell, char flag)
+SAFE_C_API_VOID_ARGS(gnc_recn_cell_set_flag, (RecnCell *cell, char flag), (cell, flag))
 {
     const char *string;
 
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->flag = flag;
     string = gnc_recn_cell_get_string (cell, flag);
@@ -166,55 +167,56 @@ gnc_recn_cell_set_flag (RecnCell *cell, char flag)
     gnc_basic_cell_set_value_internal (&cell->cell, string);
 }
 
-char
-gnc_recn_cell_get_flag (RecnCell *cell)
+SAFE_C_API_ARGS(char, gnc_recn_cell_get_flag, (RecnCell *cell), (cell))
 {
-    g_return_val_if_fail (cell != NULL, '\0');
+    g_return_val_if_fail (cell != nullptr, '\0');
 
     return cell->flag;
 }
 
-void
-gnc_recn_cell_set_string_getter (RecnCell *cell,
-                                 RecnCellStringGetter get_string)
+SAFE_C_API_VOID_ARGS(gnc_recn_cell_set_string_getter,
+    (RecnCell *cell, RecnCellStringGetter get_string),
+	(cell, get_string))
 {
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
     cell->get_string = get_string;
 }
 
-void
-gnc_recn_cell_set_confirm_cb (RecnCell *cell, RecnCellConfirm confirm_cb,
-                              gpointer data)
+SAFE_C_API_VOID_ARGS(gnc_recn_cell_set_confirm_cb,
+    (RecnCell *cell, RecnCellConfirm confirm_cb, gpointer data),
+	(cell, confirm_cb, data))
 {
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
 
     cell->confirm_cb = confirm_cb;
     cell->confirm_data = data;
 }
 
-void
-gnc_recn_cell_set_valid_flags (RecnCell *cell, const char *flags,
-                               char default_flag)
+SAFE_C_API_VOID_ARGS(gnc_recn_cell_set_valid_flags,
+    (RecnCell *cell, const char *flags, char default_flag),
+	(cell, flags, default_flag))
 {
-    g_return_if_fail (cell != NULL);
-    g_return_if_fail (flags != NULL);
+    g_return_if_fail (cell != nullptr);
+    g_return_if_fail (flags != nullptr);
 
     cell->valid_flags = (char *)flags;
     cell->default_flag = default_flag;
 }
 
-void
-gnc_recn_cell_set_flag_order (RecnCell *cell, const char *flags)
+SAFE_C_API_VOID_ARGS(gnc_recn_cell_set_flag_order,
+    (RecnCell *cell, const char *flags),
+	(cell, flags))
 {
-    g_return_if_fail (cell != NULL);
-    g_return_if_fail (flags != NULL);
+    g_return_if_fail (cell != nullptr);
+    g_return_if_fail (flags != nullptr);
 
     cell->flag_order = (char *)flags;
 }
 
-void
-gnc_recn_cell_set_read_only (RecnCell *cell, gboolean read_only)
+SAFE_C_API_VOID_ARGS(gnc_recn_cell_set_read_only, \
+    (RecnCell *cell, gboolean read_only),
+	(cell, read_only))
 {
-    g_return_if_fail (cell != NULL);
+    g_return_if_fail (cell != nullptr);
     cell->read_only = read_only;
 }

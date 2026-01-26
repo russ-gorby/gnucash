@@ -37,6 +37,10 @@
 
 #include "basiccell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     BasicCell cell;
@@ -50,5 +54,10 @@ BasicCell * gnc_checkbox_cell_new (void);
 void        gnc_checkbox_cell_set_flag (CheckboxCell *cell, gboolean flag);
 gboolean    gnc_checkbox_cell_get_flag (CheckboxCell *cell);
 const char* gnc_checkbox_cell_get_string (gboolean flag);
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif

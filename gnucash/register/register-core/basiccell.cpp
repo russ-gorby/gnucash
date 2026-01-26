@@ -35,27 +35,28 @@
 
 #include <config.h>
 
-#include <stdlib.h>
-#include <locale.h>
-#include <string.h>
+#include <cstdlib>
+#include <clocale>
+#include <cstring>
 
 #include "gnc-locale-utils.h"
 
 #include "basiccell.h"
 #include "gnc-engine.h"
 
+#include "except-fence.hpp"
+
 /* Debugging module */
 static QofLogModule log_module = GNC_MOD_REGISTER;
 
-gboolean
-gnc_cell_name_equal (const char * cell_name_1,
-                     const char * cell_name_2)
+SAFE_C_API_ARGS(gboolean, gnc_cell_name_equal,
+    (const char * cell_name_1, const char * cell_name_2),
+	(cell_name_1, cell_name_2))
 {
     return (g_strcmp0 (cell_name_1, cell_name_2) == 0);
 }
 
-BasicCell *
-gnc_basic_cell_new (void)
+SAFE_C_API_NOARGS(BasicCell *, gnc_basic_cell_new)
 {
     BasicCell * cell;
 
@@ -70,42 +71,41 @@ static void
 gnc_basic_cell_clear (BasicCell *cell)
 {
     g_free (cell->cell_name);
-    cell->cell_name = NULL;
+    cell->cell_name = nullptr;
     g_free (cell->cell_type_name);
-    cell->cell_type_name = NULL;
+    cell->cell_type_name = nullptr;
     cell->changed = FALSE;
     cell->conditionally_changed = FALSE;
 
-    cell->value = NULL;
+    cell->value = nullptr;
     cell->value_chars = 0;
 
-    cell->set_value = NULL;
-    cell->enter_cell = NULL;
-    cell->modify_verify = NULL;
-    cell->direct_update = NULL;
-    cell->leave_cell = NULL;
-    cell->gui_realize = NULL;
-    cell->gui_move = NULL;
-    cell->gui_destroy = NULL;
+    cell->set_value = nullptr;
+    cell->enter_cell = nullptr;
+    cell->modify_verify = nullptr;
+    cell->direct_update = nullptr;
+    cell->leave_cell = nullptr;
+    cell->gui_realize = nullptr;
+    cell->gui_move = nullptr;
+    cell->gui_destroy = nullptr;
 
     cell->is_popup = FALSE;
 
-    cell->gui_private = NULL;
+    cell->gui_private = nullptr;
 
     g_free (cell->sample_text);
-    cell->sample_text = NULL;
+    cell->sample_text = nullptr;
 }
 
-void
-gnc_basic_cell_init (BasicCell *cell)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_init, (BasicCell *cell), (cell))
 {
     gnc_basic_cell_clear (cell);
 
     cell->value = g_strdup ("");
 }
 
-void
-gnc_basic_cell_destroy (BasicCell *cell)
+
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_destroy, (BasicCell *cell), (cell))
 {
     ENTER(" ");
     if (cell->destroy)
@@ -117,7 +117,7 @@ gnc_basic_cell_destroy (BasicCell *cell)
 
     /* free up data strings */
     g_free (cell->value);
-    cell->value = NULL;
+    cell->value = nullptr;
 
     /* help prevent access to freed memory */
     gnc_basic_cell_clear (cell);
@@ -127,8 +127,9 @@ gnc_basic_cell_destroy (BasicCell *cell)
     LEAVE(" ");
 }
 
-void
-gnc_basic_cell_set_name (BasicCell *cell, const char *name)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_name,
+    (BasicCell *cell, const char *name),
+	(cell, name))
 {
     if (!cell) return;
     if (cell->cell_name == name) return;
@@ -137,8 +138,9 @@ gnc_basic_cell_set_name (BasicCell *cell, const char *name)
     cell->cell_name = g_strdup (name);
 }
 
-gboolean
-gnc_basic_cell_has_name (BasicCell *cell, const char *name)
+SAFE_C_API_ARGS(gboolean, gnc_basic_cell_has_name,
+    (BasicCell *cell, const char *name),
+	(cell, name))
 {
     if (!cell) return FALSE;
     if (!name) return FALSE;
@@ -148,8 +150,9 @@ gnc_basic_cell_has_name (BasicCell *cell, const char *name)
 }
 
 
-void
-gnc_basic_cell_set_type_name (BasicCell *cell, const gchar *type_name)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_type_name,
+    (BasicCell *cell, const gchar *type_name),
+	(cell, type_name))
 {
     if (!cell) return;
     if (cell->cell_type_name == type_name) return;
@@ -158,8 +161,9 @@ gnc_basic_cell_set_type_name (BasicCell *cell, const gchar *type_name)
     cell->cell_type_name = g_strdup(type_name);
 }
 
-gboolean
-gnc_basic_cell_has_type_name (BasicCell *cell, const gchar *type_name)
+SAFE_C_API_ARGS(gboolean, gnc_basic_cell_has_type_name,
+    (BasicCell *cell, const gchar *type_name),
+	(cell, type_name))
 {
     if (!cell) return FALSE;
     if (!type_name) return FALSE;
@@ -168,9 +172,9 @@ gnc_basic_cell_has_type_name (BasicCell *cell, const gchar *type_name)
     return (g_strcmp0 (type_name, cell->cell_type_name));
 }
 
-void
-gnc_basic_cell_set_sample_text (BasicCell *cell,
-                                const char *sample_text)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_sample_text,
+    (BasicCell *cell, const char *sample_text),
+	(cell, sample_text))
 {
     if (!cell) return;
     if (cell->sample_text == sample_text) return;
@@ -179,38 +183,40 @@ gnc_basic_cell_set_sample_text (BasicCell *cell,
     cell->sample_text = g_strdup (sample_text);
 }
 
-void
-gnc_basic_cell_set_alignment (BasicCell *cell,
-                              CellAlignment alignment)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_alignment,
+    (BasicCell *cell, CellAlignment alignment),
+	(cell, alignment))
 {
     if (!cell) return;
     cell->alignment = alignment;
 }
 
-void
-gnc_basic_cell_set_expandable (BasicCell *cell, gboolean expandable)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_expandable,
+    (BasicCell *cell, gboolean expandable),
+	(cell, expandable))
 {
     if (!cell) return;
     cell->expandable = expandable;
 }
 
-void
-gnc_basic_cell_set_span (BasicCell *cell, gboolean span)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_span,
+    (BasicCell *cell, gboolean span),
+	(cell, span))
 {
     if (!cell) return;
     cell->span = span;
 }
 
-const char *
-gnc_basic_cell_get_value (BasicCell *cell)
+SAFE_C_API_ARGS(const char *, gnc_basic_cell_get_value, (BasicCell *cell), (cell))
 {
-    g_return_val_if_fail (cell != NULL, NULL);
+    g_return_val_if_fail (cell != nullptr, nullptr);
 
     return cell->value;
 }
 
-void
-gnc_basic_cell_set_value (BasicCell *cell, const char *val)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_value,
+    (BasicCell *cell, const char *val),
+	(cell, val))
 {
     CellSetValueFunc cb;
 
@@ -219,7 +225,7 @@ gnc_basic_cell_set_value (BasicCell *cell, const char *val)
     {
         /* avoid recursion by disabling the
          * callback while it's being called. */
-        cell->set_value = NULL;
+        cell->set_value = nullptr;
         cb (cell, val);
         cell->set_value = cb;
     }
@@ -227,42 +233,43 @@ gnc_basic_cell_set_value (BasicCell *cell, const char *val)
         gnc_basic_cell_set_value_internal (cell, val);
 }
 
-gboolean
-gnc_basic_cell_get_changed (BasicCell *cell)
+SAFE_C_API_ARGS(gboolean, gnc_basic_cell_get_changed, (BasicCell *cell), (cell))
 {
     if (!cell) return FALSE;
 
     return cell->changed;
 }
 
-gboolean
-gnc_basic_cell_get_conditionally_changed (BasicCell *cell)
+SAFE_C_API_ARGS(gboolean, gnc_basic_cell_get_conditionally_changed, (BasicCell *cell), (cell))
 {
     if (!cell) return FALSE;
 
     return cell->conditionally_changed;
 }
 
-void
-gnc_basic_cell_set_changed (BasicCell *cell, gboolean changed)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_changed,
+    (BasicCell *cell, gboolean changed),
+	(cell, changed))
 {
     if (!cell) return;
 
     cell->changed = changed;
 }
 
-void
-gnc_basic_cell_set_conditionally_changed (BasicCell *cell, gboolean changed)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_conditionally_changed,
+    (BasicCell *cell, gboolean changed),
+	(cell, changed))
 {
     if (!cell) return;
 
     cell->conditionally_changed = changed;
 }
 
-void
-gnc_basic_cell_set_value_internal (BasicCell *cell, const char *value)
+SAFE_C_API_VOID_ARGS(gnc_basic_cell_set_value_internal,
+    (BasicCell *cell, const char *value),
+	(cell, value))
 {
-    if (value == NULL)
+    if (value == nullptr)
         value = "";
 
     /* If the caller tries to set the value with our own value then do
@@ -278,15 +285,16 @@ gnc_basic_cell_set_value_internal (BasicCell *cell, const char *value)
     cell->value_chars = g_utf8_strlen(value, -1);
 }
 
-char *
-gnc_basic_cell_validate (BasicCell *cell, GNCPrintAmountInfo print_info,
-                         const char *change, const char *newval,
-                         const char *toks, gint *cursor_position)
+SAFE_C_API_ARGS(char *, gnc_basic_cell_validate,
+    (BasicCell *cell, GNCPrintAmountInfo print_info,
+    const char *change, const char *newval,
+    const char *toks, gint *cursor_position),
+	(cell, print_info, change, newval, toks, cursor_position))
 {
     struct lconv *lc = gnc_localeconv ();
     gunichar decimal_point;
     gunichar thousands_sep;
-    const char *symbol = NULL;
+    const char *symbol = nullptr;
     char *tokens;
 
     if (print_info.monetary)
@@ -301,7 +309,7 @@ gnc_basic_cell_validate (BasicCell *cell, GNCPrintAmountInfo print_info,
         else
             symbol = gnc_commodity_get_nice_symbol (gnc_default_currency ());
 
-        tokens = g_strconcat (toks, symbol, NULL);
+        tokens = g_strconcat (toks, symbol, nullptr);
     }
     else
     {
@@ -319,10 +327,10 @@ gnc_basic_cell_validate (BasicCell *cell, GNCPrintAmountInfo print_info,
             !g_unichar_isalpha (uc) &&
             (decimal_point != uc) &&
             (thousands_sep != uc) &&
-            (g_utf8_strchr (tokens, -1, uc) == NULL))
+            (g_utf8_strchr (tokens, -1, uc) == nullptr))
         {
             g_free (tokens);
-            return NULL;
+            return nullptr;
         }
     }
     g_free (tokens);

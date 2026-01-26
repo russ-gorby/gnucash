@@ -28,6 +28,7 @@
 #include "cell-factory.h"
 #include "gnc-engine.h"
 
+#include "except-fence.hpp"
 
 typedef struct cell_record
 {
@@ -42,8 +43,7 @@ struct cell_factory
 };
 
 
-CellFactory *
-gnc_cell_factory_new (void)
+SAFE_C_API_NOARGS(CellFactory *, gnc_cell_factory_new)
 {
     CellFactory *cf;
 
@@ -57,33 +57,31 @@ gnc_cell_factory_new (void)
 static void
 cell_table_destroy_helper (gpointer key, gpointer value, gpointer user_data)
 {
-    CellRecord *cr = value;
+    CellRecord *cr = static_cast<CellRecord *>(value);
 
     g_free (cr->cell_type_name);
     g_free (cr);
 }
 
-void
-gnc_cell_factory_destroy (CellFactory *cf)
+SAFE_C_API_VOID_ARGS(gnc_cell_factory_destroy, (CellFactory *cf), (cf))
 {
     if (!cf) return;
 
-    g_hash_table_foreach (cf->cell_table, cell_table_destroy_helper, NULL);
+    g_hash_table_foreach (cf->cell_table, cell_table_destroy_helper, nullptr);
 
     g_free (cf);
 }
 
-void
-gnc_cell_factory_add_cell_type (CellFactory *cf,
-                                const char *cell_type_name,
-                                CellCreateFunc cell_creator)
+SAFE_C_API_VOID_ARGS(gnc_cell_factory_add_cell_type,
+    (CellFactory *cf, const char *cell_type_name, CellCreateFunc cell_creator),
+	(cf, cell_type_name, cell_creator))
 {
     CellRecord *cr;
 
-    g_return_if_fail (cell_type_name != NULL);
-    g_return_if_fail (cell_creator != NULL);
+    g_return_if_fail (cell_type_name != nullptr);
+    g_return_if_fail (cell_creator != nullptr);
 
-    cr = g_hash_table_lookup (cf->cell_table, cell_type_name);
+    cr = static_cast<CellRecord *>(g_hash_table_lookup (static_cast<GHashTable *>(cf->cell_table), cell_type_name));
 
     if (cr)
     {
@@ -96,19 +94,20 @@ gnc_cell_factory_add_cell_type (CellFactory *cf,
     cr->cell_type_name = g_strdup (cell_type_name);
     cr->creator = cell_creator;
 
-    g_hash_table_insert (cf->cell_table, cr->cell_type_name, cr);
+    g_hash_table_insert (static_cast<GHashTable *>(cf->cell_table), cr->cell_type_name, cr);
 }
 
-BasicCell *
-gnc_cell_factory_make_cell (CellFactory *cf, const char *cell_type_name)
+SAFE_C_API_ARGS(BasicCell *, gnc_cell_factory_make_cell,
+    (CellFactory *cf, const char *cell_type_name),
+	(cf, cell_type_name))
 {
     CellRecord *cr;
 
-    g_return_val_if_fail (cf != NULL, NULL);
-    g_return_val_if_fail (cell_type_name != NULL, NULL);
+    g_return_val_if_fail (cf != nullptr, nullptr);
+    g_return_val_if_fail (cell_type_name != nullptr, nullptr);
 
-    cr = g_hash_table_lookup (cf->cell_table, cell_type_name);
-    g_return_val_if_fail (cr != NULL, NULL);
+    cr = static_cast<CellRecord *>(g_hash_table_lookup (cf->cell_table, cell_type_name));
+    g_return_val_if_fail (cr != nullptr, nullptr);
 
     return cr->creator ();
 }

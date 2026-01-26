@@ -28,6 +28,10 @@
 #include "basiccell.h"
 #include "cellblock.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup Table Table
  * @{
  * @file table-layout.h
@@ -82,5 +86,10 @@ void gnc_table_layout_save_cursor (TableLayout *layout,
 void gnc_table_layout_restore_cursor (TableLayout *layout,
                                       CellBlock *cursor,
                                       CursorBuffer *buffer);
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif

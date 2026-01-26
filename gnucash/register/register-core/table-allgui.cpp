@@ -34,15 +34,17 @@
 
 #include <config.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include <glib.h>
 
 #include "table-allgui.h"
 #include "cellblock.h"
 #include "gnc-engine.h"
+
+#include "except-fence.hpp"
 
 
 /** Static Globals *****************************************************/
@@ -63,8 +65,7 @@ static void gnc_table_resize (Table * table, int virt_rows, int virt_cols);
 
 /** Implementation *****************************************************/
 
-void
-gnc_table_set_default_gui_handlers (TableGUIHandlers *gui_handlers)
+SAFE_C_API_VOID_ARGS(gnc_table_set_default_gui_handlers, (TableGUIHandlers *gui_handlers), (gui_handlers))
 {
     if (!gui_handlers)
         memset (&default_gui_handlers, 0, sizeof (default_gui_handlers));
@@ -72,14 +73,15 @@ gnc_table_set_default_gui_handlers (TableGUIHandlers *gui_handlers)
         default_gui_handlers = *gui_handlers;
 }
 
-Table *
-gnc_table_new (TableLayout *layout, TableModel *model, TableControl *control)
+SAFE_C_API_ARGS(Table *, gnc_table_new,
+    (TableLayout *layout, TableModel *model, TableControl *control),
+	(layout, model, control))
 {
     Table *table;
 
-    g_return_val_if_fail (layout != NULL, NULL);
-    g_return_val_if_fail (model != NULL, NULL);
-    g_return_val_if_fail (control != NULL, NULL);
+    g_return_val_if_fail (layout != nullptr, nullptr);
+    g_return_val_if_fail (model != nullptr, nullptr);
+    g_return_val_if_fail (control != nullptr, nullptr);
 
     table = g_new0 (Table, 1);
 
@@ -104,18 +106,17 @@ gnc_table_init (Table * table)
     table->num_virt_rows = -1;
     table->num_virt_cols = -1;
 
-    table->current_cursor = NULL;
+    table->current_cursor = nullptr;
 
     gnc_virtual_location_init (&table->current_cursor_loc);
 
     /* initialize private data */
 
-    table->virt_cells = NULL;
-    table->ui_data = NULL;
+    table->virt_cells = nullptr;
+    table->ui_data = nullptr;
 }
 
-void
-gnc_table_destroy (Table * table)
+SAFE_C_API_VOID_ARGS(gnc_table_destroy, (Table * table), (table))
 {
     /* invoke destroy callback */
     if (table->gui_handlers.destroy)
@@ -128,13 +129,13 @@ gnc_table_destroy (Table * table)
     g_table_destroy (table->virt_cells);
 
     gnc_table_layout_destroy (table->layout);
-    table->layout = NULL;
+    table->layout = nullptr;
 
     gnc_table_control_destroy (table->control);
-    table->control = NULL;
+    table->control = nullptr;
 
     gnc_table_model_destroy (table->model);
-    table->model = NULL;
+    table->model = nullptr;
 
     /* initialize vars to null value so that any access is voided. */
     gnc_table_init (table);
@@ -142,9 +143,9 @@ gnc_table_destroy (Table * table)
     g_free (table);
 }
 
-int
-gnc_table_current_cursor_changed (Table *table,
-                                  gboolean include_conditional)
+SAFE_C_API_ARGS(int, gnc_table_current_cursor_changed,
+    (Table *table, gboolean include_conditional),
+	(table, include_conditional))
 {
     if (!table)
         return FALSE;
@@ -152,8 +153,7 @@ gnc_table_current_cursor_changed (Table *table,
     return gnc_cellblock_changed (table->current_cursor, include_conditional);
 }
 
-void
-gnc_table_clear_current_cursor_changes (Table *table)
+SAFE_C_API_VOID_ARGS(gnc_table_clear_current_cursor_changes, (Table *table), (table))
 {
     if (!table)
         return;
@@ -161,8 +161,9 @@ gnc_table_clear_current_cursor_changes (Table *table)
     gnc_cellblock_clear_changes (table->current_cursor);
 }
 
-void
-gnc_table_save_current_cursor (Table *table, CursorBuffer *buffer)
+SAFE_C_API_VOID_ARGS(gnc_table_save_current_cursor,
+    (Table *table, CursorBuffer *buffer),
+	(table, buffer))
 {
     if (!table || !buffer)
         return;
@@ -170,9 +171,9 @@ gnc_table_save_current_cursor (Table *table, CursorBuffer *buffer)
     gnc_table_layout_save_cursor (table->layout, table->current_cursor, buffer);
 }
 
-void
-gnc_table_restore_current_cursor (Table *table,
-                                  CursorBuffer *buffer)
+SAFE_C_API_VOID_ARGS(gnc_table_restore_current_cursor,
+    (Table *table, CursorBuffer *buffer),
+	(table, buffer))
 {
     if (!table || !buffer)
         return;
@@ -181,21 +182,19 @@ gnc_table_restore_current_cursor (Table *table,
                                      table->current_cursor, buffer);
 }
 
-const char *
-gnc_table_get_current_cell_name (Table *table)
+SAFE_C_API_ARGS(const char *, gnc_table_get_current_cell_name, (Table *table), (table))
 {
-    if (table == NULL)
-        return NULL;
+    if (table == nullptr)
+        return nullptr;
 
     return gnc_table_get_cell_name (table, table->current_cursor_loc);
 }
 
-gboolean
-gnc_table_get_current_cell_location (Table *table,
-                                     const char *cell_name,
-                                     VirtualLocation *virt_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_get_current_cell_location,
+    (Table *table, const char *cell_name, VirtualLocation *virt_loc),
+	(table, cell_name, virt_loc))
 {
-    if (table == NULL)
+    if (table == nullptr)
         return FALSE;
 
     return gnc_table_get_cell_location (table, cell_name,
@@ -203,9 +202,9 @@ gnc_table_get_current_cell_location (Table *table,
                                         virt_loc);
 }
 
-gboolean
-gnc_table_virtual_cell_out_of_bounds (Table *table,
-                                      VirtualCellLocation vcell_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_virtual_cell_out_of_bounds,
+    (Table *table, VirtualCellLocation vcell_loc),
+	(table, vcell_loc))
 {
     if (!table)
         return TRUE;
@@ -216,25 +215,25 @@ gnc_table_virtual_cell_out_of_bounds (Table *table,
             (vcell_loc.virt_col >= table->num_virt_cols));
 }
 
-gboolean
-gnc_table_virtual_location_in_header (Table *table,
-                                      VirtualLocation virt_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_virtual_location_in_header,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     return (virt_loc.vcell_loc.virt_row == 0);
 }
 
-VirtualCell *
-gnc_table_get_virtual_cell (Table *table, VirtualCellLocation vcell_loc)
+SAFE_C_API_ARGS(VirtualCell *, gnc_table_get_virtual_cell,
+    (Table *table, VirtualCellLocation vcell_loc),
+	(table, vcell_loc))
 {
-    if (table == NULL)
-        return NULL;
+    if (table == nullptr)
+        return nullptr;
 
-    return g_table_index (table->virt_cells,
-                          vcell_loc.virt_row, vcell_loc.virt_col);
+    return static_cast<VirtualCell *>(g_table_index (static_cast<GTable *>(table->virt_cells),
+                          vcell_loc.virt_row, vcell_loc.virt_col));
 }
 
-VirtualCell *
-gnc_table_get_header_cell (Table *table)
+SAFE_C_API_ARGS(VirtualCell *, gnc_table_get_header_cell, (Table *table), (table))
 {
     VirtualCellLocation vcell_loc = { 0, 0 };
 
@@ -263,8 +262,9 @@ gnc_table_get_entry_internal (Table *table, VirtualLocation virt_loc,
     return entry;
 }
 
-const char *
-gnc_table_get_entry (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(const char *, gnc_table_get_entry,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     TableGetEntryHandler entry_handler;
     const char *entry;
@@ -289,7 +289,7 @@ gnc_table_get_entry (Table *table, VirtualLocation virt_loc)
                     cell->cell_name);
     if (!entry_handler) return "";
 
-    entry = entry_handler (virt_loc, TRUE, NULL,
+    entry = entry_handler (virt_loc, TRUE, nullptr,
                            table->model->handler_user_data);
     if (!entry)
         entry = "";
@@ -297,27 +297,29 @@ gnc_table_get_entry (Table *table, VirtualLocation virt_loc)
     return entry;
 }
 
-char *
-gnc_table_get_tooltip (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(char *, gnc_table_get_tooltip,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     TableGetTooltipHandler tooltip_handler;
     BasicCell *cell;
 
     cell = gnc_table_get_cell (table, virt_loc);
     if (!cell || !cell->cell_name)
-        return NULL;
+        return nullptr;
 
     tooltip_handler = gnc_table_model_get_tooltip_handler (table->model,
                          cell->cell_name);
 
     if (!tooltip_handler)
-        return NULL;
+        return nullptr;
 
     return  tooltip_handler (virt_loc, table->model->handler_user_data);
 }
 
-CellIOFlags
-gnc_table_get_io_flags (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(CellIOFlags, gnc_table_get_io_flags,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     TableGetCellIOFlagsHandler io_flags_handler;
     const char *cell_name;
@@ -336,13 +338,14 @@ gnc_table_get_io_flags (Table *table, VirtualLocation virt_loc)
     flags = io_flags_handler (virt_loc, table->model->handler_user_data);
 
     if (gnc_table_model_read_only (table->model))
-        flags &= XACC_CELL_ALLOW_SHADOW;
+        flags = static_cast<CellIOFlags>(static_cast<int>(flags) & XACC_CELL_ALLOW_SHADOW);
 
     return flags;
 }
 
-const char *
-gnc_table_get_label (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(const char *, gnc_table_get_label,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     TableGetLabelHandler label_handler;
     const char *cell_name;
@@ -364,9 +367,9 @@ gnc_table_get_label (Table *table, VirtualLocation virt_loc)
     return label;
 }
 
-guint32
-gnc_table_get_color (Table *table, VirtualLocation virt_loc,
-                                 gboolean *hatching)
+SAFE_C_API_ARGS(guint32, gnc_table_get_color,
+    (Table *table, VirtualLocation virt_loc, gboolean *hatching),
+	(table, virt_loc, hatching))
 {
     TableGetCellColorHandler color_handler;
     const char *handler_name;
@@ -389,9 +392,9 @@ gnc_table_get_color (Table *table, VirtualLocation virt_loc,
                           table->model->handler_user_data);
 }
 
-void
-gnc_table_get_borders (Table *table, VirtualLocation virt_loc,
-                       PhysicalCellBorders *borders)
+SAFE_C_API_VOID_ARGS(gnc_table_get_borders,
+    (Table *table, VirtualLocation virt_loc, PhysicalCellBorders *borders),
+	(table, virt_loc, borders))
 {
     TableGetCellBorderHandler cell_border_handler;
     const char *cell_name;
@@ -409,8 +412,9 @@ gnc_table_get_borders (Table *table, VirtualLocation virt_loc,
     cell_border_handler (virt_loc, borders, table->model->handler_user_data);
 }
 
-CellAlignment
-gnc_table_get_align (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(CellAlignment, gnc_table_get_align,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     BasicCell *cell;
 
@@ -421,8 +425,9 @@ gnc_table_get_align (Table *table, VirtualLocation virt_loc)
     return cell->alignment;
 }
 
-gboolean
-gnc_table_is_popup (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_is_popup,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     BasicCell *cell;
 
@@ -433,15 +438,14 @@ gnc_table_is_popup (Table *table, VirtualLocation virt_loc)
     return cell->is_popup;
 }
 
-char *
-gnc_table_get_help (Table *table)
+SAFE_C_API_ARGS(char *, gnc_table_get_help, (Table *table), (table))
 {
     TableGetHelpHandler help_handler;
     VirtualLocation virt_loc;
     const char * cell_name;
 
     if (!table)
-        return NULL;
+        return nullptr;
 
     virt_loc = table->current_cursor_loc;
 
@@ -449,68 +453,69 @@ gnc_table_get_help (Table *table)
 
     help_handler = gnc_table_model_get_help_handler (table->model, cell_name);
     if (!help_handler)
-        return NULL;
+        return nullptr;
 
     return help_handler (virt_loc, table->model->handler_user_data);
 }
 
-BasicCell *
-gnc_table_get_cell (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(BasicCell *, gnc_table_get_cell,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     VirtualCell *vcell;
 
     if (!table)
-        return NULL;
+        return nullptr;
 
     vcell = gnc_table_get_virtual_cell (table, virt_loc.vcell_loc);
     if (!vcell)
-        return NULL;
+        return nullptr;
 
     return gnc_cellblock_get_cell (vcell->cellblock,
                                    virt_loc.phys_row_offset,
                                    virt_loc.phys_col_offset);
 }
 
-const char *
-gnc_table_get_cell_name (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(const char *, gnc_table_get_cell_name,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     BasicCell *cell;
 
     cell = gnc_table_get_cell (table, virt_loc);
-    if (cell == NULL)
-        return NULL;
+    if (cell == nullptr)
+        return nullptr;
 
     return cell->cell_name;
 }
 
-const gchar *
-gnc_table_get_cell_type_name (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(const gchar *, gnc_table_get_cell_type_name,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     BasicCell *cell;
 
     cell = gnc_table_get_cell (table, virt_loc);
-    if (cell == NULL)
-        return NULL;
+    if (cell == nullptr)
+        return nullptr;
 
     return cell->cell_type_name;
 }
 
 
-gboolean
-gnc_table_get_cell_location (Table *table,
-                             const char *cell_name,
-                             VirtualCellLocation vcell_loc,
-                             VirtualLocation *virt_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_get_cell_location,
+    (Table *table, const char *cell_name, VirtualCellLocation vcell_loc, VirtualLocation *virt_loc),
+	(table, cell_name, vcell_loc, virt_loc))
 {
     VirtualCell *vcell;
     CellBlock *cellblock;
     int cell_row, cell_col;
 
-    if (table == NULL)
+    if (table == nullptr)
         return FALSE;
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return FALSE;
 
     cellblock = vcell->cellblock;
@@ -526,7 +531,7 @@ gnc_table_get_cell_location (Table *table,
 
             if (gnc_basic_cell_has_name (cell, cell_name))
             {
-                if (virt_loc != NULL)
+                if (virt_loc != nullptr)
                 {
                     virt_loc->vcell_loc = vcell_loc;
 
@@ -541,8 +546,9 @@ gnc_table_get_cell_location (Table *table,
     return FALSE;
 }
 
-void
-gnc_table_save_cells (Table *table, gpointer save_data)
+SAFE_C_API_VOID_ARGS(gnc_table_save_cells,
+    (Table *table, gpointer save_data),
+	(table, save_data))
 {
     TableSaveHandler save_handler;
     GList * cells;
@@ -563,7 +569,7 @@ gnc_table_save_cells (Table *table, gpointer save_data)
     cells = gnc_table_layout_get_cells (table->layout);
     for (node = cells; node; node = node->next)
     {
-        BasicCell * cell = node->data;
+        BasicCell * cell = static_cast<BasicCell *>(node->data);
         TableSaveCellHandler save_cell_handler;
 
         if (!cell) continue;
@@ -583,8 +589,9 @@ gnc_table_save_cells (Table *table, gpointer save_data)
         save_handler (save_data, table->model->handler_user_data);
 }
 
-void
-gnc_table_set_size (Table * table, int virt_rows, int virt_cols)
+SAFE_C_API_VOID_ARGS(gnc_table_set_size,
+    (Table * table, int virt_rows, int virt_cols),
+	(table, virt_rows, virt_cols))
 {
     /* Invalidate the current cursor position, if the array is
      * shrinking. This must be done since the table is probably
@@ -594,7 +601,7 @@ gnc_table_set_size (Table * table, int virt_rows, int virt_cols)
             (virt_cols < table->num_virt_cols))
     {
         gnc_virtual_location_init (&table->current_cursor_loc);
-        table->current_cursor = NULL;
+        table->current_cursor = nullptr;
     }
 
     gnc_table_resize (table, virt_rows, virt_cols);
@@ -603,16 +610,15 @@ gnc_table_set_size (Table * table, int virt_rows, int virt_cols)
 static void
 gnc_table_free_data (Table * table)
 {
-    if (table == NULL)
+    if (table == nullptr)
         return;
 
     g_table_resize (table->virt_cells, 0, 0);
 }
 
-void
-gnc_virtual_location_init (VirtualLocation *vloc)
+SAFE_C_API_VOID_ARGS(gnc_virtual_location_init, (VirtualLocation *vloc), (vloc))
 {
-    if (vloc == NULL)
+    if (vloc == nullptr)
         return;
 
     vloc->phys_row_offset = -1;
@@ -624,15 +630,15 @@ gnc_virtual_location_init (VirtualLocation *vloc)
 static void
 gnc_virtual_cell_construct (gpointer _vcell, gpointer user_data)
 {
-    VirtualCell *vcell = _vcell;
-    Table *table = user_data;
+    VirtualCell *vcell = static_cast<VirtualCell *>(_vcell);
+    Table *table = static_cast<Table *>(user_data);
 
-    vcell->cellblock = NULL;
+    vcell->cellblock = nullptr;
 
     if (table && table->model->cell_data_allocator)
         vcell->vcell_data = table->model->cell_data_allocator ();
     else
-        vcell->vcell_data = NULL;
+        vcell->vcell_data = nullptr;
 
     vcell->visible = 1;
 }
@@ -640,13 +646,13 @@ gnc_virtual_cell_construct (gpointer _vcell, gpointer user_data)
 static void
 gnc_virtual_cell_destroy (gpointer _vcell, gpointer user_data)
 {
-    VirtualCell *vcell = _vcell;
-    Table *table = user_data;
+    VirtualCell *vcell = static_cast<VirtualCell *>(_vcell);
+    Table *table = static_cast<Table *>(user_data);
 
     if (vcell->vcell_data && table && table->model->cell_data_deallocator)
         table->model->cell_data_deallocator (vcell->vcell_data);
 
-    vcell->vcell_data = NULL;
+    vcell->vcell_data = nullptr;
 }
 
 static void
@@ -660,17 +666,14 @@ gnc_table_resize (Table * table, int new_virt_rows, int new_virt_cols)
     table->num_virt_cols = new_virt_cols;
 }
 
-void
-gnc_table_set_vcell (Table *table,
-                     CellBlock *cursor,
-                     gconstpointer vcell_data,
-                     gboolean visible,
-                     gboolean start_primary_color,
-                     VirtualCellLocation vcell_loc)
+SAFE_C_API_VOID_ARGS(gnc_table_set_vcell,
+    (Table *table, CellBlock *cursor, gconstpointer vcell_data,
+    gboolean visible, gboolean start_primary_color, VirtualCellLocation vcell_loc),
+	(table, cursor, vcell_data, visible, start_primary_color, vcell_loc))
 {
     VirtualCell *vcell;
 
-    if ((table == NULL) || (cursor == NULL))
+    if ((table == nullptr) || (cursor == nullptr))
         return;
 
     if ((vcell_loc.virt_row >= table->num_virt_rows) ||
@@ -680,7 +683,7 @@ gnc_table_set_vcell (Table *table,
                           MAX (table->num_virt_cols, vcell_loc.virt_col + 1));
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return;
 
     /* this cursor is the handler for this block */
@@ -696,18 +699,17 @@ gnc_table_set_vcell (Table *table,
     vcell->start_primary_color = start_primary_color ? 1 : 0;
 }
 
-void
-gnc_table_set_virt_cell_data (Table *table,
-                              VirtualCellLocation vcell_loc,
-                              gconstpointer vcell_data)
+SAFE_C_API_VOID_ARGS(gnc_table_set_virt_cell_data,
+    (Table *table, VirtualCellLocation vcell_loc, gconstpointer vcell_data),
+	(table, vcell_loc, vcell_data))
 {
     VirtualCell *vcell;
 
-    if (table == NULL)
+    if (table == nullptr)
         return;
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return;
 
     if (table->model->cell_data_copy)
@@ -716,35 +718,33 @@ gnc_table_set_virt_cell_data (Table *table,
         vcell->vcell_data = (gpointer) vcell_data;
 }
 
-void
-gnc_table_set_virt_cell_visible (Table *table,
-                                 VirtualCellLocation vcell_loc,
-                                 gboolean visible)
+SAFE_C_API_VOID_ARGS(gnc_table_set_virt_cell_visible,
+    (Table *table, VirtualCellLocation vcell_loc, gboolean visible),
+	(table, vcell_loc, visible))
 {
     VirtualCell *vcell;
 
-    if (table == NULL)
+    if (table == nullptr)
         return;
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return;
 
     vcell->visible = visible ? 1 : 0;
 }
 
-void
-gnc_table_set_virt_cell_cursor (Table *table,
-                                VirtualCellLocation vcell_loc,
-                                CellBlock *cursor)
+SAFE_C_API_VOID_ARGS(gnc_table_set_virt_cell_cursor,
+    (Table *table, VirtualCellLocation vcell_loc, CellBlock *cursor),
+	(table, vcell_loc, cursor))
 {
     VirtualCell *vcell;
 
-    if (table == NULL)
+    if (table == nullptr)
         return;
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return;
 
     vcell->cellblock = cursor;
@@ -783,7 +783,7 @@ gnc_table_move_cursor_internal (Table *table,
     gnc_virtual_location_init (&table->current_cursor_loc);
 
     curs = table->current_cursor;
-    table->current_cursor = NULL;
+    table->current_cursor = nullptr;
 
     /* check for out-of-bounds conditions (which may be deliberate) */
     if ((new_virt_loc.vcell_loc.virt_row < 0) ||
@@ -874,8 +874,9 @@ gnc_table_move_cursor_internal (Table *table,
     LEAVE("did move\n");
 }
 
-void
-gnc_table_move_cursor (Table *table, VirtualLocation new_virt_loc)
+SAFE_C_API_VOID_ARGS(gnc_table_move_cursor,
+    (Table *table, VirtualLocation new_virt_loc),
+	(table, new_virt_loc))
 {
     if (!table) return;
 
@@ -883,8 +884,9 @@ gnc_table_move_cursor (Table *table, VirtualLocation new_virt_loc)
 }
 
 /* same as above, but be sure to deal with GUI elements as well */
-void
-gnc_table_move_cursor_gui (Table *table, VirtualLocation new_virt_loc)
+SAFE_C_API_VOID_ARGS(gnc_table_move_cursor_gui,
+    (Table *table, VirtualLocation new_virt_loc),
+	(table, new_virt_loc))
 {
     if (!table) return;
 
@@ -894,8 +896,9 @@ gnc_table_move_cursor_gui (Table *table, VirtualLocation new_virt_loc)
 /* gnc_table_verify_cursor_position checks the location of the cursor
  * with respect to a virtual location, and repositions the cursor
  * if necessary. Returns true if the cell cursor was repositioned. */
-gboolean
-gnc_table_verify_cursor_position (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_verify_cursor_position,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     gboolean do_move = FALSE;
     gboolean moved_cursor = FALSE;
@@ -928,16 +931,17 @@ gnc_table_verify_cursor_position (Table *table, VirtualLocation virt_loc)
     return moved_cursor;
 }
 
-gpointer
-gnc_table_get_vcell_data (Table *table, VirtualCellLocation vcell_loc)
+SAFE_C_API_ARGS(gpointer, gnc_table_get_vcell_data,
+    (Table *table, VirtualCellLocation vcell_loc),
+	(table, vcell_loc))
 {
     VirtualCell *vcell;
 
-    if (!table) return NULL;
+    if (!table) return nullptr;
 
     vcell = gnc_table_get_virtual_cell (table, vcell_loc);
-    if (vcell == NULL)
-        return NULL;
+    if (vcell == nullptr)
+        return nullptr;
 
     return vcell->vcell_data;
 }
@@ -946,8 +950,7 @@ gnc_table_get_vcell_data (Table *table, VirtualCellLocation vcell_loc)
  * initialization, initialize them now. The realize() callback
  * on the cursor cell is how we inform the cell handler that
  * now is the time to initialize its GUI.  */
-void
-gnc_table_realize_gui (Table * table)
+SAFE_C_API_VOID_ARGS(gnc_table_realize_gui, (Table * table), (table))
 {
     GList *cells;
     GList *node;
@@ -959,15 +962,16 @@ gnc_table_realize_gui (Table * table)
 
     for (node = cells; node; node = node->next)
     {
-        BasicCell *cell = node->data;
+        BasicCell *cell = static_cast<BasicCell *>(node->data);
 
         if (cell->gui_realize)
             cell->gui_realize (cell, table->ui_data);
     }
 }
 
-void
-gnc_table_wrap_verify_cursor_position (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_VOID_ARGS(gnc_table_wrap_verify_cursor_position,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     VirtualLocation save_loc;
     gboolean moved_cursor;
@@ -991,8 +995,9 @@ gnc_table_wrap_verify_cursor_position (Table *table, VirtualLocation virt_loc)
     LEAVE ("");
 }
 
-void
-gnc_table_refresh_current_cursor_gui (Table * table, gboolean do_scroll)
+SAFE_C_API_VOID_ARGS(gnc_table_refresh_current_cursor_gui,
+    (Table * table, gboolean do_scroll),
+	(table, do_scroll))
 {
     if (!table) return;
 
@@ -1000,10 +1005,9 @@ gnc_table_refresh_current_cursor_gui (Table * table, gboolean do_scroll)
                                   do_scroll);
 }
 
-gboolean
-gnc_table_virtual_loc_valid(Table *table,
-                            VirtualLocation virt_loc,
-                            gboolean exact_pointer)
+SAFE_C_API_ARGS(gboolean, gnc_table_virtual_loc_valid,
+    (Table *table, VirtualLocation virt_loc, gboolean exact_pointer),
+	(table, virt_loc, exact_pointer))
 {
     VirtualCell *vcell;
     CellIOFlags io_flags;
@@ -1015,7 +1019,7 @@ gnc_table_virtual_loc_valid(Table *table,
         return FALSE;
 
     vcell = gnc_table_get_virtual_cell(table, virt_loc.vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return FALSE;
 
     if (!vcell->visible)
@@ -1028,7 +1032,7 @@ gnc_table_virtual_loc_valid(Table *table,
         return FALSE;
 
     /* check for a cell handler, but only if cell address is valid */
-    if (vcell->cellblock == NULL) return FALSE;
+    if (vcell->cellblock == nullptr) return FALSE;
 
     /* if table is read-only, any cell is ok :) */
     if (gnc_table_model_read_only (table->model)) return TRUE;
@@ -1050,12 +1054,10 @@ gnc_table_virtual_loc_valid(Table *table,
 }
 
 /* Handle the non gui-specific parts of a cell enter callback */
-gboolean
-gnc_table_enter_update (Table *table,
-                        VirtualLocation virt_loc,
-                        int *cursor_position,
-                        int *start_selection,
-                        int *end_selection)
+SAFE_C_API_ARGS(gboolean, gnc_table_enter_update,
+    (Table *table, VirtualLocation virt_loc,
+    int *cursor_position, int *start_selection, int *end_selection),
+	(table, virt_loc, cursor_position, start_selection, end_selection))
 {
     gboolean can_edit = TRUE;
     CellEnterFunc enter;
@@ -1065,7 +1067,7 @@ gnc_table_enter_update (Table *table,
     int cell_col;
     CellIOFlags io_flags;
 
-    if (table == NULL)
+    if (table == nullptr)
         return FALSE;
 
     cb = table->current_cursor;
@@ -1128,8 +1130,9 @@ gnc_table_enter_update (Table *table,
     return can_edit;
 }
 
-void
-gnc_table_leave_update (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_VOID_ARGS(gnc_table_leave_update,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     CellLeaveFunc leave;
     BasicCell *cell;
@@ -1137,7 +1140,7 @@ gnc_table_leave_update (Table *table, VirtualLocation virt_loc)
     int cell_row;
     int cell_col;
 
-    if (table == NULL)
+    if (table == nullptr)
         return;
 
     cb = table->current_cursor;
@@ -1183,8 +1186,9 @@ gnc_table_leave_update (Table *table, VirtualLocation virt_loc)
     LEAVE("");
 }
 
-gboolean
-gnc_table_confirm_change (Table *table, VirtualLocation virt_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_confirm_change,
+    (Table *table, VirtualLocation virt_loc),
+	(table, virt_loc))
 {
     TableConfirmHandler confirm_handler;
     const char *cell_name;
@@ -1203,18 +1207,15 @@ gnc_table_confirm_change (Table *table, VirtualLocation virt_loc)
 }
 
 /* Returned result should not be touched by the caller.
- * NULL return value means the edit was rejected. */
-const char *
-gnc_table_modify_update (Table *table,
-                         VirtualLocation virt_loc,
-                         const char *change,
-                         int change_len,
-                         const char *newval,
-                         int newval_len,
-                         int *cursor_position,
-                         int *start_selection,
-                         int *end_selection,
-                         gboolean *cancelled)
+ * nullptr return value means the edit was rejected. */
+SAFE_C_API_ARGS(const char *, gnc_table_modify_update,
+    (Table *table, VirtualLocation virt_loc,
+    const char *change, int change_len,
+    const char *newval, int newval_len,
+    int *cursor_position, int *start_selection, int *end_selection,
+    gboolean *cancelled),
+	(table, virt_loc, change, change_len, newval, newval_len, cursor_position, 
+    start_selection, end_selection, cancelled))
 {
     gboolean changed = FALSE;
     CellModifyVerifyFunc mv;
@@ -1224,13 +1225,13 @@ gnc_table_modify_update (Table *table,
     int cell_col;
     char * old_value;
 
-    g_return_val_if_fail (table, NULL);
-    g_return_val_if_fail (table->model, NULL);
+    g_return_val_if_fail (table, nullptr);
+    g_return_val_if_fail (table->model, nullptr);
 
     if (gnc_table_model_read_only (table->model))
     {
         PWARN ("change to read-only table");
-        return NULL;
+        return nullptr;
     }
 
     cb = table->current_cursor;
@@ -1246,7 +1247,7 @@ gnc_table_modify_update (Table *table,
             *cancelled = TRUE;
 
         LEAVE("change cancelled");
-        return NULL;
+        return nullptr;
     }
 
     if (cancelled)
@@ -1257,7 +1258,7 @@ gnc_table_modify_update (Table *table,
     if (!cell)
     {
         LEAVE("no cell");
-        return NULL;
+        return nullptr;
     }
 
     mv = cell->modify_verify;
@@ -1294,17 +1295,14 @@ gnc_table_modify_update (Table *table,
     if (changed)
         return cell->value;
     else
-        return NULL;
+        return nullptr;
 }
 
-gboolean
-gnc_table_direct_update (Table *table,
-                         VirtualLocation virt_loc,
-                         char **newval_ptr,
-                         int *cursor_position,
-                         int *start_selection,
-                         int *end_selection,
-                         gpointer gui_data)
+SAFE_C_API_ARGS(gboolean, gnc_table_direct_update,
+    (Table *table, VirtualLocation virt_loc, char **newval_ptr,
+    int *cursor_position, int *start_selection, int *end_selection,
+    gpointer gui_data),
+	(table, virt_loc, newval_ptr, cursor_position, start_selection, end_selection, gui_data))
 {
     gboolean result;
     BasicCell *cell;
@@ -1333,7 +1331,7 @@ gnc_table_direct_update (Table *table,
 
     ENTER ("");
 
-    if (cell->direct_update == NULL)
+    if (cell->direct_update == nullptr)
     {
         LEAVE("no direct update");
         return FALSE;
@@ -1349,7 +1347,7 @@ gnc_table_direct_update (Table *table,
         if (!gnc_table_confirm_change (table, virt_loc))
         {
             gnc_basic_cell_set_value (cell, old_value);
-            *newval_ptr = NULL;
+            *newval_ptr = nullptr;
             result = TRUE;
         }
         else
@@ -1359,7 +1357,7 @@ gnc_table_direct_update (Table *table,
         }
     }
     else
-        *newval_ptr = NULL;
+        *newval_ptr = nullptr;
 
     g_free (old_value);
 
@@ -1378,14 +1376,14 @@ static gboolean
 gnc_table_find_valid_row_vert (Table *table, VirtualLocation *virt_loc)
 {
     VirtualLocation vloc;
-    VirtualCell *vcell = NULL;
+    VirtualCell *vcell = nullptr;
     int top;
     int bottom;
 
-    if (table == NULL)
+    if (table == nullptr)
         return FALSE;
 
-    if (virt_loc == NULL)
+    if (virt_loc == nullptr)
         return FALSE;
 
     vloc = *virt_loc;
@@ -1449,10 +1447,10 @@ gnc_table_find_valid_cell_horiz (Table *table,
     int left;
     int right;
 
-    if (table == NULL)
+    if (table == nullptr)
         return FALSE;
 
-    if (virt_loc == NULL)
+    if (virt_loc == nullptr)
         return FALSE;
 
     if (gnc_table_virtual_cell_out_of_bounds (table, virt_loc->vcell_loc))
@@ -1464,9 +1462,9 @@ gnc_table_find_valid_cell_horiz (Table *table,
     vloc = *virt_loc;
 
     vcell = gnc_table_get_virtual_cell (table, vloc.vcell_loc);
-    if (vcell == NULL)
+    if (vcell == nullptr)
         return FALSE;
-    if (vcell->cellblock == NULL)
+    if (vcell->cellblock == nullptr)
         return FALSE;
 
     if (vloc.phys_col_offset < 0)
@@ -1500,9 +1498,9 @@ gnc_table_find_valid_cell_horiz (Table *table,
     return FALSE;
 }
 
-gboolean
-gnc_table_find_close_valid_cell (Table *table, VirtualLocation *virt_loc,
-                                 gboolean exact_pointer)
+SAFE_C_API_ARGS(gboolean, gnc_table_find_close_valid_cell,
+    (Table *table, VirtualLocation *virt_loc, gboolean exact_pointer),
+	(table, virt_loc, exact_pointer))
 {
     if (!gnc_table_find_valid_row_vert (table, virt_loc))
         return FALSE;
@@ -1510,33 +1508,31 @@ gnc_table_find_close_valid_cell (Table *table, VirtualLocation *virt_loc,
     return gnc_table_find_valid_cell_horiz (table, virt_loc, exact_pointer);
 }
 
-void
-gnc_table_refresh_cursor_gui (Table * table,
-                              VirtualCellLocation vcell_loc,
-                              gboolean do_scroll)
+SAFE_C_API_VOID_ARGS(gnc_table_refresh_cursor_gui,\
+    (Table * table, VirtualCellLocation vcell_loc, gboolean do_scroll),
+	(table, vcell_loc, do_scroll))
 {
-    g_return_if_fail (table != NULL);
-    g_return_if_fail (table->gui_handlers.cursor_refresh != NULL);
+    g_return_if_fail (table != nullptr);
+    g_return_if_fail (table->gui_handlers.cursor_refresh != nullptr);
 
     table->gui_handlers.cursor_refresh (table, vcell_loc, do_scroll);
 }
 
-gboolean
-gnc_table_move_tab (Table *table,
-                    VirtualLocation *virt_loc,
-                    gboolean move_right)
+SAFE_C_API_ARGS(gboolean, gnc_table_move_tab,
+    (Table *table, VirtualLocation *virt_loc, gboolean move_right),
+	(table, virt_loc, move_right))
 {
     VirtualCell *vcell;
     VirtualLocation vloc;
     BasicCell *cell;
 
-    if ((table == NULL) || (virt_loc == NULL))
+    if ((table == nullptr) || (virt_loc == nullptr))
         return FALSE;
 
     vloc = *virt_loc;
 
     vcell = gnc_table_get_virtual_cell (table, vloc.vcell_loc);
-    if ((vcell == NULL) || (vcell->cellblock == NULL) || !vcell->visible)
+    if ((vcell == nullptr) || (vcell->cellblock == nullptr) || !vcell->visible)
         return FALSE;
 
     while (1)
@@ -1569,7 +1565,7 @@ gnc_table_move_tab (Table *table,
         }
 
         vcell = gnc_table_get_virtual_cell (table, vloc.vcell_loc);
-        if ((vcell == NULL) || (vcell->cellblock == NULL) || !vcell->visible)
+        if ((vcell == nullptr) || (vcell->cellblock == nullptr) || !vcell->visible)
             return FALSE;
 
         cell = gnc_cellblock_get_cell (vcell->cellblock,
@@ -1598,23 +1594,22 @@ gnc_table_move_tab (Table *table,
     }
 }
 
-gboolean
-gnc_table_move_vertical_position (Table *table,
-                                  VirtualLocation *virt_loc,
-                                  int phys_row_offset)
+SAFE_C_API_ARGS(gboolean, gnc_table_move_vertical_position,
+    (Table *table, VirtualLocation *virt_loc, int phys_row_offset),
+	(table, virt_loc, phys_row_offset))
 {
     VirtualLocation vloc;
     VirtualCell *vcell;
     gint last_visible_row;
 
-    if ((table == NULL) || (virt_loc == NULL))
+    if ((table == nullptr) || (virt_loc == nullptr))
         return FALSE;
 
     vloc = *virt_loc;
     last_visible_row = vloc.vcell_loc.virt_row;
 
     vcell = gnc_table_get_virtual_cell (table, vloc.vcell_loc);
-    if ((vcell == NULL) || (vcell->cellblock == NULL))
+    if ((vcell == nullptr) || (vcell->cellblock == nullptr))
         return FALSE;
 
     while (phys_row_offset != 0)
@@ -1692,15 +1687,14 @@ gnc_table_move_vertical_position (Table *table,
     }
 }
 
-gboolean
-gnc_table_traverse_update(Table *table,
-                          VirtualLocation virt_loc,
-                          gncTableTraversalDir dir,
-                          VirtualLocation *dest_loc)
+SAFE_C_API_ARGS(gboolean, gnc_table_traverse_update,
+    (Table *table, VirtualLocation virt_loc,
+    gncTableTraversalDir dir, VirtualLocation *dest_loc),
+	(table, virt_loc, dir, dest_loc))
 {
     gboolean abort_move;
 
-    if ((table == NULL) || (dest_loc == NULL))
+    if ((table == nullptr) || (dest_loc == nullptr))
         return FALSE;
 
     ENTER("proposed (%d %d) -> (%d %d)\n",

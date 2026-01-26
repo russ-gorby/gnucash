@@ -43,6 +43,10 @@
 #include "basiccell.h"
 #include "QuickFill.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     BasicCell cell;
@@ -72,5 +76,10 @@ void             gnc_quickfill_cell_add_completion (QuickFillCell *cell,
  * quickfill upon destruction. */
 void
 gnc_quickfill_cell_use_quickfill_cache (QuickFillCell *cell, QuickFill *shared_qf);
+
+#ifdef __cplusplus
+}
+#endif
+
 /** @} */
 #endif

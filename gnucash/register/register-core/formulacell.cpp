@@ -32,6 +32,8 @@
 #include "formulacell.h"
 #include <qoflog.h>
 
+#include "except-fence.hpp"
+
 #undef G_LOG_DOMAIN
 #define G_LOG_DOMAIN "gnc.register.core.formulacell"
 static const QofLogModule log_module = G_LOG_DOMAIN;
@@ -57,18 +59,14 @@ static void gnc_formula_cell_modify_verify( BasicCell *_cell,
 static void gnc_formula_cell_set_value_internal( BasicCell *_cell,
         const char *str );
 
-
-
-BasicCell*
-gnc_formula_cell_new(void)
+SAFE_C_API_NOARGS(BasicCell*, gnc_formula_cell_new)
 {
     FormulaCell *fc = g_new0( FormulaCell, 1 );
     gnc_formula_cell_init( fc );
     return &fc->cell;
 }
 
-static
-void
+static void
 gnc_formula_cell_init( FormulaCell *fc )
 {
     gnc_basic_cell_init (&(fc->cell));
@@ -80,17 +78,15 @@ gnc_formula_cell_init( FormulaCell *fc )
     fc->cell.set_value     = gnc_formula_cell_set_value_internal;
     fc->cell.leave_cell    = gnc_formula_cell_leave;
 }
-
-void
-gnc_formula_cell_set_value( FormulaCell *fc,
-                            const char *newVal )
+SAFE_C_API_VOID_ARGS(gnc_formula_cell_set_value,
+    (FormulaCell *fc, const char *newVal),
+	(fc, newVal))
 {
     DEBUG("got value [%s]", newVal);
     gnc_formula_cell_set_value_internal( &fc->cell, newVal );
 }
 
-static
-gboolean
+static gboolean
 gnc_formula_cell_enter( BasicCell *_cell,
                         int *cursor_position,
                         int *start_selection,
@@ -110,14 +106,14 @@ gnc_formula_cell_leave(BasicCell *_cell)
     FormulaCell *fc = (FormulaCell*)_cell;
     str = fc->cell.value;
     {
-        char *error_location = NULL;
+        char *error_location = nullptr;
         gnc_numeric amount;
-        if (str != NULL
+        if (str != nullptr
                 && strlen(str) != 0
                 && !gnc_exp_parser_parse(str, &amount, &error_location))
         {
             gint error_position = error_location - str;
-            gnc_warning_dialog (gnc_ui_get_main_window (NULL),
+            gnc_warning_dialog (gnc_ui_get_main_window (nullptr),
                                 _("An error occurred while processing '%s' at position %d"),
                                 str, error_position);
         }
@@ -126,8 +122,7 @@ gnc_formula_cell_leave(BasicCell *_cell)
     gnc_basic_cell_set_value_internal( &fc->cell, str );
 }
 
-static
-void
+static void
 gnc_formula_cell_modify_verify( BasicCell *_cell,
                                 const char *change,
                                 int change_len,
@@ -139,7 +134,7 @@ gnc_formula_cell_modify_verify( BasicCell *_cell,
 {
     FormulaCell *fc = (FormulaCell *)_cell;
     const char *toks = "+-*/=()_:";
-    char *validated_newval = NULL;
+    char *validated_newval = nullptr;
 
     DEBUG("%s, %d, %s, %d, %d, %d, %d",
             change ? (gchar *)change : "(null)", change_len,
@@ -147,7 +142,7 @@ gnc_formula_cell_modify_verify( BasicCell *_cell,
             *cursor_position, *start_selection, *end_selection);
 
     /* accept the newval string if user action was delete */
-    if (change == NULL)
+    if (change == nullptr)
     {
         gnc_basic_cell_set_value_internal (&fc->cell, newval);
         // Remove any selection.
@@ -166,8 +161,7 @@ gnc_formula_cell_modify_verify( BasicCell *_cell,
     g_free (validated_newval);
 }
 
-static
-void
+static void
 gnc_formula_cell_set_value_internal( BasicCell *_cell,
                                      const char *str )
 {
