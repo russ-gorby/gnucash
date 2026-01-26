@@ -102,6 +102,8 @@ add_executable (gnucash
     ${gnucash_noinst_HEADERS}
 )
 
+set_target_properties(gnucash PROPERTIES LINKER_LANGUAGE CXX)
+
 target_compile_definitions(gnucash PRIVATE -DG_LOG_DOMAIN=\"gnc.bin\")
 
 target_link_libraries (gnucash
@@ -130,6 +132,8 @@ add_executable (gnucash-cli
     ${GNUCASH_RESOURCE_FILE}
     ${gnucash_noinst_HEADERS}
 )
+
+set_target_properties(gnucash-cli PROPERTIES LINKER_LANGUAGE CXX)
 
 if (MINGW)
     target_link_options(gnucash-cli PRIVATE -mconsole)
