@@ -1,5 +1,7 @@
 # CMakeLists.txt for common/
 
+add_subdirectory(test)
+
 # The subdirectories
 add_subdirectory (cmake_modules)
 add_subdirectory (debug)
