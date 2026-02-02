@@ -41,6 +41,7 @@ G_BEGIN_DECLS
 /** These error codes can be returned by gnc_gbr_init(). */
 typedef enum
 {
+    GNC_GBR_INIT_NOERROR = 0,
     /** Cannot allocate memory. */
     GNC_GBR_INIT_ERROR_NOMEM,
     /** Unable to open /proc/self/maps; see errno for details. */
@@ -60,6 +61,10 @@ typedef enum
 } Gnc_GbrInitError;
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 gboolean gnc_gbr_init             (GError **error);
 
 gchar   *gnc_gbr_find_exe         (const gchar *default_exe);
@@ -77,6 +82,10 @@ gchar   *gnc_gbr_find_etc_dir     (const gchar *default_etc_dir);
  * location is obtained from somewhere else (e.g. qt) but the gnucash
  * code should nevertheless use this path internally. */
 void gnc_gbr_set_exe (const gchar* default_exe);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 
 G_END_DECLS

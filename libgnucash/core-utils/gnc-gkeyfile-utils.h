@@ -38,9 +38,13 @@
 #define GNC_GKEYFILE_UTILS_H
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Open and read a key/value file from disk into memory.
  *
- *  @param file The name of the file to load.  This should be a fully
+ *  @param filename The name of the file to load.  This should be a fully
  *  qualified path.
  *
  *  @param ignore_error If true this function will ignore any problems
@@ -52,7 +56,7 @@
  *
  *  @return A pointer to a GKeyFile data structure, or NULL.
  */
-GKeyFile *gnc_key_file_load_from_file (const gchar *file,
+GKeyFile *gnc_key_file_load_from_file (const gchar *filename,
                                        gboolean ignore_error,
                                        gboolean return_empty_struct,
                                        GError **caller_error);
@@ -73,6 +77,10 @@ GKeyFile *gnc_key_file_load_from_file (const gchar *file,
 gboolean gnc_key_file_save_to_file (const gchar *file,
                                     GKeyFile *key_file,
                                     GError **error);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif /* GNC_GKEYFILE_UTILS_H */
 /** @} */

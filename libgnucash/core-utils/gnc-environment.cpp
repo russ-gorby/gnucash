@@ -22,12 +22,12 @@
  */
 
 #include <glib.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include <cstdio>
 
-#include <string.h>
+#include <string>
 #include "gnc-environment.h"
 #include "gnc-path.h"
+#include "except-fence.hpp"
 
 static gchar  *environment_expand(gchar *param)
 {
@@ -116,7 +116,6 @@ gnc_environment_parse_one (const gchar *env_path)
     GKeyFile    *keyfile = g_key_file_new();
     gchar **env_vars;
     gsize param_count;
-    gint i;
     gboolean got_keyfile;
     const unsigned num_keys = 6;
     const char *reserved_keys[] = {"GNC_HOME", "GNC_BIN", "GNC_LIB",
@@ -131,11 +130,10 @@ gnc_environment_parse_one (const gchar *env_path)
 
     /* Read the environment overrides and apply them */
     env_vars = g_key_file_get_keys(keyfile, "Variables", &param_count, NULL);
-    for ( i = 0; i < param_count; i++ )
+    for ( gsize i = 0; i < param_count; i++ )
     {
         gchar **val_list;
         gsize val_count;
-        gint j;
         gchar *new_val = NULL, *tmp_val;
         if (char_array_contains(reserved_keys, num_keys, env_vars[i]))
             continue;
@@ -150,7 +148,7 @@ gnc_environment_parse_one (const gchar *env_path)
         {
             /* Set an initial return value, so we can always use g_build_path below) */
             tmp_val = g_strdup ("x");
-            for ( j = 0; j < val_count; j++ )
+            for ( gsize j = 0; j < val_count; j++ )
             {
                 gchar *expanded = environment_expand (val_list[j]);
                 if (expanded && strlen(expanded))
@@ -180,8 +178,7 @@ gnc_environment_parse_one (const gchar *env_path)
     g_key_file_free(keyfile);
 }
 
-void
-gnc_environment_setup (void)
+SAFE_C_API_VOID_NOARGS(gnc_environment_setup)
 {
     gchar *config_path;
     gchar *env_path;

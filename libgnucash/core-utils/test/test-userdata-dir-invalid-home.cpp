@@ -22,12 +22,12 @@
  */
 
 #include <config.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <string>
 
 #include <glib.h>
-#include "test-stuff.h"
 #include "gnc-filepath-utils.h"
+#include "test-stuff.h"
 
 struct usr_confpath_strings_struct
 {
@@ -41,20 +41,20 @@ typedef struct usr_confpath_strings_struct usr_confpath_strings;
 usr_confpath_strings strs2[] =
 {
     {
-        0, "gnc_build_userdata_path",
-        PROJECT_NAME
+        0, const_cast<char *>("gnc_build_userdata_path"),
+        const_cast<char *>(PROJECT_NAME)
     },
     {
-        1, "gnc_build_book_path",
-        PROJECT_NAME G_DIR_SEPARATOR_S "books"
+        1, const_cast<char *>("gnc_build_book_path"),
+        const_cast<char *>(PROJECT_NAME G_DIR_SEPARATOR_S "books")
     },
     {
-        2, "gnc_build_translog_path",
-        PROJECT_NAME G_DIR_SEPARATOR_S "translog"
+        2, const_cast<char *>("gnc_build_translog_path"),
+        const_cast<char *>(PROJECT_NAME G_DIR_SEPARATOR_S "translog")
     },
     {
-        3, "gnc_build_data_path",
-        PROJECT_NAME G_DIR_SEPARATOR_S "data"
+        3, const_cast<char *>("gnc_build_data_path"),
+        const_cast<char *>(PROJECT_NAME G_DIR_SEPARATOR_S "data")
     },
     { 0, NULL, NULL },
 };

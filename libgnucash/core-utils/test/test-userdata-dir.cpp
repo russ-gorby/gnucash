@@ -27,8 +27,8 @@
 
 #include <glib.h>
 #include <glib/gstdio.h>
-#include "test-stuff.h"
 #include "gnc-filepath-utils.h"
+#include "test-stuff.h"
 #ifdef MAC_INTEGRATION
 #include <Foundation/Foundation.h>
 #endif
@@ -50,16 +50,16 @@ typedef struct usr_confpath_strings_struct usr_confpath_strings;
 usr_confpath_strings strs2[] =
 {
     {
-        0, "gnc_build_userdata_path", ""
+        0, const_cast<char *>("gnc_build_userdata_path"), const_cast<char *>("")
     },
     {
-        1, "gnc_build_book_path", "books"
+        1, const_cast<char *>("gnc_build_book_path"), const_cast<char *>("books")
     },
     {
-        2, "gnc_build_translog_path", "translog"
+        2, const_cast<char *>("gnc_build_translog_path"), const_cast<char *>("translog")
     },
     {
-        3, "gnc_build_data_path", "data"
+        3, const_cast<char *>("gnc_build_data_path"), const_cast<char *>("data")
     },
     { 0, NULL, NULL },
 };
@@ -87,7 +87,7 @@ test_get_userdatadir ()
         b = SHGetPathFromIDListW (pidl, path);
         CoTaskMemFree (pidl);
     }
-    return b ? g_utf16_to_utf8 (path, MAX_PATH, NULL, NULL, NULL) : NULL;
+    return b ? g_utf16_to_utf8 (reinterpret_cast<gunichar2 *>(path), MAX_PATH, NULL, NULL, NULL) : NULL;
 #elif defined(MAC_INTEGRATION)
      char *retval = NULL;
      NSFileManager*fm = [NSFileManager defaultManager];

@@ -5,17 +5,17 @@ add_subdirectory(test)
 
 ### libgnc-core-utils
 set (core_utils_SOURCES
-  binreloc.c
+  binreloc.cpp
   gnc-prefs.cpp
-  gnc-environment.c
+  gnc-environment.cpp
   gnc-filepath-utils.cpp
-  gnc-gkeyfile-utils.c
-  gnc-glib-utils.c
+  gnc-gkeyfile-utils.cpp
+  gnc-glib-utils.cpp
   gnc-unicode.cpp
-  gnc-locale-utils.c
+  gnc-locale-utils-c.cpp
   gnc-locale-utils.cpp
-  gnc-path.c
-  gnc-version.c
+  gnc-path.cpp
+  gnc-version.cpp
 )
 
 # Add dependency on config.h
@@ -37,6 +37,16 @@ set(core_utils_noinst_HEADERS
 )
 
 add_library(gnc-core-utils ${core_utils_SOURCES} ${core_utils_noinst_HEADERS})
+
+if (MINGW)
+  # ensure no C compilation
+  set_target_properties(gnc-core-utils PROPERTIES
+        CMAKE_C_COMPILER_LAUNCHER "false"
+  )
+
+  # set target compile options
+  target_compile_options(gnc-core-utils PRIVATE "-Werror" "-Wall")
+endif()
 
 add_dependencies(gnc-core-utils gnc-vcs-info)
 

@@ -26,16 +26,18 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <stdlib.h> /* for mbstowcs() */
+#include <cstdlib> /* for mbstowcs() */
+
+#include "except-fence.hpp"
 
 static void
-gnc_lconv_set_utf8 (char **p_value, char *default_value)
+gnc_lconv_set_utf8 (char **p_value, const char *default_value)
 {
     char *value = *p_value;
     *p_value = NULL;
 
     if ((value == NULL) || (value[0] == 0))
-        value = default_value;
+        value = const_cast<char *>(default_value);
 
 #ifdef G_OS_WIN32
     {
@@ -44,11 +46,12 @@ gnc_lconv_set_utf8 (char **p_value, char *default_value)
         if (count > 0)
         {
             /* malloc and convert */
-            wchar_t *wvalue = g_malloc ((count + 1) * sizeof(wchar_t));
+            wchar_t *wvalue = static_cast<wchar_t *>(g_malloc ((count + 1) * sizeof(wchar_t)));
             count = mbstowcs (wvalue, value, count + 1);
             if (count > 0)
             {
-                *p_value = g_utf16_to_utf8 (wvalue, -1, NULL, NULL, NULL);
+                gunichar2 *w_value = reinterpret_cast<gunichar2 *>(wvalue);
+                *p_value = g_utf16_to_utf8 (w_value, -1, NULL, NULL, NULL);
             }
             g_free (wvalue);
         }
@@ -61,7 +64,7 @@ gnc_lconv_set_utf8 (char **p_value, char *default_value)
     {
         // The g_locale_to_utf8 conversion failed. FIXME: Should we rather
         // use an empty string instead of the default_value? Not sure.
-        *p_value = default_value;
+        *p_value = const_cast<char *>(default_value);
     }
 }
 
@@ -72,8 +75,7 @@ gnc_lconv_set_char (char *p_value, char default_value)
         *p_value = default_value;
 }
 
-struct lconv *
-gnc_localeconv (void)
+SAFE_C_API_NOARGS(struct lconv *, gnc_localeconv)
 {
     static struct lconv lc;
     static gboolean lc_set = FALSE;
@@ -108,8 +110,7 @@ gnc_localeconv (void)
     return &lc;
 }
 
-const char *
-gnc_locale_default_iso_currency_code (void)
+SAFE_C_API_NOARGS(const char *, gnc_locale_default_iso_currency_code)
 {
     static char *code = NULL;
     struct lconv *lc;
@@ -131,8 +132,7 @@ gnc_locale_default_iso_currency_code (void)
 }
 
 /* Return the number of decimal places for this locale. */
-int
-gnc_locale_decimal_places (void)
+SAFE_C_API_NOARGS(int, gnc_locale_decimal_places)
 {
     static gboolean got_it = FALSE;
     static int places;
@@ -151,7 +151,7 @@ gnc_locale_decimal_places (void)
     return places;
 }
 
-gchar *gnc_locale_name (void)
+SAFE_C_API_NOARGS(gchar *, gnc_locale_name)
 {
 # ifdef G_OS_WIN32
     return g_win32_getlocale();

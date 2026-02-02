@@ -44,7 +44,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
-#include <string.h>
+#include <string>
 #include <errno.h>
 #include <fcntl.h>
 #ifdef HAVE_UNISTD_H
@@ -61,12 +61,17 @@
 #endif
 
 #include "gnc-gkeyfile-utils.h"
+#include "except-fence.hpp"
 
-GKeyFile *
-gnc_key_file_load_from_file (const gchar *filename,
-                             gboolean ignore_error,
-                             gboolean return_empty_struct,
-                             GError **caller_error)
+/*GKeyFile *gnc_key_file_load_from_file (const gchar *file,
+                                       gboolean ignore_error,
+                                       gboolean return_empty_struct,
+                                       GError **caller_error);*/
+
+SAFE_C_API_ARGS(GKeyFile *, gnc_key_file_load_from_file,
+	(const gchar *filename, gboolean ignore_error,
+    gboolean return_empty_struct, GError **caller_error),
+	(filename, ignore_error, return_empty_struct, caller_error))
 {
     GKeyFile *key_file;
     GError *error = NULL;
@@ -97,10 +102,9 @@ gnc_key_file_load_from_file (const gchar *filename,
 }
 
 
-gboolean
-gnc_key_file_save_to_file (const gchar *filename,
-                           GKeyFile *key_file,
-                           GError **error)
+SAFE_C_API_ARGS(gboolean, gnc_key_file_save_to_file,
+	(const gchar *filename, GKeyFile *key_file, GError **error),
+	(filename, key_file, error))
 {
     gchar *contents;
     gint fd;

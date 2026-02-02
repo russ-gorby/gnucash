@@ -29,6 +29,7 @@
 #include <unicode/coll.h>
 #include "gnc-locale-utils.h"
 #include <glib-2.0/glib.h>
+#include "except-fence.hpp"
 
 constexpr const char *logdomain{"gnc.locale"};
 
@@ -115,41 +116,33 @@ unicode_has_substring_internal(const char* needle, const char* haystack,
     return true;
 }
 
-bool
-gnc_unicode_has_substring_base_chars(const char* needle,
-                                     const char* haystack,
-                                     int* position,
-                                     int* length)
+SAFE_C_API_ARGS(bool, gnc_unicode_has_substring_base_chars,
+	(const char* needle, const char* haystack, int* position, int* length),
+	(needle, haystack, position, length))
 {
     return unicode_has_substring_internal(needle, haystack, position, length,
                                           CompareStrength::PRIMARY);
 }
 
-bool
-gnc_unicode_has_substring_accented_chars(const char* needle,
-                                         const char* haystack,
-                                         int* position,
-                                         int* length)
+SAFE_C_API_ARGS(bool, gnc_unicode_has_substring_accented_chars,
+	(const char* needle, const char* haystack, int* position, int* length),
+	(needle, haystack, position, length))
 {
     return unicode_has_substring_internal(needle, haystack, position, length,
                                           CompareStrength::SECONDARY);
 }
 
-bool
-gnc_unicode_has_substring_accented_case_sensitive(const char* needle,
-                                                  const char* haystack,
-                                                  int* position,
-                                                  int* length)
+SAFE_C_API_ARGS(bool, gnc_unicode_has_substring_accented_case_sensitive,
+	(const char* needle, const char* haystack, int* position, int* length),
+	(needle, haystack, position, length))
 {
     return unicode_has_substring_internal(needle, haystack, position, length,
                                           CompareStrength::TERTIARY);
 }
 
-bool
-gnc_unicode_has_substring_identical(const char* needle,
-                                    const char*haystack,
-                                    int* position,
-                                    int* length)
+SAFE_C_API_ARGS(bool, gnc_unicode_has_substring_identical,
+	(const char* needle, const char*haystack, int* position, int* length),
+	(needle, haystack, position, length))
 {
     auto location = strstr(haystack, needle);
     if (location && location != haystack)
@@ -197,26 +190,30 @@ unicode_compare_internal(const char* one, const char* two,
     return result == UCOL_LESS ? -1 : result == UCOL_EQUAL ? 0 : 1;
 }
 
-int
-gnc_unicode_compare_base_chars(const char* one, const char* two)
+SAFE_C_API_ARGS(int, gnc_unicode_compare_base_chars,
+	(const char* one, const char* two),
+	(one, two))
 {
     return unicode_compare_internal(one, two, CompareStrength::PRIMARY);
 }
 
-int
-gnc_unicode_compare_accented_chars(const char* one, const char* two)
+SAFE_C_API_ARGS(int, gnc_unicode_compare_accented_chars,
+	(const char* one, const char* two),
+	(one, two))
 {
     return unicode_compare_internal(one, two, CompareStrength::SECONDARY);
 }
 
-int
-gnc_unicode_compare_accented_case_sensitive(const char* one, const char* two)
+SAFE_C_API_ARGS(int, gnc_unicode_compare_accented_case_sensitive,
+	(const char* one, const char* two),
+	(one, two))
 {
     return unicode_compare_internal(one, two, CompareStrength::TERTIARY);
 }
 
-int
-gnc_unicode_compare_identical(const char* one, const char* two)
+SAFE_C_API_ARGS(int, gnc_unicode_compare_identical,
+	(const char* one, const char* two),
+	(one, two))
 {
     return unicode_compare_internal(one, two, CompareStrength::IDENTICAL);
 

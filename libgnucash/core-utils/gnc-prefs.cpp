@@ -23,12 +23,13 @@
 
 #include <string>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <glib.h>
 #include <config.h>
 #include "gnc-prefs.h"
 #include "gnc-prefs-p.h"
 #include "gnc-version.h"
+#include "except-fence.hpp"
 
 static std::string namespace_regexp;
 static gboolean is_debugging      = FALSE;
@@ -45,89 +46,82 @@ static gulong reg_negative_color_pref_id;
 
 PrefsBackend *prefsbackend = NULL;
 
-const gchar *
-gnc_prefs_get_namespace_regexp(void)
+SAFE_C_API_NOARGS(const gchar *, gnc_prefs_get_namespace_regexp)
 {
     return namespace_regexp.c_str();
 }
 
-void
-gnc_prefs_set_namespace_regexp(const gchar *str)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_namespace_regexp,
+	(const gchar *str), (str))
 {
     if (str)
         namespace_regexp = str;
 }
 
-gboolean
-gnc_prefs_is_debugging_enabled(void)
+SAFE_C_API_NOARGS(gboolean, gnc_prefs_is_debugging_enabled)
 {
     return is_debugging;
 }
 
-void
-gnc_prefs_set_debugging(gboolean d)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_debugging,
+	(gboolean d), (d))
 {
     is_debugging = d;
 }
 
-gboolean
-gnc_prefs_is_extra_enabled(void)
+SAFE_C_API_NOARGS(gboolean, gnc_prefs_is_extra_enabled)
 {
     return extras_enabled;
 }
 
-void
-gnc_prefs_set_extra(gboolean enabled)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_extra,
+	(gboolean enabled), (enabled))
 {
     extras_enabled = enabled;
 }
 
-gboolean
-gnc_prefs_get_file_save_compressed(void)
+SAFE_C_API_NOARGS(gboolean, gnc_prefs_get_file_save_compressed)
 {
     return use_compression;
 }
 
-void
-gnc_prefs_set_file_save_compressed(gboolean compressed)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_file_save_compressed,
+	(gboolean compressed), (compressed))
 {
     use_compression = compressed;
 }
 
-gint
-gnc_prefs_get_file_retention_policy(void)
+SAFE_C_API_NOARGS(gint, gnc_prefs_get_file_retention_policy)
 {
     return file_retention_policy;
 }
 
-void
-gnc_prefs_set_file_retention_policy(gint policy)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_file_retention_policy,
+	(gint policy), (policy))
 {
     file_retention_policy = policy;
 }
 
-gint
-gnc_prefs_get_file_retention_days(void)
+SAFE_C_API_NOARGS(gint, gnc_prefs_get_file_retention_days)
 {
     return file_retention_days;
 }
 
-void
-gnc_prefs_set_file_retention_days(gint days)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_file_retention_days,
+	(gint days), (days))
 {
     file_retention_days = days;
 }
 
-guint
-gnc_prefs_get_long_version()
+SAFE_C_API_NOARGS(guint, gnc_prefs_get_long_version)
 {
      return PROJECT_VERSION_MAJOR * 1000000 + PROJECT_VERSION_MINOR;
 }
 
-gulong gnc_prefs_register_cb (const char *group,
-                              const gchar *pref_name,
-                              gpointer func,
-                              gpointer user_data)
+SAFE_C_API_ARGS(gulong, gnc_prefs_register_cb,
+	(const char *group, const gchar *pref_name,
+    gpointer func, gpointer user_data),
+	(group, pref_name, func, user_data))
 {
     if (prefsbackend && prefsbackend->register_cb)
         return (prefsbackend->register_cb) (group, pref_name, func, user_data);
@@ -139,27 +133,28 @@ gulong gnc_prefs_register_cb (const char *group,
 }
 
 
-void gnc_prefs_remove_cb_by_func (const gchar *group,
-                                  const gchar *pref_name,
-                                  gpointer func,
-                                  gpointer user_data)
+SAFE_C_API_VOID_ARGS(gnc_prefs_remove_cb_by_func,
+	(const gchar *group, const gchar *pref_name,
+    gpointer func, gpointer user_data),
+	(group, pref_name, func, user_data))
 {
     if (prefsbackend && prefsbackend->remove_cb_by_func)
         (prefsbackend->remove_cb_by_func) (group, pref_name, func, user_data);
 }
 
 
-void gnc_prefs_remove_cb_by_id (const gchar *group,
-                                guint id)
+SAFE_C_API_VOID_ARGS(gnc_prefs_remove_cb_by_id,
+	(const gchar *group, guint id),
+	(group, id))
 {
     if (prefsbackend && prefsbackend->remove_cb_by_id)
         (prefsbackend->remove_cb_by_id) (group, id);
 }
 
 
-guint gnc_prefs_register_group_cb (const gchar *group,
-                                   gpointer func,
-                                   gpointer user_data)
+SAFE_C_API_ARGS(guint, gnc_prefs_register_group_cb,
+	(const gchar *group, gpointer func, gpointer user_data),
+	(group, func, user_data))
 {
     if (prefsbackend && prefsbackend->register_group_cb)
         return (prefsbackend->register_group_cb) (group, func, user_data);
@@ -168,28 +163,30 @@ guint gnc_prefs_register_group_cb (const gchar *group,
 }
 
 
-void gnc_prefs_remove_group_cb_by_func (const gchar *group,
-                                        gpointer func,
-                                        gpointer user_data)
+SAFE_C_API_VOID_ARGS(gnc_prefs_remove_group_cb_by_func,
+	(const gchar *group, gpointer func, gpointer user_data),
+	(group, func, user_data))
 {
     if (prefsbackend && prefsbackend->remove_group_cb_by_func)
         (prefsbackend->remove_group_cb_by_func) (group, func, user_data);
 }
 
 
-void gnc_prefs_bind (const gchar *group,
-                     /*@ null @*/ const gchar *pref_name,
-                     /*@ null @*/ const gchar *pref_value,
-                     gpointer object,
-                     const gchar *property)
+SAFE_C_API_VOID_ARGS(gnc_prefs_bind,
+	(const gchar *group,
+    /*@ null @*/ const gchar *pref_name,
+    /*@ null @*/ const gchar *pref_value,
+    gpointer object, const gchar *property),
+	(group, pref_name, pref_value, object, property))
 {
     if (prefsbackend && prefsbackend->bind)
         (prefsbackend->bind) (group, pref_name, pref_value, object, property);
 }
 
 
-gboolean gnc_prefs_get_bool (const gchar *group,
-                             /*@ null @*/ const gchar *pref_name)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_get_bool,
+	(const gchar *group, /*@ null @*/ const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->get_bool)
         return (prefsbackend->get_bool) (group, pref_name);
@@ -198,8 +195,9 @@ gboolean gnc_prefs_get_bool (const gchar *group,
 }
 
 
-gint gnc_prefs_get_int (const gchar *group,
-                        const gchar *pref_name)
+SAFE_C_API_ARGS(gint, gnc_prefs_get_int,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->get_int)
         return (prefsbackend->get_int) (group, pref_name);
@@ -208,8 +206,9 @@ gint gnc_prefs_get_int (const gchar *group,
 }
 
 
-gint64 gnc_prefs_get_int64 (const gchar *group,
-                            const gchar *pref_name)
+SAFE_C_API_ARGS(gint64, gnc_prefs_get_int64,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     gint64 result = 0;
     GVariant *var = gnc_prefs_get_value(group, pref_name);
@@ -219,8 +218,9 @@ gint64 gnc_prefs_get_int64 (const gchar *group,
 }
 
 
-gdouble gnc_prefs_get_float (const gchar *group,
-                             const gchar *pref_name)
+SAFE_C_API_ARGS(gdouble, gnc_prefs_get_float,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->get_float)
         return (prefsbackend->get_float) (group, pref_name);
@@ -229,8 +229,9 @@ gdouble gnc_prefs_get_float (const gchar *group,
 }
 
 
-gchar *gnc_prefs_get_string (const gchar *group,
-                             const gchar *pref_name)
+SAFE_C_API_ARGS(gchar *, gnc_prefs_get_string,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->get_string)
         return (prefsbackend->get_string) (group, pref_name);
@@ -239,8 +240,9 @@ gchar *gnc_prefs_get_string (const gchar *group,
 }
 
 
-gint gnc_prefs_get_enum (const gchar *group,
-                         const gchar *pref_name)
+SAFE_C_API_ARGS(gint, gnc_prefs_get_enum,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->get_enum)
         return (prefsbackend->get_enum) (group, pref_name);
@@ -248,10 +250,9 @@ gint gnc_prefs_get_enum (const gchar *group,
         return 0;
 }
 
-void
-gnc_prefs_get_coords (const gchar *group,
-                      const gchar *pref_name,
-                      gdouble *x, gdouble *y)
+SAFE_C_API_VOID_ARGS(gnc_prefs_get_coords,
+	(const gchar *group, const gchar *pref_name, gdouble *x, gdouble *y),
+	(group, pref_name, x, y))
 {
     GVariant *coords = gnc_prefs_get_value (group, pref_name);
 
@@ -264,8 +265,9 @@ gnc_prefs_get_coords (const gchar *group,
 }
 
 
-GVariant *gnc_prefs_get_value (const gchar *group,
-                               const gchar *pref_name)
+SAFE_C_API_ARGS(GVariant *, gnc_prefs_get_value,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->get_value)
         return (prefsbackend->get_value) (group,pref_name);
@@ -274,9 +276,9 @@ GVariant *gnc_prefs_get_value (const gchar *group,
 }
 
 
-gboolean gnc_prefs_set_bool (const gchar *group,
-                             const gchar *pref_name,
-                             gboolean value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_bool,
+	(const gchar *group, const gchar *pref_name, gboolean value),
+	(group, pref_name, value))
 {
     if (prefsbackend && prefsbackend->set_bool)
         return (prefsbackend->set_bool) (group, pref_name, value);
@@ -285,9 +287,9 @@ gboolean gnc_prefs_set_bool (const gchar *group,
 }
 
 
-gboolean gnc_prefs_set_int (const gchar *group,
-                            const gchar *pref_name,
-                            gint value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_int,
+	(const gchar *group, const gchar *pref_name, gint value),
+	(group, pref_name, value))
 {
     if (prefsbackend && prefsbackend->set_int)
         return (prefsbackend->set_int) (group, pref_name, value);
@@ -296,18 +298,18 @@ gboolean gnc_prefs_set_int (const gchar *group,
 }
 
 
-gboolean gnc_prefs_set_int64 (const gchar *group,
-                              const gchar *pref_name,
-                              gint64 value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_int64,
+	(const gchar *group,const gchar *pref_name, gint64 value),
+	(group, pref_name, value))
 {
     GVariant *var = g_variant_new ("x",value);
     return gnc_prefs_set_value (group, pref_name, var);
 }
 
 
-gboolean gnc_prefs_set_float (const gchar *group,
-                              const gchar *pref_name,
-                              gdouble value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_float,
+	(const gchar *group, const gchar *pref_name, gdouble value),
+	(group, pref_name, value))
 {
     if (prefsbackend && prefsbackend->set_float)
         return (prefsbackend->set_float) (group, pref_name, value);
@@ -316,9 +318,9 @@ gboolean gnc_prefs_set_float (const gchar *group,
 }
 
 
-gboolean gnc_prefs_set_string (const gchar *group,
-                               const gchar *pref_name,
-                               const gchar *value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_string,
+	(const gchar *group, const gchar *pref_name, const gchar *value),
+	(group, pref_name, value))
 {
     if (prefsbackend && prefsbackend->set_string)
         return (prefsbackend->set_string) (group, pref_name, value);
@@ -327,9 +329,9 @@ gboolean gnc_prefs_set_string (const gchar *group,
 }
 
 
-gboolean gnc_prefs_set_enum (const gchar *group,
-                             const gchar *pref_name,
-                             gint value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_enum,
+	(const gchar *group, const gchar *pref_name, gint value),
+	(group, pref_name, value))
 {
     if (prefsbackend && prefsbackend->set_enum)
         return (prefsbackend->set_enum) (group, pref_name, value);
@@ -338,18 +340,18 @@ gboolean gnc_prefs_set_enum (const gchar *group,
 }
 
 
-gboolean gnc_prefs_set_coords (const gchar *group,
-                               const gchar *pref_name,
-                               gdouble x, gdouble y)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_coords,
+	(const gchar *group, const gchar *pref_name, gdouble x, gdouble y),
+	(group, pref_name, x, y))
 {
     GVariant *var = g_variant_new ("(dd)",x, y);
     return gnc_prefs_set_value (group, pref_name, var);
 }
 
 
-gboolean gnc_prefs_set_value (const gchar *group,
-                              const gchar *pref_name,
-                              GVariant *value)
+SAFE_C_API_ARGS(gboolean, gnc_prefs_set_value,
+	(const gchar *group, const gchar *pref_name, GVariant *value),
+	(group, pref_name, value))
 {
     if (prefsbackend && prefsbackend->set_value)
         return (prefsbackend->set_value) (group, pref_name, value);
@@ -358,52 +360,56 @@ gboolean gnc_prefs_set_value (const gchar *group,
 }
 
 
-void gnc_prefs_reset (const gchar *group,
-                      const gchar *pref_name)
+SAFE_C_API_VOID_ARGS(gnc_prefs_reset,
+	(const gchar *group, const gchar *pref_name),
+	(group, pref_name))
 {
     if (prefsbackend && prefsbackend->reset)
         (prefsbackend->reset) (group, pref_name);
 }
 
-void gnc_prefs_reset_group (const gchar *group)
+SAFE_C_API_VOID_ARGS(gnc_prefs_reset_group,
+	(const gchar *group), (group))
 {
     if (prefsbackend && prefsbackend->reset_group)
         (prefsbackend->reset_group) (group);
 }
 
-gboolean gnc_prefs_is_set_up (void)
+SAFE_C_API_NOARGS(gboolean, gnc_prefs_is_set_up)
 {
     return (prefsbackend !=NULL);
 }
 
-void gnc_prefs_block_all (void)
+SAFE_C_API_VOID_NOARGS(gnc_prefs_block_all)
 {
     if (prefsbackend && prefsbackend->block_all)
         (prefsbackend->block_all) ();
 }
 
-void gnc_prefs_unblock_all (void)
+SAFE_C_API_VOID_NOARGS(gnc_prefs_unblock_all)
 {
     if (prefsbackend && prefsbackend->unblock_all)
         (prefsbackend->unblock_all) ();
 }
 
-gulong gnc_prefs_get_reg_auto_raise_lists_id (void)
+SAFE_C_API_NOARGS(gulong, gnc_prefs_get_reg_auto_raise_lists_id)
 {
     return reg_auto_raise_lists_id;
 }
 
-void gnc_prefs_set_reg_auto_raise_lists_id (gulong id)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_reg_auto_raise_lists_id,
+	(gulong id), (id))
 {
     reg_auto_raise_lists_id = id;
 }
 
-gulong gnc_prefs_get_reg_negative_color_pref_id (void)
+SAFE_C_API_NOARGS(gulong, gnc_prefs_get_reg_negative_color_pref_id)
 {
     return reg_negative_color_pref_id;
 }
 
-void gnc_prefs_set_reg_negative_color_pref_id (gulong id)
+SAFE_C_API_VOID_ARGS(gnc_prefs_set_reg_negative_color_pref_id,
+	(gulong id), (id))
 {
     reg_negative_color_pref_id = id;
 }

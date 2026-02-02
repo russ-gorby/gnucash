@@ -40,9 +40,9 @@
 #endif
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <string>
 #include <sys/types.h>
 #include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
@@ -68,6 +68,7 @@
 #include <boost/locale.hpp>
 #include <regex>
 #include <iostream>
+#include "except-fence.hpp"
 
 /* Below cvt and bfs_locale should be used with boost::filesystem::path (bfs)
  * objects created alter in this source file. The rationale is as follows:
@@ -151,8 +152,8 @@ check_path_return_if_valid(gchar *path)
  *
  *  @return An absolute file path.
  */
-gchar *
-gnc_resolve_file_path (const gchar * filefrag)
+SAFE_C_API_ARGS(gchar *, gnc_resolve_file_path,
+	(const gchar * filefrag), (filefrag))
 {
     gchar *fullpath = NULL, *tmp_path = NULL;
 
@@ -206,7 +207,9 @@ gnc_resolve_file_path (const gchar * filefrag)
 
 }
 
-gchar *gnc_file_path_relative_part (const gchar *prefix, const gchar *path)
+SAFE_C_API_ARGS(gchar *, gnc_file_path_relative_part,
+	(const gchar *prefix, const gchar *path),
+	(prefix, path))
 {
     std::string p{path};
     if (p.find(prefix) == 0)
@@ -231,7 +234,7 @@ gchar *gnc_file_path_relative_part (const gchar *prefix, const gchar *path)
  * localized versions of files if they exist.
  */
 static gchar *
-gnc_path_find_localized_html_file_internal (const gchar * file_name)
+gnc_path_find_localized_html_file_internal(const gchar * file_name)
 {
     gchar *full_path = NULL;
     int i;
@@ -300,8 +303,8 @@ gnc_path_find_localized_html_file_internal (const gchar * file_name)
  *
  *  @return An absolute file path or NULL if no file is found.
  */
-gchar *
-gnc_path_find_localized_html_file (const gchar *file_name)
+SAFE_C_API_ARGS(gchar *, gnc_path_find_localized_html_file,
+	(const gchar *file_name), (file_name))
 {
     gchar *loc_file_name = NULL;
     gchar *full_path = NULL;
@@ -368,7 +371,7 @@ static bool dir_is_descendant (const bfs::path& path, const bfs::path& base)
  * @param dirname The path to check
  */
 static bool
-gnc_validate_directory (const bfs::path &dirname)
+gnc_validate_directory(const bfs::path &dirname)
 {
     if (dirname.empty())
         return false;
@@ -482,17 +485,16 @@ copy_recursive(const bfs::path& src, const bfs::path& dest)
  * and minimally adjusted to fetch CSIDL_APPDATA
  */
 static bfs::path
-get_user_data_dir ()
+get_user_data_dir (void)
 {
     wchar_t path[MAX_PATH+1];
     HRESULT hr;
     LPITEMIDLIST pidl = NULL;
-    BOOL b;
 
     hr = SHGetSpecialFolderLocation (NULL, CSIDL_APPDATA, &pidl);
     if (hr == S_OK)
     {
-        b = SHGetPathFromIDListW (pidl, path);
+        (void) SHGetPathFromIDListW (pidl, path);
         CoTaskMemFree (pidl);
     }
     bfs::path retval(path, cvt);
@@ -501,7 +503,7 @@ get_user_data_dir ()
 }
 #elif defined MAC_INTEGRATION
 static bfs::path
-get_user_data_dir()
+get_user_data_dir(void)
 {
     NSFileManager*fm = [NSFileManager defaultManager];
     NSArray* appSupportDir = [fm URLsForDirectory:NSApplicationSupportDirectory
@@ -516,7 +518,7 @@ get_user_data_dir()
 }
 #else
 static bfs::path
-get_user_data_dir()
+get_user_data_dir(void)
 {
     return g_get_user_data_dir();
 }
@@ -584,7 +586,7 @@ get_userconfig_home(void)
 #endif
 }
 
-static std::string migrate_gnc_datahome()
+static std::string migrate_gnc_datahome(void)
 {
     // Specify location of dictionaries
     bfs::path old_dir(g_get_home_dir(), cvt);
@@ -740,7 +742,7 @@ constexpr auto path_package = PROJECT_NAME;
 // Initialize the user's config directory for gnucash
 // creating it if it doesn't exist yet.
 static void
-gnc_file_path_init_config_home (void)
+gnc_file_path_init_config_home(void)
 {
     auto have_valid_userconfig_home = false;
 
@@ -819,7 +821,7 @@ gnc_file_path_init_config_home (void)
 // The function will return true if the directory already
 // existed or false if it had to be created
 static bool
-gnc_file_path_init_data_home (void)
+gnc_file_path_init_data_home(void)
 {
     // Initialize the user's data directory for gnucash
     auto gnc_userdata_home_exists = false;
@@ -907,8 +909,7 @@ gnc_file_path_init_data_home (void)
 // does.
 // Finally it well ensure a number of default required directories
 // will be created if they don't exist yet.
-char *
-gnc_filepath_init (void)
+SAFE_C_API_NOARGS(char *, gnc_filepath_init)
 {
     gnc_userconfig_home = get_userconfig_home() / path_package;
     gnc_userconfig_home_str = gnc_userconfig_home.string();
@@ -976,8 +977,7 @@ gnc_filepath_init (void)
  * consider here is how to handle this in the bindings (if they
  * need it).
  */
-const gchar *
-gnc_userdata_dir (void)
+SAFE_C_API_NOARGS(const gchar *, gnc_userdata_dir)
 {
     if (gnc_userdata_home.empty())
         gnc_filepath_init();
@@ -997,8 +997,7 @@ gnc_userdata_dir (void)
  *  @return An absolute path to the configuration directory. This string is
  *  owned by the gnc_filepath_utils code and should not be freed by the user.
  */
-const gchar *
-gnc_userconfig_dir (void)
+SAFE_C_API_NOARGS(const gchar *, gnc_userconfig_dir)
 {
     if (gnc_userdata_home.empty())
         gnc_filepath_init();
@@ -1007,7 +1006,7 @@ gnc_userconfig_dir (void)
 }
 
 static const bfs::path&
-gnc_userdata_dir_as_path (void)
+gnc_userdata_dir_as_path(void)
 {
     if (gnc_userdata_home.empty())
         /* Don't create missing directories automatically except
@@ -1022,7 +1021,7 @@ gnc_userdata_dir_as_path (void)
 }
 
 static const bfs::path&
-gnc_userconfig_dir_as_path (void)
+gnc_userconfig_dir_as_path(void)
 {
     if (gnc_userdata_home.empty())
         /* Don't create missing directories automatically except
@@ -1036,7 +1035,9 @@ gnc_userconfig_dir_as_path (void)
     return gnc_userconfig_home;
 }
 
-gchar *gnc_file_path_absolute (const gchar *prefix, const gchar *relative)
+SAFE_C_API_ARGS(gchar *, gnc_file_path_absolute,
+	(const gchar *prefix, const gchar *relative),
+	(prefix, relative))
 {
     bfs::path path_relative (relative);
     path_relative.imbue (bfs_locale);
@@ -1074,8 +1075,8 @@ gchar *gnc_file_path_absolute (const gchar *prefix, const gchar *relative)
  *  using g_free().
  */
 
-gchar *
-gnc_build_userdata_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_userdata_path,
+	(const gchar *filename), (filename))
 {
     return g_strdup((gnc_userdata_dir_as_path() / filename).string().c_str());
 }
@@ -1089,8 +1090,8 @@ gnc_build_userdata_path (const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_userconfig_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_userconfig_path,
+	(const gchar *filename), (filename))
 {
     return g_strdup((gnc_userconfig_dir_as_path() / filename).string().c_str());
 }
@@ -1105,7 +1106,7 @@ is_invalid_char (char c)
 }
 
 static bfs::path
-gnc_build_userdata_subdir_path (const gchar *subdir, const gchar *filename)
+gnc_build_userdata_subdir_path(const gchar *subdir, const gchar *filename)
 {
     auto fn = std::string(filename);
 
@@ -1123,8 +1124,8 @@ gnc_build_userdata_subdir_path (const gchar *subdir, const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_book_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_book_path,
+	(const gchar *filename), (filename))
 {
     auto path = gnc_build_userdata_subdir_path("books", filename).string();
     return g_strdup(path.c_str());
@@ -1139,8 +1140,8 @@ gnc_build_book_path (const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_translog_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_translog_path,
+	(const gchar *filename), (filename))
 {
     auto path = gnc_build_userdata_subdir_path("translog", filename).string();
     return g_strdup(path.c_str());
@@ -1155,8 +1156,8 @@ gnc_build_translog_path (const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_data_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_data_path,
+	(const gchar *filename), (filename))
 {
     auto path = gnc_build_userdata_subdir_path("data", filename).string();
     return g_strdup(path.c_str());
@@ -1171,8 +1172,8 @@ gnc_build_data_path (const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_scm_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_scm_path,
+	(const gchar *filename), (filename))
 {
     gchar *scmdir = gnc_path_get_scmdir ();
     gchar *result = g_build_filename (scmdir, filename, (gchar *)NULL);
@@ -1189,8 +1190,8 @@ gnc_build_scm_path (const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_report_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_report_path,
+	(const gchar *filename), (filename))
 {
     gchar *rptdir = gnc_path_get_reportdir ();
     gchar *result = g_build_filename (rptdir, filename, (gchar *)NULL);
@@ -1207,8 +1208,8 @@ gnc_build_report_path (const gchar *filename)
  *  using g_free().
  */
 
-gchar *
-gnc_build_reports_path (const gchar *dirname)
+SAFE_C_API_ARGS(gchar *, gnc_build_reports_path,
+	(const gchar *dirname), (dirname))
 {
     gchar *rptsdir = gnc_path_get_reportsdir ();
     gchar *result = g_build_filename (rptsdir, dirname, (gchar *)NULL);
@@ -1225,8 +1226,8 @@ gnc_build_reports_path (const gchar *dirname)
  *  using g_free().
  */
 
-gchar *
-gnc_build_stdreports_path (const gchar *filename)
+SAFE_C_API_ARGS(gchar *, gnc_build_stdreports_path,
+	(const gchar *filename), (filename))
 {
     gchar *stdrptdir = gnc_path_get_stdreportsdir ();
     gchar *result = g_build_filename (stdrptdir, filename, (gchar *)NULL);
@@ -1235,7 +1236,7 @@ gnc_build_stdreports_path (const gchar *filename)
 }
 
 static gchar *
-gnc_filepath_locate_file (const gchar *default_path, const gchar *name)
+gnc_filepath_locate_file(const gchar *default_path, const gchar *name)
 {
     gchar *fullname;
 
@@ -1258,8 +1259,8 @@ gnc_filepath_locate_file (const gchar *default_path, const gchar *name)
     return fullname;
 }
 
-gchar *
-gnc_filepath_locate_data_file (const gchar *name)
+SAFE_C_API_ARGS(gchar *, gnc_filepath_locate_data_file,
+	(const gchar *name), (name))
 {
     gchar *pkgdatadir = gnc_path_get_pkgdatadir ();
     gchar *result = gnc_filepath_locate_file (pkgdatadir, name);
@@ -1267,8 +1268,8 @@ gnc_filepath_locate_data_file (const gchar *name)
     return result;
 }
 
-gchar *
-gnc_filepath_locate_pixmap (const gchar *name)
+SAFE_C_API_ARGS(gchar *, gnc_filepath_locate_pixmap,
+	(const gchar *name), (name))
 {
     gchar *default_path;
     gchar *fullname;
@@ -1282,8 +1283,8 @@ gnc_filepath_locate_pixmap (const gchar *name)
     return fullname;
 }
 
-gchar *
-gnc_filepath_locate_ui_file (const gchar *name)
+SAFE_C_API_ARGS(gchar *, gnc_filepath_locate_ui_file,
+	(const gchar *name), (name))
 {
     gchar *default_path;
     gchar *fullname;
@@ -1297,8 +1298,8 @@ gnc_filepath_locate_ui_file (const gchar *name)
     return fullname;
 }
 
-gchar *
-gnc_filepath_locate_doc_file (const gchar *name)
+SAFE_C_API_ARGS(gchar *, gnc_filepath_locate_doc_file,
+	(const gchar *name), (name))
 {
     gchar *docdir = gnc_path_get_pkgdocdir ();
     gchar *result = gnc_filepath_locate_file (docdir, name);
@@ -1307,7 +1308,7 @@ gnc_filepath_locate_doc_file (const gchar *name)
 }
 
 std::vector<EnvPaths>
-gnc_list_all_paths ()
+gnc_list_all_paths(void)
 {
     if (gnc_userdata_home.empty())
         gnc_filepath_init ();
@@ -1325,7 +1326,8 @@ gnc_list_all_paths ()
 static const std::regex
 backup_regex (".*[.](?:xac|gnucash)[.][0-9]{14}[.](?:xac|gnucash)$");
 
-gboolean gnc_filename_is_backup (const char *filename)
+SAFE_C_API_ARGS(gboolean, gnc_filename_is_backup,
+	(const char *filename), (filename))
 {
     return std::regex_match (filename, backup_regex);
 }
@@ -1333,7 +1335,8 @@ gboolean gnc_filename_is_backup (const char *filename)
 static const std::regex
 datafile_regex (".*[.](?:xac|gnucash)$");
 
-gboolean gnc_filename_is_datafile (const char *filename)
+SAFE_C_API_ARGS(gboolean, gnc_filename_is_datafile,
+	(const char *filename), (filename))
 {
     return !gnc_filename_is_backup (filename) &&
         std::regex_match (filename, datafile_regex);

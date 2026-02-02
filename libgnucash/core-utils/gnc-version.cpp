@@ -24,6 +24,7 @@
 
 #include "gnc-version.h"
 #include <config.h>
+#include "except-fence.hpp"
 
 #ifdef GNC_VCS
     #define vcs GNC_VCS " "
@@ -32,12 +33,12 @@
 #endif
 #define dflt_build_id vcs GNC_VCS_REV "(" GNC_VCS_REV_DATE ")"
 
-const char *gnc_version(void)
+SAFE_C_API_NOARGS(const char *, gnc_version)
 {
     return PROJECT_VERSION;
 }
 
-const char *gnc_build_id(void)
+SAFE_C_API_NOARGS(const char *, gnc_build_id)
 {
     /* GNUCASH_BUILD_ID can be set by the builder prior to compiling to anything
      * the builder sees fit (eg distributions may want to print a package source
@@ -52,17 +53,17 @@ const char *gnc_build_id(void)
 
 }
 
-const char *gnc_vcs_rev(void)
+SAFE_C_API_NOARGS(const char *, gnc_vcs_rev)
 {
     return GNC_VCS_REV;
 }
 
-const char *gnc_vcs_rev_date(void)
+SAFE_C_API_NOARGS(const char *, gnc_vcs_rev_date)
 {
     return GNC_VCS_REV_DATE;
 }
 
-const int gnc_gnucash_major_version(void)
+SAFE_C_API_NOARGS(const int, gnc_gnucash_major_version)
 {
     return PROJECT_VERSION_MAJOR;
 }

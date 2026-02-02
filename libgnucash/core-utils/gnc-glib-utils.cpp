@@ -27,15 +27,17 @@
 #include <signal.h>
 #include <string.h>
 #include <stdbool.h>
-
 #include "gnc-glib-utils.h"
 
 #ifdef G_OS_WIN32
 #include <windows.h>
 #endif
 
-int
-safe_utf8_collate (const char * da, const char * db)
+#include "except-fence.hpp"
+
+SAFE_C_API_ARGS(int, safe_utf8_collate,
+    (const char * da, const char * db),
+    (da, db))
 {
     if (da && !(*da))
         da = NULL;
@@ -120,10 +122,9 @@ safe_utf8_collate (const char * da, const char * db)
      ((Char) >= 0x20 || (Char) == 0x09 || (Char) == 0x0A || (Char) == 0x0D) && \
      ((Char) & 0xFFFE) != 0xFFFE)
 
-gboolean
-gnc_utf8_validate(const gchar  *str,
-                  gssize        max_len,
-                  const gchar **end)
+SAFE_C_API_ARGS(gboolean, gnc_utf8_validate,
+	(const gchar *str, gssize max_len, const gchar **end),
+	(str, max_len, end))
 {
 
     const gchar *p;
@@ -181,8 +182,8 @@ gnc_utf8_validate(const gchar  *str,
         return TRUE;
 }
 
-void
-gnc_utf8_strip_invalid (gchar *str)
+SAFE_C_API_VOID_ARGS(gnc_utf8_strip_invalid,
+	(gchar *str), (str))
 {
     gchar *end;
     gint len;
@@ -201,16 +202,16 @@ gnc_utf8_strip_invalid (gchar *str)
     while (!gnc_utf8_validate(str, -1, (const gchar **)&end));
 }
 
-gchar *
-gnc_utf8_strip_invalid_strdup(const gchar* str)
+SAFE_C_API_ARGS(gchar *, gnc_utf8_strip_invalid_strdup,
+	(const gchar* str), (str))
 {
     gchar *result = g_strdup (str);
     gnc_utf8_strip_invalid (result);
     return result;
 }
 
-void
-gnc_utf8_strip_invalid_and_controls (gchar *str)
+SAFE_C_API_VOID_ARGS(gnc_utf8_strip_invalid_and_controls,
+	(gchar *str), (str))
 {
     gchar *c = NULL;
     const gchar *controls = "\b\f\n\r\t\v";
@@ -224,8 +225,8 @@ gnc_utf8_strip_invalid_and_controls (gchar *str)
     }
 }
 
-gchar *
-gnc_locale_from_utf8(const gchar* str)
+SAFE_C_API_ARGS(gchar *, gnc_locale_from_utf8,
+	(const gchar* str), (str))
 {
     gchar *   locale_str;
     gsize     bytes_written = 0;
@@ -242,8 +243,8 @@ gnc_locale_from_utf8(const gchar* str)
     return locale_str;
 }
 
-gchar *
-gnc_locale_to_utf8(const gchar* str)
+SAFE_C_API_ARGS(gchar *, gnc_locale_to_utf8,
+	(const gchar* str), (str))
 {
     gchar *   utf8_str;
     gsize     bytes_written = 0;
@@ -260,8 +261,9 @@ gnc_locale_to_utf8(const gchar* str)
     return utf8_str;
 }
 
-GList*
-gnc_g_list_map(GList* list, GncGMapFunc fn, gpointer user_data)
+SAFE_C_API_ARGS(GList*, gnc_g_list_map,
+	(GList* list, GncGMapFunc fn, gpointer user_data),
+	(list, fn, user_data))
 {
     GList *rtn = NULL;
     for (; list != NULL; list = list->next)
@@ -271,8 +273,9 @@ gnc_g_list_map(GList* list, GncGMapFunc fn, gpointer user_data)
     return g_list_reverse (rtn);
 }
 
-void
-gnc_g_list_cut(GList **list, GList *cut_point)
+SAFE_C_API_VOID_ARGS(gnc_g_list_cut,
+	(GList **list, GList *cut_point),
+	(list, cut_point))
 {
     if (list == NULL || *list == NULL)
         return;
@@ -314,7 +317,7 @@ gnc_g_list_stringjoin_internal (GList *list_of_strings, const gchar *sep, bool t
 
     for (GList *n = list_of_strings; n; n = n->next)
     {
-        gchar *str = n->data;
+        gchar *str = static_cast<char *>(n->data);
         if (str && *str)
             length += strlen (str) + seplen;
     }
@@ -325,7 +328,7 @@ gnc_g_list_stringjoin_internal (GList *list_of_strings, const gchar *sep, bool t
     p = retval = (gchar*) g_malloc0 (length * sizeof (gchar) + 1);
     for (GList *n = list_of_strings; n; n = n->next)
     {
-        gchar *str = n->data;
+        gchar *str = static_cast<char *>(n->data);
         if (!str || !str[0])
             continue;
         if (!testdups || utf8_strstr (&str, retval))
@@ -341,20 +344,23 @@ gnc_g_list_stringjoin_internal (GList *list_of_strings, const gchar *sep, bool t
     return retval;
 }
 
-gchar *
-gnc_g_list_stringjoin (GList *list_of_strings, const gchar *sep)
+SAFE_C_API_ARGS(gchar *, gnc_g_list_stringjoin,
+	(GList *list_of_strings, const gchar *sep),
+	(list_of_strings, sep))
 {
     return gnc_g_list_stringjoin_internal (list_of_strings, sep, false);
 }
 
-gchar *
-gnc_g_list_stringjoin_nodups (GList *list_of_strings, const gchar *sep)
+SAFE_C_API_ARGS(gchar *, gnc_g_list_stringjoin_nodups,
+	(GList *list_of_strings, const gchar *sep),
+	(list_of_strings, sep))
 {
     return gnc_g_list_stringjoin_internal (list_of_strings, sep, true);
 }
 
-gint
-gnc_list_length_cmp (const GList *list, size_t len)
+SAFE_C_API_ARGS(gint, gnc_list_length_cmp,
+	(const GList *list, size_t len),
+	(list, len))
 {
     for (GList *lst = (GList*) list;; lst = g_list_next (lst), len--)
     {

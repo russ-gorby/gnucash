@@ -25,8 +25,9 @@
 #include <stdio.h>
 #include "binreloc.h"
 #include "gnc-filepath-utils.h"
+#include "except-fence.hpp"
 
-gchar *gnc_path_get_prefix()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_prefix)
 {
     //printf("Returning prefix %s\n", gnc_gbr_find_prefix (PREFIX));
     return gnc_gbr_find_prefix (PREFIX);
@@ -36,7 +37,7 @@ gchar *gnc_path_get_prefix()
  * "$prefix/bin".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_bindir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_bindir)
 {
     //printf("Returning bindir %s\n", gnc_gbr_find_bin_dir (BINDIR));
     return gnc_gbr_find_bin_dir (BINDIR);
@@ -46,7 +47,7 @@ gchar *gnc_path_get_bindir()
  * "$prefix/lib".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_libdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_libdir)
 {
     //printf("Returning libdir %s\n", gnc_gbr_find_lib_dir (LIBDIR));
     return gnc_gbr_find_lib_dir (LIBDIR);
@@ -56,7 +57,7 @@ gchar *gnc_path_get_libdir()
  * "$prefix/lib".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_datadir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_datadir)
 {
     //printf("Returning libdir %s\n", gnc_gbr_find_lib_dir (LIBDIR));
     return gnc_gbr_find_data_dir (DATADIR);
@@ -66,7 +67,7 @@ gchar *gnc_path_get_datadir()
  * "$prefix/share/gnucash". Needed for gnc_gnome_locate_*().
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_pkgdatadir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_pkgdatadir)
 {
     gchar *datadir = gnc_gbr_find_data_dir (DATADIR);
     gchar *result = g_build_filename (datadir, PROJECT_NAME, (char*)NULL);
@@ -79,7 +80,7 @@ gchar *gnc_path_get_pkgdatadir()
  * "$prefix/share/doc/gnucash".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_pkgdocdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_pkgdocdir)
 {
     gchar *docdir = gnc_gbr_find_data_dir (DATADIR);
     gchar *result = g_build_filename (docdir, "doc", PROJECT_NAME, (char*)NULL);
@@ -92,7 +93,7 @@ gchar *gnc_path_get_pkgdocdir()
  * "$prefix/etc/gnucash".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_pkgsysconfdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_pkgsysconfdir)
 {
     gchar *sysconfdir = gnc_gbr_find_etc_dir (SYSCONFDIR);
     gchar *result = g_build_filename (sysconfdir, PROJECT_NAME, (char*)NULL);
@@ -106,7 +107,7 @@ gchar *gnc_path_get_pkgsysconfdir()
  * "$prefix/lib/gnucash".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_pkglibdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_pkglibdir)
 {
     gchar *libdir = gnc_path_get_libdir ();
 #ifdef G_OS_WIN32
@@ -124,7 +125,7 @@ gchar *gnc_path_get_pkglibdir()
  * "$prefix/share/gnucash/gtkbuilder".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_gtkbuilderdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_gtkbuilderdir)
 {
     gchar *pkgdatadir = gnc_path_get_pkgdatadir ();
     gchar *result = g_build_filename (pkgdatadir, "gtkbuilder", (char*)NULL);
@@ -137,7 +138,7 @@ gchar *gnc_path_get_gtkbuilderdir()
  * "$prefix/share/locale".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_localedir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_localedir)
 {
     gchar *prefix = gnc_path_get_prefix();
     char *locale_subdir = gnc_file_path_relative_part (PREFIX, LOCALEDIR);
@@ -161,7 +162,7 @@ gchar *gnc_path_get_localedir()
  * "$prefix/share/gnucash/accounts".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_accountsdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_accountsdir)
 {
     gchar *pkgdatadir = gnc_path_get_pkgdatadir ();
     gchar *result = g_build_filename (pkgdatadir, "accounts", (char*)NULL);
@@ -176,7 +177,7 @@ gchar *gnc_path_get_accountsdir()
  * rebasing this to be relative to our own installation prefix.
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_scmdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_scmdir)
 {
     gchar *prefix = gnc_path_get_prefix ();
     gchar *result = g_build_filename (prefix, GUILE_REL_SITEDIR, (char*)NULL);
@@ -189,7 +190,7 @@ gchar *gnc_path_get_scmdir()
  * "$prefix/share/guile/site/x.y/gnucash/report".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_reportdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_reportdir)
 {
     gchar *scmdir = gnc_path_get_scmdir ();
     gchar *result = g_build_filename (scmdir, PROJECT_NAME, "report", (char*)NULL);
@@ -202,7 +203,7 @@ gchar *gnc_path_get_reportdir()
  * "$prefix/share/guile/site/x.y/gnucash/reports".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_reportsdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_reportsdir)
 {
     gchar *scmdir = gnc_path_get_scmdir ();
     gchar *result = g_build_filename (scmdir, PROJECT_NAME, "reports", NULL);
@@ -216,7 +217,7 @@ gchar *gnc_path_get_reportsdir()
  * "$prefix/share/guile/site/x.y/gnucash/reports/standard".
  *
  * @returns A newly allocated string. */
-gchar *gnc_path_get_stdreportsdir()
+SAFE_C_API_NOARGS(gchar *, gnc_path_get_stdreportsdir)
 {
     gchar *reportdir = gnc_path_get_reportdir ();
     gchar *result = g_build_filename (reportdir, "reports", "standard", NULL);

@@ -21,22 +21,26 @@
 \********************************************************************/
 
 
+#include <string>
+
 #include <config.h>
-#include <string.h>
 #include <glib.h>
 #include <gnc-glib-utils.h>
 #include <unittest-support.h>
 
+// string literal to gpointer casting
+#define SL2GP(p) static_cast<gpointer>(const_cast<char *>(p))
+
 static void
 test_gnc_utf8_strip_invalid_and_controls (gconstpointer data)
 {
-    gchar *str = g_strdup (data);
+    gchar *str = g_strdup (static_cast<const char *>(data));
     const gchar *controls = "\b\f\n\r\t\v\x01\x02\x03\x04\x05\x06\x07"
         "\x08\x09\xa\xb\xc\xd\xe\xf\x10\x11\x12\x13\x14\x15\x16"
         "\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f";
     char *msg1 = g_strdup_printf ("Invalid utf8 string: %s",
                                   (const gchar*)data);
-    const GLogLevelFlags level = G_LOG_LEVEL_WARNING | G_LOG_FLAG_FATAL;
+    const GLogLevelFlags level = static_cast<GLogLevelFlags>(G_LOG_LEVEL_WARNING | G_LOG_FLAG_FATAL);
     TestErrorStruct check = {level, NULL, msg1, 0};
 
     guint handler = g_log_set_handler (NULL, level,
@@ -65,7 +69,7 @@ test_g_list_stringjoin (gconstpointer data)
     ret = gnc_g_list_stringjoin (NULL, ":");
     g_assert_true (ret == NULL);
 
-    test = g_list_prepend (test, "one");
+    test = g_list_prepend (test, SL2GP("one"));
 
     ret = gnc_g_list_stringjoin (test, NULL);
     g_assert_cmpstr (ret, ==, "one");
@@ -84,7 +88,7 @@ test_g_list_stringjoin (gconstpointer data)
        not insert separator repeatedly between NULL strings */
     test = g_list_prepend (test, NULL);
 
-    test = g_list_prepend (test, "two");
+    test = g_list_prepend (test, SL2GP("two"));
 
     ret = gnc_g_list_stringjoin (test, NULL);
     g_assert_cmpstr (ret, ==, "twoone");
@@ -98,7 +102,7 @@ test_g_list_stringjoin (gconstpointer data)
     g_assert_cmpstr (ret, ==, "two:one");
     g_free (ret);
 
-    test = g_list_prepend (test, "three");
+    test = g_list_prepend (test, SL2GP("three"));
 
     ret = gnc_g_list_stringjoin (test, NULL);
     g_assert_cmpstr (ret, ==, "threetwoone");
@@ -121,12 +125,12 @@ test_g_list_stringjoin_nodups (gconstpointer data)
     GList *test = NULL;
     gchar *ret;
 
-    test = g_list_prepend (test, "one");
-    test = g_list_prepend (test, "two");
-    test = g_list_prepend (test, "two");
-    test = g_list_prepend (test, "three");
-    test = g_list_prepend (test, "one:two");
-    test = g_list_prepend (test, "four");
+    test = g_list_prepend (test, SL2GP("one"));
+    test = g_list_prepend (test, SL2GP("two"));
+    test = g_list_prepend (test, SL2GP("two"));
+    test = g_list_prepend (test, SL2GP("three"));
+    test = g_list_prepend (test, SL2GP("one:two"));
+    test = g_list_prepend (test, SL2GP("four"));
     test = g_list_reverse (test);
     ret = gnc_g_list_stringjoin_nodups (test, ":");
     g_assert_cmpstr (ret, ==, "one:two:three:four");

@@ -30,8 +30,8 @@
 \********************************************************************/
 
 
-#ifndef __BINRELOC_C__
-#define __BINRELOC_C__
+#ifndef __BINRELOC_CPP__
+#define __BINRELOC_CPP__
 #include <config.h>
 
 #include <platform.h>
@@ -58,6 +58,7 @@
 #include "gnc-filepath-utils.h"
 #include <glib.h>
 #include "gncla-dir.h"
+#include "except-fence.hpp"
 
 G_BEGIN_DECLS
 
@@ -86,12 +87,12 @@ _br_find_exe (Gnc_GbrInitError *error)
             *error = GNC_GBR_INIT_WIN32_NO_EXE_DIR;
         return NULL;
     }
-    if (!g_file_test (result, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_EXECUTABLE))
+    const GFileTest gft = static_cast<GFileTest>(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_EXECUTABLE);
+    if (!g_file_test (result, gft))
     {
         g_free (result);
         result = g_build_filename (prefix, "gnucash.exe", NULL);
-        if (!g_file_test (result,
-                           G_FILE_TEST_EXISTS | G_FILE_TEST_IS_EXECUTABLE))
+        if (!g_file_test (result, gft))
         {
             g_free (result);
             result = NULL;
@@ -235,7 +236,7 @@ void gnc_gbr_set_exe (const gchar* default_exe)
 gboolean
 gnc_gbr_init (GError **error)
 {
-    Gnc_GbrInitError errcode = 0;
+    Gnc_GbrInitError errcode = GNC_GBR_INIT_NOERROR;
 
     /* Locate the application's filename. */
     exe = _br_find_exe (&errcode);
@@ -254,7 +255,7 @@ gnc_gbr_init (GError **error)
 static void
 set_gerror (GError **error, Gnc_GbrInitError errcode)
 {
-    gchar *error_message;
+    const gchar *error_message;
 
     if (error == NULL)
         return;
@@ -561,4 +562,4 @@ gnc_gbr_find_etc_dir (const gchar *default_etc_dir)
 
 G_END_DECLS
 
-#endif /* __BINRELOC_C__ */
+#endif /* __BINRELOC_CPP__ */
