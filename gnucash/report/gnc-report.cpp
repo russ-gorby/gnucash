@@ -31,9 +31,8 @@
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
 #include <libguile.h>
-#include <stdio.h>
-#include <string.h>
-#include <string.h>
+#include <cstdio>
+#include <string>
 #include <errno.h>
 #include <fcntl.h>
 
@@ -43,6 +42,7 @@
 #include <gnc-engine.h>
 #include "gnc-report.h"
 #include <charconv>
+#include "except-fence.hpp"
 
 extern "C" SCM scm_init_sw_report_module(void);
 
@@ -100,8 +100,7 @@ load_custom_reports_stylesheets(void)
     try_load_config_array(stylesheet_files);
 }
 
-void
-gnc_report_init (void)
+SAFE_C_API_VOID_NOARGS(gnc_report_init)
 {
     scm_init_sw_report_module();
     scm_c_use_module ("gnucash report");
@@ -123,14 +122,15 @@ gnc_report_init_table(void)
     }
 }
 
-void
-gnc_report_remove_by_id(gint id)
+SAFE_C_API_VOID_ARGS(gnc_report_remove_by_id,
+	(gint id), (id))
 {
     if (reports)
         g_hash_table_remove(reports, &id);
 }
 
-SCM gnc_report_find(gint id)
+SAFE_C_API_ARGS(SCM, gnc_report_find,
+	(gint id), (id))
 {
     SCM report = nullptr;
 
@@ -145,7 +145,8 @@ SCM gnc_report_find(gint id)
     return report;
 }
 
-gint gnc_report_add(SCM report)
+SAFE_C_API_ARGS(gint, gnc_report_add,
+	(SCM report), (report))
 {
     SCM get_id = scm_c_eval_string("gnc:report-id");
     SCM value;
@@ -194,23 +195,24 @@ yes_remove(gpointer key, gpointer val, gpointer data)
     return TRUE;
 }
 
-void
-gnc_reports_flush_global(void)
+SAFE_C_API_VOID_NOARGS(gnc_reports_flush_global)
 {
     if (reports)
         g_hash_table_foreach_remove(reports, yes_remove, NULL);
 }
 
-void
-gnc_reports_foreach (GHFunc func, gpointer user_data)
+SAFE_C_API_VOID_ARGS(gnc_reports_foreach,
+	(GHFunc func, gpointer user_data),
+	(func, user_data))
 {
     gnc_report_init_table();
     if (reports)
         g_hash_table_foreach (reports, func, user_data);
 }
 
-gboolean
-gnc_run_report_with_error_handling (gint report_id, gchar ** data, gchar **errmsg)
+SAFE_C_API_ARGS(gboolean, gnc_run_report_with_error_handling,
+	(gint report_id, gchar **data, gchar **errmsg),
+	(report_id, data, errmsg))
 {
     SCM report, res, html, captured_error;
 
@@ -247,8 +249,8 @@ gnc_run_report_with_error_handling (gint report_id, gchar ** data, gchar **errms
     }
 }
 
-gchar*
-gnc_report_name( SCM report )
+SAFE_C_API_ARGS(gchar*, gnc_report_name,
+	(SCM report), (report))
 {
     SCM    get_name = scm_c_eval_string("gnc:report-name");
 
@@ -258,8 +260,8 @@ gnc_report_name( SCM report )
     return gnc_scm_call_1_to_string(get_name, report);
 }
 
-gint
-gnc_report_id_string_to_report_id (const char *id_string)
+SAFE_C_API_ARGS(gint, gnc_report_id_string_to_report_id,
+	(const char *id_string), (id_string))
 {
     g_return_val_if_fail (id_string, -1);
 
@@ -280,9 +282,9 @@ gnc_report_id_string_to_report_id (const char *id_string)
     return scm_is_number (id) ? scm_to_int (id) : -1;
 }
 
-gboolean
-gnc_run_report_id_string_with_error_handling (const char * id_string, char **data,
-                                              gchar **errmsg)
+SAFE_C_API_ARGS(gboolean, gnc_run_report_id_string_with_error_handling,
+	(const char * id_string, char **data, gchar **errmsg),
+	(id_string, data, errmsg))
 {
     g_return_val_if_fail (id_string, FALSE);
     g_return_val_if_fail (data, FALSE);
@@ -298,8 +300,7 @@ gnc_run_report_id_string_with_error_handling (const char * id_string, char **dat
     return gnc_run_report_with_error_handling (report_id, data, errmsg);
 }
 
-gchar*
-gnc_get_default_report_font_family(void)
+SAFE_C_API_NOARGS(gchar*, gnc_get_default_report_font_family)
 {
     GList                *top_list;
     GtkWidget            *top_widget;
@@ -377,7 +378,7 @@ gnc_saved_reports_write_internal (const gchar *file, const gchar *contents, gboo
 }
 
 
-gboolean gnc_saved_reports_backup (void)
+SAFE_C_API_NOARGS(gboolean, gnc_saved_reports_backup)
 {
     gboolean success = FALSE;
     gchar *saved_rpts_path     = gnc_build_userdata_path (SAVED_REPORTS_FILE);
@@ -407,8 +408,9 @@ gboolean gnc_saved_reports_backup (void)
     return success;
 }
 
-gboolean
-gnc_saved_reports_write_to_file (const gchar* report_def, gboolean overwrite)
+SAFE_C_API_ARGS(gboolean, gnc_saved_reports_write_to_file,
+	(const gchar* report_def, gboolean overwrite),
+	(report_def, overwrite))
 {
     gboolean success = FALSE;
     gchar *saved_rpts_path = gnc_build_userdata_path (SAVED_REPORTS_FILE);
