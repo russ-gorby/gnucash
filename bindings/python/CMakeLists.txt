@@ -63,6 +63,7 @@ gnc_add_swig_python_command (swig-app-utils-python
         )
 
 if(WITH_PYTHON)
+  set(PY_EXT_SUFFIX ".pyd")
 
   ### gnucash_core_c
 
@@ -80,7 +81,7 @@ if(WITH_PYTHON)
   target_include_directories(gnucash_core_c PRIVATE ${gnucash_core_c_INCLUDE_DIRS})
 
   target_link_libraries(gnucash_core_c gnc-app-utils gnc-engine ${Python3_LIBRARIES})
-  set_target_properties(gnucash_core_c PROPERTIES PREFIX "_")
+  set_target_properties(gnucash_core_c PROPERTIES PREFIX "_" SUFFIX "${PY_EXT_SUFFIX}")
   target_compile_options(gnucash_core_c PRIVATE -Wno-implicit -Wno-missing-prototypes -Wno-declaration-after-statement -Wno-missing-declarations)
   if (HAVE_STRINGOP_TRUNCATION)
     target_compile_options(gnucash_core_c PRIVATE -Wno-error=stringop-truncation)
@@ -115,16 +116,15 @@ if(WITH_PYTHON)
     DEPENDS ${SWIG_GNUCASH_CORE_C})
 
   add_custom_target(gnucash-core-c-build ALL
-    COMMAND ${CMAKE_COMMAND} -E copy ${LIBDIR_BUILD}/gnucash/_gnucash_core_c${CMAKE_SHARED_MODULE_SUFFIX} ${PYTHON_SYSCONFIG_BUILD}/gnucash
+    COMMAND ${CMAKE_COMMAND} -E copy ${LIBDIR_BUILD}/gnucash/_gnucash_core_c${PY_EXT_SUFFIX} ${PYTHON_SYSCONFIG_BUILD}/gnucash
     DEPENDS gnucash_core_c)
-
 
   ### sw_core_utils
 
   add_library (sw_core_utils MODULE ${SWIG_CORE_UTILS_PYTHON_C})
 
   target_link_libraries(sw_core_utils gnc-core-utils ${Python3_LIBRARIES})
-  set_target_properties(sw_core_utils PROPERTIES PREFIX "_")
+  set_target_properties(sw_core_utils PROPERTIES PREFIX "_" SUFFIX "${PY_EXT_SUFFIX}")
 
   if (HAVE_STRINGOP_TRUNCATION)
     target_compile_options(sw_core_utils PRIVATE -Wno-error=stringop-truncation)
@@ -150,7 +150,7 @@ if(WITH_PYTHON)
     DEPENDS ${SWIG_CORE_UTILS_PYTHON_C})
 
   add_custom_target(sw-core-utils-build ALL
-    COMMAND ${CMAKE_COMMAND} -E copy ${LIBDIR_BUILD}/gnucash/_sw_core_utils${CMAKE_SHARED_MODULE_SUFFIX} ${PYTHON_SYSCONFIG_BUILD}/gnucash
+    COMMAND ${CMAKE_COMMAND} -E copy ${LIBDIR_BUILD}/gnucash/_sw_core_utils${PY_EXT_SUFFIX} ${PYTHON_SYSCONFIG_BUILD}/gnucash
     DEPENDS sw_core_utils)
 
   ### App-utils
@@ -158,7 +158,7 @@ if(WITH_PYTHON)
   add_library (sw_app_utils MODULE ${SWIG_APP_UTILS_PYTHON_C})
 
   target_link_libraries(sw_app_utils gnc-app-utils ${app_utils_ALL_LIBRARIES} ${Python3_LIBRARIES})
-  set_target_properties(sw_app_utils PROPERTIES PREFIX "_")
+  set_target_properties(sw_app_utils PROPERTIES PREFIX "_" SUFFIX "${PY_EXT_SUFFIX}")
   if (HAVE_STRINGOP_TRUNCATION)
     target_compile_options(sw_app_utils PRIVATE -Wno-error=stringop-truncation)
   endif()
@@ -183,10 +183,9 @@ if(WITH_PYTHON)
           )
 
   add_custom_target(sw-app-utils-build ALL
-          COMMAND ${CMAKE_COMMAND} -E copy ${LIBDIR_BUILD}/gnucash/_sw_app_utils${CMAKE_SHARED_MODULE_SUFFIX} ${PYTHON_SYSCONFIG_BUILD}/gnucash
+          COMMAND ${CMAKE_COMMAND} -E copy ${LIBDIR_BUILD}/gnucash/_sw_app_utils${PY_EXT_SUFFIX} ${PYTHON_SYSCONFIG_BUILD}/gnucash
           DEPENDS sw_app_utils)
-
-endif()
+endif(WITH_PYTHON)
 
 set(python_bindings_DATA
   app_utils.py

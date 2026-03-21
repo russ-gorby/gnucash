@@ -171,6 +171,15 @@ LDT_from_unix_local(const time64 time)
         PTime temp(unix_epoch.date(),
                    boost::posix_time::hours(time / 3600) +
                    boost::posix_time::seconds(time % 3600));
+        /*
+         * this is confusing to me
+         * tz is timezone information that could/should contain
+         * DST information as well, but that can't possibly
+         * work properly if get() is only provided a year
+         * e.g. in the case where this is called from
+         * gnc_localtime_r() DST is not determined and thus
+         * is not a true localtime
+         */
         auto tz = tzp->get(temp.date().year());
         return LDT(temp, tz);
     }

@@ -16,7 +16,7 @@ class Instance:
 
 def prefix_new_function():
     """new function for ClassFromFunction tests
-    
+
     returns instance of Instance class"""
     return Instance()
 

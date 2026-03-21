@@ -17,6 +17,8 @@ from gnucash import (
 
 from gnucash.gnucash_core import GnuCashBackendException
 
+import sys
+
 class TestSession(TestCase):
     def test_create_empty_session(self):
         self.ses = Session()
@@ -33,7 +35,11 @@ class TestSession(TestCase):
         """create Session with new xml file"""
         from tempfile import TemporaryDirectory
         from urllib.parse import urlunparse
-        with TemporaryDirectory() as tempdir:
+        igce=False
+        if sys.platform == "win32":
+            # is there a better way?
+            igce=True
+        with TemporaryDirectory(ignore_cleanup_errors=igce) as tempdir:
             uri = urlunparse(("xml", tempdir, "tempfile", "", "", ""))
             with Session(uri, SessionOpenMode.SESSION_NEW_STORE) as ses:
                 pass

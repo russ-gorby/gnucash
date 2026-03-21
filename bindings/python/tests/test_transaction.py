@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 
 from test_book import BookSession
 
+import sys
+
 class TransactionSession(BookSession):
     def setUp(self):
         self.domain1 = "gnc.engine"
@@ -133,7 +135,25 @@ class TestTransaction(TransactionSession):
     def test_date(self):
         ZERODATE=datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
         DATE=datetime(2020, 2, 20, 10, 59, 0, tzinfo=timezone.utc)
-        self.assertEqual(ZERODATE, self.trans.GetDate().astimezone(timezone.utc))
+        if sys.platform == "win32":
+            tmp=datetime(1969, 12, 31, 17, 0)
+            tmp=self.trans.GetDate()
+            #tmpi=int(tmp.timestamp())
+            # <naive datetime>.astimezone(timezone.utc)
+            # calling astiemezone(tz) on a naive datetime is invalid on windows based platforms like MINGW
+            # we can fully replace() the timezone successfully however
+            #tmp=tmp.replace(tzinfo=timezone.utc)
+            ## use fromtimestamp() instead on naive datetimes
+            #tmp_utc=datetime.fromtimestamp(tmp.timestamp(), timezone.utc)
+            localtz = datetime.now().astimezone().tzinfo
+            tmp_aware = tmp.replace(tzinfo=localtz)
+            time_int=int(tmp_aware.timestamp())
+            tmp_utc = tmp_aware.astimezone(timezone.utc)
+            GETDATE=tmp_utc
+            # ? why is this not working -  off by 1hr ?
+            self.assertEqual(ZERODATE, GETDATE)
+        else:
+            self.assertEqual(ZERODATE, self.trans.GetDate().astimezone(timezone.utc))
         self.trans.SetDate(DATE.day, DATE.month, DATE.year)
         self.assertEqual(DATE, self.trans.GetDate().astimezone(timezone.utc))
 
