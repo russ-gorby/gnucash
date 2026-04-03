@@ -1,5 +1,5 @@
 /*
- * gnc-currency-edit.c --  Currency editor widget
+ * gnc-currency-edit.cpp --  Currency editor widget
  *
  * Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation
  * All rights reserved.
@@ -27,7 +27,7 @@
     @{ */
 /** @addtogroup GncCurrencyEdit
  * @{ */
-/** @file gnc-currency-edit.c
+/** @file gnc-currency-edit.cpp
  *  @brief Currency selection widget.
  *  @author Dave Peticolas <dave@krondo.com>
  *  @author David Hampton <hampton@employees.org>

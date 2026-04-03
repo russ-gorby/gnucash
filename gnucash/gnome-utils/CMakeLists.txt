@@ -27,89 +27,89 @@ add_custom_command(
 )
 
 set (gnome_utils_SOURCES
-  account-quickfill.c
-  assistant-xml-encoding.c
-  cursors.c
-  dialog-account.c
-  dialog-doclink-utils.c
-  dialog-book-close.c
+  account-quickfill.cpp
+  assistant-xml-encoding.cpp
+  cursors.cpp
+  dialog-account.cpp
+  dialog-doclink-utils.cpp
+  dialog-book-close.cpp
   dialog-commodity.cpp
-  dialog-dup-trans.c
-  dialog-file-access.c
-  dialog-object-references.c
+  dialog-dup-trans.cpp
+  dialog-file-access.cpp
+  dialog-object-references.cpp
   dialog-options.cpp
-  dialog-preferences.c
-  dialog-query-view.c
-  dialog-reset-warnings.c
-  dialog-tax-table.c
-  dialog-totd.c
+  dialog-preferences.cpp
+  dialog-query-view.cpp
+  dialog-reset-warnings.cpp
+  dialog-tax-table.cpp
+  dialog-totd.cpp
   dialog-transfer.cpp
-  dialog-userpass.c
-  dialog-utils.c
-  gnc-account-sel.c
-  gnc-amount-edit.c
-  gnc-autosave.c
-  gnc-cell-renderer-text-flag.c
-  gnc-cell-renderer-text-view.c
-  gnc-cell-view.c
-  gnc-commodity-edit.c
-  gnc-component-manager.c
+  dialog-userpass.cpp
+  dialog-utils.cpp
+  gnc-account-sel.cpp
+  gnc-amount-edit.cpp
+  gnc-autosave.cpp
+  gnc-cell-renderer-text-flag.cpp
+  gnc-cell-renderer-text-view.cpp
+  gnc-cell-view.cpp
+  gnc-commodity-edit.cpp
+  gnc-component-manager.cpp
   gnc-currency-edit.cpp
-  gnc-date-edit.c
-  gnc-date-format.c
-  gnc-dense-cal.c
-  gnc-dense-cal-model.c
-  gnc-dense-cal-store.c
-  gnc-embedded-window.c
-  gnc-file.c
-  gnc-frequency.c
-  gnc-recurrence.c
-  gnc-general-select.c
-  gnc-gnome-utils.c
-  gnc-gobject-utils.c
-  gnc-gtk-utils.c
-  gnc-gui-query.c
-  gnc-icons.c
-  gnc-keyring.c
+  gnc-date-edit.cpp
+  gnc-date-format.cpp
+  gnc-dense-cal.cpp
+  gnc-dense-cal-model.cpp
+  gnc-dense-cal-store.cpp
+  gnc-embedded-window.cpp
+  gnc-file.cpp
+  gnc-frequency.cpp
+  gnc-recurrence.cpp
+  gnc-general-select.cpp
+  gnc-gnome-utils.cpp
+  gnc-gobject-utils.cpp
+  gnc-gtk-utils.cpp
+  gnc-gui-query.cpp
+  gnc-icons.cpp
+  gnc-keyring.cpp
   gnc-main-window.cpp
-  gnc-menu-extensions.c
+  gnc-menu-extensions.cpp
   gnc-option-gtk-ui.cpp
-  gnc-plugin-file-history.c
-  gnc-plugin-manager.c
-  gnc-plugin-menu-additions.c
-  gnc-plugin-page.c
-  gnc-plugin.c
-  gnc-period-select.c
-  gnc-query-view.c
-  gnc-report-combo.c
-  gnc-splash.c
-  gnc-sx-instance-dense-cal-adapter.c
-  gnc-sx-list-tree-model-adapter.c
-  gnc-tree-model.c
-  gnc-tree-model-account-types.c
-  gnc-tree-model-account.c
-  gnc-tree-model-budget.c
-  gnc-tree-model-owner.c
-  gnc-tree-model-commodity.c
-  gnc-tree-model-price.c
-  gnc-tree-view-account.c
-  gnc-tree-view-commodity.c
-  gnc-tree-view-owner.c
-  gnc-tree-view-price.c
-  gnc-tree-view-sx-list.c
-  gnc-tree-view.c
-  gnc-window.c
-  misc-gnome-utils.c
-  tree-view-utils.c
-  search-param.c
-  print-session.c
-  window-main-summarybar.c
+  gnc-plugin-file-history.cpp
+  gnc-plugin-manager.cpp
+  gnc-plugin-menu-additions.cpp
+  gnc-plugin-page.cpp
+  gnc-plugin.cpp
+  gnc-period-select.cpp
+  gnc-query-view.cpp
+  gnc-report-combo.cpp
+  gnc-splash.cpp
+  gnc-sx-instance-dense-cal-adapter.cpp
+  gnc-sx-list-tree-model-adapter.cpp
+  gnc-tree-model.cpp
+  gnc-tree-model-account-types.cpp
+  gnc-tree-model-account.cpp
+  gnc-tree-model-budget.cpp
+  gnc-tree-model-owner.cpp
+  gnc-tree-model-commodity.cpp
+  gnc-tree-model-price.cpp
+  gnc-tree-view-account.cpp
+  gnc-tree-view-commodity.cpp
+  gnc-tree-view-owner.cpp
+  gnc-tree-view-price.cpp
+  gnc-tree-view-sx-list.cpp
+  gnc-tree-view.cpp
+  gnc-window.cpp
+  misc-gnome-utils.cpp
+  tree-view-utils.cpp
+  search-param.cpp
+  print-session.cpp
+  window-main-summarybar.cpp
 )
 
 set(gnome_utils_noinst_HEADERS
   dialog-tax-table.h
   dialog-options.hpp
-  gnc-autosave.h
+  gnc-autosave.hpp
   gnc-gobject-utils.h
   gnc-gtk-utils.h
   gnc-option-gtk-ui.hpp
@@ -118,7 +118,7 @@ set(gnome_utils_noinst_HEADERS
 
 set (gnome_utils_HEADERS
   account-quickfill.h
-  assistant-xml-encoding.h
+  assistant-xml-encoding.hpp
   dialog-account.h
   dialog-doclink-utils.h
   dialog-book-close.h
@@ -126,17 +126,17 @@ set (gnome_utils_HEADERS
   dialog-dup-trans.h
   dialog-file-access.h
   dialog-preferences.h
-  dialog-object-references.h
+  dialog-object-references.hpp
   dialog-query-view.h
-  dialog-reset-warnings.h
+  dialog-reset-warnings.hpp
   dialog-totd.h
   dialog-transfer.h
   dialog-utils.h
   gnc-account-sel.h
   gnc-amount-edit.h
   gnc-cell-renderer-text-flag.h
-  gnc-cell-renderer-text-view.h
-  gnc-cell-view.h
+  gnc-cell-renderer-text-view.hpp
+  gnc-cell-view.hpp
   gnc-commodity-edit.h
   gnc-component-manager.h
   gnc-currency-edit.h
@@ -153,7 +153,7 @@ set (gnome_utils_HEADERS
   gnc-gnome-utils.h
   gnc-gui-query.h
   gnc-icons.h
-  gnc-keyring.h
+  gnc-keyring.hpp
   gnc-main-window.h
   gnc-menu-extensions.h
   gnc-plugin-file-history.h
@@ -161,31 +161,31 @@ set (gnome_utils_HEADERS
   gnc-plugin-menu-additions.h
   gnc-plugin-page.h
   gnc-plugin.h
-  gnc-period-select.h
+  gnc-period-select.hpp
   gnc-query-view.h
   gnc-report-combo.h
-  gnc-splash.h
-  gnc-sx-instance-dense-cal-adapter.h
-  gnc-sx-list-tree-model-adapter.h
-  gnc-tree-model.h
+  gnc-splash.hpp
+  gnc-sx-instance-dense-cal-adapter.hpp
+  gnc-sx-list-tree-model-adapter.hpp
+  gnc-tree-model.hpp
   gnc-tree-model-account-types.h
-  gnc-tree-model-account.h
+  gnc-tree-model-account.hpp
   gnc-tree-model-budget.h
-  gnc-tree-model-owner.h
-  gnc-tree-model-commodity.h
-  gnc-tree-model-price.h
+  gnc-tree-model-owner.hpp
+  gnc-tree-model-commodity.hpp
+  gnc-tree-model-price.hpp
   gnc-tree-view-account.h
-  gnc-tree-view-commodity.h
-  gnc-tree-view-owner.h
-  gnc-tree-view-price.h
-  gnc-tree-view-sx-list.h
+  gnc-tree-view-commodity.hpp
+  gnc-tree-view-owner.hpp
+  gnc-tree-view-price.hpp
+  gnc-tree-view-sx-list.hpp
   gnc-tree-view.h
   gnc-ui.h
   gnc-window.h
   misc-gnome-utils.h
   tree-view-utils.h
   print-session.h
-  window-main-summarybar.h
+  window-main-summarybar.hpp
   )
 
 

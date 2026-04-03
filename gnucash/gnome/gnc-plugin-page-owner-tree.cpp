@@ -56,13 +56,13 @@
 #include "gnc-gobject-utils.h"
 #include "gnc-icons.h"
 #include "gnc-session.h"
-#include "gnc-tree-view-owner.h"
+#include "gnc-tree-view-owner.hpp"
 #include "gnc-ui.h"
 #include "gnc-ui-util.h"
 #include "gnc-window.h"
 #include "guile-mappings.h"
 #include "dialog-lot-viewer.h"
-#include "dialog-object-references.h"
+#include "dialog-object-references.hpp"
 
 /* This static indicates the debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;

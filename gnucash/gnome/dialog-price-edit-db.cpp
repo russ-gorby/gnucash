@@ -44,7 +44,7 @@
 #include "gnc-gui-query.h"
 #include "gnc-pricedb.h"
 #include "gnc-session.h"
-#include "gnc-tree-view-price.h"
+#include "gnc-tree-view-price.hpp"
 #include "gnc-ui.h"
 #include "gnc-ui-util.h"
 #include "gnc-warnings.h"

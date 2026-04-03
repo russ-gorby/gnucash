@@ -1,5 +1,5 @@
 /*
- * tree-view-utils.c -- some convenience functions for use with
+ * tree-view-utils.cpp -- some convenience functions for use with
  *                      plain GtkTreeViews in situations where a
  *                      fully fledged GncTreeView is overkill.
  *                      Handy with GtkTreeViews defined in glade files.
@@ -28,7 +28,7 @@
     @{ */
 /** @addtogroup GncTreeView
  * @{ */
-/** @file tree-view-utils.c
+/** @file tree-view-utils.cpp
     @brief Simple convenience functions for common tasks on GtkTreeViews.
     @author Geert Janssens <geert@kobaltwit.be>
 */

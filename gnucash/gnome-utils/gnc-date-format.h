@@ -1,5 +1,5 @@
 /*
- * gnc-date-format.c -- Date formator widget
+ * gnc-date-format.cpp -- Date formator widget
  *
  * Copyright (C) 2003 Derek Atkins  <derek@ihtfp.com>
  * All rights reserved.

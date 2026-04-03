@@ -1,5 +1,5 @@
 /********************************************************************\
- * gnc-option-gtk-ui.cpp -- Gtk Widgets for manipulating options    *
+ * gnc-option-gtk-ui.cpppp -- Gtk Widgets for manipulating options    *
   * Copyright 2022 John Ralls <jralls@ceridwen.us>                  *
  *                                                                  *
  * This program is free software; you can redistribute it and/or    *

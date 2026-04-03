@@ -70,8 +70,8 @@
 #include "dialog-lot-viewer.h"
 #include "window-reconcile.h"
 #include "window-autoclear.h"
-#include "window-main-summarybar.h"
-#include "dialog-object-references.h"
+#include "window-main-summarybar.hpp"
+#include "dialog-object-references.hpp"
 #include "dialog-find-account.h"
 #include <gnc-glib-utils.h>
 

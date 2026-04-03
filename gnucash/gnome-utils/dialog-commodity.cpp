@@ -1,5 +1,5 @@
 /********************************************************************
- * dialog-commodity.c -- "select" and "new" commodity windows       *
+ * dialog-commodity.cpp -- "select" and "new" commodity windows       *
  *                       (GnuCash)                                  *
  * Copyright (C) 2000 Bill Gribble <grib@billgribble.com>           *
  * Copyright (c) 2006 David Hampton <hampton@employees.org>         *
@@ -27,7 +27,7 @@
     @{ */
 /** @addtogroup GuiCommodity
     @{ */
-/** @file dialog-commodity.c
+/** @file dialog-commodity.cpp
     @brief "select" and "new" commodity windows
     @author Copyright (C) 2000 Bill Gribble <grib@billgribble.com>
     @author Copyright (c) 2006 David Hampton <hampton@employees.org>
@@ -315,7 +315,7 @@ gnc_ui_select_commodity_create(const gnc_commodity * orig_sel,
  *
  *  @note This function is an internal helper function for the
  *  Commodity Selection dialog.  It should not be used outside of the
- *  dialog-commodity.c file.
+ *  dialog-commodity.cpp file.
  *
  *  @param button A pointer to the "new" button widget in the dialog.
  *
@@ -358,7 +358,7 @@ gnc_ui_select_commodity_new_cb(GtkButton * button,
  *
  *  @note This function is an internal helper function for the
  *  Commodity Selection dialog.  It should not be used outside of the
- *  dialog-commodity.c file.
+ *  dialog-commodity.cpp file.
  *
  *  @param cbwe A pointer to the commodity name entry widget in the
  *  dialog.
@@ -399,7 +399,7 @@ gnc_ui_select_commodity_changed_cb (GtkComboBox *cbwe,
  *
  *  @note This function is an internal helper function for the
  *  Commodity Selection dialog.  It should not be used outside of the
- *  dialog-commodity.c file.
+ *  dialog-commodity.cpp file.
  *
  *  @param cbwe A pointer to the commodity namespace entry widget in
  *  the dialog.

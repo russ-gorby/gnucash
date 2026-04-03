@@ -53,7 +53,7 @@
 #include <gnc-prefs.h>
 #include <gnc-prefs-utils.h>
 #include <gnc-session.h>
-#include <gnc-splash.h>
+#include <gnc-splash.hpp>
 #include <gnucash-register.h>
 #include <search-core-type.h>
 #include <top-level.h>

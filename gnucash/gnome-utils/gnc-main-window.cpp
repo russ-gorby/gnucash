@@ -1,5 +1,5 @@
 /*
- * gnc-main-window.c -- GtkWindow which represents the
+ * gnc-main-window.cpp -- GtkWindow which represents the
  *  GnuCash main window.
  *
  * Copyright (C) 2003 Jan Arne Petersen <jpetersen@uni-bonn.de>
@@ -27,7 +27,7 @@
     @{ */
 /** @addtogroup GncMainWindow Main Window functions.
     @{ */
-/** @file gnc-main-window.c
+/** @file gnc-main-window.cpp
     @brief Functions for adding content to a window.
     @author Copyright (C) 2003 Jan Arne Petersen <jpetersen@uni-bonn.de>
     @author Copyright (C) 2003,2005,2006 David Hampton <hampton@employees.org>
@@ -47,7 +47,7 @@
 #include "gnc-main-window.h"
 
 #include "dialog-preferences.h"
-#include "dialog-reset-warnings.h"
+#include "dialog-reset-warnings.hpp"
 #include "dialog-transfer.h"
 #include "dialog-utils.h"
 #include "engine-helpers.h"
@@ -76,7 +76,7 @@
 #include "gnc-window.h"
 #include "gnc-prefs.h"
 #include "gnc-optiondb.h"
-#include "gnc-autosave.h"
+#include "gnc-autosave.hpp"
 #include "print-session.h"
 #ifdef MAC_INTEGRATION
 #include <gtkmacintegration/gtkosxapplication.h>
@@ -442,7 +442,7 @@ gnc_main_window_foreach_page (GncMainWindowPageFunc fn, gpointer user_data)
  *
  *  @param data A data structure containing state about the
  *  window/page restoration process.
- * 
+ *
  *  @return true if page was added else false.
  *  */
 static gboolean
@@ -795,7 +795,7 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
         if (!page_added) // if page not added, increase offset to compensate
         {
             offset ++;
-            added_page_offsets = g_slist_append (added_page_offsets, 
+            added_page_offsets = g_slist_append (added_page_offsets,
                                                  GINT_TO_POINTER(-1));
         }
         else
@@ -837,7 +837,7 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
         {
             gint zero_based_page_number = order[i] - 1;
 
-            gint offset = GPOINTER_TO_INT(g_slist_nth_data (added_page_offsets, 
+            gint offset = GPOINTER_TO_INT(g_slist_nth_data (added_page_offsets,
                                                             zero_based_page_number));
 
             if (offset == -1)
@@ -1213,7 +1213,7 @@ gnc_main_window_prompt_for_save (GtkWidget *window)
     gint response;
     const gchar *filename, *tmp;
     const gchar *title = _("Save changes to file %s before closing?");
-    /* This should be the same message as in gnc-file.c */
+    /* This should be the same message as in gnc-file.cpp */
     const gchar *message_hours =
         _("If you don't save, changes from the past %d hours and %d minutes will be discarded.");
     const gchar *message_days =

@@ -45,7 +45,7 @@ extern "C"
 /** The dialog commodity types are used to determine what commodity
  *  namespaces the currency dialog will present to a user.  These
  *  values can be safely changed from one release to the next.  Note
- *  that if values are added, the routines in dialog-commodity.c will
+ *  that if values are added, the routines in dialog-commodity.cpp will
  *  need to be updated to match.
  */
 typedef enum

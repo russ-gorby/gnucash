@@ -49,7 +49,7 @@ struct _GncTreeViewClass
     GtkTreeViewClass gtk_tree_view;
 };
 
-/* The columns managed by gnc-tree-view can use the following column
+/* The columns managed by gnc-tree-view cppan use the following column
    attributes.  Set them with:
 
    g_object_set_data(col, ATTRIBUTE_NAME, value);

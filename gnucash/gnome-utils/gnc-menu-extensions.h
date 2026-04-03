@@ -56,7 +56,7 @@ void gnc_extension_invoke_cb (SCM extension, SCM window);
  *  the application menus,
  *
  *  @param extension A scheme object describing the menu to be
- *  inserted.  Functions written in C should use the gnc-plugin code.
+ *  inserted.  Functions written in C should use the gnc-plugin cppode.
  */
 void gnc_add_scm_extension (SCM extension);
 

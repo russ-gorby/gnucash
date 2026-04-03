@@ -35,7 +35,7 @@
 #include <gnc-menu-extensions.h>
 #include <gnc-plugin-file-history.h>
 #include <gnc-ui.h>
-#include <gnc-splash.h>
+#include <gnc-splash.hpp>
 #include <dialog-tax-table.h>
 %}
 #if defined(SWIGGUILE)
