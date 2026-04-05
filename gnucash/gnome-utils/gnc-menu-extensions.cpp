@@ -143,25 +143,20 @@ gnc_extension_documentation (SCM extension)
 static void
 gnc_extension_path (SCM extension, char **fullpath)
 {
-    SCM path;
-    gchar **strings;
-    gint i;
-    gint num_strings;
-
     initialize_getters();
 
-    path = gnc_scm_call_1_to_list(getters.path, extension);
+    SCM path = gnc_scm_call_1_to_list(getters.path, extension);
     if ((path == SCM_UNDEFINED) || scm_is_null(path))
     {
         *fullpath = g_strdup("");
         return;
     }
 
-    num_strings = scm_ilength(path) + 2;
-    strings = g_new0(gchar *, num_strings);
-    strings[0] = "/menubar";
+    gint num_strings = scm_ilength(path) + 2;
+    gchar **strings = g_new0(gchar *, num_strings);
+    strings[0] = const_cast<gchar *>("/menubar");
 
-    i = 1;
+    gint i = 1;
     while (!scm_is_null(path))
     {
         SCM item;
@@ -256,12 +251,9 @@ gnc_extension_invoke_cb (SCM extension, SCM window)
 static gboolean
 gnc_create_extension_info (SCM extension)
 {
-    ExtensionInfo *ext_info;
-    gchar *typeStr, *tmp;
-    gchar* name;
-    gchar* guid;
+    gchar *typeStr = NULL;
 
-    ext_info = g_new0 (ExtensionInfo, 1);
+    ExtensionInfo *ext_info = g_new0 (ExtensionInfo, 1);
     ext_info->extension = extension;
     gnc_extension_path (extension, &ext_info->path);
     if (!gnc_extension_type (extension, &ext_info->type))
@@ -272,8 +264,8 @@ gnc_create_extension_info (SCM extension)
     }
 
     /* Get all the pieces */
-    name = gnc_extension_name (extension);
-    guid = gnc_extension_guid (extension);
+    gchar *name = gnc_extension_name (extension);
+    gchar *guid = gnc_extension_guid (extension);
     ext_info->action_label = g_strdup (gettext (name));
     ext_info->action_label_original = NULL;
     ext_info->action_name = gnc_ext_gen_action_name (guid);
@@ -281,23 +273,23 @@ gnc_create_extension_info (SCM extension)
     g_free (name);
     g_free (guid);
 
-    tmp = g_strdup_printf ("%s/%s", ext_info->path, ext_info->action_label);
+    gchar *tmp = g_strdup_printf ("%s/%s", ext_info->path, ext_info->action_label);
     ext_info->sort_key = g_utf8_collate_key (tmp, -1);
     g_free(tmp);
 
     switch (ext_info->type)
     {
     case GNC_SUB_MENU_ITEM:
-        typeStr = "menu";
+        typeStr = const_cast<gchar *>("menu");
         break;
     case GNC_MENU_ITEM:
-        typeStr = "menuitem";
+        typeStr = const_cast<gchar *>("menuitem");
         break;
     case GNC_SEPARATOR_ITEM:
-        typeStr = "sepitem";
+        typeStr = const_cast<gchar *>("sepitem");
         break;
     default:
-        typeStr = "unk";
+        typeStr = const_cast<gchar *>("unk");
         break;
     }
     ext_info->typeStr = typeStr;
@@ -317,7 +309,7 @@ gnc_create_extension_info (SCM extension)
 static void
 cleanup_extension_info (gpointer extension_info, gpointer not_used)
 {
-    ExtensionInfo *ext_info = extension_info;
+    auto ext_info = static_cast<ExtensionInfo *>(extension_info);
 
     if (ext_info->extension)
         scm_gc_unprotect_object (ext_info->extension);

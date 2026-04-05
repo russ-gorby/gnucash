@@ -92,8 +92,9 @@ gnc_gnome_utils_init (void)
 static void
 gnc_configure_date_format (void)
 {
-    QofDateFormat df = gnc_prefs_get_int(GNC_PREFS_GROUP_GENERAL,
-                                         GNC_PREF_DATE_FORMAT);
+    auto df = static_cast<QofDateFormat>(
+        gnc_prefs_get_int(GNC_PREFS_GROUP_GENERAL, GNC_PREF_DATE_FORMAT)
+    );
 
     /* Only a subset of the qof date formats is currently
      * supported for date entry.
@@ -598,8 +599,7 @@ gnc_ui_start_event_loop (void)
 GncMainWindow *
 gnc_gui_init(void)
 {
-    static GncMainWindow *main_window;
-    gchar *map;
+    static GncMainWindow *main_window = NULL;
 
     ENTER ("");
 
@@ -623,22 +623,22 @@ gnc_gui_init(void)
 
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_FORMAT,
-                           gnc_configure_date_format,
+                           reinterpret_cast<gpointer>(gnc_configure_date_format),
                            NULL);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_COMPL_THISYEAR,
-                           gnc_configure_date_completion,
+                           reinterpret_cast<gpointer>(gnc_configure_date_completion),
                            NULL);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_COMPL_SLIDING,
-                           gnc_configure_date_completion,
+                           reinterpret_cast<gpointer>(gnc_configure_date_completion),
                            NULL);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_BACKMONTHS,
-                           gnc_configure_date_completion,
+                           reinterpret_cast<gpointer>(gnc_configure_date_completion),
                            NULL);
     gnc_prefs_register_group_cb (GNC_PREFS_GROUP_GENERAL,
-                                gnc_gui_refresh_all,
+                                reinterpret_cast<gpointer>(gnc_gui_refresh_all),
                                 NULL);
 
     gnc_file_set_shutdown_callback (gnc_shutdown);
@@ -649,7 +649,7 @@ gnc_gui_init(void)
     gnc_window_set_progressbar_window (GNC_WINDOW(main_window));
 
 
-    map = gnc_build_userdata_path(ACCEL_MAP_NAME);
+    gchar *map = gnc_build_userdata_path(ACCEL_MAP_NAME);
     if (!g_file_test (map, G_FILE_TEST_EXISTS))
     {
         gchar *text = NULL;
@@ -700,22 +700,22 @@ gnc_gui_destroy (void)
     {
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_FORMAT,
-                                     gnc_configure_date_format,
+                                     reinterpret_cast<gpointer>(gnc_configure_date_format),
                                      NULL);
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_COMPL_THISYEAR,
-                                     gnc_configure_date_completion,
+                                     reinterpret_cast<gpointer>(gnc_configure_date_completion),
                                      NULL);
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_COMPL_SLIDING,
-                                     gnc_configure_date_completion,
+                                     reinterpret_cast<gpointer>(gnc_configure_date_completion),
                                      NULL);
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_BACKMONTHS,
-                                     gnc_configure_date_completion,
+                                     reinterpret_cast<gpointer>(gnc_configure_date_completion),
                                      NULL);
         gnc_prefs_remove_group_cb_by_func (GNC_PREFS_GROUP_GENERAL,
-                                           gnc_gui_refresh_all,
+                                           reinterpret_cast<gpointer>(gnc_gui_refresh_all),
                                            NULL);
 
         gnc_ui_util_remove_registered_prefs ();

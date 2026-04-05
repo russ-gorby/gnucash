@@ -55,7 +55,7 @@ const SecretSchema* gnucash_get_secret_schema(void)
             { "server", SECRET_SCHEMA_ATTRIBUTE_STRING },
             { "port", SECRET_SCHEMA_ATTRIBUTE_INTEGER },
             { "user", SECRET_SCHEMA_ATTRIBUTE_STRING },
-            { "NULL", 0 },
+            { "NULL", static_cast<SecretSchemaAttributeType>(0) },
         }
     };
 

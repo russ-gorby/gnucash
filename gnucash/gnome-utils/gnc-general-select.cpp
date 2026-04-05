@@ -151,13 +151,11 @@ gnc_general_select_dispose (GObject *object)
 static void
 select_cb(GtkButton * button, gpointer user_data)
 {
-    GNCGeneralSelect *gsl = user_data;
-    gpointer new_selection;
-    GtkWidget *toplevel;
+    auto gsl = static_cast<GNCGeneralSelect *>(user_data);
 
-    toplevel = gtk_widget_get_toplevel (GTK_WIDGET (button));
+    GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (button));
 
-    new_selection = (gsl->new_select)(gsl->cb_arg, gsl->selected_item,
+    gpointer new_selection = (gsl->new_select)(gsl->cb_arg, gsl->selected_item,
                                       toplevel);
 
     /* NULL return means cancel; no change */
@@ -202,11 +200,12 @@ gnc_general_select_new (GNCGeneralSelectType type,
                         GNCGeneralSelectNewSelectCB new_select,
                         gpointer cb_arg)
 {
-    GNCGeneralSelect *gsl;
     g_return_val_if_fail (get_string != NULL, NULL);
     g_return_val_if_fail (new_select != NULL, NULL);
 
-    gsl = g_object_new(GNC_TYPE_GENERAL_SELECT, NULL, NULL);
+    auto gsl = static_cast<GNCGeneralSelect *>(
+        g_object_new(GNC_TYPE_GENERAL_SELECT, NULL, NULL)
+    );
 
     create_children (gsl, type);
     gsl->get_string = get_string;

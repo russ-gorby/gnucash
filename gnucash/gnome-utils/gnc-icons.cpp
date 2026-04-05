@@ -37,7 +37,7 @@
 
 static QofLogModule log_module = GNC_MOD_GUI;
 
-static gchar *icon_files[] =
+static const gchar *icon_files[] =
 {
     GNC_ICON_APP,
     GNC_ICON_ACCOUNT,
@@ -94,7 +94,7 @@ gnc_load_app_icons (void)
 
     for (i = 0; icon_files[i]; i++)
     {
-        gchar *file = icon_files[i];
+        const gchar *file = icon_files[i];
         // check if we have at least one size for the named icons loaded
         if (!gtk_icon_theme_has_icon (icon_theme, file))
             PWARN ("No icon named '%s' found. Some gui elements may be missing their icons", file);

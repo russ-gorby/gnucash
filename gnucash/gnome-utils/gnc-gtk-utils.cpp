@@ -311,7 +311,10 @@ find_widget_func (GtkWidget *widget, const gchar *id)
     {
         GList *container_list = gtk_container_get_children (GTK_CONTAINER(widget));
         for (GList *n = container_list; !ret && n; n = n->next)
-            ret = find_widget_func (n->data, id);
+            ret = static_cast<GtkWidget *>(
+                find_widget_func(static_cast<GtkWidget *>(n->data), id)
+            );
+
         g_list_free (container_list);
     }
 
@@ -330,7 +333,9 @@ GtkWidget *
 gnc_get_dialog_widget_from_id (GtkDialog *dialog, const gchar *id)
 {
     GtkWidget *content_area = gtk_dialog_get_content_area (dialog);
-    return find_widget_func (content_area, id);
+    return static_cast<GtkWidget *>(
+        find_widget_func (content_area, id)
+    );
 }
 
 
@@ -364,7 +369,7 @@ static void
 accel_map_foreach_func (gpointer user_data, const gchar* accel_path, guint accel_key,
                         GdkModifierType accel_mods, gboolean changed)
 {
-    GMenuModel *menu_model = user_data;
+    auto menu_model = static_cast<GMenuModel *>(user_data);
     gchar **accel_path_parts = NULL;
     guint  accel_size = 0;
     gchar *target = NULL;
@@ -481,7 +486,9 @@ find_menu_item_func (GtkWidget *widget, const gchar *action_name, const gchar *a
         {
             GList *container_list = gtk_container_get_children (GTK_CONTAINER(subMenu));
             for (GList *n = container_list; !ret && n; n = n->next)
-                ret = find_menu_item_func (n->data, action_name, action_label);
+                ret = static_cast<GtkWidget *>(
+                    find_menu_item_func (static_cast<GtkWidget *>(n->data), action_name, action_label)
+                );
             g_list_free (container_list);
         }
     }
@@ -509,7 +516,10 @@ gnc_find_menu_item_by_action_name (GtkWidget *menu, const gchar *action_name)
     {
         GList *container_list = gtk_container_get_children (GTK_CONTAINER(menu));
         for (GList *n = container_list; !ret && n; n = n->next)
-            ret = find_menu_item_func (n->data, action_name, action_label);
+            ret = static_cast<GtkWidget *>(
+                find_menu_item_func (
+                    static_cast<GtkWidget *>(n->data), action_name, action_label)
+            );
         g_list_free (container_list);
     }
     return ret;
@@ -537,7 +547,10 @@ gnc_find_menu_item_by_action_label (GtkWidget *menu, const gchar *action_label)
     {
         GList *container_list = gtk_container_get_children (GTK_CONTAINER(menu));
         for (GList *n = container_list; !ret && n; n = n->next)
-            ret = find_menu_item_func (n->data, action_name, action_label);
+            ret = static_cast<GtkWidget *>(
+                find_menu_item_func (
+                    static_cast<GtkWidget *>(n->data), action_name, action_label)
+            );
         g_list_free (container_list);
     }
     return ret;
@@ -547,7 +560,7 @@ gnc_find_menu_item_by_action_label (GtkWidget *menu, const gchar *action_label)
 static void
 menu_item_list (GtkWidget *widget, gpointer user_data)
 {
-    GList **list = user_data;
+    auto list = static_cast<GList **>(user_data);
 
     if (GTK_IS_MENU_ITEM(widget))
     {
@@ -589,7 +602,7 @@ struct find_tool_item_struct
 static void
 find_tool_action (GtkWidget *widget, gpointer user_data)
 {
-    struct find_tool_item_struct *ftis = user_data;
+    auto ftis = static_cast<find_tool_item_struct *>(user_data);
 
     if (GTK_IS_ACTIONABLE(widget))
     {
@@ -612,7 +625,7 @@ find_tool_action (GtkWidget *widget, gpointer user_data)
 GtkWidget *
 gnc_find_toolbar_item (GtkWidget *toolbar, const gchar *action_name)
 {
-    struct find_tool_item_struct ftis;
+    find_tool_item_struct ftis;
 
     g_return_val_if_fail (GTK_IS_TOOLBAR(toolbar), NULL);
     g_return_val_if_fail (action_name != NULL, NULL);
@@ -631,17 +644,16 @@ extract_items_from_model (GMenuModel *model,
                           gint        item,
                           gpointer    user_data)
 {
-    GMenuAttributeIter *iter;
-    const gchar *key;
-    GVariant *value;
-    GncMenuModelSearch *gsm = user_data;
+    const gchar *key = NULL;
+    GVariant *value = NULL;
+    auto gsm = static_cast<GncMenuModelSearch *>(user_data);
     const gchar *action = NULL;
     const gchar *label = NULL;
     const gchar *tooltip = NULL;
     const gchar *target_char = NULL;
-    gint         target_int = -1;
+    gint target_int = -1;
 
-    iter = g_menu_model_iterate_item_attributes (model, item);
+    GMenuAttributeIter *iter = g_menu_model_iterate_item_attributes (model, item);
     while (g_menu_attribute_iter_get_next (iter, &key, &value))
     {
         if (g_str_equal (key, GNC_MENU_ATTRIBUTE_TOOLTIP) &&
@@ -706,7 +718,7 @@ static void
 items_from_model (GMenuModel *model,
                   gpointer user_data)
 {
-    GncMenuModelSearch *gsm = user_data;
+    auto gsm = static_cast<GncMenuModelSearch *>(user_data);
 
     for (gint i = 0; i < g_menu_model_get_n_items (model); i++)
     {
@@ -918,11 +930,11 @@ gnc_menubar_model_update_item (GMenuModel *menu_model, const gchar *action_name,
 }
 
 
-typedef struct
+struct to_remove
 {
     GMenuModel *model;
     gint        index;
-} to_remove;
+};
 
 static void
 item_to_remove_from_model (GMenuModel  *model,
@@ -1015,7 +1027,9 @@ static void
 menu_item_select_cb (GtkWidget *menu_item, GtkWidget *statusbar)
 {
     GtkWidget *accel_label = gtk_bin_get_child (GTK_BIN(menu_item));
-    GMenuModel *menubar_model = g_object_get_data (G_OBJECT(statusbar), "menu-model");
+    auto menubar_model = static_cast<GMenuModel *>(
+        g_object_get_data (G_OBJECT(statusbar), "menu-model")
+    );
 
     if (!menubar_model)
         return;
@@ -1077,7 +1091,7 @@ tool_item_enter_event (GtkWidget *button, GdkEvent *event,
 {
     GtkWidget *tool_item = gtk_widget_get_parent (button);
     gchar *tooltip = gtk_widget_get_tooltip_text (tool_item);
-    statusbar_push (user_data, tooltip);
+    statusbar_push (static_cast<GtkWidget *>(user_data), tooltip);
     g_free (tooltip);
     return FALSE;
 }
@@ -1086,7 +1100,7 @@ static gboolean
 tool_item_leave_event (GtkWidget *button, GdkEvent *event,
                        gpointer user_data)
 {
-    statusbar_pop (user_data);
+    statusbar_pop (static_cast<GtkWidget *>(user_data));
     return FALSE;
 }
 

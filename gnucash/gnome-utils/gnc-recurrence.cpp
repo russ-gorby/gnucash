@@ -50,47 +50,50 @@ struct _GncRecurrence
     Recurrence recurrence;
 };
 
-typedef enum
+enum GNCR_Signals
 {
     GNCRECURRENCE_CHANGED,
     LAST_SIGNAL
-} GNCR_Signals;
+};
 
-typedef enum
+enum UIPeriodType
 {
     GNCR_DAY,
     GNCR_WEEK,
     GNCR_MONTH,
     GNCR_YEAR,
-} UIPeriodType;
+};
 
 G_DEFINE_TYPE (GncRecurrence, gnc_recurrence, GTK_TYPE_BOX)
 
 static UIPeriodType get_pt_ui(GncRecurrence *gr)
 {
-    return (gtk_combo_box_get_active(gr->gcb_period));
+    return (static_cast<UIPeriodType>(
+        gtk_combo_box_get_active(gr->gcb_period))
+    );
 }
 
 
 static void set_pt_ui(GncRecurrence *gr, PeriodType pt)
 {
     UIPeriodType idx;
+
     switch (pt)
     {
     case PERIOD_DAY:
-        idx = 0;
+        idx = GNCR_DAY;
         break;
     case PERIOD_WEEK:
-        idx = 1;
+        idx = GNCR_WEEK;
         break;
     case PERIOD_MONTH:
     case PERIOD_END_OF_MONTH:
     case PERIOD_NTH_WEEKDAY:
     case PERIOD_LAST_WEEKDAY:
-        idx = 2;
+        idx = GNCR_MONTH;
         break;
     case PERIOD_YEAR:
-        idx = 3;
+        idx = GNCR_YEAR;
         break;
     default:
         return;
@@ -360,10 +363,10 @@ gnc_recurrence_class_init( GncRecurrenceClass *klass )
 GtkWidget *
 gnc_recurrence_new()
 {
-    GncRecurrence *gr;
-
     ENTER(" ");
-    gr = g_object_new(gnc_recurrence_get_type(), NULL);
+    auto gr = static_cast<GncRecurrence *>(
+        g_object_new(gnc_recurrence_get_type(), NULL)
+    );
     LEAVE(" ");
     return GTK_WIDGET(gr);
 }
