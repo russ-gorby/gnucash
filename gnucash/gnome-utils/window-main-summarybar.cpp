@@ -101,12 +101,11 @@ typedef struct
 static GNCCurrencyAcc *
 gnc_ui_get_currency_accumulator(GList **list, gnc_commodity * currency, gint total_mode)
 {
-    GList *current;
-    GNCCurrencyAcc *found;
+    GNCCurrencyAcc *found = NULL;
 
-    for (current = g_list_first(*list); current; current = g_list_next(current))
+    for (GList *current = g_list_first(*list); current; current = g_list_next(current))
     {
-        found = current->data;
+        found = static_cast<GNCCurrencyAcc *>(current->data);
         if ((gnc_commodity_equiv(currency, found->currency))
                 && (found->total_mode == total_mode))
         {
@@ -148,7 +147,7 @@ gnc_ui_accounts_recurse (Account *parent, GList **currency_list,
     children = gnc_account_get_children(parent);
     for (node = children; node; node = g_list_next(node))
     {
-        Account *account = node->data;
+        auto account = static_cast<Account *>(node->data);
         QofBook *book = gnc_account_get_book (account);
         GNCPriceDB *pricedb = gnc_pricedb_get_db (book);
         gnc_commodity *to_curr = options.default_currency;
@@ -354,14 +353,9 @@ enum
 static void
 gnc_main_window_summary_refresh (GNCMainSummary * summary)
 {
-    Account *root;
-    GNCCurrencyAcc *currency_accum;
-    GList *currency_list;
-    GList *current;
     GNCSummarybarOptions options;
+    Account *root = gnc_get_current_root_account ();
 
-
-    root = gnc_get_current_root_account ();
     options.default_currency = gnc_default_currency ();
     if (options.default_currency == NULL)
     {
@@ -375,7 +369,7 @@ gnc_main_window_summary_refresh (GNCMainSummary * summary)
     options.start_date = gnc_accounting_period_fiscal_start();
     options.end_date = gnc_accounting_period_fiscal_end();
 
-    currency_list = NULL;
+    GList *currency_list = NULL;
 
     /* grand total should be first in the list */
     if (options.grand_total)
@@ -396,12 +390,12 @@ gnc_main_window_summary_refresh (GNCMainSummary * summary)
         g_object_ref(summary->datamodel);
         gtk_combo_box_set_model(GTK_COMBO_BOX(summary->totals_combo), NULL);
         gtk_list_store_clear(summary->datamodel);
-        for (current = g_list_first(currency_list); current; current = g_list_next(current))
+        for (GList *current = g_list_first(currency_list); current; current = g_list_next(current))
         {
             gchar *total_mode_label;
             gchar *bidi_total, *bidi_asset_amount, *bidi_profit_amount;
 
-            currency_accum = current->data;
+            auto currency_accum = static_cast<GNCCurrencyAcc *>(current->data);
 
             xaccSPrintAmount(asset_amount_string,
                              currency_accum->assets,
@@ -463,7 +457,7 @@ get_negative_color_str (void)
 static void
 summarybar_update_color (gpointer gsettings, gchar *key, gpointer user_data)
 {
-    GNCMainSummary *summary = user_data;
+    auto summary = static_cast<GNCMainSummary *>(user_data);
 
     summary->negative_color = get_negative_color_str();
     summary->show_negative_color = gnc_prefs_get_bool (GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED);
@@ -478,7 +472,8 @@ gnc_main_window_summary_destroy_cb(GNCMainSummary *summary, gpointer data)
     gnc_unregister_gui_component(summary->component_id);
 
     gnc_prefs_remove_cb_by_func(GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED,
-                                summarybar_update_color, summary);
+                                reinterpret_cast<gpointer>(summarybar_update_color),
+                                summary);
 
     g_free (summary->negative_color);
     g_free (summary);
@@ -487,14 +482,14 @@ gnc_main_window_summary_destroy_cb(GNCMainSummary *summary, gpointer data)
 static void
 summarybar_refresh_handler(GHashTable * changes, gpointer user_data)
 {
-    GNCMainSummary * summary = user_data;
+    auto summary = static_cast<GNCMainSummary *>(user_data);
     gnc_main_window_summary_refresh(summary);
 }
 
 static void
 prefs_changed_cb (gpointer prefs, gchar *pref, gpointer user_data)
 {
-    GNCMainSummary * summary = user_data;
+    auto summary = static_cast<GNCMainSummary *>(user_data);
     gnc_main_window_summary_refresh(summary);
 }
 
@@ -546,7 +541,7 @@ static void
 cdf (GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter,
                           gpointer user_data)
 {
-    GNCMainSummary * summary = user_data;
+    auto summary = static_cast<GNCMainSummary *>(user_data);
     gchar *type, *assets, *assets_val, *profits, *profits_val;
     gboolean assets_neg, profits_neg;
     gint viewcol;
@@ -606,7 +601,7 @@ cdf (GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model
 static void
 summary_combo_popped (GObject *widget, GParamSpec *pspec, gpointer user_data)
 {
-    GNCMainSummary * summary = user_data;
+    auto summary = static_cast<GNCMainSummary *>(user_data);
     if (summary->combo_popped)
         summary->combo_popped = FALSE;
     else
@@ -616,9 +611,7 @@ summary_combo_popped (GObject *widget, GParamSpec *pspec, gpointer user_data)
 GtkWidget *
 gnc_main_window_summary_new (void)
 {
-    GNCMainSummary  * retval = g_new0(GNCMainSummary, 1);
-    GtkCellRenderer *textRenderer;
-    int i;
+    GNCMainSummary *retval = g_new0(GNCMainSummary, 1);
 
     retval->datamodel = gtk_list_store_new (N_COLUMNS,
                                             G_TYPE_STRING,
@@ -641,7 +634,8 @@ gnc_main_window_summary_new (void)
     retval->negative_color = get_negative_color_str();
     retval->show_negative_color = gnc_prefs_get_bool (GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED,
-                          summarybar_update_color, retval);
+                          reinterpret_cast<gpointer>(summarybar_update_color),
+                          retval);
 
     retval->component_id = gnc_register_gui_component (WINDOW_SUMMARYBAR_CM_CLASS,
                            summarybar_refresh_handler,
@@ -656,9 +650,9 @@ gnc_main_window_summary_new (void)
 
     retval->combo_popped = FALSE;
 
-    for (i = 0; i <= N_COLUMNS - 2; i += 2)
+    for (int i = 0; i <= N_COLUMNS - 2; i += 2)
     {
-        textRenderer = GTK_CELL_RENDERER(gtk_cell_renderer_text_new());
+        GtkCellRenderer *textRenderer = GTK_CELL_RENDERER(gtk_cell_renderer_text_new());
 
         gtk_cell_renderer_set_fixed_size (textRenderer, 50, -1);
 
@@ -680,7 +674,7 @@ gnc_main_window_summary_new (void)
     gnc_main_window_summary_refresh(retval);
 
     retval->cnxn_id =  gnc_prefs_register_cb (GNC_PREFS_GROUP, NULL,
-                       prefs_changed_cb, retval);
+                       reinterpret_cast<gpointer>(prefs_changed_cb), retval);
 
     return retval->hbox;
 }

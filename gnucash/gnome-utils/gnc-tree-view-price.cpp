@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License*
  * along with this program; if not, contact:                        *
  *                                                                  *
- * Free Software Foundation           Voice:  +1-617-542-5942       *
+ * Free Software Foundation           git status
+ * git Voice:  +1-617-542-5942       *
  * 51 Franklin Street, Fifth Floor    Fax:    +1-617-542-2652       *
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
  *                                                                  *
@@ -351,28 +352,24 @@ gnc_tree_view_price_new (QofBook *book,
                          const gchar *first_property_name,
                          ...)
 {
-    GncTreeView *view;
-    GtkTreeModel *model, *f_model, *s_model;
-    GtkTreeViewColumn *col;
-    GNCPriceDB *price_db;
     va_list var_args;
-    const gchar *sample_text;
-    gchar *sample_text2;
 
     ENTER(" ");
     /* Create/get a pointer to the existing model for this set of books. */
-    price_db = gnc_pricedb_get_db(book);
-    model = gnc_tree_model_price_new (book, price_db);
+    GNCPriceDB *price_db = gnc_pricedb_get_db(book);
+    auto model = static_cast<GtkTreeModel *>(
+        gnc_tree_model_price_new (book, price_db)
+    );
 
     /* Set up the view private filter on the common model. */
-    f_model = gtk_tree_model_filter_new (model, NULL);
+    GtkTreeModel *f_model = gtk_tree_model_filter_new (model, NULL);
     g_object_unref(G_OBJECT(model));
-    s_model = gtk_tree_model_sort_new_with_model (f_model);
+    GtkTreeModel *s_model = gtk_tree_model_sort_new_with_model (f_model);
     g_object_unref(G_OBJECT(f_model));
 
     /* Create our view */
-    view = g_object_new (GNC_TYPE_TREE_VIEW_PRICE,
-                         "name", "gnc-id-price-tree", NULL);
+    auto view = static_cast<GncTreeView *>(
+        g_object_new (GNC_TYPE_TREE_VIEW_PRICE, "name", "gnc-id-price-tree", NULL));
     gtk_tree_view_set_model (GTK_TREE_VIEW (view), s_model);
     g_object_unref(G_OBJECT(s_model));
 
@@ -380,15 +377,15 @@ gnc_tree_view_price_new (QofBook *book,
     DEBUG("f_model ref count is %d", G_OBJECT(f_model)->ref_count);
     DEBUG("s_model ref count is %d", G_OBJECT(s_model)->ref_count);
 
-    sample_text = gnc_commodity_get_printname(gnc_default_currency());
-    sample_text2 = g_strdup_printf("%s%s", sample_text, sample_text);
+    const gchar *sample_text = gnc_commodity_get_printname(gnc_default_currency());
+    gchar *sample_text2 = g_strdup_printf("%s%s", sample_text, sample_text);
     gnc_tree_view_add_text_column (
               view, _("Security"), "security", NULL, sample_text2,
               GNC_TREE_MODEL_PRICE_COL_COMMODITY,
               GNC_TREE_VIEW_COLUMN_VISIBLE_ALWAYS,
               sort_by_name);
     g_free(sample_text2);
-    col = gnc_tree_view_add_text_column (
+    GtkTreeViewColumn *col = gnc_tree_view_add_text_column (
               view, _("Currency"), "currency", NULL, sample_text,
               GNC_TREE_MODEL_PRICE_COL_CURRENCY,
               GNC_TREE_MODEL_PRICE_COL_VISIBILITY,
@@ -507,7 +504,7 @@ typedef struct
 static void
 gnc_tree_view_price_filter_destroy (gpointer data)
 {
-    filter_user_data *fd = data;
+    auto fd = static_cast<filter_user_data *>(data);
 
     if (fd->user_destroy)
         fd->user_destroy(fd->user_data);
@@ -519,10 +516,7 @@ gnc_tree_view_price_filter_helper (GtkTreeModel *model,
                                    GtkTreeIter *iter,
                                    gpointer data)
 {
-    gnc_commodity_namespace *name_space;
-    gnc_commodity *commodity;
-    GNCPrice *price;
-    filter_user_data *fd = data;
+    auto fd = static_cast<filter_user_data *>(data);
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_PRICE (model), FALSE);
     g_return_val_if_fail (iter != NULL, FALSE);
@@ -531,7 +525,7 @@ gnc_tree_view_price_filter_helper (GtkTreeModel *model,
     {
         if (fd->user_ns_fn)
         {
-            name_space = gnc_tree_model_price_get_namespace (GNC_TREE_MODEL_PRICE(model), iter);
+            gnc_commodity_namespace *name_space = gnc_tree_model_price_get_namespace (GNC_TREE_MODEL_PRICE(model), iter);
             return fd->user_ns_fn(name_space, fd->user_data);
         }
         return TRUE;
@@ -541,7 +535,7 @@ gnc_tree_view_price_filter_helper (GtkTreeModel *model,
     {
         if (fd->user_cm_fn)
         {
-            commodity = gnc_tree_model_price_get_commodity (GNC_TREE_MODEL_PRICE(model), iter);
+            gnc_commodity *commodity = gnc_tree_model_price_get_commodity (GNC_TREE_MODEL_PRICE(model), iter);
             return fd->user_cm_fn(commodity, fd->user_data);
         }
         return TRUE;
@@ -551,7 +545,7 @@ gnc_tree_view_price_filter_helper (GtkTreeModel *model,
     {
         if (fd->user_pc_fn)
         {
-            price = gnc_tree_model_price_get_price (GNC_TREE_MODEL_PRICE(model), iter);
+            GNCPrice *price = gnc_tree_model_price_get_price (GNC_TREE_MODEL_PRICE(model), iter);
             return fd->user_pc_fn(price, fd->user_data);
         }
         return TRUE;
@@ -573,24 +567,23 @@ gnc_tree_view_price_set_filter (GncTreeViewPrice *view,
                                 gpointer data,
                                 GDestroyNotify destroy)
 {
-    GtkTreeModel *f_model, *s_model;
-    filter_user_data *fd = data;
-
     ENTER("view %p, ns func %p, cm func %p, pc func %p, data %p, destroy %p",
           view, ns_func, cm_func, pc_func, data, destroy);
 
     g_return_if_fail(GNC_IS_TREE_VIEW_PRICE(view));
     g_return_if_fail((ns_func != NULL) || (cm_func != NULL));
 
-    fd = g_malloc(sizeof(filter_user_data));
+    auto fd = static_cast<filter_user_data *>(
+        g_malloc(sizeof(filter_user_data))
+    );
     fd->user_ns_fn   = ns_func;
     fd->user_cm_fn   = cm_func;
     fd->user_pc_fn   = pc_func;
     fd->user_data    = data;
     fd->user_destroy = destroy;
 
-    s_model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
-    f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
+    GtkTreeModel *s_model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
+    GtkTreeModel *f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
 
     /* disconnect model from view */
     g_object_ref (G_OBJECT(s_model));
@@ -736,20 +729,18 @@ get_selected_prices_helper (GtkTreeModel *s_model,
                             GtkTreeIter *s_iter,
                             gpointer data)
 {
-    GList **return_list = data;
-    GtkTreeModel *model, *f_model;
+    auto return_list = static_cast<GList **>(data);
     GtkTreeIter iter, f_iter;
-    GNCPrice *price;
 
     gtk_tree_model_sort_convert_iter_to_child_iter (GTK_TREE_MODEL_SORT (s_model),
             &f_iter, s_iter);
 
-    f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
+    GtkTreeModel *f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
     gtk_tree_model_filter_convert_iter_to_child_iter (GTK_TREE_MODEL_FILTER (f_model),
             &iter, &f_iter);
 
-    model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(f_model));
-    price = gnc_tree_model_price_get_price (GNC_TREE_MODEL_PRICE(model),
+    GtkTreeModel *model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(f_model));
+    GNCPrice *price = gnc_tree_model_price_get_price (GNC_TREE_MODEL_PRICE(model),
                                             &iter);
     if (price)
         *return_list = g_list_prepend (*return_list, price);
@@ -779,20 +770,18 @@ get_selected_commodity_helper (GtkTreeModel *s_model,
                                GtkTreeIter *s_iter,
                                gpointer data)
 {
-    GList **return_list = data;
-    GtkTreeModel *model, *f_model;
+    auto return_list = static_cast<GList **>(data);
     GtkTreeIter iter, f_iter;
-    gnc_commodity *commodity;
 
     gtk_tree_model_sort_convert_iter_to_child_iter (GTK_TREE_MODEL_SORT (s_model),
             &f_iter, s_iter);
 
-    f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
+    GtkTreeModel *f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
     gtk_tree_model_filter_convert_iter_to_child_iter (GTK_TREE_MODEL_FILTER (f_model),
             &iter, &f_iter);
 
-    model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(f_model));
-    commodity = gnc_tree_model_price_get_commodity (GNC_TREE_MODEL_PRICE(model), &iter);
+    GtkTreeModel *model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(f_model));
+    gnc_commodity *commodity = gnc_tree_model_price_get_commodity (GNC_TREE_MODEL_PRICE(model), &iter);
 
     if (commodity)
         *return_list = g_list_prepend (*return_list, commodity);

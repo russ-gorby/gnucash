@@ -155,18 +155,13 @@ gnc_tree_view_owner_active_toggled (GtkCellRendererToggle *cell,
                                     const gchar *s_path_str,
                                     gpointer user_data)
 {
-    GncTreeViewOwner *tree_view;
-    GtkTreePath *s_path;
-    GncOwner *owner;
-    gboolean active;
-
     /* Change the requested owner */
-    tree_view = user_data;
-    s_path = gtk_tree_path_new_from_string (s_path_str);
-    owner = gnc_tree_view_owner_get_owner_from_path (tree_view, s_path);
+    auto tree_view = static_cast<GncTreeViewOwner *>(user_data);
+    GtkTreePath *s_path = gtk_tree_path_new_from_string (s_path_str);
+    GncOwner *owner = gnc_tree_view_owner_get_owner_from_path (tree_view, s_path);
     if (owner)
     {
-        active = !gtk_cell_renderer_toggle_get_active (cell); // hasn't changed yet.
+        bool active = !gtk_cell_renderer_toggle_get_active (cell); // hasn't changed yet.
         gncOwnerSetActive (owner, active);
     }
 
@@ -318,9 +313,7 @@ sort_by_balance_value (GtkTreeModel *f_model,
 GtkTreeView *
 gnc_tree_view_owner_new (GncOwnerType owner_type)
 {
-    GtkTreeModel *model, *f_model, *s_model;
-    const gchar *sample_type, *sample_currency;
-    const gchar *owner_name = NULL, * owner_id = NULL;
+    const gchar *owner_name = NULL, *owner_id = NULL;
 
     ENTER(" ");
 
@@ -350,20 +343,21 @@ gnc_tree_view_owner_new (GncOwnerType owner_type)
         break;
     }
     /* Create our view */
-    GncTreeViewOwner *view = g_object_new (GNC_TYPE_TREE_VIEW_OWNER,
-                                           "name", "gnc-id-owner-tree", NULL);
+    auto view = static_cast<GncTreeViewOwner *>(
+        g_object_new (GNC_TYPE_TREE_VIEW_OWNER, "name", "gnc-id-owner-tree", NULL)
+    );
 
     /* Create/get a pointer to the existing model for this set of books. */
-    model = gnc_tree_model_owner_new (owner_type);
+    GtkTreeModel *model = gnc_tree_model_owner_new (owner_type);
 
     /* Set up the view private filter layer on the common model. */
-    f_model = gtk_tree_model_filter_new (model, NULL);
+    GtkTreeModel *f_model = gtk_tree_model_filter_new (model, NULL);
     /* A GncTreeModelOwner is based on a GncTreeModel, which is a
      * GObject that provides a GtkTreeModel interface. */
     g_object_unref(G_OBJECT(model));
 
     /* Set up the view private sort layer on the common model. */
-    s_model = gtk_tree_model_sort_new_with_model(f_model);
+    GtkTreeModel *s_model = gtk_tree_model_sort_new_with_model(f_model);
     g_object_unref(G_OBJECT(f_model));
     gtk_tree_view_set_model (GTK_TREE_VIEW (view), s_model);
     g_object_unref(G_OBJECT(s_model));
@@ -371,8 +365,8 @@ gnc_tree_view_owner_new (GncOwnerType owner_type)
     /* Set default visibilities */
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW(view), FALSE);
 
-    sample_type = gncOwnerTypeToQofIdType (GNC_OWNER_CUSTOMER);
-    sample_currency = gnc_commodity_get_fullname(gnc_default_currency());
+    const gchar *sample_type = gncOwnerTypeToQofIdType (GNC_OWNER_CUSTOMER);
+    const gchar *sample_currency = gnc_commodity_get_fullname(gnc_default_currency());
 
     view->name_column
         = gnc_tree_view_add_text_column(GNC_TREE_VIEW(view), owner_name, GNC_OWNER_TREE_NAME_COL,
@@ -582,13 +576,12 @@ gnc_tree_view_owner_filter_helper (GtkTreeModel *model,
                                    GtkTreeIter *iter,
                                    gpointer data)
 {
-    GncOwner *owner;
-    GncTreeViewOwner *view = data;
+    auto view = static_cast<GncTreeViewOwner *>(data);
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), FALSE);
     g_return_val_if_fail (iter != NULL, FALSE);
 
-    owner = gnc_tree_model_owner_get_owner (
+    GncOwner *owner = gnc_tree_model_owner_get_owner (
                 GNC_TREE_MODEL_OWNER(model), iter);
 
     if (view->filter_fn)
@@ -653,17 +646,14 @@ GncOwner *
 gnc_tree_view_owner_get_owner_from_path (GncTreeViewOwner *view,
         GtkTreePath *s_path)
 {
-    GtkTreeModel *model, *f_model, *s_model;
-    GtkTreePath *path, *f_path;
     GtkTreeIter iter;
-    GncOwner *owner;
 
     ENTER("view %p", view);
     g_return_val_if_fail (GNC_IS_TREE_VIEW_OWNER (view), NULL);
     g_return_val_if_fail (s_path != NULL, NULL);
 
-    s_model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
-    f_path = gtk_tree_model_sort_convert_path_to_child_path (
+    GtkTreeModel *s_model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
+    GtkTreePath *f_path = gtk_tree_model_sort_convert_path_to_child_path (
                  GTK_TREE_MODEL_SORT (s_model), s_path);
     if (!f_path)
     {
@@ -671,8 +661,8 @@ gnc_tree_view_owner_get_owner_from_path (GncTreeViewOwner *view,
         return NULL;
     }
 
-    f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
-    path = gtk_tree_model_filter_convert_path_to_child_path (
+    GtkTreeModel *f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
+    GtkTreePath *path = gtk_tree_model_filter_convert_path_to_child_path (
                GTK_TREE_MODEL_FILTER (f_model), f_path);
     gtk_tree_path_free(f_path);
     if (!path)
@@ -681,14 +671,14 @@ gnc_tree_view_owner_get_owner_from_path (GncTreeViewOwner *view,
         return NULL;
     }
 
-    model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(f_model));
+    GtkTreeModel *model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(f_model));
     if (!gtk_tree_model_get_iter (model, &iter, path))
     {
         LEAVE("no iter");
         return NULL;
     }
 
-    owner = iter.user_data;
+    auto owner = static_cast<GncOwner *>(iter.user_data);
     gtk_tree_path_free(path);
     LEAVE("owner %p (%s)", owner, gncOwnerGetName (owner));
     return owner;
@@ -729,17 +719,14 @@ gnc_tree_view_owner_get_owner_from_iter (GtkTreeModel *s_model,
 GncOwner *
 gnc_tree_view_owner_get_selected_owner (GncTreeViewOwner *view)
 {
-    GtkTreeSelection *selection;
-    GtkTreeModel *f_model, *s_model;
+    GtkTreeModel *s_model = NULL;
     GtkTreeIter iter, f_iter, s_iter;
-    GncOwner *owner;
-    GtkSelectionMode mode;
 
     ENTER("view %p", view);
     g_return_val_if_fail (GNC_IS_TREE_VIEW_OWNER (view), NULL);
 
-    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(view));
-    mode = gtk_tree_selection_get_mode(selection);
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(view));
+    GtkSelectionMode mode = gtk_tree_selection_get_mode(selection);
     if ((mode != GTK_SELECTION_SINGLE) && (mode != GTK_SELECTION_BROWSE))
     {
         return NULL;
@@ -753,11 +740,11 @@ gnc_tree_view_owner_get_selected_owner (GncTreeViewOwner *view)
     gtk_tree_model_sort_convert_iter_to_child_iter (GTK_TREE_MODEL_SORT (s_model),
             &f_iter, &s_iter);
 
-    f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
+    GtkTreeModel *f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
     gtk_tree_model_filter_convert_iter_to_child_iter (
         GTK_TREE_MODEL_FILTER (f_model), &iter, &f_iter);
 
-    owner = iter.user_data;
+    auto owner = static_cast<GncOwner *>(iter.user_data);
     LEAVE("owner %p (%s)", owner, gncOwnerGetName (owner));
     return owner;
 }
@@ -903,12 +890,10 @@ gtvo_update_column_names (GncTreeViewOwner *view)
 static void
 gtvo_currency_changed_cb (void)
 {
-    const GList *views, *ptr;
-
-    views = gnc_gobject_tracking_get_list (GNC_TREE_VIEW_OWNER_NAME);
-    for (ptr = views; ptr; ptr = g_list_next(ptr))
+    const GList *views = gnc_gobject_tracking_get_list (GNC_TREE_VIEW_OWNER_NAME);
+    for (const GList *ptr = views; ptr; ptr = g_list_next(ptr))
     {
-        gtvo_update_column_names (ptr->data);
+        gtvo_update_column_names (static_cast<GncTreeViewOwner *>(ptr->data));
     }
 }
 
@@ -1025,8 +1010,7 @@ gboolean
 gnc_plugin_page_owner_tree_filter_owners (GncOwner *owner,
         gpointer user_data)
 {
-    OwnerFilterDialog *fd = user_data;
-    gnc_numeric total;
+    auto fd = static_cast<OwnerFilterDialog *>(user_data);
 
     ENTER("owner %p:%s", owner, gncOwnerGetName(owner));
 
@@ -1038,7 +1022,7 @@ gnc_plugin_page_owner_tree_filter_owners (GncOwner *owner,
 
     if (!fd->show_zero_total)
     {
-        total = gncOwnerGetBalanceInCurrency (owner, NULL);
+        gnc_numeric total = gncOwnerGetBalanceInCurrency (owner, NULL);
         if (gnc_numeric_zero_p(total))
         {
             LEAVE(" hide: zero balance");
@@ -1099,8 +1083,6 @@ gppot_filter_response_cb (GtkWidget *dialog,
                           gint       response,
                           OwnerFilterDialog *fd)
 {
-    gpointer gptemp;
-
     g_return_if_fail(GTK_IS_DIALOG(dialog));
 
     ENTER("dialog %p, response %d", dialog, response);
@@ -1113,10 +1095,10 @@ gppot_filter_response_cb (GtkWidget *dialog,
     }
 
     /* Clean up and delete dialog */
-    gptemp = (gpointer)fd->dialog;
+    gpointer gptemp = (gpointer)fd->dialog;
     g_atomic_pointer_compare_and_exchange(&gptemp,
                                           (gpointer)dialog, NULL);
-    fd->dialog = gptemp;
+    fd->dialog = static_cast<GtkWidget *>(gptemp);
     gtk_widget_destroy(dialog);
     LEAVE("");
 }
@@ -1195,15 +1177,13 @@ static void
 tree_save_selected_row (GncTreeViewOwner *view,
                         gpointer user_data)
 {
-    GncOwner *owner;
-    bar_t *bar = user_data;
-    const gchar *owner_name;
+    auto bar = static_cast<bar_t *>(user_data);
 
-    owner = gnc_tree_view_owner_get_selected_owner(view);
+    GncOwner *owner = gnc_tree_view_owner_get_selected_owner(view);
     if (owner == NULL)
         return;
 
-    owner_name = gncOwnerGetName (owner);
+    const gchar *owner_name = gncOwnerGetName (owner);
     if (owner_name == NULL)
         return;
 

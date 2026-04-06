@@ -274,7 +274,7 @@ update_report_list (GncReportCombo *grc, GSList *report_list)
 
         for (GSList* node = report_list; node != NULL; node = g_slist_next (node))
         {
-            ReportListEntry *rle = node->data;
+            auto rle = static_cast<ReportListEntry *>(node->data);
 
             gtk_list_store_append (GTK_LIST_STORE(model), &iter);
             gtk_list_store_set (GTK_LIST_STORE(model), &iter,
@@ -482,17 +482,13 @@ gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list)
 GtkWidget *
 gnc_report_combo_new (GSList *report_list)
 {
-    GncReportCombo *grc;
-    GtkListStore *store;
-    GtkCellRenderer *renderer;
-
-    store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
-    grc = g_object_new (GNC_TYPE_REPORT_COMBO, NULL);
+    GtkListStore *store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+    auto grc = static_cast<GncReportCombo *>(g_object_new (GNC_TYPE_REPORT_COMBO, NULL));
 
     grc->combo = gtk_combo_box_new_with_model (GTK_TREE_MODEL(store));
     g_object_unref (store);
 
-    renderer = gtk_cell_renderer_text_new ();
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
     gtk_cell_layout_pack_start (GTK_CELL_LAYOUT(grc->combo), renderer, TRUE);
     gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT(grc->combo), renderer,
                                     "text", RC_NAME, NULL);

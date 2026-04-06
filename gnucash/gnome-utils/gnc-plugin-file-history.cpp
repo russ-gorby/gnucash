@@ -140,7 +140,7 @@ gnc_history_pref_name_to_index (const gchar *pref)
     result = sscanf(pref, HISTORY_STRING_FILE_N, &index);
     if (result != 1)
         return -1;
-    if ((index < 0) || (index >= gnc_plugin_n_actions))
+    if ((index < 0) || (index >= static_cast<gint>(gnc_plugin_n_actions)))
         return -1;
     return index;
 }
@@ -621,8 +621,8 @@ gnc_plugin_file_history_add_to_window (GncPlugin *plugin,
                                        GncMainWindow *window,
                                        GQuark type)
 {
-    gnc_prefs_register_cb (GNC_PREFS_GROUP_HISTORY, NULL,
-                           gnc_plugin_history_list_changed, window);
+    auto fptr = reinterpret_cast<gpointer>(gnc_plugin_history_list_changed);
+    gnc_prefs_register_cb (GNC_PREFS_GROUP_HISTORY, NULL, fptr, window);
     gnc_history_update_menus(window);
 }
 
@@ -643,8 +643,8 @@ gnc_plugin_file_history_remove_from_window (GncPlugin *plugin,
                                             GncMainWindow *window,
                                             GQuark type)
 {
-    gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_HISTORY, NULL,
-                                 gnc_plugin_history_list_changed, window);
+    auto fptr = reinterpret_cast<gpointer>(gnc_plugin_history_list_changed);
+    gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_HISTORY, NULL, fptr, window);
 }
 
 /************************************************************
@@ -669,7 +669,7 @@ gnc_plugin_file_history_cmd_open_file (GSimpleAction *simple,
                                        gpointer       user_data)
 
 {
-    GncMainWindowActionData *data = user_data;
+    auto data = static_cast<GncMainWindowActionData *>(user_data);
     gchar *filename, *pref, *index;
     const gchar *action_name;
 

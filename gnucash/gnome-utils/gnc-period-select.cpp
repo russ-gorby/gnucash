@@ -140,9 +140,11 @@ gnc_period_sample_update_date_label (GncPeriodSelect *period)
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
     if (!period->date_label)
         return;
-    which = gtk_combo_box_get_active (GTK_COMBO_BOX (period->selector));
+    which = static_cast<GncAccountingPeriod>(
+        gtk_combo_box_get_active (GTK_COMBO_BOX (period->selector))
+    );
     if (which == -1)
-        date = g_date_new_dmy (31, 7, 2013);
+        date = g_date_new_dmy (31, static_cast<GDateMonth>(7), 2013);
 
     else if (period->start)
         date = gnc_accounting_period_start_gdate (which, period->fy_end,
@@ -217,11 +219,17 @@ gnc_period_select_set_active_internal (GncPeriodSelect *period,
     g_return_if_fail(which >= 0);
     g_return_if_fail(which <  GNC_ACCOUNTING_PERIOD_LAST);
 
-    g_signal_handlers_block_by_func(G_OBJECT(period),
-                                    G_CALLBACK(gnc_period_sample_combobox_changed), period);
+    g_signal_handlers_block_by_func(
+        G_OBJECT(period),
+        reinterpret_cast<gpointer>(G_CALLBACK(gnc_period_sample_combobox_changed)),
+        period
+    );
     gtk_combo_box_set_active(GTK_COMBO_BOX(period->selector), which);
-    g_signal_handlers_unblock_by_func(G_OBJECT(period),
-                                      G_CALLBACK(gnc_period_sample_combobox_changed), period);
+    g_signal_handlers_unblock_by_func(
+        G_OBJECT(period),
+        reinterpret_cast<gpointer>(G_CALLBACK(gnc_period_sample_combobox_changed)),
+        period
+    );
 
     /* Update this widget */
     gnc_period_sample_update_date_label(period);
@@ -442,21 +450,24 @@ gnc_period_select_set_property (GObject      *object,
                                 const GValue *value,
                                 GParamSpec   *pspec)
 {
-    GncPeriodSelect *period = GNC_PERIOD_SELECT(object);
+    auto period = static_cast<GncPeriodSelect *>(GNC_PERIOD_SELECT(object));
 
     switch (prop_id)
     {
     case PROP_FY_END:
-        gnc_period_select_set_fy_end(period, g_value_get_pointer(value));
+        gnc_period_select_set_fy_end(period,
+            static_cast<const GDate *>(g_value_get_pointer(value)));
         break;
     case PROP_SHOW_DATE:
         gnc_period_select_set_show_date(period, g_value_get_boolean(value));
         break;
     case PROP_DATE_BASE:
-        gnc_period_select_set_date_base(period, g_value_get_pointer(value));
+        gnc_period_select_set_date_base(period,
+            static_cast<const GDate *>(g_value_get_pointer(value)));
         break;
     case PROP_PS_ACTIVE:
-        gnc_period_select_set_active_internal(period, g_value_get_int(value));
+        gnc_period_select_set_active_internal(period,
+            static_cast<GncAccountingPeriod>(g_value_get_int(value)));
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
@@ -566,16 +577,15 @@ gnc_period_select_init (GncPeriodSelect *period)
 static void
 gnc_period_select_finalize (GObject *object)
 {
-    GncPeriodSelect *period;
-
     g_return_if_fail (object != NULL);
     g_return_if_fail (GNC_IS_PERIOD_SELECT (object));
 
-    period = GNC_PERIOD_SELECT(object);
+    GncPeriodSelect *period = GNC_PERIOD_SELECT(object);
 
     /* Stop tracking changes to date formatting */
     gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL, GNC_PREF_DATE_FORMAT,
-                                 gnc_period_sample_new_date_format, period);
+                                 reinterpret_cast<gpointer>(gnc_period_sample_new_date_format),
+                                 period);
 
     /* The selector and date_label were added to the hbox.  They will be
      * freed automatically. */
@@ -603,11 +613,7 @@ gnc_period_select_finalize (GObject *object)
 GtkWidget *
 gnc_period_select_new (gboolean starting_labels)
 {
-    GncPeriodSelect *period;
-    const gchar *label;
-    gint i;
-
-    period = g_object_new(GNC_TYPE_PERIOD_SELECT, NULL);
+    auto period = static_cast<GncPeriodSelect *>(g_object_new(GNC_TYPE_PERIOD_SELECT, NULL));
 
     /* Set up private data structures */
     period->selector   = gtk_combo_box_text_new();
@@ -622,15 +628,15 @@ gnc_period_select_new (gboolean starting_labels)
                      G_CALLBACK(gnc_period_sample_combobox_changed), period);
 
     /* Build all the labels except the fiscal year labels */
-    for (i = 0; i < GNC_ACCOUNTING_PERIOD_CYEAR_LAST; i++)
+    for (int i = 0; i < GNC_ACCOUNTING_PERIOD_CYEAR_LAST; i++)
     {
-        label = starting_labels ? _(start_strings[i]) : _(end_strings[i]);
+        const gchar *label = starting_labels ? _(start_strings[i]) : _(end_strings[i]);
         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(period->selector), label);
     }
 
     /* Track changes to date formatting */
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL, GNC_PREF_DATE_FORMAT,
-                           gnc_period_sample_new_date_format, period);
+                           reinterpret_cast<gpointer>(gnc_period_sample_new_date_format), period);
 
     return GTK_WIDGET (period);
 }
@@ -685,10 +691,14 @@ gnc_period_select_set_active (GncPeriodSelect *period,
 GncAccountingPeriod
 gnc_period_select_get_active (GncPeriodSelect *period)
 {
-    g_return_val_if_fail(period != NULL, -1);
-    g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), -1);
+    g_return_val_if_fail(period != NULL,
+                         static_cast<GncAccountingPeriod>(-1));
+    g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period),
+                         static_cast<GncAccountingPeriod>(-1));
 
-    return gtk_combo_box_get_active(GTK_COMBO_BOX(period->selector));
+    return static_cast<GncAccountingPeriod>(
+        gtk_combo_box_get_active(GTK_COMBO_BOX(period->selector))
+    );
 }
 
 
@@ -699,12 +709,12 @@ gnc_period_select_get_active (GncPeriodSelect *period)
 GDate *
 gnc_period_select_get_date (GncPeriodSelect *period)
 {
-    GncAccountingPeriod which;
-
     g_return_val_if_fail(period != NULL, 0);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), 0);
 
-    which = gtk_combo_box_get_active(GTK_COMBO_BOX(period->selector));
+    auto which = static_cast<GncAccountingPeriod>(
+        gtk_combo_box_get_active(GTK_COMBO_BOX(period->selector))
+    );
     if (which == -1)
         return NULL;
 

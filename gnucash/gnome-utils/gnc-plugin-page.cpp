@@ -215,19 +215,15 @@ gnc_plugin_page_recreate_page(GtkWidget *window,
                               GKeyFile *key_file,
                               const gchar *page_group)
 {
-    GncPluginPageClass *klass;
-    GncPluginPage *page = NULL;
-    GType type;
-
     ENTER("type %s, keyfile %p, group %s", page_type, key_file, page_group);
-    type = g_type_from_name (page_type);
+    GType type = g_type_from_name (page_type);
     if (type == 0)
     {
         LEAVE("Cannot find type named %s", page_type);
         return NULL;
     }
 
-    klass = g_type_class_ref (type);
+    auto klass = static_cast<GncPluginPageClass *>(g_type_class_ref (type));
     if (klass == NULL)
     {
         const gchar *type_name = g_type_name (type);
@@ -242,7 +238,7 @@ gnc_plugin_page_recreate_page(GtkWidget *window,
         return NULL;
     }
 
-    page = (klass->recreate_page)(window, key_file, page_group);
+    GncPluginPage *page = (klass->recreate_page)(window, key_file, page_group);
     g_type_class_unref (klass);
     LEAVE(" ");
     return page;

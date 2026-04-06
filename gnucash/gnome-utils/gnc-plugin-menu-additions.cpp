@@ -174,21 +174,20 @@ gnc_plugin_menu_additions_action_new_cb (GSimpleAction *simple,
                                          GVariant      *parameter,
                                          gpointer       user_data)
 {
-    SCM extension;
-    gsize length;
-    const gchar *action_name;
-
     g_return_if_fail (G_IS_SIMPLE_ACTION(simple));
 
     ENTER("");
 
-    action_name = g_variant_get_string (parameter, &length);
+    gsize length;
+    const gchar *action_name = g_variant_get_string (parameter, &length);
 
     PINFO("action name is '%s'", action_name);
 
-    GncMainWindowActionData *cb_data = user_data;
+    auto cb_data = static_cast<GncMainWindowActionData *>(user_data);
     GncPluginMenuAdditions *plugin = GNC_PLUGIN_MENU_ADDITIONS(cb_data->data);
-    extension = g_hash_table_lookup (plugin->item_hash, action_name);
+    auto extension = static_cast<SCM>(
+        g_hash_table_lookup (plugin->item_hash, action_name)
+    );
 
     if (extension)
     {
@@ -249,9 +248,6 @@ gnc_menu_additions_init_accel_table (gpointer unused)
 static void
 gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
 {
-    gchar *map, *new_map, *accel_key;
-    const gchar *ptr;
-
     ENTER("Checking %s/%s [%s]", info->path, info->action_label, info->action_name);
     if (info->accel_assigned)
     {
@@ -268,21 +264,21 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
     }
 
     /* Was an accelerator pre-assigned in the source? */
-    ptr = g_utf8_strchr (info->action_label, -1, '_');
+    const gchar *ptr = g_utf8_strchr (info->action_label, -1, '_');
     if (ptr == NULL)
     {
         LEAVE("not preassigned");
         return;
     }
 
-    accel_key = g_utf8_strdown(g_utf8_next_char(ptr), 1);
+    gchar *accel_key = g_utf8_strdown(g_utf8_next_char(ptr), 1);
     DEBUG("Accelerator preassigned: '%s'", accel_key);
 
     /* Now build a new map. Old one freed automatically. */
-    map = g_hash_table_lookup(table, info->path);
+    auto map = static_cast<gchar *>(g_hash_table_lookup(table, info->path));
     if (map == NULL)
-        map = "";
-    new_map = g_strconcat(map, accel_key, (gchar *)NULL);
+        map = const_cast<gchar *>("");
+    gchar *new_map = g_strconcat(map, accel_key, (gchar *)NULL);
     DEBUG("path '%s', map '%s' -> '%s'", info->path, map, new_map);
     g_hash_table_replace(table, info->path, new_map);
 
@@ -306,10 +302,8 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
 static void
 gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
 {
-    gchar *map, *new_map, *new_label, *start, buf[16];
-    const gchar *ptr;
-    gunichar uni;
-    gint len;
+    gchar buf[16];
+    const gchar *ptr = NULL;
     gboolean map_allocated = FALSE;
 
     ENTER("Checking %s/%s [%s]", info->path, info->action_label, info->action_name);
@@ -320,7 +314,9 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     }
 
     /* Get map of used keys */
-    map = g_hash_table_lookup(table, info->path);
+    auto map = static_cast<gchar *>(
+        g_hash_table_lookup(table, info->path)
+    );
     if (map == NULL)
     {
         map = g_strdup("");
@@ -330,11 +326,11 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
 
     for (ptr = info->action_label; *ptr; ptr = g_utf8_next_char(ptr))
     {
-        uni = g_utf8_get_char(ptr);
+        gunichar uni = g_utf8_get_char(ptr);
         if (!g_unichar_isalpha(uni))
             continue;
         uni = g_unichar_tolower(uni);
-        len = g_unichar_to_utf8(uni, buf);
+        gint len = g_unichar_to_utf8(uni, buf);
         buf[len] = '\0';
         DEBUG("Testing character '%s'", buf);
         if (!g_utf8_strchr(map, -1, uni))
@@ -354,9 +350,9 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     }
 
     /* Now build a new string in the form "<start>_<end>". */
-    start = g_strndup (info->action_label, ptr - info->action_label);
+    gchar *start = g_strndup (info->action_label, ptr - info->action_label);
     DEBUG("start %p, len %ld, text '%s'", start, g_utf8_strlen(start, -1), start);
-    new_label = g_strconcat(start, "_", ptr, (gchar *)NULL);
+    gchar *new_label = g_strconcat(start, "_", ptr, (gchar *)NULL);
     g_free(start);
     DEBUG("label '%s' -> '%s'", info->action_label, new_label);
 
@@ -368,7 +364,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     info->action_label = new_label;
 
     /* Now build a new map. Old one freed automatically. */
-    new_map = g_strconcat(map, buf, (gchar *)NULL);
+    gchar *new_map = g_strconcat(map, buf, (gchar *)NULL);
     DEBUG("map '%s' -> '%s'", map, new_map);
     g_hash_table_replace(table, info->path, new_map);
 
@@ -417,8 +413,6 @@ static void
 gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
                                    GncPluginMenuAdditionsPerWindow *per_window)
 {
-    GMenuItem *item_path, *item_with_full_path;
-    gchar *full_path = NULL;
     GMenuItem *gmenu_item = NULL;
 
     DEBUG("Adding %s/%s [%s] as [%s]", ext_info->path, ext_info->action_label,
@@ -429,10 +423,14 @@ gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
     if (g_str_has_suffix (ext_info->path, _("_Custom")))
         return;
 
-    full_path = g_strconcat (ext_info->path, "/", ext_info->action_label, NULL);
+    gchar *full_path = g_strconcat (ext_info->path, "/", ext_info->action_label, NULL);
 
-    item_path = g_hash_table_lookup (per_window->build_menu_hash, ext_info->path);
-    item_with_full_path = g_hash_table_lookup (per_window->build_menu_hash, full_path);
+    auto item_path = static_cast<GMenuItem *>(
+        g_hash_table_lookup (per_window->build_menu_hash, ext_info->path)
+    );
+    auto item_with_full_path = static_cast<GMenuItem *>(
+        g_hash_table_lookup (per_window->build_menu_hash, full_path)
+    );
 
     if (!item_path && !item_with_full_path)
     {
@@ -483,7 +481,7 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
 {
     GncPluginMenuAdditionsPerWindow per_window;
     static GOnce accel_table_init = G_ONCE_INIT;
-    static GHashTable *table;
+    static GHashTable *table = NULL;
     GSList *menu_list;
     GMenuModel *menubar_model = gnc_main_window_get_menu_model (window);
     GncMenuModelSearch *gsm = g_new0 (GncMenuModelSearch, 1);
@@ -502,7 +500,9 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
                               (GCompareFunc)gnc_menu_additions_sort);
 
     /* Assign accelerators */
-    table = g_once (&accel_table_init, gnc_menu_additions_init_accel_table, NULL);
+    table = static_cast<GHashTable *>(
+        g_once (&accel_table_init, gnc_menu_additions_init_accel_table, NULL)
+    );
     g_slist_foreach (menu_list,
                     (GFunc)gnc_menu_additions_do_preassigned_accel, table);
     g_slist_foreach (menu_list, (GFunc)gnc_menu_additions_assign_accel, table);

@@ -29,8 +29,8 @@
 #include <string.h>
 
 #include "gnc-tree-view.h"
-#include "gnc-tree-model-cppommodity.hpp"
-#include "gnc-tree-view-cppommodity.hpp"
+#include "gnc-tree-model-commodity.hpp"
+#include "gnc-tree-view-commodity.hpp"
 
 #include "gnc-commodity.h"
 #include "gnc-component-manager.h"
@@ -312,7 +312,6 @@ gnc_tree_view_commodity_new (QofBook *book,
                              const gchar *first_property_name,
                              ...)
 {
-    GncTreeView *view;
     GtkTreeModel *model, *f_model, *s_model;
     GtkTreeViewColumn *col;
     gnc_commodity_table *ct;
@@ -330,8 +329,10 @@ gnc_tree_view_commodity_new (QofBook *book,
     g_object_unref(G_OBJECT(f_model));
 
     /* Create our view */
-    view = g_object_new (GNC_TYPE_TREE_VIEW_COMMODITY,
-                         "name", "gnc-id-commodity-tree", NULL);
+    auto view = static_cast<GncTreeView *>(
+        g_object_new (GNC_TYPE_TREE_VIEW_COMMODITY,
+                      "name", "gnc-id-commodity-tree", NULL)
+    );
     gtk_tree_view_set_model (GTK_TREE_VIEW (view), s_model);
     g_object_unref(G_OBJECT(s_model));
 
@@ -492,7 +493,7 @@ typedef struct
 static void
 gnc_tree_view_commodity_filter_destroy (gpointer data)
 {
-    filter_user_data *fd = data;
+    auto fd = static_cast<filter_user_data *>(data);
 
     if (fd->user_destroy)
         fd->user_destroy(fd->user_data);
@@ -504,9 +505,7 @@ gnc_tree_view_commodity_filter_helper (GtkTreeModel *model,
                                        GtkTreeIter *iter,
                                        gpointer data)
 {
-    gnc_commodity_namespace *name_space;
-    gnc_commodity *commodity;
-    filter_user_data *fd = data;
+    auto fd = static_cast<filter_user_data *>(data);
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_COMMODITY (model), FALSE);
     g_return_val_if_fail (iter != NULL, FALSE);
@@ -515,7 +514,7 @@ gnc_tree_view_commodity_filter_helper (GtkTreeModel *model,
     {
         if (fd->user_ns_fn)
         {
-            name_space = gnc_tree_model_commodity_get_namespace (GNC_TREE_MODEL_COMMODITY(model), iter);
+            gnc_commodity_namespace *name_space = gnc_tree_model_commodity_get_namespace (GNC_TREE_MODEL_COMMODITY(model), iter);
             return fd->user_ns_fn(name_space, fd->user_data);
         }
         return TRUE;
@@ -525,7 +524,7 @@ gnc_tree_view_commodity_filter_helper (GtkTreeModel *model,
     {
         if (fd->user_cm_fn)
         {
-            commodity = gnc_tree_model_commodity_get_commodity (GNC_TREE_MODEL_COMMODITY(model), iter);
+            gnc_commodity *commodity = gnc_tree_model_commodity_get_commodity (GNC_TREE_MODEL_COMMODITY(model), iter);
             return fd->user_cm_fn(commodity, fd->user_data);
         }
         return TRUE;
@@ -546,23 +545,20 @@ gnc_tree_view_commodity_set_filter (GncTreeViewCommodity *view,
                                     gpointer data,
                                     GDestroyNotify destroy)
 {
-    GtkTreeModel *f_model, *s_model;
-    filter_user_data *fd = data;
-
     g_return_if_fail(GNC_IS_TREE_VIEW_COMMODITY(view));
     g_return_if_fail((ns_func != NULL) || (cm_func != NULL));
 
     ENTER("view %p, ns func %p, cm func %p, data %p, destroy %p",
           view, ns_func, cm_func, data, destroy);
 
-    fd = g_malloc(sizeof(filter_user_data));
+    auto fd = static_cast<filter_user_data *>(g_malloc(sizeof(filter_user_data)));
     fd->user_ns_fn   = ns_func;
     fd->user_cm_fn   = cm_func;
     fd->user_data    = data;
     fd->user_destroy = destroy;
 
-    s_model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
-    f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
+    GtkTreeModel *s_model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
+    GtkTreeModel *f_model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(s_model));
 
     /* disconnect model from view */
     g_object_ref (G_OBJECT(s_model));

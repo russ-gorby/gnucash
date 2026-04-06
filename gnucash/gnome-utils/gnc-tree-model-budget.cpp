@@ -35,7 +35,7 @@ static void add_budget_to_model(QofInstance* data, gpointer user_data )
 {
     GtkTreeIter iter;
     GncBudget* budget = GNC_BUDGET(data);
-    GtkTreeModel* treeModel = user_data;
+    auto treeModel = static_cast<GtkTreeModel *>(user_data);
 
     g_return_if_fail(GNC_IS_BUDGET(budget));
     g_return_if_fail(budget && treeModel);

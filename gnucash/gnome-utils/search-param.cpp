@@ -228,7 +228,7 @@ gnc_search_param_set_param_path (GNCSearchParamSimple *param,
     /* Compute the parameter type */
     for (; param_path; param_path = param_path->next)
     {
-        QofIdType param_name = param_path->data;
+        auto param_name = static_cast<QofIdType>(param_path->data);
         const QofParam *objDef = qof_class_get_parameter (search_type,
                                                           param_name);
 
@@ -571,7 +571,7 @@ gnc_search_param_compute_value (GNCSearchParamSimple *param, gpointer object)
         /* Do all the object conversions */
         for (; converters; converters = converters->next)
         {
-            QofParam *qp = converters->data;
+            auto qp = static_cast<QofParam *>(converters->data);
             res = (qp->param_getfcn) (res, qp);
         }
         return res;

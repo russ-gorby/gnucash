@@ -35,7 +35,7 @@
 #define __GNC_TREE_VIEW_PRICE_H
 
 #include <gtk/gtk.h>
-#include "gnc-tree-view.h
+#include "gnc-tree-view.h"
 
 #include "gnc-pricedb.h"
 #include "gnc-ui-util.h"

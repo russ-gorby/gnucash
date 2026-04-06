@@ -87,7 +87,9 @@ gnc_tree_model_account_types_finalize (GObject * object)
 GtkTreeModel *
 gnc_tree_model_account_types_new (guint32 selected)
 {
-    GncTreeModelAccountTypes *model = g_object_new (GNC_TYPE_TREE_MODEL_ACCOUNT_TYPES, NULL);
+    auto model = static_cast<GncTreeModelAccountTypes *>(
+        g_object_new (GNC_TYPE_TREE_MODEL_ACCOUNT_TYPES, NULL)
+    );
     model->selected = selected;
 
     return GTK_TREE_MODEL (model);
@@ -200,7 +202,7 @@ gnc_tree_model_account_types_get_selection_single(GtkTreeSelection *sel)
 
     for (i = 0; i < NUM_ACCOUNT_TYPES; i++)
         if (selected & (1 << i))
-            return i;
+            return static_cast<GNCAccountType>(i);
     return ACCT_TYPE_NONE;
 }
 
@@ -213,7 +215,7 @@ gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo)
     guint32 bits = 0;
     gint i;
 
-    g_return_val_if_fail (GTK_IS_COMBO_BOX(combo), 0);
+    g_return_val_if_fail (GTK_IS_COMBO_BOX(combo), static_cast<GNCAccountType>(0));
 
     if (gtk_combo_box_get_active_iter (combo, &iter))
     {
@@ -243,7 +245,7 @@ gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo)
     }
     for (i = 0; i < NUM_ACCOUNT_TYPES; i++)
         if (bits & (1 << i))
-            return i;
+            return static_cast<GNCAccountType>(i);
     return ACCT_TYPE_NONE;
 }
 
@@ -323,7 +325,9 @@ gnc_tree_model_account_types_set_active_combo (GtkComboBox *combo,
 static GtkTreeModelFlags
 gnc_tree_model_account_types_get_flags (GtkTreeModel * tree_model)
 {
-    return GTK_TREE_MODEL_ITERS_PERSIST | GTK_TREE_MODEL_LIST_ONLY;
+    return static_cast<GtkTreeModelFlags>(
+        GTK_TREE_MODEL_ITERS_PERSIST | GTK_TREE_MODEL_LIST_ONLY
+    );
 }
 
 static int
@@ -415,8 +419,11 @@ gnc_tree_model_account_types_get_value (GtkTreeModel * tree_model,
         break;
     case GNC_TREE_MODEL_ACCOUNT_TYPES_COL_NAME:
         g_value_init (value, G_TYPE_STRING);
-        g_value_set_string (value, xaccAccountGetTypeStr (
-                                GPOINTER_TO_INT (iter->user_data)));
+        g_value_set_string (value,
+                            xaccAccountGetTypeStr(
+                                static_cast<GNCAccountType>(
+                                    GPOINTER_TO_INT (iter->user_data)
+                                )));
         break;
     case GNC_TREE_MODEL_ACCOUNT_TYPES_COL_SELECTED:
         g_value_init (value, G_TYPE_BOOLEAN);

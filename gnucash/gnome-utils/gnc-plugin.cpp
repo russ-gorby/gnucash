@@ -278,7 +278,7 @@ gnc_plugin_add_menu_tooltip_callbacks (GtkWidget  *menubar,
 
     for (GList *node = menu_item_list; node; node = node->next)
     {
-        GtkWidget *menu_item = node->data;
+        auto menu_item = static_cast<GtkWidget *>(node->data);
 
         gnc_menu_item_setup_tooltip_to_statusbar_callback (menu_item, statusbar);
     }
@@ -289,7 +289,7 @@ gnc_plugin_add_menu_tooltip_callbacks (GtkWidget  *menubar,
 static void
 for_each_tool_action (GtkWidget *widget, gpointer user_data)
 {
-    GtkWidget *statusbar = user_data;
+    auto statusbar = static_cast<GtkWidget *>(user_data);
 
     if (GTK_IS_ACTIONABLE(widget))
         gnc_tool_item_setup_tooltip_to_statusbar_callback (widget, statusbar);

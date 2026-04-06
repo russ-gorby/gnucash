@@ -114,34 +114,28 @@ gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query)
 GtkWidget *
 gnc_query_view_new (GList *param_list, Query *query)
 {
-    GNCQueryView  *qview;
-    GtkListStore  *liststore;
-    GList         *node;
-    gint           columns, i;
-    gsize          array_size;
-    GType         *types;
-
     g_return_val_if_fail (param_list, NULL);
     g_return_val_if_fail (query, NULL);
 
     /* Add 1 to param_list length for extra pointer column */
-    columns = g_list_length (param_list) + 1;
-    qview = GNC_QUERY_VIEW(g_object_new (gnc_query_view_get_type (), NULL));
+    int columns = g_list_length (param_list) + 1;
+    GNCQueryView *qview = GNC_QUERY_VIEW(g_object_new (gnc_query_view_get_type (), NULL));
 
-    array_size = sizeof(GType) * columns;
-    types = g_slice_alloc (array_size);
+    gsize array_size = sizeof(GType) * columns;
+    auto types = static_cast<GType *>(g_slice_alloc (array_size));
 
     types[0] = G_TYPE_POINTER;
 
     /* Get the types for the list store */
+    int i;
+    GList *node;
     for (i = 0, node = param_list; node; node = node->next, i++)
     {
-        GNCSearchParamSimple *param = node->data;
-        const char *type;
+        auto param = static_cast<GNCSearchParamSimple *>(node->data);
 
         g_assert (GNC_IS_SEARCH_PARAM_SIMPLE(param));
 
-        type = gnc_search_param_get_param_type ((GNCSearchParam *) param);
+        const char *type = gnc_search_param_get_param_type ((GNCSearchParam *) param);
 
         if (g_strcmp0 (type, QOF_TYPE_BOOLEAN) == 0)
             types[i+1] = G_TYPE_BOOLEAN;
@@ -150,7 +144,7 @@ gnc_query_view_new (GList *param_list, Query *query)
     }
 
     /* Create the list store and add to treeview */
-    liststore = gtk_list_store_newv (columns, types );
+    GtkListStore *liststore = gtk_list_store_newv (columns, types );
     gtk_tree_view_set_model (GTK_TREE_VIEW(qview), GTK_TREE_MODEL(liststore));
     g_object_unref (liststore);
 
@@ -301,9 +295,8 @@ gnc_query_view_init_view (GNCQueryView *qview)
 
     for (i = 0, node = qview->column_params; node; node = node->next, i++)
     {
-        const char *type;
         gfloat algn = 0;
-        GNCSearchParamSimple *param = node->data;
+        auto param = static_cast<GNCSearchParamSimple *>(node->data);
 
         g_assert (GNC_IS_SEARCH_PARAM_SIMPLE(param));
 
@@ -351,7 +344,7 @@ gnc_query_view_init_view (GNCQueryView *qview)
                                              GINT_TO_POINTER(i+1), NULL);
         }
 
-        type = gnc_search_param_get_param_type (((GNCSearchParam *) param));
+        const char *type = gnc_search_param_get_param_type (((GNCSearchParam *) param));
 
         if (g_strcmp0 (type, QOF_TYPE_BOOLEAN) == 0)
         {
@@ -626,7 +619,7 @@ scroll_to_selection (GNCQueryView *qview, gboolean override_scroll)
 
     if (node)
     {
-        GtkTreePath *tree_path = node->data;
+        auto tree_path = static_cast<GtkTreePath *>(node->data);
         gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW(qview),
                                       tree_path, NULL, FALSE, 0.0, 0.0);
     }
@@ -729,13 +722,11 @@ gnc_query_view_refresh (GNCQueryView *qview)
 static void
 gnc_query_view_set_query_sort (GNCQueryView *qview, gboolean new_column)
 {
-    gboolean              sort_order = qview->increasing;
-    GList                *node;
-    GNCSearchParamSimple *param;
+    bool sort_order = qview->increasing;
 
     /* Find the column parameter definition */
-    node = g_list_nth (qview->column_params, qview->sort_column);
-    param = node->data;
+    GList *node = g_list_nth (qview->column_params, qview->sort_column);
+    auto param = static_cast<GNCSearchParamSimple *>(node->data);
 
     g_assert (GNC_IS_SEARCH_PARAM_SIMPLE(param));
 
@@ -763,7 +754,7 @@ gnc_query_view_set_query_sort (GNCQueryView *qview, gboolean new_column)
         GSList *p1, *p2;
 
         p1 = gnc_search_param_get_param_path (param);
-        p2 = g_slist_prepend (NULL, QUERY_DEFAULT_SORT);
+        p2 = g_slist_prepend (NULL, const_cast<char *>(QUERY_DEFAULT_SORT));
         qof_query_set_sort_order (qview->query, p1, p2, NULL);
     }
 
@@ -811,48 +802,40 @@ gnc_query_set_expand_column (GNCQueryView *qview, gint column)
 static void
 gnc_query_view_fill (GNCQueryView *qview)
 {
-    GNCQueryViewPrivate *priv;
-    GtkTreeModel        *model;
-    GtkTreeIter          iter;
-    GList               *entries, *item;
-    const                GncGUID *guid;
-    gint                 i;
-
     /* Clear all watches */
-    priv = GNC_QUERY_VIEW_GET_PRIVATE(qview);
+    GNCQueryViewPrivate *priv = GNC_QUERY_VIEW_GET_PRIVATE(qview);
     gnc_gui_component_clear_watches (priv->component_id);
 
-    entries = qof_query_run (qview->query);
+    GList *entries = qof_query_run (qview->query);
 
-    model = gtk_tree_view_get_model (GTK_TREE_VIEW(qview));
+    GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(qview));
 
-    for (item = entries; item; item = item->next)
+    for (GList *item = entries; item; item = item->next)
     {
-        GList *node;
-        const QofParam *gup;
         QofParam *qp = NULL;
+        GList *node;
+        int i;
+        GtkTreeIter iter;
 
         /* Add a row to the list store */
         gtk_list_store_append (GTK_LIST_STORE(model), &iter);
         /* Add a pointer to the data in the first column of the list store */
         gtk_list_store_set (GTK_LIST_STORE(model), &iter, 0, item->data, -1);
-
         for (i = 0, node = qview->column_params; node; node = node->next)
         {
-            gboolean result;
-            GNCSearchParamSimple *param = node->data;
-            GSList *converters = NULL;
+            auto param = static_cast<GNCSearchParamSimple *>(node->data);
             const char *type = gnc_search_param_get_param_type ((GNCSearchParam *) param);
             gpointer res = item->data;
-            gchar *qofstring;
 
             g_assert (GNC_IS_SEARCH_PARAM_SIMPLE(param));
-            converters = gnc_search_param_get_converters (param);
+            GSList *converters = gnc_search_param_get_converters (param);
 
             /* Test for boolean type */
             if (g_strcmp0 (type, QOF_TYPE_BOOLEAN) == 0)
             {
-                result = (gboolean) GPOINTER_TO_INT(gnc_search_param_compute_value (param, res));
+                bool result = static_cast<bool>(
+                    GPOINTER_TO_INT(gnc_search_param_compute_value (param, res))
+                );
                 gtk_list_store_set (GTK_LIST_STORE(model), &iter, i + 1, result, -1);
                 i++;
                 continue;
@@ -861,7 +844,7 @@ gnc_query_view_fill (GNCQueryView *qview)
             /* Do all the object conversions */
             for (; converters; converters = converters->next)
             {
-                qp = converters->data;
+                qp = static_cast<QofParam *>(converters->data);
                 if (converters->next)
                     res = (qp->param_getfcn)(res, qp);
             }
@@ -882,15 +865,15 @@ gnc_query_view_fill (GNCQueryView *qview)
             }
             else
             {
-                qofstring = qof_query_core_to_string (type, res, qp);
+                gchar *qofstring = qof_query_core_to_string (type, res, qp);
                 gtk_list_store_set (GTK_LIST_STORE(model), &iter, i + 1, qofstring , -1);
                 g_free (qofstring);
             }
             i++;
         }
         /* and set a watcher on this item */
-        gup = priv->get_guid;
-        guid = (const GncGUID*)((gup->param_getfcn)(item->data, gup));
+        const QofParam *gup = priv->get_guid;
+        auto guid = static_cast<const GncGUID *>((gup->param_getfcn)(item->data, gup));
         gnc_gui_component_watch_entity (priv->component_id, guid,
                                         QOF_EVENT_MODIFY | QOF_EVENT_DESTROY);
     }

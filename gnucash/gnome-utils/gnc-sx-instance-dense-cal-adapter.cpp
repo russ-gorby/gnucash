@@ -125,7 +125,9 @@ gsidca_instances_removing_cb(GncSxInstanceModel *model, SchedXaction *sx_to_be_r
 GncSxInstanceDenseCalAdapter*
 gnc_sx_instance_dense_cal_adapter_new(GncSxInstanceModel *instances)
 {
-    GncSxInstanceDenseCalAdapter *adapter = g_object_new(GNC_TYPE_SX_INSTANCE_DENSE_CAL_ADAPTER, NULL);
+    auto adapter = static_cast<GncSxInstanceDenseCalAdapter *>(
+        g_object_new(GNC_TYPE_SX_INSTANCE_DENSE_CAL_ADAPTER, NULL)
+    );
     adapter->instances = instances;
     g_object_ref(G_OBJECT(adapter->instances));
 
