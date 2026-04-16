@@ -62,7 +62,7 @@ static const gchar *icon_files[] =
 };
 
 void
-gnc_load_app_icons (void)
+gnc_load_app_icons (void) noexcept
 {
     GtkIconTheme *icon_theme = gtk_icon_theme_get_default ();
     gchar *default_path;

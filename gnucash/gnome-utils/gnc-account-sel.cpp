@@ -728,7 +728,7 @@ gnc_account_sel_init (GNCAccountSel *gas)
 }
 
 GtkWidget *
-gnc_account_sel_new (void)
+gnc_account_sel_new (void) noexcept
 {
     auto gas = static_cast<GNCAccountSel *>(
         g_object_new (GNC_TYPE_ACCOUNT_SEL, NULL)
@@ -791,7 +791,7 @@ check_account_can_be_seen (GNCAccountSel *gas, GtkTreeModel *fmodel, Account *ac
 
 void
 gnc_account_sel_set_account (GNCAccountSel *gas, Account *acct,
-                             gboolean set_default_acct)
+                             gboolean set_default_acct) noexcept
 {
     GtkTreeModel *fmodel;
     gas_find_data data;
@@ -828,7 +828,7 @@ gnc_account_sel_set_account (GNCAccountSel *gas, Account *acct,
 }
 
 Account*
-gnc_account_sel_get_account (GNCAccountSel *gas)
+gnc_account_sel_get_account (GNCAccountSel *gas) noexcept
 {
     GtkTreeModel *fmodel;
     GtkTreeIter fiter;
@@ -853,7 +853,7 @@ gnc_account_sel_get_account (GNCAccountSel *gas)
 
 void
 gnc_account_sel_set_acct_filters (GNCAccountSel *gas, GList *typeFilters,
-                                  GList *commodityFilters)
+                                  GList *commodityFilters) noexcept
 {
     g_return_if_fail (gas != NULL);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
@@ -885,7 +885,7 @@ gnc_account_sel_set_acct_filters (GNCAccountSel *gas, GList *typeFilters,
 
 void
 gnc_account_sel_set_acct_exclude_filter (GNCAccountSel *gas,
-                                         GList *excludeFilter)
+                                         GList *excludeFilter) noexcept
 {
     g_return_if_fail (gas != NULL);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
@@ -903,7 +903,7 @@ gnc_account_sel_set_acct_exclude_filter (GNCAccountSel *gas,
 }
 
 void
-gnc_account_sel_set_default_new_commodity (GNCAccountSel *gas, gnc_commodity *new_commodity)
+gnc_account_sel_set_default_new_commodity (GNCAccountSel *gas, gnc_commodity *new_commodity) noexcept
 {
     g_return_if_fail (gas);
     g_return_if_fail (GNC_IS_COMMODITY (new_commodity));
@@ -959,7 +959,7 @@ gnc_account_sel_dispose (GObject *object)
 
 void
 gnc_account_sel_set_new_account_ability (GNCAccountSel *gas,
-                                         gboolean state)
+                                         gboolean state) noexcept
 {
     g_return_if_fail (gas != NULL);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
@@ -996,7 +996,7 @@ gnc_account_sel_set_new_account_ability (GNCAccountSel *gas,
 
 void
 gnc_account_sel_set_new_account_modal (GNCAccountSel *gas,
-                                       gboolean state)
+                                       gboolean state) noexcept
 {
     g_return_if_fail (gas != NULL);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
@@ -1023,7 +1023,7 @@ gas_new_account_click (GtkButton *b, gpointer user_data)
 }
 
 gint
-gnc_account_sel_get_visible_account_num (GNCAccountSel *gas)
+gnc_account_sel_get_visible_account_num (GNCAccountSel *gas) noexcept
 {
     GtkTreeModel *fmodel;
 

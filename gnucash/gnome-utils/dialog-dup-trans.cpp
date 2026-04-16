@@ -348,7 +348,7 @@ gnc_dup_trans_dialog (GtkWidget * parent, const char* title,
                       gboolean show_date, time64 *date_p,
                       const char *num, char **out_num,
                       const char *tnum, char **out_tnum,
-                      const char *tlink, char **out_tlink)
+                      const char *tlink, char **out_tlink) noexcept
 {
     return gnc_dup_trans_dialog_internal (parent, NULL, title,
                                           show_date, date_p, NULL,
@@ -358,7 +358,7 @@ gnc_dup_trans_dialog (GtkWidget * parent, const char* title,
 
 gboolean
 gnc_dup_trans_dialog_gdate (GtkWidget * parent, GDate *gdate_p,
-                            const char *num, char **out_num)
+                            const char *num, char **out_num) noexcept
 {
     time64 tmp_time;
     g_assert (gdate_p);
@@ -372,7 +372,7 @@ gnc_dup_trans_dialog_gdate (GtkWidget * parent, GDate *gdate_p,
 
 gboolean
 gnc_dup_time64_dialog (GtkWidget * parent, const char *window_title,
-                       const char* title, time64 *date)
+                       const char* title, time64 *date) noexcept
 {
     return gnc_dup_trans_dialog_internal (parent, window_title, title, TRUE,
                                           date, NULL,
@@ -381,7 +381,7 @@ gnc_dup_time64_dialog (GtkWidget * parent, const char *window_title,
 }
 
 gboolean
-gnc_dup_date_dialog (GtkWidget * parent, const char* title, GDate *gdate_p)
+gnc_dup_date_dialog (GtkWidget * parent, const char* title, GDate *gdate_p) noexcept
 {
     time64 tmp_time;
     g_assert (gdate_p);

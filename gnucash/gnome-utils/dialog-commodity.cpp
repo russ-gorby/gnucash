@@ -110,21 +110,26 @@ typedef struct commodity_window CommodityWindow;
 static SelectCommodityWindow *
 gnc_ui_select_commodity_create(const gnc_commodity * orig_sel,
                                dialog_commodity_mode mode);
-void gnc_ui_select_commodity_new_cb(GtkButton * button,
-                                    gpointer user_data);
 extern "C" {
+/*
+ * Callbacks / private internal library functions
+ */
+// unused externally, should this be static?
+void gnc_ui_select_commodity_new_cb(GtkButton * button,
+                                    gpointer user_data) noexcept;
 void gnc_ui_select_commodity_changed_cb(GtkComboBox *cbwe,
-                                        gpointer user_data);
+                                        gpointer user_data) noexcept;
 void gnc_ui_select_commodity_namespace_changed_cb(GtkComboBox *cbwe,
-        gpointer user_data);
+        gpointer user_data) noexcept;
 
 /* The commodity creation window */
-void gnc_ui_commodity_changed_cb(GtkWidget * dummy, gpointer user_data);
-void gnc_ui_commodity_quote_info_cb(GtkWidget *w, gpointer data);
+void gnc_ui_commodity_changed_cb(GtkWidget * dummy, gpointer user_data) noexcept;
+void gnc_ui_commodity_quote_info_cb(GtkWidget *w, gpointer data) noexcept;
+// unused externally, should this be static?
+gboolean gnc_ui_commodity_dialog_to_object(CommodityWindow * w) noexcept;
 }
-gboolean gnc_ui_commodity_dialog_to_object(CommodityWindow * w);
 
-#if 0
+#ifdef DRH
 static void gnc_ui_select_commodity_response_cb (GtkDialog * dialog, gint response, gpointer data);
 #endif
 
@@ -138,7 +143,7 @@ gnc_ui_select_commodity_modal_full(gnc_commodity * orig_sel,
                                    const char * user_message,
                                    const char * cusip,
                                    const char * fullname,
-                                   const char * mnemonic)
+                                   const char * mnemonic) noexcept
 {
     gnc_commodity * retval = nullptr;
     const gchar *initial;
@@ -216,7 +221,7 @@ gnc_ui_select_commodity_modal_full(gnc_commodity * orig_sel,
 gnc_commodity *
 gnc_ui_select_commodity_modal(gnc_commodity * orig_sel,
                               GtkWidget * parent,
-                              dialog_commodity_mode mode)
+                              dialog_commodity_mode mode) noexcept
 {
     return gnc_ui_select_commodity_modal_full(orig_sel,
             parent,
@@ -324,7 +329,7 @@ gnc_ui_select_commodity_create(const gnc_commodity * orig_sel,
  */
 void
 gnc_ui_select_commodity_new_cb(GtkButton * button,
-                               gpointer user_data)
+                               gpointer user_data) noexcept
 {
     auto w = static_cast<SelectCommodityWindow*>(user_data);
 
@@ -368,7 +373,7 @@ gnc_ui_select_commodity_new_cb(GtkButton * button,
  */
 void
 gnc_ui_select_commodity_changed_cb (GtkComboBox *cbwe,
-                                    gpointer user_data)
+                                    gpointer user_data) noexcept
 {
     auto w = static_cast<SelectCommodityWindow*>(user_data);
     gchar *name_space;
@@ -409,7 +414,7 @@ gnc_ui_select_commodity_changed_cb (GtkComboBox *cbwe,
  */
 void
 gnc_ui_select_commodity_namespace_changed_cb (GtkComboBox *cbwe,
-        gpointer user_data)
+        gpointer user_data) noexcept
 {
     auto w = static_cast<SelectCommodityWindow*>(user_data);
     gchar *name_space;
@@ -440,7 +445,7 @@ collate(gconstpointer a, gconstpointer b)
 void
 gnc_ui_update_commodity_picker (GtkWidget *cbwe,
                                 const gchar * name_space,
-                                const gchar * init_string)
+                                const gchar * init_string) noexcept
 {
     GList      * commodities;
     GList      * iterator = nullptr;
@@ -555,7 +560,7 @@ gnc_ui_update_fq_info (CommodityWindow *cw)
 void
 gnc_ui_update_namespace_picker (GtkWidget *cbwe,
                                 const char * init_string,
-                                dialog_commodity_mode mode)
+                                dialog_commodity_mode mode) noexcept
 {
     GtkComboBox *combo_box;
     GtkTreeModel *model;
@@ -655,7 +660,7 @@ gnc_ui_update_namespace_picker (GtkWidget *cbwe,
 
 
 gchar *
-gnc_ui_namespace_picker_ns (GtkWidget *cbwe)
+gnc_ui_namespace_picker_ns (GtkWidget *cbwe) noexcept
 {
     const gchar *name_space;
 
@@ -677,7 +682,7 @@ gnc_ui_namespace_picker_ns (GtkWidget *cbwe)
  * gnc_ui_commodity_quote_info_cb                                   *
  *******************************************************************/
 void
-gnc_ui_commodity_quote_info_cb (GtkWidget *w, gpointer data)
+gnc_ui_commodity_quote_info_cb (GtkWidget *w, gpointer data) noexcept
 {
     auto cw = static_cast<CommodityWindow*>(data);
     gboolean get_quote, allow_src, active;
@@ -709,7 +714,7 @@ gnc_ui_commodity_quote_info_cb (GtkWidget *w, gpointer data)
 
 
 void
-gnc_ui_commodity_changed_cb(GtkWidget * dummy, gpointer user_data)
+gnc_ui_commodity_changed_cb(GtkWidget * dummy, gpointer user_data) noexcept
 {
     auto w = static_cast<CommodityWindow*>(user_data);
     gchar *name_space;
@@ -1172,7 +1177,7 @@ gnc_ui_new_commodity_modal_full(const char * name_space,
                                 const char * fullname,
                                 const char * mnemonic,
                                 const char * user_symbol,
-                                int fraction)
+                                int fraction) noexcept
 {
     gnc_commodity *result;
 
@@ -1190,7 +1195,7 @@ gnc_ui_new_commodity_modal_full(const char * name_space,
  ********************************************************************/
 gnc_commodity *
 gnc_ui_new_commodity_modal(const char * default_namespace,
-                           GtkWidget * parent)
+                           GtkWidget * parent) noexcept
 {
     gnc_commodity *result;
 
@@ -1212,7 +1217,7 @@ gnc_ui_new_commodity_modal(const char * default_namespace,
  */
 gboolean
 gnc_ui_edit_commodity_modal(gnc_commodity *commodity,
-                            GtkWidget * parent)
+                            GtkWidget * parent) noexcept
 {
     gnc_commodity *result;
 
@@ -1228,7 +1233,7 @@ gnc_ui_edit_commodity_modal(gnc_commodity *commodity,
  * gnc_ui_commodity_dialog_to_object()
  ********************************************************************/
 gboolean
-gnc_ui_commodity_dialog_to_object(CommodityWindow * w)
+gnc_ui_commodity_dialog_to_object(CommodityWindow * w) noexcept
 {
     gnc_quote_source *source;
     QuoteSourceType type;

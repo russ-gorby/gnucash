@@ -41,8 +41,6 @@
 #include <gtk/gtk.h>
 #include "gnc-sx-instance-model.h"
 
-G_BEGIN_DECLS
-
 #define GNC_TYPE_SX_LIST_TREE_MODEL_ADAPTER (gnc_sx_list_tree_model_adapter_get_type ())
 G_DECLARE_FINAL_TYPE (GncSxListTreeModelAdapter, gnc_sx_list_tree_model_adapter,
                       GNC, SX_LIST_TREE_MODEL_ADAPTER, GObject)
@@ -62,7 +60,5 @@ GncSxListTreeModelAdapter* gnc_sx_list_tree_model_adapter_new (GncSxInstanceMode
 
 GncSxInstances* gnc_sx_list_tree_model_adapter_get_sx_instances (GncSxListTreeModelAdapter *model,
                                                                  GtkTreeIter *iter);
-
-G_END_DECLS
 
 #endif // _GNC_SX_LIST_TREE_MODEL_ADAPTER_H

@@ -113,7 +113,7 @@ static guint embedded_window_signals[LAST_SIGNAL] = { 0 };
 /*  Display a data plugin page in a window. */
 void
 gnc_embedded_window_open_page (GncEmbeddedWindow *window,
-                               GncPluginPage *page)
+                               GncPluginPage *page) noexcept
 {
     g_return_if_fail (GNC_IS_EMBEDDED_WINDOW (window));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
@@ -133,7 +133,7 @@ gnc_embedded_window_open_page (GncEmbeddedWindow *window,
 /*  Remove a data plugin page from a window. */
 void
 gnc_embedded_window_close_page (GncEmbeddedWindow *window,
-                                GncPluginPage *page)
+                                GncPluginPage *page) noexcept
 {
     g_return_if_fail (GNC_IS_EMBEDDED_WINDOW (window));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
@@ -159,7 +159,7 @@ gnc_embedded_window_close_page (GncEmbeddedWindow *window,
 
 /*  Retrieve the plugin that is embedded in the specified window. */
 GncPluginPage *
-gnc_embedded_window_get_page (GncEmbeddedWindow *window)
+gnc_embedded_window_get_page (GncEmbeddedWindow *window) noexcept
 {
     return window->page;
 }
@@ -233,7 +233,7 @@ gnc_embedded_window_init (GncEmbeddedWindow *window)
  *  @param obj The new object instance created by the object
  *  system.
  */
- static void
+static void
 gnc_embedded_window_constructed (GObject *obj)
 {
     gnc_gobject_tracking_remember(obj);
@@ -318,7 +318,7 @@ gnc_embedded_window_new (const gchar *action_group_name,
                          const gchar *ui_filename,
                          GtkWidget *enclosing_win,
                          gboolean add_accelerators,
-                         gpointer user_data)
+                         gpointer user_data) noexcept
 {
     gchar *ui_fullname;
     GError *error = NULL;

@@ -63,7 +63,11 @@
 #include <gtk/gtk.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 /** This function adds a full page of preferences to the preferences
@@ -81,7 +85,7 @@ extern "C" {
  *  the dialog notebook. */
 void gnc_preferences_add_page (const gchar *filename,
                                const gchar *widgetname,
-                               const gchar *tabname);
+                               const gchar *tabname) NOEXCEPT;
 
 
 /** This function adds a partial page of preferences to the
@@ -99,14 +103,14 @@ void gnc_preferences_add_page (const gchar *filename,
  *  the dialog notebook. */
 void gnc_preferences_add_to_page (const gchar *filename,
                                   const gchar *widgetname,
-                                  const gchar *tabname);
+                                  const gchar *tabname) NOEXCEPT;
 
 
 /** This function creates the preferences dialog and presents it to
  *  the user.  The preferences dialog is a singleton, so if a
  *  preferences dialog already exists it will be raised to the top of
  *  the window stack instead of creating a new dialog. */
-void gnc_preferences_dialog (GtkWindow *parent);
+void gnc_preferences_dialog (GtkWindow *parent) NOEXCEPT;
 
 #ifdef __cplusplus
 }

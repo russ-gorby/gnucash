@@ -40,14 +40,14 @@
 #include "dialog-commodity.h"
 #include "gnc-commodity-edit.h"
 
-const char * gnc_commodity_edit_get_string (gpointer ptr)
+const char * gnc_commodity_edit_get_string (gpointer ptr) noexcept
 {
     gnc_commodity * comm = (gnc_commodity *)ptr;
     return gnc_commodity_get_printname(comm);
 }
 
 gpointer gnc_commodity_edit_new_select (gpointer arg, gpointer ptr,
-                                        GtkWidget *toplevel)
+                                        GtkWidget *toplevel) noexcept
 {
     gnc_commodity * comm = (gnc_commodity *)ptr;
     auto mode_ptr = static_cast<dialog_commodity_mode *>(arg);

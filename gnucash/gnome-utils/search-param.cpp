@@ -186,7 +186,7 @@ gnc_search_param_compound_finalize (GObject *obj)
  * Return value: A new #GNCSearchParam object.
  **/
 GNCSearchParamSimple *
-gnc_search_param_simple_new (void)
+gnc_search_param_simple_new (void) noexcept
 {
     GNCSearchParamSimple *o = (GNCSearchParamSimple *)
                                g_object_new (gnc_search_param_simple_get_type (), NULL);
@@ -201,7 +201,7 @@ gnc_search_param_simple_new (void)
  * Return value: A new #GNCSearchParamCompound object.
  **/
 GNCSearchParamCompound *
-gnc_search_param_compound_new (void)
+gnc_search_param_compound_new (void) noexcept
 {
     GNCSearchParamCompound *o = (GNCSearchParamCompound *)
                                  g_object_new (gnc_search_param_compound_get_type (), NULL);
@@ -211,7 +211,7 @@ gnc_search_param_compound_new (void)
 void
 gnc_search_param_set_param_path (GNCSearchParamSimple *param,
                                  QofIdTypeConst search_type,
-                                 GSList *param_path)
+                                 GSList *param_path) noexcept
 {
     GNCSearchParamPrivate       *priv_base;
     QofIdTypeConst               type = NULL;
@@ -257,7 +257,7 @@ gnc_search_param_set_param_path (GNCSearchParamSimple *param,
 
 void
 gnc_search_param_override_param_type (GNCSearchParamSimple *param,
-                                      QofIdTypeConst param_type)
+                                      QofIdTypeConst param_type) noexcept
 {
     GNCSearchParamPrivate *priv;
 
@@ -270,7 +270,7 @@ gnc_search_param_override_param_type (GNCSearchParamSimple *param,
 }
 
 GList *
-gnc_search_param_get_search (GNCSearchParamCompound *param)
+gnc_search_param_get_search (GNCSearchParamCompound *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM_COMPOUND(param), NULL);
 
@@ -278,7 +278,7 @@ gnc_search_param_get_search (GNCSearchParamCompound *param)
 }
 
 GSList *
-gnc_search_param_get_param_path (GNCSearchParamSimple *param)
+gnc_search_param_get_param_path (GNCSearchParamSimple *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM_SIMPLE(param), NULL);
 
@@ -286,7 +286,7 @@ gnc_search_param_get_param_path (GNCSearchParamSimple *param)
 }
 
 GSList *
-gnc_search_param_get_converters (GNCSearchParamSimple *param)
+gnc_search_param_get_converters (GNCSearchParamSimple *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM_SIMPLE(param), NULL);
 
@@ -294,7 +294,7 @@ gnc_search_param_get_converters (GNCSearchParamSimple *param)
 }
 
 QofIdTypeConst
-gnc_search_param_get_param_type (GNCSearchParam *param)
+gnc_search_param_get_param_type (GNCSearchParam *param) noexcept
 {
     GNCSearchParamPrivate *priv;
 
@@ -305,7 +305,7 @@ gnc_search_param_get_param_type (GNCSearchParam *param)
 }
 
 GNCSearchParamKind
-gnc_search_param_get_kind (GNCSearchParam *param)
+gnc_search_param_get_kind (GNCSearchParam *param) noexcept
 {
     if (GNC_IS_SEARCH_PARAM_SIMPLE(param))
         return SEARCH_PARAM_ELEM;
@@ -316,7 +316,7 @@ gnc_search_param_get_kind (GNCSearchParam *param)
 }
 
 const char*
-gnc_search_param_get_title (GNCSearchParam *param)
+gnc_search_param_get_title (GNCSearchParam *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM(param), NULL);
 
@@ -325,7 +325,7 @@ gnc_search_param_get_title (GNCSearchParam *param)
 }
 
 void
-gnc_search_param_set_title (GNCSearchParam *param, const char *title)
+gnc_search_param_set_title (GNCSearchParam *param, const char *title) noexcept
 {
     g_return_if_fail (GNC_IS_SEARCH_PARAM(param));
 
@@ -334,7 +334,7 @@ gnc_search_param_set_title (GNCSearchParam *param, const char *title)
 }
 
 GtkJustification
-gnc_search_param_get_justify (GNCSearchParam *param)
+gnc_search_param_get_justify (GNCSearchParam *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM(param), GTK_JUSTIFY_LEFT);
 
@@ -343,7 +343,7 @@ gnc_search_param_get_justify (GNCSearchParam *param)
 }
 
 void
-gnc_search_param_set_justify (GNCSearchParam *param, GtkJustification justify)
+gnc_search_param_set_justify (GNCSearchParam *param, GtkJustification justify) noexcept
 {
     g_return_if_fail (GNC_IS_SEARCH_PARAM(param));
 
@@ -352,7 +352,7 @@ gnc_search_param_set_justify (GNCSearchParam *param, GtkJustification justify)
 }
 
 gboolean
-gnc_search_param_get_passive (GNCSearchParam *param)
+gnc_search_param_get_passive (GNCSearchParam *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM(param), FALSE);
 
@@ -361,7 +361,7 @@ gnc_search_param_get_passive (GNCSearchParam *param)
 }
 
 void
-gnc_search_param_set_passive (GNCSearchParam *param, gboolean value)
+gnc_search_param_set_passive (GNCSearchParam *param, gboolean value) noexcept
 {
     g_assert (GNC_IS_SEARCH_PARAM(param));
 
@@ -370,7 +370,7 @@ gnc_search_param_set_passive (GNCSearchParam *param, gboolean value)
 }
 
 gboolean
-gnc_search_param_get_non_resizeable (GNCSearchParam *param)
+gnc_search_param_get_non_resizeable (GNCSearchParam *param) noexcept
 {
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM(param), FALSE);
 
@@ -379,7 +379,7 @@ gnc_search_param_get_non_resizeable (GNCSearchParam *param)
 }
 
 void
-gnc_search_param_set_non_resizeable (GNCSearchParam *param, gboolean value)
+gnc_search_param_set_non_resizeable (GNCSearchParam *param, gboolean value) noexcept
 {
     g_assert (GNC_IS_SEARCH_PARAM(param));
 
@@ -388,7 +388,7 @@ gnc_search_param_set_non_resizeable (GNCSearchParam *param, gboolean value)
 }
 
 gboolean
-gnc_search_param_type_match (GNCSearchParam *a, GNCSearchParam *b)
+gnc_search_param_type_match (GNCSearchParam *a, GNCSearchParam *b) noexcept
 {
     GNCSearchParamPrivate *a_priv, *b_priv;
 
@@ -445,7 +445,7 @@ gnc_search_param_prepend_with_justify (GList *list, char const *title,
                                        GtkJustification justify,
                                        QofIdTypeConst type_override,
                                        QofIdTypeConst search_type,
-                                       const char *param, ...)
+                                       const char *param, ...) noexcept
 {
     GList  *result;
     va_list ap;
@@ -467,7 +467,7 @@ GList *
 gnc_search_param_prepend (GList *list, char const *title,
                           QofIdTypeConst type_override,
                           QofIdTypeConst search_type,
-                          const char *param, ...)
+                          const char *param, ...) noexcept
 {
     GList  *result;
     va_list ap;
@@ -489,7 +489,7 @@ GList *
 gnc_search_param_prepend_compound (GList *list, char const *title,
                                    GList *param_list,
                                    GtkJustification justify,
-                                   GNCSearchParamKind kind)
+                                   GNCSearchParamKind kind) noexcept
 {
     GList                         *p;
     QofIdTypeConst                 type = NULL;
@@ -528,7 +528,7 @@ void
 gnc_search_param_set_param_fcn (GNCSearchParamSimple *param,
                                 QofIdTypeConst param_type,
                                 GNCSearchParamFcn fcn,
-                                gpointer arg)
+                                gpointer arg) noexcept
 {
     g_return_if_fail (param);
     g_return_if_fail (param_type && *param_type);
@@ -541,7 +541,7 @@ gnc_search_param_set_param_fcn (GNCSearchParamSimple *param,
 }
 
 gboolean
-gnc_search_param_has_param_fcn (GNCSearchParamSimple *param)
+gnc_search_param_has_param_fcn (GNCSearchParamSimple *param) noexcept
 {
     g_return_val_if_fail (param, FALSE);
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM_SIMPLE(param), FALSE);
@@ -554,7 +554,7 @@ gnc_search_param_has_param_fcn (GNCSearchParamSimple *param)
 
 /* Compute the value of this parameter for this object */
 gpointer
-gnc_search_param_compute_value (GNCSearchParamSimple *param, gpointer object)
+gnc_search_param_compute_value (GNCSearchParamSimple *param, gpointer object) noexcept
 {
     g_return_val_if_fail (param, NULL);
     g_return_val_if_fail (GNC_IS_SEARCH_PARAM_SIMPLE(param), NULL);

@@ -24,15 +24,18 @@
 #define QUERY_USER_H
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
-extern void
+void
 gnc_info_dialog (GtkWindow *parent,
-                 const char *format, ...) G_GNUC_PRINTF (2, 3);
+                 const char *format, ...) NOEXCEPT G_GNUC_PRINTF (2, 3);
 
-
-void gnc_error_dialog (GtkWindow* parent, const char* format, ...) G_GNUC_PRINTF (2, 3);
+void gnc_error_dialog (GtkWindow* parent, const char* format, ...) NOEXCEPT G_GNUC_PRINTF (2, 3);
 
 #ifdef __cplusplus
 }

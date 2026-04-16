@@ -38,19 +38,28 @@ typedef struct
     GNCDisplayViewCB	cb_fcn;
 } GNCDisplayViewButton;
 
-DialogQueryView *
-gnc_dialog_query_view_new (GtkWindow *parent, GList *param_list, Query *q, const gchar *pref_group);
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
-void gnc_dialog_query_view_set_title (DialogQueryView *dqv, const char *title);
-void gnc_dialog_query_view_set_label (DialogQueryView *dqv, const char *label);
+DialogQueryView *
+gnc_dialog_query_view_new (GtkWindow *parent, GList *param_list, Query *q,
+                           const gchar *pref_group) NOEXCEPT;
+
+void gnc_dialog_query_view_set_title (DialogQueryView *dqv, const char *title) NOEXCEPT;
+void gnc_dialog_query_view_set_label (DialogQueryView *dqv, const char *label) NOEXCEPT;
 void gnc_dialog_query_view_set_buttons (DialogQueryView *dqv,
                                         GNCDisplayViewButton *buttons,
-                                        gpointer user_data);
+                                        gpointer user_data) NOEXCEPT;
 void gnc_dialog_query_view_set_numerics (DialogQueryView *dqv, gboolean abs,
-                                         gboolean inv_sort);
+                                         gboolean inv_sort) NOEXCEPT;
 
-void gnc_dialog_query_view_refresh (DialogQueryView *dqv);
-void gnc_dialog_query_view_destroy (DialogQueryView *dqv);
+void gnc_dialog_query_view_refresh (DialogQueryView *dqv) NOEXCEPT;
+void gnc_dialog_query_view_destroy (DialogQueryView *dqv) NOEXCEPT;
 
 DialogQueryView *
 gnc_dialog_query_view_create (GtkWindow *parent, GList *param_list, Query *q,
@@ -59,7 +68,11 @@ gnc_dialog_query_view_create (GtkWindow *parent, GList *param_list, Query *q,
                               gint sort_column, GtkSortType order,
                               gint expand_column,
                               GNCDisplayViewButton *buttons,
-                              const gchar *pref_group, gpointer user_data);
+                              const gchar *pref_group, gpointer user_data) NOEXCEPT;
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GNC_DIALOG_QUERY_VIEW_H */

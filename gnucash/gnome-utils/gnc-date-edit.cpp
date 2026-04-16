@@ -712,7 +712,7 @@ gnc_date_edit_forall (GtkContainer *container, gboolean include_internals,
  * to be the one represented by @the_time.
  */
 void
-gnc_date_edit_set_time (GNCDateEdit *gde, time64 the_time)
+gnc_date_edit_set_time (GNCDateEdit *gde, time64 the_time) noexcept
 {
     g_return_if_fail (gde != NULL);
     g_return_if_fail (GNC_IS_DATE_EDIT (gde));
@@ -725,7 +725,7 @@ gnc_date_edit_set_time (GNCDateEdit *gde, time64 the_time)
 }
 
 void
-gnc_date_edit_set_gdate (GNCDateEdit *gde, const GDate *date)
+gnc_date_edit_set_gdate (GNCDateEdit *gde, const GDate *date) noexcept
 {
     struct tm mytm;
     time64 t;
@@ -747,7 +747,7 @@ gnc_date_edit_set_gdate (GNCDateEdit *gde, const GDate *date)
  * selectors.
  */
 void
-gnc_date_edit_set_popup_range (GNCDateEdit *gde, int low_hour, int up_hour)
+gnc_date_edit_set_popup_range (GNCDateEdit *gde, int low_hour, int up_hour) noexcept
 {
     g_return_if_fail (gde != NULL);
     g_return_if_fail (GNC_IS_DATE_EDIT (gde));
@@ -939,7 +939,7 @@ create_children (GNCDateEdit *gde)
  * Returns a GNCDateEdit widget.
  */
 GtkWidget *
-gnc_date_edit_new (time64 the_time, int show_time, int use_24_format)
+gnc_date_edit_new (time64 the_time, int show_time, int use_24_format) noexcept
 {
     auto flags = static_cast<GNCDateEditFlags>(
         (show_time ? GNC_DATE_EDIT_SHOW_TIME : 0) |
@@ -957,7 +957,7 @@ gnc_date_edit_new (time64 the_time, int show_time, int use_24_format)
 GtkWidget *
 gnc_date_edit_new_glade (gchar *widget_name,
                          gchar *string1, gchar *string2,
-                         gint int1, gint int2)
+                         gint int1, gint int2) noexcept
 {
     GtkWidget *widget;
 
@@ -978,7 +978,7 @@ gnc_date_edit_new_glade (gchar *widget_name,
  * Return value: the newly-created date editor widget.
  **/
 GtkWidget *
-gnc_date_edit_new_flags (time64 the_time, GNCDateEditFlags flags)
+gnc_date_edit_new_flags (time64 the_time, GNCDateEditFlags flags) noexcept
 {
     auto gde = static_cast<GNCDateEdit *>(
         g_object_new (GNC_TYPE_DATE_EDIT, NULL, NULL)
@@ -1077,7 +1077,7 @@ gnc_date_edit_get_date_internal (GNCDateEdit *gde)
  * Returns the time entered in the GNCDateEdit widget
  */
 time64
-gnc_date_edit_get_date (GNCDateEdit *gde)
+gnc_date_edit_get_date (GNCDateEdit *gde) noexcept
 {
     struct tm tm;
 
@@ -1090,7 +1090,7 @@ gnc_date_edit_get_date (GNCDateEdit *gde)
 }
 
 void
-gnc_date_edit_get_gdate (GNCDateEdit *gde, GDate *date)
+gnc_date_edit_get_gdate (GNCDateEdit *gde, GDate *date) noexcept
 {
     time64 t;
 
@@ -1110,7 +1110,7 @@ gnc_date_edit_get_gdate (GNCDateEdit *gde, GDate *date)
  * but with the time adjusted to the end of the day.
  */
 time64
-gnc_date_edit_get_date_end (GNCDateEdit *gde)
+gnc_date_edit_get_date_end (GNCDateEdit *gde) noexcept
 {
     struct tm tm;
 
@@ -1131,7 +1131,7 @@ gnc_date_edit_get_date_end (GNCDateEdit *gde)
  * Changes the display flags on an existing date editor widget.
  **/
 void
-gnc_date_edit_set_flags (GNCDateEdit *gde, GNCDateEditFlags flags)
+gnc_date_edit_set_flags (GNCDateEdit *gde, GNCDateEditFlags flags) noexcept
 {
     GNCDateEditFlags old_flags;
 
@@ -1173,7 +1173,7 @@ gnc_date_edit_set_flags (GNCDateEdit *gde, GNCDateEditFlags flags)
  * Return value: The current display flags for the given date editor widget.
  **/
 int
-gnc_date_edit_get_flags (GNCDateEdit *gde)
+gnc_date_edit_get_flags (GNCDateEdit *gde) noexcept
 {
     g_return_val_if_fail (gde != NULL, 0);
     g_return_val_if_fail (GNC_IS_DATE_EDIT (gde), 0);
@@ -1191,7 +1191,7 @@ gnc_date_edit_get_flags (GNCDateEdit *gde)
  * clicking the button that has the default.
  **/
 void
-gnc_date_activates_default (GNCDateEdit *gde, gboolean state)
+gnc_date_activates_default (GNCDateEdit *gde, gboolean state) noexcept
 {
     if (!gde)
         return;
@@ -1207,7 +1207,7 @@ gnc_date_activates_default (GNCDateEdit *gde, gboolean state)
  * Sets the focus to the Editable field.
  **/
 void
-gnc_date_grab_focus (GNCDateEdit *gde)
+gnc_date_grab_focus (GNCDateEdit *gde) noexcept
 {
     if (!gde)
         return;
@@ -1222,7 +1222,7 @@ gnc_date_grab_focus (GNCDateEdit *gde)
  *  @param label The label whose access key should set focus to this
  *  widget. */
 void
-gnc_date_make_mnemonic_target (GNCDateEdit *gde, GtkWidget *label)
+gnc_date_make_mnemonic_target (GNCDateEdit *gde, GtkWidget *label) noexcept
 {
     if (!gde)
         return;

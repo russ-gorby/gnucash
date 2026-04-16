@@ -33,7 +33,11 @@
 #include <gtk/gtk.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_AMOUNT_EDIT          (gnc_amount_edit_get_type ())
@@ -48,7 +52,7 @@ G_DECLARE_FINAL_TYPE (GNCAmountEdit, gnc_amount_edit, GNC, AMOUNT_EDIT, GtkBox)
  *
  * Returns a GNCAmountEdit widget.
  */
-GtkWidget *gnc_amount_edit_new (void);
+GtkWidget *gnc_amount_edit_new (void) NOEXCEPT;
 
 /**
  * gnc_amount_edit_gtk_entry:
@@ -56,7 +60,7 @@ GtkWidget *gnc_amount_edit_new (void);
  *
  * Returns the gtk entry of the widget..
  */
-GtkWidget *gnc_amount_edit_gtk_entry (GNCAmountEdit *gae);
+GtkWidget *gnc_amount_edit_gtk_entry (GNCAmountEdit *gae) NOEXCEPT;
 
 /**
  * gnc_amount_edit_set_amount:
@@ -66,7 +70,7 @@ GtkWidget *gnc_amount_edit_gtk_entry (GNCAmountEdit *gae);
  * Returns nothing.
  */
 void gnc_amount_edit_set_amount (GNCAmountEdit *gae,
-                                 gnc_numeric amount);
+                                 gnc_numeric amount) NOEXCEPT;
 
 /**
  * gnc_amount_edit_set_damount:
@@ -76,7 +80,7 @@ void gnc_amount_edit_set_amount (GNCAmountEdit *gae,
  * Returns nothing.
  */
 void gnc_amount_edit_set_damount (GNCAmountEdit *gae,
-                                  double amount);
+                                  double amount) NOEXCEPT;
 
 /**
  * gnc_amount_edit_get_amount:
@@ -86,7 +90,7 @@ void gnc_amount_edit_set_damount (GNCAmountEdit *gae,
  * a gnc_numeric, parsing the expression if necessary.
  * The result of parsing replaces the expression.
  */
-gnc_numeric gnc_amount_edit_get_amount (GNCAmountEdit *gae);
+gnc_numeric gnc_amount_edit_get_amount (GNCAmountEdit *gae) NOEXCEPT;
 
 /**
  * gnc_amount_edit_get_damount:
@@ -96,7 +100,7 @@ gnc_numeric gnc_amount_edit_get_amount (GNCAmountEdit *gae);
  * a double, parsing the expression if necessary.
  * The result of parsing replaces the expression.
  */
-double gnc_amount_edit_get_damount (GNCAmountEdit *gae);
+double gnc_amount_edit_get_damount (GNCAmountEdit *gae) NOEXCEPT;
 
 /**
  * gnc_amount_edit_expr_is_valid
@@ -104,9 +108,9 @@ double gnc_amount_edit_get_damount (GNCAmountEdit *gae);
  * @amount: parameter to hold the value of the parsed expression
  * @empty_ok: if true, an empty field is skipped, otherwise an empty field
  *            parses as 0
- * @error: if error location information is available it will be stored 
+ * @error: if error location information is available it will be stored
  *         in this variable. Set it to NULL if you don't want the error.
- * 
+ *
  * If needed, parse the expression in the amount entry. If there's no
  * parsing error, it returns the amount, otherwise it returns the
  * position in the expression where the error occurred.
@@ -119,12 +123,12 @@ double gnc_amount_edit_get_damount (GNCAmountEdit *gae);
 gint gnc_amount_edit_expr_is_valid (GNCAmountEdit *gae,
                                     gnc_numeric *amount,
                                     gboolean empty_ok,
-                                    GError **error);
+                                    GError **error) NOEXCEPT;
 
 /**
  * gnc_amount_edit_evaluate
  * @gae: The GNCAmountEdit widget
- * @error: if error location information is available it will be stored 
+ * @error: if error location information is available it will be stored
  *         in this variable. Set it to NULL if you don't want the error.
  *
  * If needed, parse the expression in the amount entry
@@ -134,7 +138,7 @@ gint gnc_amount_edit_expr_is_valid (GNCAmountEdit *gae,
  *
  * Return TRUE if parsing was successful or there was no need to parse.
  */
-gboolean gnc_amount_edit_evaluate (GNCAmountEdit *gae, GError **error);
+gboolean gnc_amount_edit_evaluate (GNCAmountEdit *gae, GError **error) NOEXCEPT;
 
 /**
  * gnc_amount_edit_set_print_flags:
@@ -144,7 +148,7 @@ gboolean gnc_amount_edit_evaluate (GNCAmountEdit *gae, GError **error);
  * Returns nothing.
  */
 void gnc_amount_edit_set_print_info (GNCAmountEdit *gae,
-                                     GNCPrintAmountInfo print_info);
+                                     GNCPrintAmountInfo print_info) NOEXCEPT;
 
 /**
  * gnc_amount_edit_set_fraction:
@@ -153,7 +157,7 @@ void gnc_amount_edit_set_print_info (GNCAmountEdit *gae,
  *
  * Returns nothing.
  */
-void gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction);
+void gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction) NOEXCEPT;
 
 /**
  * gnc_amount_edit_set_evaluate_on_enter:
@@ -163,7 +167,7 @@ void gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction);
  * Returns nothing.
  */
 void gnc_amount_edit_set_evaluate_on_enter (GNCAmountEdit *gae,
-                                            gboolean evaluate_on_enter);
+                                            gboolean evaluate_on_enter) NOEXCEPT;
 
 /**
  * gnc_amount_edit_set_validate_on_change:
@@ -173,7 +177,7 @@ void gnc_amount_edit_set_evaluate_on_enter (GNCAmountEdit *gae,
  * Returns nothing.
  */
 void gnc_amount_edit_set_validate_on_change (GNCAmountEdit *gae,
-                                             gboolean validate_on_change);
+                                             gboolean validate_on_change) NOEXCEPT;
 
 /**
  * gnc_amount_edit_select_region:
@@ -185,7 +189,7 @@ void gnc_amount_edit_set_validate_on_change (GNCAmountEdit *gae,
  */
 void gnc_amount_edit_select_region (GNCAmountEdit *gae,
                                     gint start_pos,
-                                    gint end_pos);
+                                    gint end_pos) NOEXCEPT;
 
 /**
  * gnc_amount_edit_show_warning_symbol:
@@ -194,7 +198,7 @@ void gnc_amount_edit_select_region (GNCAmountEdit *gae,
  *
  * Returns nothing.
  */
-void gnc_amount_edit_show_warning_symbol (GNCAmountEdit *gae, gboolean show);
+void gnc_amount_edit_show_warning_symbol (GNCAmountEdit *gae, gboolean show) NOEXCEPT;
 
 /**
  * gnc_amount_edit_make_mnemonic_target:
@@ -203,7 +207,7 @@ void gnc_amount_edit_show_warning_symbol (GNCAmountEdit *gae, gboolean show);
  *
  * Returns nothing.
  */
-void gnc_amount_edit_make_mnemonic_target (GNCAmountEdit *gae, GtkWidget *label);
+void gnc_amount_edit_make_mnemonic_target (GNCAmountEdit *gae, GtkWidget *label) NOEXCEPT;
 
 #ifdef __cplusplus
 }

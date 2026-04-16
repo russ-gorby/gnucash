@@ -42,11 +42,14 @@
 %{
 #include "guile-mappings.h"
 
-SCM scm_init_sw_gnome_utils_module (void);
+// SWIG-generated module init functions require C-linkage
+extern "C" SCM scm_init_sw_gnome_utils_module (void);
 %}
 #endif
 
 %import "base-typemaps.i"
+
+// Python-wrapped functions
 
 gboolean
 gnc_verify_dialog (GtkWindow *parent, gboolean yes_is_default,
@@ -62,12 +65,12 @@ void
 gnc_info_dialog (GtkWindow *parent,
 		 const char *format, ...);
 
-void gnc_add_scm_extension (SCM extension);
+void gnc_add_scm_extension (SCM extension); // no C-linkage
 
 void gnc_set_busy_cursor (GtkWidget *w, gboolean update_now);
 void gnc_unset_busy_cursor (GtkWidget *w);
 void gnc_window_show_progress (const char *message, double percentage);
 
-gboolean gnucash_ui_is_running(void);
+gboolean gnucash_ui_is_running(void); // no C-linkage
 
-TaxTableWindow * gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book);
+TaxTableWindow *gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book);

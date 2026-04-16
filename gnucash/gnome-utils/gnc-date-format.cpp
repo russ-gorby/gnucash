@@ -80,10 +80,15 @@ struct _GNCDateFormat
 
 static guint date_format_signals [LAST_SIGNAL] = { 0 };
 
-static void gnc_date_format_finalize     (GObject            *object);
+static void gnc_date_format_finalize(GObject *object);
 static void gnc_date_format_compute_format(GNCDateFormat *gdf);
 
-void gnc_ui_date_format_changed_cb(GtkWidget *unused, gpointer user_data);
+extern "C"  {
+/*
+ * Callbacks / private internal library functions
+ */
+void gnc_ui_date_format_changed_cb(GtkWidget *unused, gpointer user_data) noexcept;
+}
 
 G_DEFINE_TYPE(GNCDateFormat, gnc_date_format, GTK_TYPE_BOX)
 
@@ -183,14 +188,14 @@ gnc_date_format_finalize (GObject *object)
  * Returns a GNCDateFormat widget.
  */
 GtkWidget *
-gnc_date_format_new (void)
+gnc_date_format_new (void) noexcept
 {
     return gnc_date_format_new_with_label (NULL);
 }
 
 
 GtkWidget *
-gnc_date_format_new_without_label (void)
+gnc_date_format_new_without_label (void) noexcept
 {
     GtkWidget *widget = gnc_date_format_new_with_label(NULL);
     GNCDateFormat *gdf = GNC_DATE_FORMAT(widget);
@@ -212,7 +217,7 @@ gnc_date_format_new_without_label (void)
  * Returns a GNCDateFormat widget.
  */
 GtkWidget *
-gnc_date_format_new_with_label (const char *label)
+gnc_date_format_new_with_label (const char *label) noexcept
 {
     auto gdf = static_cast<GNCDateFormat *>(
         g_object_new(GNC_TYPE_DATE_FORMAT, NULL)
@@ -227,7 +232,7 @@ gnc_date_format_new_with_label (const char *label)
 
 
 void
-gnc_date_format_set_format (GNCDateFormat *gdf, QofDateFormat format)
+gnc_date_format_set_format (GNCDateFormat *gdf, QofDateFormat format) noexcept
 {
     g_return_if_fail(gdf);
     g_return_if_fail(GNC_IS_DATE_FORMAT(gdf));
@@ -238,7 +243,7 @@ gnc_date_format_set_format (GNCDateFormat *gdf, QofDateFormat format)
 
 
 QofDateFormat
-gnc_date_format_get_format (GNCDateFormat *gdf)
+gnc_date_format_get_format (GNCDateFormat *gdf) noexcept
 {
     g_return_val_if_fail (gdf, QOF_DATE_FORMAT_LOCALE);
     g_return_val_if_fail (GNC_IS_DATE_FORMAT(gdf), QOF_DATE_FORMAT_LOCALE);
@@ -250,7 +255,7 @@ gnc_date_format_get_format (GNCDateFormat *gdf)
 
 
 void
-gnc_date_format_set_months (GNCDateFormat *gdf, GNCDateMonthFormat months)
+gnc_date_format_set_months (GNCDateFormat *gdf, GNCDateMonthFormat months) noexcept
 {
     GtkWidget *button = NULL;
 
@@ -280,7 +285,7 @@ gnc_date_format_set_months (GNCDateFormat *gdf, GNCDateMonthFormat months)
 
 
 GNCDateMonthFormat
-gnc_date_format_get_months (GNCDateFormat *gdf)
+gnc_date_format_get_months (GNCDateFormat *gdf) noexcept
 {
     g_return_val_if_fail(gdf, GNCDATE_MONTH_NUMBER);
     g_return_val_if_fail(GNC_IS_DATE_FORMAT(gdf), GNCDATE_MONTH_NUMBER);
@@ -299,7 +304,7 @@ gnc_date_format_get_months (GNCDateFormat *gdf)
 
 
 void
-gnc_date_format_set_years (GNCDateFormat *gdf, gboolean include_century)
+gnc_date_format_set_years (GNCDateFormat *gdf, gboolean include_century) noexcept
 {
     g_return_if_fail(gdf);
     g_return_if_fail(GNC_IS_DATE_FORMAT(gdf));
@@ -311,7 +316,7 @@ gnc_date_format_set_years (GNCDateFormat *gdf, gboolean include_century)
 
 
 gboolean
-gnc_date_format_get_years (GNCDateFormat *gdf)
+gnc_date_format_get_years (GNCDateFormat *gdf) noexcept
 {
     g_return_val_if_fail(gdf, FALSE);
     g_return_val_if_fail(GNC_IS_DATE_FORMAT(gdf), FALSE);
@@ -321,7 +326,7 @@ gnc_date_format_get_years (GNCDateFormat *gdf)
 
 
 void
-gnc_date_format_set_custom (GNCDateFormat *gdf, const char *format)
+gnc_date_format_set_custom (GNCDateFormat *gdf, const char *format) noexcept
 {
     g_return_if_fail(gdf);
     g_return_if_fail(GNC_IS_DATE_FORMAT(gdf));
@@ -335,7 +340,7 @@ gnc_date_format_set_custom (GNCDateFormat *gdf, const char *format)
 
 
 const char *
-gnc_date_format_get_custom (GNCDateFormat *gdf)
+gnc_date_format_get_custom (GNCDateFormat *gdf) noexcept
 {
     g_return_val_if_fail(gdf, "");
     g_return_val_if_fail(GNC_IS_DATE_FORMAT(gdf), "");
@@ -345,7 +350,7 @@ gnc_date_format_get_custom (GNCDateFormat *gdf)
 
 
 void
-gnc_ui_date_format_changed_cb(GtkWidget *unused, gpointer user_data)
+gnc_ui_date_format_changed_cb(GtkWidget *unused, gpointer user_data) noexcept
 {
     auto gdf = static_cast<GNCDateFormat *>(user_data);
 
@@ -380,7 +385,7 @@ gnc_date_format_enable_format (GNCDateFormat *gdf, gboolean sensitive)
 
 
 void
-gnc_date_format_refresh (GNCDateFormat *gdf)
+gnc_date_format_refresh (GNCDateFormat *gdf) noexcept
 {
     int sel_option;
     gboolean enable_year, enable_month, enable_custom, check_modifiers;

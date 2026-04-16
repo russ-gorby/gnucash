@@ -26,10 +26,6 @@
 #ifndef DIALOG_OBJECT_REFERENCES_H
 #define DIALOG_OBJECT_REFERENCES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /** @addtogroup GUI
     @{ */
 /** @file dialog-object-references.hpp
@@ -43,9 +39,5 @@ extern "C" {
 void gnc_ui_object_references_show( const gchar* explanation, GList* objlist );
 
 /** @} */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* DIALOG_OBJECT_REFERENCES_H */

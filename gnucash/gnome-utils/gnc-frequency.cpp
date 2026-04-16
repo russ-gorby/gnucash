@@ -345,7 +345,7 @@ start_date_changed( GNCDateEdit *gde, gpointer d )
  * Relabel some of the labels         *
  *************************************/
 void
-gnc_frequency_set_frequency_label_text(GncFrequency *gf, const gchar *txt)
+gnc_frequency_set_frequency_label_text(GncFrequency *gf, const gchar *txt) noexcept
 {
     GtkLabel *lbl;
     if (!gf || !txt) return;
@@ -355,7 +355,7 @@ gnc_frequency_set_frequency_label_text(GncFrequency *gf, const gchar *txt)
 
 
 void
-gnc_frequency_set_date_label_text(GncFrequency *gf, const gchar *txt)
+gnc_frequency_set_date_label_text(GncFrequency *gf, const gchar *txt) noexcept
 {
     GtkLabel *lbl;
     if (!gf || !txt) return;
@@ -365,14 +365,14 @@ gnc_frequency_set_date_label_text(GncFrequency *gf, const gchar *txt)
 
 
 GtkWidget*
-gnc_frequency_new_from_recurrence(GList *recurrences, const GDate *start_date)
+gnc_frequency_new_from_recurrence(GList *recurrences, const GDate *start_date) noexcept
 {
     return gnc_frequency_new(recurrences, start_date);
 }
 
 
 GtkWidget*
-gnc_frequency_new(GList *recurrences, const GDate *start_date)
+gnc_frequency_new(GList *recurrences, const GDate *start_date) noexcept
 {
     auto toRet = static_cast<GncFrequency *>(g_object_new(gnc_frequency_get_type(), NULL));
     gnc_frequency_setup_recurrence(toRet, recurrences, start_date);
@@ -433,14 +433,14 @@ _get_monthly_combobox_index(Recurrence *r)
 
 
 void
-gnc_frequency_setup_recurrence(GncFrequency *gf, GList *recurrences, const GDate *start_date)
+gnc_frequency_setup_recurrence(GncFrequency *gf, GList *recurrences, const GDate *start_date) noexcept
 {
     gnc_frequency_setup(gf, recurrences, start_date);
 }
 
 
 void
-gnc_frequency_setup(GncFrequency *gf, GList *recurrences, const GDate *start_date)
+gnc_frequency_setup(GncFrequency *gf, GList *recurrences, const GDate *start_date) noexcept
 {
     gboolean made_changes = FALSE;
 
@@ -645,7 +645,7 @@ _get_day_of_month_recurrence(GncFrequency *gf, GDate *start_date, int multiplier
 
 
 void
-gnc_frequency_save_to_recurrence(GncFrequency *gf, GList **recurrences, GDate *out_start_date)
+gnc_frequency_save_to_recurrence(GncFrequency *gf, GList **recurrences, GDate *out_start_date) noexcept
 {
     GDate start_date;
 

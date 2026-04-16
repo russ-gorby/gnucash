@@ -41,6 +41,14 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
 /** Set default width for a treeview column. This base width
  *  is the largest of the column title and some arbitrary
  *  text passed in via sizing_text. This base width is then
@@ -48,7 +56,11 @@
  */
 void tree_view_column_set_default_width (GtkTreeView *view,
                                          GtkTreeViewColumn *column,
-                                         const gchar *sizing_text);
+                                         const gchar *sizing_text) NOEXCEPT;
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 /** @} */

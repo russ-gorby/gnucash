@@ -312,7 +312,7 @@ update_warning_tooltip (GncReportCombo *grc)
 void
 gnc_report_combo_set_active (GncReportCombo *grc,
                              const char* active_report_guid,
-                             const char* active_report_name)
+                             const char* active_report_name) noexcept
 {
     g_return_if_fail (grc != NULL);
     g_return_if_fail (GNC_IS_REPORT_COMBO(grc));
@@ -334,7 +334,7 @@ gnc_report_combo_set_active (GncReportCombo *grc,
 }
 
 gchar *
-gnc_report_combo_get_active_guid (GncReportCombo *grc)
+gnc_report_combo_get_active_guid (GncReportCombo *grc) noexcept
 {
     gchar *guid = NULL;
     GtkTreeIter iter;
@@ -351,7 +351,7 @@ gnc_report_combo_get_active_guid (GncReportCombo *grc)
 }
 
 gchar *
-gnc_report_combo_get_active_name (GncReportCombo *grc)
+gnc_report_combo_get_active_name (GncReportCombo *grc) noexcept
 {
     gchar *name = NULL;
     GtkTreeIter iter;
@@ -368,7 +368,7 @@ gnc_report_combo_get_active_name (GncReportCombo *grc)
 }
 
 gchar*
-gnc_report_combo_get_active_guid_name (GncReportCombo *grc)
+gnc_report_combo_get_active_guid_name (GncReportCombo *grc) noexcept
 {
     gchar *report = NULL;
     GtkTreeIter iter;
@@ -394,7 +394,7 @@ gnc_report_combo_get_active_guid_name (GncReportCombo *grc)
 
 void
 gnc_report_combo_set_active_guid_name (GncReportCombo *grc,
-                                       const gchar *guid_name)
+                                       const gchar *guid_name) noexcept
 {
     g_return_if_fail (grc != NULL);
     g_return_if_fail (GNC_IS_REPORT_COMBO(grc));
@@ -414,7 +414,7 @@ gnc_report_combo_set_active_guid_name (GncReportCombo *grc,
 }
 
 gboolean
-gnc_report_combo_is_warning_visible_for_active (GncReportCombo *grc)
+gnc_report_combo_is_warning_visible_for_active (GncReportCombo *grc) noexcept
 {
     g_return_val_if_fail (grc != NULL, FALSE);
     g_return_val_if_fail (GNC_IS_REPORT_COMBO(grc), FALSE);
@@ -458,7 +458,7 @@ combo_popped_cb (GObject    *gobject,
 }
 
 void
-gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list)
+gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list) noexcept
 {
     g_return_if_fail (grc != NULL);
     g_return_if_fail (GNC_IS_REPORT_COMBO(grc));
@@ -480,7 +480,7 @@ gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list)
  *  @return A GncReportCombo widget.
  */
 GtkWidget *
-gnc_report_combo_new (GSList *report_list)
+gnc_report_combo_new (GSList *report_list) noexcept
 {
     GtkListStore *store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
     auto grc = static_cast<GncReportCombo *>(g_object_new (GNC_TYPE_REPORT_COMBO, NULL));

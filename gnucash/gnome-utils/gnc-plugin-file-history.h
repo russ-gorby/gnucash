@@ -37,7 +37,13 @@
 
 #include "gnc-plugin.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_PLUGIN_FILE_HISTORY            (gnc_plugin_file_history_get_type ())
@@ -53,7 +59,7 @@ G_DECLARE_FINAL_TYPE (GncPluginFileHistory, gnc_plugin_file_history, GNC, PLUGIN
  *
  *  @return A pointer to the new object.
  */
-GncPlugin *gnc_plugin_file_history_new (void);
+GncPlugin *gnc_plugin_file_history_new (void) NOEXCEPT;
 
 
 /** Add a file name to the front of the file "history list".  If the
@@ -62,20 +68,20 @@ GncPlugin *gnc_plugin_file_history_new (void);
  *
  *  @param filename The name of the file to add to the list.
  */
-void gnc_history_add_file (const char *filename);
+void gnc_history_add_file (const char *filename) NOEXCEPT;
 
 /** Remove all occurrences of a file name from the history list.  Move
  *  the other key values up in the list to fill the gaps.
  *
  *  @param oldfile The name of the file to remove from the list.
  */
-void gnc_history_remove_file (const char *oldfile);
+void gnc_history_remove_file (const char *oldfile) NOEXCEPT;
 
 /** Test for a file name existing in the history list.
  *
  *  @param oldfile The name of the file to test in the list.
  */
-gboolean gnc_history_test_for_file (const char *oldfile);
+gboolean gnc_history_test_for_file (const char *oldfile) NOEXCEPT;
 
 /** Retrieve the name of the file most recently accessed.  This is the
  *  name at the front of the list.
@@ -84,9 +90,11 @@ gboolean gnc_history_test_for_file (const char *oldfile);
  *  name of the most recently accessed file.  The caller is
  *  responsible for freeing this string.
  */
-char * gnc_history_get_last (void);
+char * gnc_history_get_last (void) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_PLUGIN_FILE_HISTORY_H */
 

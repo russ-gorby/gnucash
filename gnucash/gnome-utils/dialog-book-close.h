@@ -27,6 +27,14 @@
 #ifndef DIALOG_BOOK_CLOSE_H
 #define DIALOG_BOOK_CLOSE_H
 
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
 /** @addtogroup GUI
     @{ */
 /** @file dialog-book-close.h
@@ -42,9 +50,13 @@
  *  will be closed.
  *  @param parent This parameter specifies the parent window
  */
-void gnc_ui_close_book (QofBook* book, GtkWindow *parent);
+void gnc_ui_close_book (QofBook* book, GtkWindow *parent) NOEXCEPT;
 
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DIALOG_BOOK_CLOSE_H */

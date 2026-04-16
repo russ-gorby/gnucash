@@ -153,7 +153,7 @@ target_include_directories(gnc-gnome
     ${CMAKE_SOURCE_DIR}/libgnucash/app-utils
     ${CMAKE_SOURCE_DIR}/libgnucash/app-utils/calculation
     ${CMAKE_SOURCE_DIR}/gnucash/html
-    ${CMAKE_BINARY_DIR}/gnucash/gnome-utils # for gnc-warnings.h
+    ${CMAKE_BINARY_DIR}/gnucash/gnome-utils # for gnc-warnings.hpp
 )
 
 add_dependencies (gnc-gnome swig-runtime-h swig-gnome-c)

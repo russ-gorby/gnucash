@@ -38,7 +38,11 @@
 #include <gtk/gtk.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 
@@ -90,55 +94,57 @@ extern "C" {
 
 /* Dialog windows ***************************************************/
 
-extern gboolean
+gboolean
 gnc_verify_dialog (GtkWindow *parent,
                    gboolean yes_is_default,
-                   const char *format, ...) G_GNUC_PRINTF (3, 4);
+                   const char *format, ...) NOEXCEPT G_GNUC_PRINTF (3, 4);
 
-extern gint
+gint
 gnc_ok_cancel_dialog (GtkWindow *parent,
                       gint default_result,
-                      const char *format, ...) G_GNUC_PRINTF (3, 4);
+                      const char *format, ...) NOEXCEPT G_GNUC_PRINTF (3, 4);
 
-extern gboolean
+gboolean
 gnc_action_dialog (GtkWindow *parent,
                    const gchar *action,
                    gboolean action_default,
-                   const gchar *format, ...) G_GNUC_PRINTF (4, 5);
+                   const gchar *format, ...) NOEXCEPT G_GNUC_PRINTF (4, 5);
 
-extern void
+void
 gnc_warning_dialog (GtkWindow *parent,
-                    const char *format, ...) G_GNUC_PRINTF (2, 3);
+                    const char *format, ...) NOEXCEPT G_GNUC_PRINTF (2, 3);
 
-extern void
+void
 gnc_info_dialog (GtkWindow *parent,
-                 const char *format, ...) G_GNUC_PRINTF (2, 3);
+                 const char *format, ...) NOEXCEPT G_GNUC_PRINTF (2, 3);
 
-extern void
+void
 gnc_error_dialog (GtkWindow *parent,
-                  const char *format, ...) G_GNUC_PRINTF (2, 3);
+                  const char *format, ...) NOEXCEPT G_GNUC_PRINTF (2, 3);
 
-extern gchar *
-gnc_input_dialog (GtkWidget *parent, const gchar *title, const gchar *msg, const gchar *default_input);
+gchar *
+gnc_input_dialog (GtkWidget *parent, const gchar *title, const gchar *msg,
+                  const gchar *default_input) NOEXCEPT;
 
-extern gchar *
-gnc_input_dialog_with_entry (GtkWidget *parent, const gchar *title, const gchar *msg, const gchar *default_input);
+gchar *
+gnc_input_dialog_with_entry (GtkWidget *parent, const gchar *title,
+                             const gchar *msg, const gchar *default_input) NOEXCEPT;
 
-extern void
-gnc_info2_dialog (GtkWidget *parent, const gchar *title, const gchar *msg);
+void
+gnc_info2_dialog (GtkWidget *parent, const gchar *title, const gchar *msg) NOEXCEPT;
 
-extern void
-gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *target_link);
+void
+gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *target_link) NOEXCEPT;
 
 int      gnc_choose_radio_option_dialog (GtkWidget *parent,
         const char *title,
         const char *msg,
         const char *button_name,
         int default_value,
-        GList *radio_list);
+        GList *radio_list) NOEXCEPT;
 
-void     gnc_tax_info_dialog (GtkWidget *parent, Account *account);
-void     gnc_stock_split_dialog (GtkWidget *parent, Account * initial);
+void     gnc_tax_info_dialog (GtkWidget *parent, Account *account) NOEXCEPT;
+void     gnc_stock_split_dialog (GtkWidget *parent, Account * initial) NOEXCEPT;
 
 typedef enum
 {
@@ -147,10 +153,10 @@ typedef enum
 } GNCPriceEditType;
 
 void gnc_price_edit_dialog (GtkWidget *parent, QofSession *session,
-                            GNCPrice *price, GNCPriceEditType type);
-GNCPrice* gnc_price_edit_by_guid (GtkWidget * parent, const GncGUID * guid);
-void     gnc_prices_dialog (GtkWidget *parent);
-void     gnc_commodities_dialog (GtkWidget *parent);
+                            GNCPrice *price, GNCPriceEditType type) NOEXCEPT;
+GNCPrice* gnc_price_edit_by_guid (GtkWidget * parent, const GncGUID * guid) NOEXCEPT;
+void     gnc_prices_dialog (GtkWidget *parent) NOEXCEPT;
+void     gnc_commodities_dialog (GtkWidget *parent) NOEXCEPT;
 
 /* Open a dialog asking for username and password. The heading and
  * either 'initial_*' arguments may be NULL. If the dialog returns
@@ -163,7 +169,7 @@ gboolean gnc_get_username_password (GtkWidget *parent,
                                     const char *initial_username,
                                     const char *initial_password,
                                     char **username,
-                                    char **password);
+                                    char **password) NOEXCEPT;
 
 /* Managing the GUI Windows *****************************************/
 
@@ -173,7 +179,7 @@ gboolean gnc_get_username_password (GtkWidget *parent,
  *
  *  @param widget the widget to find a GtkWindow for.
  *  @return A pointer to a GtkWindow object or NULL if no toplevel was found. */
-GtkWindow *gnc_ui_get_gtk_window (GtkWidget *widget);
+GtkWindow *gnc_ui_get_gtk_window (GtkWidget *widget) NOEXCEPT;
 
 /** Get a pointer to the final GncMainWindow widget is rooted
  * in. If widget is a child of a GncMainWindow return that window.
@@ -194,16 +200,15 @@ GtkWindow *gnc_ui_get_gtk_window (GtkWidget *widget);
  * @param widget the widget to find a GncMainWindow for.
  * @return A pointer to a GtkWindow object. */
 
-GtkWindow *gnc_ui_get_main_window (GtkWidget *widget);
+GtkWindow *gnc_ui_get_main_window (GtkWidget *widget) NOEXCEPT;
 
 /* Changing the GUI Cursor ******************************************/
 
-void gnc_set_busy_cursor(GtkWidget *w, gboolean update_now);
-void gnc_unset_busy_cursor(GtkWidget *w);
+void gnc_set_busy_cursor(GtkWidget *w, gboolean update_now) NOEXCEPT;
+void gnc_unset_busy_cursor(GtkWidget *w) NOEXCEPT;
 
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif

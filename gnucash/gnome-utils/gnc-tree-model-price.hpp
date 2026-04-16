@@ -41,8 +41,6 @@
 
 #include "gnc-pricedb.h"
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_MODEL_PRICE            (gnc_tree_model_price_get_type ())
 G_DECLARE_FINAL_TYPE (GncTreeModelPrice, gnc_tree_model_price, GNC, TREE_MODEL_PRICE, GncTreeModel)
@@ -236,9 +234,6 @@ gboolean gnc_tree_model_price_get_iter_from_price (GncTreeModelPrice *model,
 GtkTreePath *gnc_tree_model_price_get_path_from_price (GncTreeModelPrice *model,
         GNCPrice *price);
 /** @} */
-
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_MODEL_PRICE_H */
 

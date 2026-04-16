@@ -87,10 +87,24 @@ void gnc_set_current_book_tax_name_type (gboolean name_changed,
                                             const char* tax_type);
 const char*  gnc_get_current_book_tax_name (void);
 const char*  gnc_get_current_book_tax_type (void);
+
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
 /** Calls gnc_book_option_num_field_source_change to initiate registered
   * callbacks when num_field_source book option changes so that
   * registers/reports can update themselves; sets feature flag */
-void gnc_book_option_num_field_source_change_cb (gboolean num_action);
+void gnc_book_option_num_field_source_change_cb (gboolean num_action) NOEXCEPT;
+
+#ifdef __cplusplus
+}
+#endif
+
 Account* gnc_get_current_root_account (void);
 gnc_commodity_table* gnc_get_current_commodities (void);
 

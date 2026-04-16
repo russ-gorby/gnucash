@@ -46,7 +46,7 @@ gnc_window_default_init (GncWindowInterface *klass)
  ************************************************************/
 
 GtkWindow *
-gnc_window_get_gtk_window (GncWindow *window)
+gnc_window_get_gtk_window (GncWindow *window) noexcept
 {
     g_return_val_if_fail(GNC_WINDOW (window), NULL);
 
@@ -57,7 +57,7 @@ gnc_window_get_gtk_window (GncWindow *window)
 }
 
 GtkWidget *
-gnc_window_get_statusbar (GncWindow *window)
+gnc_window_get_statusbar (GncWindow *window) noexcept
 {
     g_return_val_if_fail(GNC_WINDOW (window), NULL);
 
@@ -68,7 +68,7 @@ gnc_window_get_statusbar (GncWindow *window)
 }
 
 GtkWidget *
-gnc_window_get_progressbar (GncWindow *window)
+gnc_window_get_progressbar (GncWindow *window) noexcept
 {
     g_return_val_if_fail(GNC_WINDOW (window), NULL);
 
@@ -80,7 +80,7 @@ gnc_window_get_progressbar (GncWindow *window)
 }
 
 GtkWidget *
-gnc_window_get_menubar (GncWindow *window)
+gnc_window_get_menubar (GncWindow *window) noexcept
 {
     g_return_val_if_fail (GNC_WINDOW(window), NULL);
 
@@ -92,7 +92,7 @@ gnc_window_get_menubar (GncWindow *window)
 }
 
 GtkWidget *
-gnc_window_get_toolbar (GncWindow *window)
+gnc_window_get_toolbar (GncWindow *window) noexcept
 {
     g_return_val_if_fail (GNC_WINDOW(window), NULL);
 
@@ -104,7 +104,7 @@ gnc_window_get_toolbar (GncWindow *window)
 }
 
 GMenuModel *
-gnc_window_get_menubar_model (GncWindow *window)
+gnc_window_get_menubar_model (GncWindow *window) noexcept
 {
     g_return_val_if_fail (GNC_WINDOW(window), NULL);
 
@@ -116,7 +116,7 @@ gnc_window_get_menubar_model (GncWindow *window)
 }
 
 GtkAccelGroup *
-gnc_window_get_accel_group (GncWindow *window)
+gnc_window_get_accel_group (GncWindow *window) noexcept
 {
     g_return_val_if_fail (GNC_WINDOW(window), NULL);
 
@@ -131,7 +131,7 @@ gnc_window_get_accel_group (GncWindow *window)
  ************************************************************/
 
 void
-gnc_window_update_status (GncWindow *window, GncPluginPage *page)
+gnc_window_update_status (GncWindow *window, GncPluginPage *page) noexcept
 {
     GtkWidget *statusbar;
     const gchar *message;
@@ -146,7 +146,7 @@ gnc_window_update_status (GncWindow *window, GncPluginPage *page)
 
 void
 gnc_window_set_status (GncWindow *window, GncPluginPage *page,
-                       const gchar *message)
+                       const gchar *message) noexcept
 {
     g_return_if_fail(GNC_WINDOW (window));
     g_return_if_fail(GNC_PLUGIN_PAGE (page));
@@ -170,7 +170,7 @@ static GncWindow *progress_bar_hack_window = NULL;
  * Must be set to a valid window or to NULL (no window).
  */
 void
-gnc_window_set_progressbar_window (GncWindow *window)
+gnc_window_set_progressbar_window (GncWindow *window) noexcept
 {
     if (window != NULL)
     {
@@ -182,14 +182,14 @@ gnc_window_set_progressbar_window (GncWindow *window)
 
 
 GncWindow *
-gnc_window_get_progressbar_window (void)
+gnc_window_get_progressbar_window (void) noexcept
 {
     return progress_bar_hack_window;
 }
 
 
 void
-gnc_window_show_progress (const char *message, double percentage)
+gnc_window_show_progress (const char *message, double percentage) noexcept
 {
     GncWindow *window;
     GtkWidget *progressbar;

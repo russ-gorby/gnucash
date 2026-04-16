@@ -82,7 +82,13 @@
 #include "gnc-main-window.h"
 #include "gnc-plugin-page.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_PLUGIN            (gnc_plugin_get_type ())
@@ -269,7 +275,9 @@ void gnc_plugin_add_menu_tooltip_callbacks (GtkWidget *menubar,
 void gnc_plugin_add_toolbar_tooltip_callbacks (GtkWidget *toolbar,
                                                GtkWidget *statusbar);
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_PLUGIN_H */
 

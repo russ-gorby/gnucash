@@ -24,8 +24,13 @@
 #define DIALOG_DOCLINK_UTILS_H
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
+
 
 #define GNC_DOC_LINK_PATH_HEAD "assoc-head"
 /* Note, assoc-head is the old name for the document link head which has been
@@ -43,7 +48,7 @@ extern "C" {
  *
  *  @return The current documentation-link file path head.
  */
-gchar * gnc_doclink_get_path_head (void);
+gchar * gnc_doclink_get_path_head (void) NOEXCEPT;
 
 /** Sets the label text for displaying the path head in a dialog.
  *
@@ -53,7 +58,7 @@ gchar * gnc_doclink_get_path_head (void);
  */
 void gnc_doclink_set_path_head_label (GtkWidget *path_head_label,
                                       const gchar *incoming_path_head,
-                                      const gchar *prefix);
+                                      const gchar *prefix) NOEXCEPT;
 
 /** Return a uri that can be used for opening it.
  *
@@ -69,7 +74,7 @@ void gnc_doclink_set_path_head_label (GtkWidget *path_head_label,
  *
  *  @return The uri used for opening the link.
  */
-gchar * gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri, gchar *uri_scheme);
+gchar * gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri, gchar *uri_scheme) NOEXCEPT;
 
 /** Corrects an earlier relative file documentation link uri forrmat.
  *
@@ -80,7 +85,7 @@ gchar * gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri, gchar
  *  @param trans The Transaction holding the document link
  *  @param book_ro TRUE if the book is read only
  */
-gchar * gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro);
+gchar * gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro) NOEXCEPT;
 
 /** Return an unescaped uri for display use.
  *
@@ -96,7 +101,8 @@ gchar * gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro);
  *
  *  @return The unescaped uri used for display purposes.
  */
-gchar * gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri, gchar *uri_scheme);
+gchar * gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri,
+                                      gchar *uri_scheme) NOEXCEPT;
 
 /** Return an unescaped uri for display use just based on the uri.
  *
@@ -110,7 +116,7 @@ gchar * gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri, 
  *
  *  @return The unescaped uri used for display purposes.
  */
-gchar * gnc_doclink_get_unescaped_just_uri (const gchar *uri);
+gchar * gnc_doclink_get_unescaped_just_uri (const gchar *uri) NOEXCEPT;
 
 /** Presents a dialog when the path head is changed.
  *
@@ -122,7 +128,8 @@ gchar * gnc_doclink_get_unescaped_just_uri (const gchar *uri);
  *  @param parent The GtkWindow for the parent widget
  *  @param old_path_head_uri The old path head uri
  */
-void gnc_doclink_pref_path_head_changed (GtkWindow *parent, const gchar *old_path_head_uri);
+void gnc_doclink_pref_path_head_changed (GtkWindow *parent,
+                                         const gchar *old_path_head_uri) NOEXCEPT;
 
 #ifdef __cplusplus
 }

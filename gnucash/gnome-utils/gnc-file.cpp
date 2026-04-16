@@ -72,7 +72,7 @@ static bool datafile_filter (const GtkFileFilterInfo* info, CharToBool checker)
 }
 
 GList*
-gnc_file_chooser_get_datafile_filters ()
+gnc_file_chooser_get_datafile_filters (void) noexcept
 {
     /* Translators: *.gnucash.*.gnucash, *.xac.*.xac are file patterns
        and must not be translated*/
@@ -100,7 +100,7 @@ gnc_file_chooser_get_datafile_filters ()
 }
 
 void
-gnc_file_chooser_add_filters (GtkFileChooser* file_box, GList *filters)
+gnc_file_chooser_add_filters (GtkFileChooser* file_box, GList *filters) noexcept
 {
     g_return_if_fail (GTK_IS_WIDGET (file_box));
     if (filters == NULL) return;
@@ -244,7 +244,7 @@ gnc_file_dialog (GtkWindow *parent,
                  GList * filters,
                  const char * starting_dir,
                  GNCFileDialogType type
-                 )
+                 ) noexcept
 {
     gchar* file_name = NULL;
     GSList* ret = gnc_file_dialog_int (parent, title, filters, starting_dir, type, FALSE);
@@ -274,7 +274,7 @@ gnc_file_dialog_multi (GtkWindow *parent,
                        GList * filters,
                        const char * starting_dir,
                        GNCFileDialogType type
-                       )
+                       ) noexcept
 {
     return gnc_file_dialog_int (parent, title, filters, starting_dir, type, TRUE);
 }
@@ -283,7 +283,7 @@ gboolean
 show_session_error (GtkWindow *parent,
                     QofBackendError io_error,
                     const char *newfile,
-                    GNCFileDialogType type)
+                    GNCFileDialogType type) noexcept
 {
     GtkWidget *dialog;
     gboolean uh_oh = TRUE;
@@ -617,7 +617,7 @@ gnc_book_opened (void)
 }
 
 void
-gnc_file_new (GtkWindow *parent)
+gnc_file_new (GtkWindow *parent) noexcept
 {
     QofSession *session;
 
@@ -654,7 +654,7 @@ gnc_file_new (GtkWindow *parent)
 }
 
 gboolean
-gnc_file_query_save (GtkWindow *parent, gboolean can_cancel)
+gnc_file_query_save (GtkWindow *parent, gboolean can_cancel) noexcept
 {
     QofBook *current_book;
 
@@ -1194,7 +1194,7 @@ RESTART:
  *       paths, never db uris.
  */
 gboolean
-gnc_file_open (GtkWindow *parent)
+gnc_file_open (GtkWindow *parent) noexcept
 {
     const gchar * newfile;
     gchar *last = NULL;
@@ -1231,7 +1231,8 @@ gnc_file_open (GtkWindow *parent)
 }
 
 gboolean
-gnc_file_open_file (GtkWindow *parent, const char * newfile, gboolean open_readonly)
+gnc_file_open_file (GtkWindow *parent, const char * newfile,
+                    gboolean open_readonly) noexcept
 {
     if (!newfile) return FALSE;
 
@@ -1250,7 +1251,7 @@ gnc_file_open_file (GtkWindow *parent, const char * newfile, gboolean open_reado
  *       never db uris
  */
 void
-gnc_file_export (GtkWindow *parent)
+gnc_file_export (GtkWindow *parent) noexcept
 {
     const char *filename;
     char *default_dir = NULL;        /* Default to last open */
@@ -1312,7 +1313,7 @@ check_file_path (const char *path)
 
 
 void
-gnc_file_do_export(GtkWindow *parent, const char * filename)
+gnc_file_do_export(GtkWindow *parent, const char * filename) noexcept
 {
     QofSession *current_session, *new_session;
     gboolean ok;
@@ -1447,7 +1448,7 @@ gnc_file_do_export(GtkWindow *parent, const char * filename)
 static gboolean been_here_before = FALSE;
 
 void
-gnc_file_save (GtkWindow *parent)
+gnc_file_save (GtkWindow *parent) noexcept
 {
     QofBackendError io_err;
     const char * newfile;
@@ -1516,7 +1517,7 @@ gnc_file_save (GtkWindow *parent)
  *       never db uris. See gnc_file_do_save_as for that.
  */
 void
-gnc_file_save_as (GtkWindow *parent)
+gnc_file_save_as (GtkWindow *parent) noexcept
 {
     const gchar *filename;
     gchar *default_dir = NULL;        /* Default to last open */
@@ -1553,7 +1554,7 @@ gnc_file_save_as (GtkWindow *parent)
 }
 
 void
-gnc_file_do_save_as (GtkWindow *parent, const char* filename)
+gnc_file_do_save_as (GtkWindow *parent, const char* filename) noexcept
 {
     QofSession *new_session;
     QofSession *session;
@@ -1768,7 +1769,7 @@ gnc_file_do_save_as (GtkWindow *parent, const char* filename)
 }
 
 void
-gnc_file_revert (GtkWindow *parent)
+gnc_file_revert (GtkWindow *parent) noexcept
 {
     QofSession *session;
     const gchar *fileurl, *filename, *tmp;
@@ -1793,7 +1794,7 @@ gnc_file_revert (GtkWindow *parent)
     gnc_file_open_file (parent, fileurl, qof_book_is_readonly(gnc_get_current_book()));}
 
 void
-gnc_file_quit (void)
+gnc_file_quit (void) noexcept
 {
     QofSession *session;
 
@@ -1816,13 +1817,13 @@ gnc_file_quit (void)
 }
 
 void
-gnc_file_set_shutdown_callback (GNCShutdownCB cb)
+gnc_file_set_shutdown_callback (GNCShutdownCB cb) noexcept
 {
     shutdown_cb = cb;
 }
 
 gboolean
-gnc_file_save_in_progress (void)
+gnc_file_save_in_progress (void) noexcept
 {
     if (gnc_current_session_exist())
     {

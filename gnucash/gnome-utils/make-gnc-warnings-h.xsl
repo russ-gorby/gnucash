@@ -55,11 +55,20 @@ typedef struct GncWarningSpec
   const gchar *warn_long_desc;
 } GncWarningSpec;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 const GncWarningSpec *gnc_get_warnings (void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GNC_WARNINGS_H */
 </xsl:template>
 <xsl:variable name="smallcase" select="'-abcdefghijklmnopqrstuvwxyz'" />
 <xsl:variable name="uppercase" select="'_ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
 
-</xsl:stylesheet> 
+</xsl:stylesheet>

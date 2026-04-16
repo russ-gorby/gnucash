@@ -28,13 +28,23 @@ typedef struct _taxtable_window TaxTableWindow;
 
 #include "gncTaxTable.h"
 
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
 /* Create a new tax-table by name */
-GncTaxTable * gnc_ui_tax_table_new_from_name (GtkWindow *parent, QofBook *book, const char *name);
+GncTaxTable * gnc_ui_tax_table_new_from_name (GtkWindow *parent, QofBook *book,
+                                              const char *name) NOEXCEPT;
 
 /* Create a tax-table window */
-TaxTableWindow * gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book);
+TaxTableWindow * gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book) NOEXCEPT;
 
-/* Destroy a tax-table window */
-void gnc_ui_tax_table_window_destroy (TaxTableWindow *ttw);
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _DIALOG_TAX-TABLE_H */

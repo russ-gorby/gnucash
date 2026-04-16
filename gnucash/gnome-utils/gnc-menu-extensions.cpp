@@ -49,7 +49,7 @@ static GSList *extension_list = NULL;
 static Getters getters = {0, 0, 0, 0, 0, 0};
 
 GSList *
-gnc_extensions_get_menu_list (void)
+gnc_extensions_get_menu_list (void) noexcept
 {
     return g_slist_copy(extension_list);
 }
@@ -230,7 +230,7 @@ gnc_ext_gen_action_name (const gchar *name)
 /******************** Callback ********************/
 
 void
-gnc_extension_invoke_cb (SCM extension, SCM window)
+gnc_extension_invoke_cb (SCM extension, SCM window) noexcept
 {
     SCM script;
 
@@ -325,7 +325,7 @@ cleanup_extension_info (gpointer extension_info, gpointer not_used)
 
 
 void
-gnc_add_scm_extension (SCM extension)
+gnc_add_scm_extension (SCM extension) noexcept
 {
     if (!gnc_create_extension_info(extension))
     {
@@ -337,7 +337,7 @@ gnc_add_scm_extension (SCM extension)
 /******************** Shutdown ********************/
 
 void
-gnc_extensions_shutdown (void)
+gnc_extensions_shutdown (void) noexcept
 {
     g_slist_foreach(extension_list, cleanup_extension_info, NULL);
 

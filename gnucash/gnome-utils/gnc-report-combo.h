@@ -26,8 +26,11 @@
 #define GNC_REPORT_COMBO_H
 
 #ifdef __cplusplus
+#define NOEXCEPT noexcept
 extern "C"
 {
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_REPORT_COMBO            (gnc_report_combo_get_type())
@@ -46,7 +49,7 @@ typedef struct
  *
  *  @return A GncReportCombo widget.
  */
-GtkWidget *gnc_report_combo_new (GSList *report_list);
+GtkWidget *gnc_report_combo_new (GSList *report_list) NOEXCEPT;
 
 /** Refresh the report combo model.
  *
@@ -54,7 +57,7 @@ GtkWidget *gnc_report_combo_new (GSList *report_list);
  *
  *  @param report_list The report list to update the combo with.
  */
-void gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list);
+void gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list) NOEXCEPT;
 
 /** Set the active report in the GncReportCombo widget.
  *
@@ -66,7 +69,7 @@ void gnc_report_combo_refresh (GncReportCombo *grc, GSList *report_list);
  */
 void gnc_report_combo_set_active (GncReportCombo *grc,
                                   const char* active_report_guid,
-                                  const char* active_report_name);
+                                  const char* active_report_name) NOEXCEPT;
 
 /** Get the active report guid string.
  *
@@ -74,7 +77,7 @@ void gnc_report_combo_set_active (GncReportCombo *grc,
  *
  *  @return The string guid of the selected report or NULL if none active
  */
-gchar * gnc_report_combo_get_active_guid (GncReportCombo *grc);
+gchar * gnc_report_combo_get_active_guid (GncReportCombo *grc) NOEXCEPT;
 
 /** Get the active report name string.
  *
@@ -82,7 +85,7 @@ gchar * gnc_report_combo_get_active_guid (GncReportCombo *grc);
  *
  *  @return The string name of the selected report or NULL if none active
  */
-gchar * gnc_report_combo_get_active_name (GncReportCombo *grc);
+gchar * gnc_report_combo_get_active_name (GncReportCombo *grc) NOEXCEPT;
 
 /** Set the active report to the guid string
  *
@@ -91,7 +94,7 @@ gchar * gnc_report_combo_get_active_name (GncReportCombo *grc);
  *  @param guid_name The concatination of the guid/name of the Invoice Report
  */
 void gnc_report_combo_set_active_guid_name (GncReportCombo *grc,
-                                            const gchar *guid_name);
+                                            const gchar *guid_name) NOEXCEPT;
 
 /** Get the active report name string.
  *
@@ -100,7 +103,7 @@ void gnc_report_combo_set_active_guid_name (GncReportCombo *grc,
  *  @return The concatinated string of report guid and name of the selected
  *          report or NULL if none active
  */
-gchar * gnc_report_combo_get_active_guid_name (GncReportCombo *grc);
+gchar * gnc_report_combo_get_active_guid_name (GncReportCombo *grc) NOEXCEPT;
 
 /** Is the warning displayed for active entry.
  *
@@ -108,7 +111,7 @@ gchar * gnc_report_combo_get_active_guid_name (GncReportCombo *grc);
  *
  *  @return TRUE is warning is displayed, else FALSE
  */
-gboolean gnc_report_combo_is_warning_visible_for_active (GncReportCombo *grc);
+gboolean gnc_report_combo_is_warning_visible_for_active (GncReportCombo *grc) NOEXCEPT;
 
 #ifdef __cplusplus
 }

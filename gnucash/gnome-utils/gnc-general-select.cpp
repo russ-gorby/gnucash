@@ -198,7 +198,7 @@ GtkWidget *
 gnc_general_select_new (GNCGeneralSelectType type,
                         GNCGeneralSelectGetStringCB get_string,
                         GNCGeneralSelectNewSelectCB new_select,
-                        gpointer cb_arg)
+                        gpointer cb_arg) noexcept
 {
     g_return_val_if_fail (get_string != NULL, NULL);
     g_return_val_if_fail (new_select != NULL, NULL);
@@ -223,7 +223,7 @@ gnc_general_select_new (GNCGeneralSelectType type,
  * returns the printable name of the selection
  */
 const char *
-gnc_general_select_get_printname (GNCGeneralSelect *gsl, gpointer selection)
+gnc_general_select_get_printname (GNCGeneralSelect *gsl, gpointer selection) noexcept
 {
     g_return_val_if_fail (gsl != NULL, NULL);
     g_return_val_if_fail (selection != NULL, NULL);
@@ -241,7 +241,7 @@ gnc_general_select_get_printname (GNCGeneralSelect *gsl, gpointer selection)
  * Returns nothing.
  */
 void
-gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection)
+gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection) noexcept
 {
     const char *text;
 
@@ -267,7 +267,7 @@ gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection)
  * Returns the current selection by the widget.
  */
 gpointer
-gnc_general_select_get_selected (GNCGeneralSelect *gsl)
+gnc_general_select_get_selected (GNCGeneralSelect *gsl) noexcept
 {
     g_return_val_if_fail(gsl != NULL, NULL);
     g_return_val_if_fail(GNC_IS_GENERAL_SELECT(gsl), NULL);
@@ -284,7 +284,7 @@ gnc_general_select_get_selected (GNCGeneralSelect *gsl)
  *  @param label The label whose access key should set focus to this
  *  widget. */
 void
-gnc_general_select_make_mnemonic_target (GNCGeneralSelect *gsl, GtkWidget *label)
+gnc_general_select_make_mnemonic_target (GNCGeneralSelect *gsl, GtkWidget *label) noexcept
 {
     g_return_if_fail(gsl);
     g_return_if_fail(GNC_IS_GENERAL_SELECT(gsl));

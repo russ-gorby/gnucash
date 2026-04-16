@@ -90,12 +90,18 @@
 /** The debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_PREFS;
 
-void gnc_preferences_response_cb (GtkDialog *dialog, gint response, GtkDialog *unused);
-void gnc_account_separator_pref_changed_cb (GtkEntry *entry, GtkWidget *dialog);
-void gnc_save_on_close_expires_cb (GtkToggleButton *button, GtkWidget *dialog);
+extern "C" {
+/*
+ * Callbacks / private internal library functions
+ */
+void gnc_preferences_response_cb (GtkDialog *dialog, gint response, GtkDialog *unused) noexcept;
+void gnc_account_separator_pref_changed_cb (GtkEntry *entry, GtkWidget *dialog) noexcept;
+void gnc_save_on_close_expires_cb (GtkToggleButton *button, GtkWidget *dialog) noexcept;
+
 gboolean gnc_preferences_delete_event_cb (GtkWidget *widget,
                                           GdkEvent  *event,
-                                          gpointer   user_data);
+                                          gpointer   user_data) noexcept;
+}
 
 /** This data structure holds the information for a single addition to
  *  the preferences dialog. */
@@ -153,7 +159,7 @@ static gchar *gnc_account_separator_is_valid (const gchar *separator,
  *  @param dialog A pointer to the preferences dialog.
  */
 void
-gnc_account_separator_pref_changed_cb (GtkEntry *entry, GtkWidget *dialog)
+gnc_account_separator_pref_changed_cb (GtkEntry *entry, GtkWidget *dialog) noexcept
 {
     gchar *separator = NULL;
     gchar *conflict_msg = gnc_account_separator_is_valid (gtk_entry_get_text (entry), &separator);
@@ -293,7 +299,7 @@ gnc_preferences_select_account_page (GtkDialog *dialog)
  * @param dialog the prefs dialog.
  */
 void
-gnc_save_on_close_expires_cb (GtkToggleButton *button, GtkWidget *dialog)
+gnc_save_on_close_expires_cb (GtkToggleButton *button, GtkWidget *dialog) noexcept
 {
     auto spinner = static_cast<GtkWidget *>(
         g_object_get_data (G_OBJECT(dialog), "save_on_close_wait_time")
@@ -424,7 +430,7 @@ gnc_preferences_add_page_internal (const gchar *filename,
 void
 gnc_preferences_add_page (const gchar *filename,
                           const gchar *widgetname,
-                          const gchar *tabname)
+                          const gchar *tabname) noexcept
 {
     gnc_preferences_add_page_internal (filename, widgetname, tabname, TRUE);
 }
@@ -439,7 +445,7 @@ gnc_preferences_add_page (const gchar *filename,
 void
 gnc_preferences_add_to_page (const gchar *filename,
                              const gchar *widgetname,
-                             const gchar *tabname)
+                             const gchar *tabname) noexcept
 {
     gnc_preferences_add_page_internal (filename, widgetname, tabname, FALSE);
 }
@@ -1192,7 +1198,7 @@ gnc_prefs_connect_date_edit (GNCDateEdit *gde , const gchar *boxname )
 gboolean
 gnc_preferences_delete_event_cb (GtkWidget *widget,
                                  GdkEvent  *event,
-                                 gpointer   user_data)
+                                 gpointer   user_data) noexcept
 {
     /* need to block this for the account separator test */
     return TRUE;
@@ -1212,7 +1218,7 @@ gnc_preferences_delete_event_cb (GtkWidget *widget,
  *  @param unused
  */
 void
-gnc_preferences_response_cb (GtkDialog *dialog, gint response, GtkDialog *unused)
+gnc_preferences_response_cb (GtkDialog *dialog, gint response, GtkDialog *unused) noexcept
 {
     switch (response)
     {
@@ -1583,7 +1589,7 @@ close_handler (gpointer user_data)
  *  preferences dialog already exists it will be raised to the top of
  *  the window stack instead of creating a new dialog. */
 void
-gnc_preferences_dialog (GtkWindow *parent)
+gnc_preferences_dialog (GtkWindow *parent) noexcept
 {
     GtkWidget *dialog;
 

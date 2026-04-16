@@ -87,25 +87,25 @@ gnc_dense_cal_model_default_init (GncDenseCalModelInterface *g_class)
 G_DEFINE_INTERFACE(GncDenseCalModel, gnc_dense_cal_model, G_TYPE_OBJECT)
 
 GList*
-gnc_dense_cal_model_get_contained (GncDenseCalModel *model)
+gnc_dense_cal_model_get_contained (GncDenseCalModel *model) noexcept
 {
     return (*GNC_DENSE_CAL_MODEL_GET_IFACE(model)->get_contained)(model);
 }
 
 gchar*
-gnc_dense_cal_model_get_name (GncDenseCalModel *model, guint tag)
+gnc_dense_cal_model_get_name (GncDenseCalModel *model, guint tag) noexcept
 {
     return (*GNC_DENSE_CAL_MODEL_GET_IFACE(model)->get_name)(model, tag);
 }
 
 gchar*
-gnc_dense_cal_model_get_info (GncDenseCalModel *model, guint tag)
+gnc_dense_cal_model_get_info (GncDenseCalModel *model, guint tag) noexcept
 {
     return (*GNC_DENSE_CAL_MODEL_GET_IFACE(model)->get_info)(model, tag);
 }
 
 gint
-gnc_dense_cal_model_get_instance_count (GncDenseCalModel *model, guint tag)
+gnc_dense_cal_model_get_instance_count (GncDenseCalModel *model, guint tag) noexcept
 {
     return (*GNC_DENSE_CAL_MODEL_GET_IFACE(model)->get_instance_count)(model, tag);
 }
@@ -114,7 +114,7 @@ void
 gnc_dense_cal_model_get_instance (GncDenseCalModel *model,
                                   guint tag,
                                   gint instance_index,
-                                  GDate *date)
+                                  GDate *date) noexcept
 {
     (*GNC_DENSE_CAL_MODEL_GET_IFACE(model)->get_instance)(model, tag, instance_index, date);
 }

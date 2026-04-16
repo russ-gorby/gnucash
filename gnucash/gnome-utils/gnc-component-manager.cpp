@@ -282,7 +282,7 @@ gnc_cm_event_handler (QofInstance *entity,
 static gint handler_id;
 
 void
-gnc_component_manager_init (void)
+gnc_component_manager_init (void) noexcept
 {
     if (changes.entity_events)
     {
@@ -300,7 +300,7 @@ gnc_component_manager_init (void)
 }
 
 void
-gnc_component_manager_shutdown (void)
+gnc_component_manager_shutdown (void) noexcept
 {
     if (!changes.entity_events)
     {
@@ -419,7 +419,7 @@ gint
 gnc_register_gui_component (const char *component_class,
                             GNCComponentRefreshHandler refresh_handler,
                             GNCComponentCloseHandler close_handler,
-                            gpointer user_data)
+                            gpointer user_data) noexcept
 {
     ComponentInfo *ci;
 
@@ -443,7 +443,7 @@ gnc_register_gui_component (const char *component_class,
 void
 gnc_gui_component_watch_entity (gint component_id,
                                 const GncGUID *entity,
-                                QofEventId event_mask)
+                                QofEventId event_mask) noexcept
 {
     ComponentInfo *ci;
 
@@ -463,7 +463,7 @@ gnc_gui_component_watch_entity (gint component_id,
 void
 gnc_gui_component_watch_entity_type (gint component_id,
                                      QofIdTypeConst entity_type,
-                                     QofEventId event_mask)
+                                     QofEventId event_mask) noexcept
 {
     ComponentInfo *ci;
 
@@ -478,7 +478,7 @@ gnc_gui_component_watch_entity_type (gint component_id,
 }
 
 const EventInfo *
-gnc_gui_get_entity_events (GHashTable *changes, const GncGUID *entity)
+gnc_gui_get_entity_events (GHashTable *changes, const GncGUID *entity) noexcept
 {
     if (!changes || !entity)
         return QOF_EVENT_NONE;
@@ -487,7 +487,7 @@ gnc_gui_get_entity_events (GHashTable *changes, const GncGUID *entity)
 }
 
 void
-gnc_gui_component_clear_watches (gint component_id)
+gnc_gui_component_clear_watches (gint component_id) noexcept
 {
     ComponentInfo *ci;
 
@@ -502,7 +502,7 @@ gnc_gui_component_clear_watches (gint component_id)
 }
 
 void
-gnc_unregister_gui_component (gint component_id)
+gnc_unregister_gui_component (gint component_id) noexcept
 {
     ComponentInfo *ci;
 
@@ -541,7 +541,7 @@ gnc_unregister_gui_component (gint component_id)
 
 void
 gnc_unregister_gui_component_by_data (const char *component_class,
-                                      gpointer user_data)
+                                      gpointer user_data) noexcept
 {
     GList *list = find_components_by_data (user_data);
 
@@ -560,7 +560,7 @@ gnc_unregister_gui_component_by_data (const char *component_class,
 }
 
 void
-gnc_suspend_gui_refresh (void)
+gnc_suspend_gui_refresh (void) noexcept
 {
     suspend_counter++;
 
@@ -571,7 +571,7 @@ gnc_suspend_gui_refresh (void)
 }
 
 void
-gnc_resume_gui_refresh (void)
+gnc_resume_gui_refresh (void) noexcept
 {
     if (suspend_counter == 0)
     {
@@ -732,7 +732,7 @@ gnc_gui_refresh_internal (gboolean force)
 }
 
 void
-gnc_gui_refresh_all (void)
+gnc_gui_refresh_all (void) noexcept
 {
     if (suspend_counter != 0)
     {
@@ -744,13 +744,13 @@ gnc_gui_refresh_all (void)
 }
 
 gboolean
-gnc_gui_refresh_suspended (void)
+gnc_gui_refresh_suspended (void) noexcept
 {
     return suspend_counter != 0;
 }
 
 void
-gnc_close_gui_component (gint component_id)
+gnc_close_gui_component (gint component_id) noexcept
 {
     ComponentInfo *ci;
 
@@ -770,7 +770,7 @@ gnc_close_gui_component (gint component_id)
 
 void
 gnc_close_gui_component_by_data (const char *component_class,
-                                 gpointer user_data)
+                                 gpointer user_data) noexcept
 {
     GList *list = find_components_by_data (user_data);
 
@@ -789,7 +789,7 @@ gnc_close_gui_component_by_data (const char *component_class,
 }
 
 void
-gnc_gui_component_set_session (gint component_id, gpointer session)
+gnc_gui_component_set_session (gint component_id, gpointer session) noexcept
 {
     ComponentInfo *ci;
 
@@ -804,7 +804,7 @@ gnc_gui_component_set_session (gint component_id, gpointer session)
 }
 
 void
-gnc_gui_component_reset_session (gpointer old_session, gpointer new_session)
+gnc_gui_component_reset_session (gpointer old_session, gpointer new_session) noexcept
 {
     for (GList *node = components; node; node = node->next)
     {
@@ -816,7 +816,7 @@ gnc_gui_component_reset_session (gpointer old_session, gpointer new_session)
 }
 
 void
-gnc_close_gui_component_by_session (gpointer session)
+gnc_close_gui_component_by_session (gpointer session) noexcept
 {
     GList *list = find_components_by_session (session);
 
@@ -836,7 +836,7 @@ gnc_close_gui_component_by_session (gpointer session)
 GList *
 gnc_find_gui_components (const char *component_class,
                          GNCComponentFindHandler find_handler,
-                         gpointer find_data)
+                         gpointer find_data) noexcept
 {
     GList *list = NULL;
 
@@ -862,7 +862,7 @@ gnc_find_gui_components (const char *component_class,
 gpointer
 gnc_find_first_gui_component (const char *component_class,
                               GNCComponentFindHandler find_handler,
-                              gpointer find_data)
+                              gpointer find_data) noexcept
 {
     GList *list;
     gpointer user_data;
@@ -911,7 +911,7 @@ find_component_ids_by_class (const char *component_class)
 gint
 gnc_forall_gui_components (const char *component_class,
                            GNCComponentHandler handler,
-                           gpointer iter_data)
+                           gpointer iter_data) noexcept
 {
     GList *list;
     GList *node;

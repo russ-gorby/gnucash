@@ -58,7 +58,11 @@
 #include "gnc-commodity.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 /** @name Basic Object Implementation */
@@ -72,7 +76,7 @@ G_DECLARE_FINAL_TYPE (GNCCurrencyEdit, gnc_currency_edit, GNC, CURRENCY_EDIT, Gt
  *
  *  @return A GNCCurrencyEdit widget.
  */
-GtkWidget *gnc_currency_edit_new (void);
+GtkWidget *gnc_currency_edit_new (void) NOEXCEPT;
 /** @} */
 
 
@@ -87,7 +91,7 @@ GtkWidget *gnc_currency_edit_new (void);
  *  value of the widget.
  */
 void gnc_currency_edit_set_currency (GNCCurrencyEdit *gce,
-                                     const gnc_commodity *currency);
+                                     const gnc_commodity *currency) NOEXCEPT;
 
 
 /** Retrieve the displayed currency of the widget.
@@ -97,7 +101,7 @@ void gnc_currency_edit_set_currency (GNCCurrencyEdit *gce,
  *  @return A pointer to the selected currency (a gnc_commodity
  *  structure).
  */
-gnc_commodity *gnc_currency_edit_get_currency (GNCCurrencyEdit *gce);
+gnc_commodity *gnc_currency_edit_get_currency (GNCCurrencyEdit *gce) NOEXCEPT;
 
 
 /** Clear the displayed currency of the widget.
@@ -107,7 +111,7 @@ gnc_commodity *gnc_currency_edit_get_currency (GNCCurrencyEdit *gce);
  *
  *  @param gce The currency editor widget whose values should be retrieved.
  */
-void gnc_currency_edit_clear_display (GNCCurrencyEdit *gce);
+void gnc_currency_edit_clear_display (GNCCurrencyEdit *gce) NOEXCEPT;
 
 /** @} */
 

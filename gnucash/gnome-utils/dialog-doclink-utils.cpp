@@ -75,7 +75,8 @@ convert_uri_to_abs_path (const gchar *path_head, const gchar *uri,
 }
 
 gchar *
-gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri, gchar *uri_scheme)
+gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri,
+                              gchar *uri_scheme) noexcept
 {
     gchar *display_str = NULL;
 
@@ -100,7 +101,8 @@ gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri, gchar *u
 }
 
 gchar *
-gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri, gchar *uri_scheme)
+gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri,
+                         gchar *uri_scheme) noexcept
 {
     gchar *use_str = NULL;
 
@@ -121,7 +123,7 @@ gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri, gchar *uri_sc
 }
 
 gchar *
-gnc_doclink_get_unescaped_just_uri (const gchar *uri)
+gnc_doclink_get_unescaped_just_uri (const gchar *uri) noexcept
 {
     gchar *path_head = gnc_doclink_get_path_head ();
     gchar *uri_scheme = gnc_uri_get_scheme (uri);
@@ -133,7 +135,7 @@ gnc_doclink_get_unescaped_just_uri (const gchar *uri)
 }
 
 gchar *
-gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro)
+gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro) noexcept
 {
     auto transaction = static_cast<Transaction*>(trans);
     const gchar *uri = xaccTransGetDocLink (transaction); // get the existing uri
@@ -204,7 +206,7 @@ doclink_get_path_head_and_set (gboolean *path_head_set)
 }
 
 gchar *
-gnc_doclink_get_path_head (void)
+gnc_doclink_get_path_head (void) noexcept
 {
     gboolean path_head_set = FALSE;
 
@@ -212,7 +214,9 @@ gnc_doclink_get_path_head (void)
 }
 
 void
-gnc_doclink_set_path_head_label (GtkWidget *path_head_label, const gchar *incoming_path_head, const gchar *prefix)
+gnc_doclink_set_path_head_label (GtkWidget *path_head_label,
+                                 const gchar *incoming_path_head,
+                                 const gchar *prefix) noexcept
 {
     gboolean path_head_set = FALSE;
     gchar *path_head = NULL;
@@ -389,7 +393,8 @@ change_relative_and_absolute_uri_paths (const gchar *old_path_head_uri, gboolean
 }
 
 void
-gnc_doclink_pref_path_head_changed (GtkWindow *parent, const gchar *old_path_head_uri)
+gnc_doclink_pref_path_head_changed (GtkWindow *parent,
+                                    const gchar *old_path_head_uri) noexcept
 {
     GtkWidget  *dialog;
     GtkBuilder *builder;

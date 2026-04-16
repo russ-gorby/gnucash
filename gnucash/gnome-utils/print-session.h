@@ -37,8 +37,13 @@
 #include <gtk/gtk.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
+
 
 /**
  * Retrieve the print settings from the GtkPrintOperation @a op and save them in
@@ -46,7 +51,7 @@ extern "C" {
  *
  * @param op non-NULL print operation
  */
-void gnc_print_operation_save_print_settings(GtkPrintOperation *op);
+void gnc_print_operation_save_print_settings(GtkPrintOperation *op) NOEXCEPT;
 
 /**
  * If print settings have been saved by
@@ -56,7 +61,7 @@ void gnc_print_operation_save_print_settings(GtkPrintOperation *op);
  * @param op non-NULL print operation
  * @param jobname non-NULL print job name
  */
-void gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname);
+void gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname) NOEXCEPT;
 
 /**
  * Run a page setup dialog and save the resulting GtkPageSetup in a static
@@ -64,11 +69,11 @@ void gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname);
  *
  * @param parent Transient parent, or NULL
  */
-void gnc_ui_page_setup(GtkWindow *parent);
+void gnc_ui_page_setup(GtkWindow *parent) NOEXCEPT;
 
 /** Returns the pointer to our static GtkPrintSettings object. Watch out: This
  * might get modified by other threads. */
-GtkPrintSettings *gnc_print_get_settings(void);
+GtkPrintSettings *gnc_print_get_settings(void) NOEXCEPT;
 
 /** Key for saving the PDF-export directory in the print settings */
 #define GNC_GTK_PRINT_SETTINGS_EXPORT_DIR "gnc-pdf-export-directory"

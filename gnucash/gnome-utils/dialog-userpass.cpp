@@ -34,7 +34,7 @@ gnc_get_username_password (GtkWidget *parent,
                            const char *initial_username,
                            const char *initial_password,
                            char **username,
-                           char **password)
+                           char **password) noexcept
 {
     GtkWidget  *dialog;
     GtkWidget  *heading_label;

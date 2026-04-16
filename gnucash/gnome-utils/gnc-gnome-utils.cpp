@@ -55,7 +55,8 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
-extern SCM scm_init_sw_gnome_utils_module(void);
+// SWIG-generated module init functions use C-linkage
+extern "C" SCM scm_init_sw_gnome_utils_module(void);
 
 static QofLogModule log_module = GNC_MOD_GUI;
 static int gnome_is_running = FALSE;
@@ -73,7 +74,7 @@ const gchar *msg_no_help_reason =
 const gchar *msg_no_help_location = N_("Expected location");
 
 void
-gnc_gnome_utils_init (void)
+gnc_gnome_utils_init (void) noexcept
 {
     gnc_component_manager_init ();
 
@@ -136,7 +137,7 @@ gnc_configure_date_completion (void)
 }
 
 void
-gnc_add_css_file (void)
+gnc_add_css_file (void) noexcept
 {
     GtkCssProvider *provider_user, *provider_app, *provider_fallback;
     GdkDisplay *display;
@@ -177,7 +178,7 @@ gnc_add_css_file (void)
  * toolkit.
  */
 void
-gnc_gnome_help (GtkWindow *parent, const char *dir, const char *detail)
+gnc_gnome_help (GtkWindow *parent, const char *dir, const char *detail) noexcept
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSString *subdir = [NSString stringWithUTF8String: dir];
@@ -309,7 +310,7 @@ gnc_gnome_help (GtkWindow *parent, const char *dir, const char *detail)
 }
 #elif defined G_OS_WIN32 /* G_OS_WIN32 */
 void
-gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor)
+gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor) noexcept
 {
     const gchar * const *lang;
     gchar *pkgdatadir, *fullpath, *found = NULL;
@@ -341,7 +342,7 @@ gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor)
 }
 #else
 void
-gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor)
+gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor) noexcept
 {
     GError *error = NULL;
     gchar *uri = NULL;
@@ -379,7 +380,7 @@ gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor)
  * toolkit.
  */
 void
-gnc_launch_doclink (GtkWindow *parent, const char *uri)
+gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSString *uri_str = [NSString stringWithUTF8String: uri];
@@ -401,7 +402,7 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri)
 }
 #elif defined G_OS_WIN32 /* G_OS_WIN32 */
 void
-gnc_launch_doclink (GtkWindow *parent, const char *uri)
+gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 {
     wchar_t *winuri = NULL;
     gchar *filename = NULL;
@@ -436,7 +437,7 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri)
 
 #else
 void
-gnc_launch_doclink (GtkWindow *parent, const char *uri)
+gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 {
     GError *error = NULL;
     gboolean success;
@@ -483,7 +484,7 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri)
  * Returns: GtkWidget or NULL if there was a problem                *
  \*******************************************************************/
 GtkWidget *
-gnc_gnome_get_pixmap (const char *name)
+gnc_gnome_get_pixmap (const char *name) noexcept
 {
     GtkWidget *pixmap;
     char *fullname;
@@ -514,7 +515,7 @@ gnc_gnome_get_pixmap (const char *name)
  * Returns: GdkPixbuf or NULL if there was a problem                *
  \*******************************************************************/
 GdkPixbuf *
-gnc_gnome_get_gdkpixbuf (const char *name)
+gnc_gnome_get_gdkpixbuf (const char *name) noexcept
 {
     GdkPixbuf *pixbuf;
     GError *error = NULL;
@@ -572,7 +573,7 @@ gnc_ui_check_events (gpointer not_used)
 
 
 int
-gnc_ui_start_event_loop (void)
+gnc_ui_start_event_loop (void) noexcept
 {
     guint id;
 
@@ -597,7 +598,7 @@ gnc_ui_start_event_loop (void)
 }
 
 GncMainWindow *
-gnc_gui_init(void)
+gnc_gui_init(void) noexcept
 {
     static GncMainWindow *main_window = NULL;
 
@@ -685,7 +686,7 @@ gnc_gui_init(void)
 }
 
 gboolean
-gnucash_ui_is_running(void)
+gnucash_ui_is_running(void) noexcept
 {
     return gnome_is_running;
 }
@@ -744,7 +745,7 @@ gnc_gui_shutdown (void)
  *  shutdown, and when that has finished it will exit the program.
  */
 void
-gnc_shutdown (int exit_status)
+gnc_shutdown (int exit_status) noexcept
 {
     if (gnucash_ui_is_running())
     {

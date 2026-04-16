@@ -91,7 +91,7 @@ gnc_dense_cal_store_iface_init (GncDenseCalModelInterface *iface)
 }
 
 GncDenseCalStore*
-gnc_dense_cal_store_new (int num_marks)
+gnc_dense_cal_store_new (int num_marks) noexcept
 {
     auto model = static_cast<GncDenseCalStore *>(
         g_object_new (GNC_TYPE_DENSE_CAL_STORE, NULL)
@@ -115,14 +115,14 @@ gnc_dense_cal_store_new (int num_marks)
 }
 
 void
-gnc_dense_cal_store_clear (GncDenseCalStore *model)
+gnc_dense_cal_store_clear (GncDenseCalStore *model) noexcept
 {
     model->num_real_marks = 0;
     g_signal_emit_by_name (model, "update", GUINT_TO_POINTER(1));
 }
 
 void
-gnc_dense_cal_store_update_name (GncDenseCalStore *model, const gchar *name)
+gnc_dense_cal_store_update_name (GncDenseCalStore *model, const gchar *name) noexcept
 {
     if (model->name != NULL)
         g_free (model->name);
@@ -132,7 +132,7 @@ gnc_dense_cal_store_update_name (GncDenseCalStore *model, const gchar *name)
 }
 
 void
-gnc_dense_cal_store_update_info (GncDenseCalStore *model, const gchar *info)
+gnc_dense_cal_store_update_info (GncDenseCalStore *model, const gchar *info) noexcept
 {
     if (model->info != NULL)
         g_free (model->info);
@@ -175,7 +175,7 @@ gdcs_generic_update_recurrences (GncDenseCalStore *trans, GDate *start, GList *r
 void
 gnc_dense_cal_store_update_recurrences_no_end (GncDenseCalStore *model,
                                                GDate *start,
-                                               GList *recurrences)
+                                               GList *recurrences) noexcept
 {
     model->end_type = NEVER_END;
     gdcs_generic_update_recurrences (model, start, recurrences);
@@ -185,7 +185,7 @@ void
 gnc_dense_cal_store_update_recurrences_count_end (GncDenseCalStore *model,
                                                   GDate *start,
                                                   GList *recurrences,
-                                                  int num_occur)
+                                                  int num_occur) noexcept
 {
     model->end_type = END_AFTER_N_OCCS;
     model->n_occurrences = num_occur;
@@ -196,7 +196,7 @@ void
 gnc_dense_cal_store_update_recurrences_date_end (GncDenseCalStore *model,
                                                  GDate *start,
                                                  GList *recurrences,
-                                                 GDate *end_date)
+                                                 GDate *end_date) noexcept
 {
     model->end_type = END_ON_DATE;
     model->end_date = *end_date;

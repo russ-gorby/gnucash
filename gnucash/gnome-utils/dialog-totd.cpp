@@ -44,9 +44,13 @@
 #define GNC_RESPONSE_FORWARD 1
 #define GNC_RESPONSE_BACK    2
 
-/* Callbacks */
-void gnc_totd_dialog_response_cb (GtkDialog *dialog, gint response, gpointer user_data);
-void gnc_totd_dialog_startup_toggled_cb (GtkToggleButton *button, gpointer user_data);
+extern "C" {
+/*
+ * Callbacks / private internal library functions
+ */
+void gnc_totd_dialog_response_cb (GtkDialog *dialog, gint response, gpointer user_data) noexcept;
+void gnc_totd_dialog_startup_toggled_cb (GtkToggleButton *button, gpointer user_data) noexcept;
+}
 
 /* The Tips */
 static gchar **tip_list;
@@ -132,7 +136,7 @@ gnc_new_tip_number (TotdDialog *totd_dialog, gint offset)
 /***************************/
 void gnc_totd_dialog_response_cb (GtkDialog *dialog,
                                   gint       response,
-                                  gpointer   user_data)
+                                  gpointer   user_data) noexcept
 {
     auto totd_dialog = static_cast<TotdDialog *>(user_data);
 
@@ -162,7 +166,7 @@ void gnc_totd_dialog_response_cb (GtkDialog *dialog,
 
 void
 gnc_totd_dialog_startup_toggled_cb (GtkToggleButton *button,
-                                    gpointer user_data)
+                                    gpointer user_data) noexcept
 {
     gboolean active;
 
@@ -307,7 +311,7 @@ close_handler (gpointer user_data)
 /*     Create the TotD Dialog        */
 /*************************************/
 void
-gnc_totd_dialog (GtkWindow *parent, gboolean startup)
+gnc_totd_dialog (GtkWindow *parent, gboolean startup) noexcept
 {
     TotdDialog *totd_dialog;
 
@@ -386,7 +390,7 @@ gnc_totd_dialog (GtkWindow *parent, gboolean startup)
  *  window.
  ****************************************************/
 void
-gnc_totd_dialog_reparent (void)
+gnc_totd_dialog_reparent (void) noexcept
 {
     gnc_forall_gui_components(DIALOG_TOTD_CM_CLASS, show_handler, NULL);
 }

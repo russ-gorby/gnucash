@@ -36,7 +36,7 @@ G_LOCK_DEFINE_STATIC(page_setup);
 
 
 void
-gnc_print_operation_save_print_settings(GtkPrintOperation *op)
+gnc_print_operation_save_print_settings(GtkPrintOperation *op) noexcept
 {
     g_return_if_fail(op);
 
@@ -48,7 +48,7 @@ gnc_print_operation_save_print_settings(GtkPrintOperation *op)
 }
 
 void
-gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname)
+gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname) noexcept
 {
     g_return_if_fail(op);
 
@@ -68,7 +68,7 @@ gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname)
 }
 
 void
-gnc_ui_page_setup(GtkWindow *parent)
+gnc_ui_page_setup(GtkWindow *parent) noexcept
 {
     GtkPrintSettings *settings = NULL;
     GtkPageSetup *old_page_setup, *new_page_setup;
@@ -105,7 +105,7 @@ gnc_ui_page_setup(GtkWindow *parent)
         g_object_unref(old_page_setup);
 }
 
-GtkPrintSettings *gnc_print_get_settings()
+GtkPrintSettings *gnc_print_get_settings(void) noexcept
 {
     return print_settings;
 }

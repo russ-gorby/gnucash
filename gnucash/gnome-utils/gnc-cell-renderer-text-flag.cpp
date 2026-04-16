@@ -231,7 +231,7 @@ gnc_cell_renderer_text_flag_set_property(GObject *object, guint param_id,
  * Returns: the new cell renderer
  **/
 GtkCellRenderer *
-gnc_cell_renderer_text_flag_new(void)
+gnc_cell_renderer_text_flag_new(void) noexcept
 {
     return static_cast<GtkCellRenderer *>(
         g_object_new(GNC_TYPE_CELL_RENDERER_TEXT_FLAG, NULL)

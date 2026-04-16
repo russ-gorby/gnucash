@@ -40,7 +40,13 @@
 
 #include "Account.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_TREE_MODEL_ACCOUNT_TYPES         (gnc_tree_model_account_types_get_type ())
@@ -92,51 +98,53 @@ typedef enum
    use gnc_tree_model_account_types_valid().
 
    Caller is responsible for ref/unref. */
-GtkTreeModel * gnc_tree_model_account_types_filter_using_mask (guint32 types);
+GtkTreeModel * gnc_tree_model_account_types_filter_using_mask (guint32 types) NOEXCEPT;
 
 /* Update the set of the visibible account types in 'f_model' to 'types'. */
 void gnc_tree_model_account_types_set_mask (GtkTreeModel *f_model,
-        guint32 types);
+        guint32 types) NOEXCEPT;
 
 /* Return the current set of the visibible account types. */
-guint32 gnc_tree_model_account_types_get_mask (GtkTreeModel *f_model);
+guint32 gnc_tree_model_account_types_get_mask (GtkTreeModel *f_model) NOEXCEPT;
 
 /* Return the bitmask of the account type enums reflecting the state
    of the tree selection.  If your view allows the selection of
    multiple account types, use must use this function to get the
    selection. */
-guint32 gnc_tree_model_account_types_get_selection(GtkTreeSelection *sel);
+guint32 gnc_tree_model_account_types_get_selection(GtkTreeSelection *sel) NOEXCEPT;
 
 /* Gets the selected account type.  Use the function if your view
    allows the selection of only one account type. If no types are
    selected, returns ACCT_TYPE_NONE.  If more than one type is
    selected, arbitrarily returns one of the selected types. */
 GNCAccountType
-gnc_tree_model_account_types_get_selection_single(GtkTreeSelection *sel);
+gnc_tree_model_account_types_get_selection_single(GtkTreeSelection *sel) NOEXCEPT;
 
 /* Gets the selected account type.  If no types are active, returns
    ACCT_TYPE_NONE. */
 GNCAccountType
-gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo);
+gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo) NOEXCEPT;
 
 /* Set the selection state of the tree selection to match the bitmask
    of account-type enums in 'selected'.  This will also scroll to a
    selected row in the TreeView.*/
 void gnc_tree_model_account_types_set_selection(GtkTreeSelection *sel,
-        guint32 selected);
+        guint32 selected) NOEXCEPT;
 
 /* Set the active entry to match the bitmask of account-type enums in
    'selected' */
 void gnc_tree_model_account_types_set_active_combo (GtkComboBox *combo,
-                                                    guint32 selected);
+                                                    guint32 selected) NOEXCEPT;
 
 
 /**************** Method 2 functions **************/
 
-GtkTreeModel *gnc_tree_model_account_types_new(guint32 selected);
+GtkTreeModel *gnc_tree_model_account_types_new(guint32 selected) NOEXCEPT;
 
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_TREE_MODEL_ACCOUNT_H */
 

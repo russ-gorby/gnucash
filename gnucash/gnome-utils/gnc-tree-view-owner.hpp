@@ -41,8 +41,6 @@
 #include "gnc-ui-util.h"
 #include "gnc-plugin-page.h"
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_VIEW_OWNER            (gnc_tree_view_owner_get_type ())
 G_DECLARE_FINAL_TYPE (GncTreeViewOwner, gnc_tree_view_owner, GNC, TREE_VIEW_OWNER, GncTreeView)
@@ -255,8 +253,5 @@ GncOwner * gnc_tree_view_owner_get_selected_owner (GncTreeViewOwner *view);
  */
 void gnc_tree_view_owner_set_selected_owner (GncTreeViewOwner *view,
         GncOwner *owner);
-
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_VIEW_OWNER_H */

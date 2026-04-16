@@ -60,14 +60,19 @@ enum tax_entry_cols
     NUM_TAX_ENTRY_COLS
 };
 
-void tax_table_new_table_cb (GtkButton *button, TaxTableWindow *ttw);
-void tax_table_rename_table_cb (GtkButton *button, TaxTableWindow *ttw);
-void tax_table_delete_table_cb (GtkButton *button, TaxTableWindow *ttw);
-void tax_table_new_entry_cb (GtkButton *button, TaxTableWindow *ttw);
-void tax_table_edit_entry_cb (GtkButton *button, TaxTableWindow *ttw);
-void tax_table_delete_entry_cb (GtkButton *button, TaxTableWindow *ttw);
-void tax_table_window_close (GtkWidget *widget, gpointer data);
-void tax_table_window_destroy_cb (GtkWidget *widget, gpointer data);
+extern "C" {
+/*
+ * Callbacks / private internal library functions
+ */
+void tax_table_new_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept;
+void tax_table_rename_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept;
+void tax_table_delete_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept;
+void tax_table_new_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept;
+void tax_table_edit_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept;
+void tax_table_delete_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept;
+void tax_table_window_close (GtkWidget *widget, gpointer data) noexcept;
+void tax_table_window_destroy_cb (GtkWidget *widget, gpointer data) noexcept;
+}
 
 struct _taxtable_window
 {
@@ -611,7 +616,7 @@ tax_table_entry_row_activated (GtkTreeView       *tree_view,
 }
 
 void
-tax_table_new_table_cb (GtkButton *button, TaxTableWindow *ttw)
+tax_table_new_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     g_return_if_fail (ttw);
     new_tax_table_dialog (ttw, TRUE, NULL, NULL);
@@ -675,7 +680,7 @@ static const char
 }
 
 void
-tax_table_rename_table_cb (GtkButton *button, TaxTableWindow *ttw)
+tax_table_rename_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     const char *oldname;
     const char *newname;
@@ -707,7 +712,7 @@ tax_table_rename_table_cb (GtkButton *button, TaxTableWindow *ttw)
 
 
 void
-tax_table_delete_table_cb (GtkButton *button, TaxTableWindow *ttw)
+tax_table_delete_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     g_return_if_fail (ttw);
 
@@ -739,7 +744,7 @@ tax_table_delete_table_cb (GtkButton *button, TaxTableWindow *ttw)
 }
 
 void
-tax_table_new_entry_cb (GtkButton *button, TaxTableWindow *ttw)
+tax_table_new_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     g_return_if_fail (ttw);
     if (!ttw->current_table)
@@ -748,7 +753,7 @@ tax_table_new_entry_cb (GtkButton *button, TaxTableWindow *ttw)
 }
 
 void
-tax_table_edit_entry_cb (GtkButton *button, TaxTableWindow *ttw)
+tax_table_edit_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     g_return_if_fail (ttw);
     if (!ttw->current_entry)
@@ -757,7 +762,7 @@ tax_table_edit_entry_cb (GtkButton *button, TaxTableWindow *ttw)
 }
 
 void
-tax_table_delete_entry_cb (GtkButton *button, TaxTableWindow *ttw)
+tax_table_delete_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     g_return_if_fail (ttw);
     if (!ttw->current_table || !ttw->current_entry)
@@ -806,7 +811,7 @@ tax_table_window_close_handler (gpointer data)
 }
 
 void
-tax_table_window_close (GtkWidget *widget, gpointer data)
+tax_table_window_close (GtkWidget *widget, gpointer data) noexcept
 {
     auto ttw = static_cast<TaxTableWindow *>(data);
     gnc_close_gui_component (ttw->component_id);
@@ -825,7 +830,7 @@ tax_table_window_delete_event_cb (GtkWidget *widget,
 }
 
 void
-tax_table_window_destroy_cb (GtkWidget *widget, gpointer data)
+tax_table_window_destroy_cb (GtkWidget *widget, gpointer data) noexcept
 {
     auto ttw = static_cast<TaxTableWindow *>(data);
 
@@ -867,7 +872,7 @@ find_handler (gpointer find_data, gpointer data)
 
 /* Create a tax-table window */
 TaxTableWindow *
-gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book)
+gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book) noexcept
 {
     if (!book) return NULL;
 
@@ -980,7 +985,7 @@ gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book)
 
 /* Create a new tax-table by name */
 GncTaxTable *
-gnc_ui_tax_table_new_from_name (GtkWindow *parent, QofBook *book, const char *name)
+gnc_ui_tax_table_new_from_name (GtkWindow *parent, QofBook *book, const char *name) noexcept
 {
     TaxTableWindow *ttw;
 

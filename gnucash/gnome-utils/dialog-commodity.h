@@ -38,9 +38,13 @@
 #include "gnc-commodity.h"
 
 #ifdef __cplusplus
+#define NOEXCEPT noexcept
 extern "C"
 {
+#else
+#define NOEXCEPT
 #endif
+
 
 /** The dialog commodity types are used to determine what commodity
  *  namespaces the currency dialog will present to a user.  These
@@ -109,7 +113,7 @@ gnc_ui_select_commodity_modal_full(gnc_commodity * orig_sel,
                                    const char * user_message,
                                    const char * cusip,
                                    const char * fullname,
-                                   const char * mnemonic);
+                                   const char * mnemonic) NOEXCEPT;
 
 
 /** Ask the user to select a commodity from the existing set of
@@ -132,7 +136,7 @@ gnc_ui_select_commodity_modal_full(gnc_commodity * orig_sel,
 gnc_commodity *
 gnc_ui_select_commodity_modal(gnc_commodity * orig_sel,
                               GtkWidget * parent,
-                              dialog_commodity_mode mode);
+                              dialog_commodity_mode mode) NOEXCEPT;
 /** @} */
 
 
@@ -172,7 +176,7 @@ gnc_ui_new_commodity_modal_full(const char * name_space,
                                 const char * fullname,
                                 const char * mnemonic,
                                 const char * user_symbol,
-                                int fraction);
+                                int fraction) NOEXCEPT;
 
 /** Ask the user to provide the information necessary to create a new
  *  commodity.
@@ -187,7 +191,7 @@ gnc_ui_new_commodity_modal_full(const char * name_space,
  */
 gnc_commodity *
 gnc_ui_new_commodity_modal(const char * default_namespace,
-                           GtkWidget * parent);
+                           GtkWidget * parent) NOEXCEPT;
 
 /** Allow the user to edit the information about a commodity.  For
  *  currencies, only the price quote information may be changed.  For
@@ -205,7 +209,7 @@ gnc_ui_new_commodity_modal(const char * default_namespace,
  */
 gboolean
 gnc_ui_edit_commodity_modal(gnc_commodity *commodity,
-                            GtkWidget * parent);
+                            GtkWidget * parent) NOEXCEPT;
 /** @} */
 
 
@@ -225,7 +229,7 @@ gnc_ui_edit_commodity_modal(gnc_commodity *commodity,
  */
 void gnc_ui_update_namespace_picker(GtkWidget *cbwe,
                                     const gchar *sel,
-                                    dialog_commodity_mode mode);
+                                    dialog_commodity_mode mode)NOEXCEPT ;
 
 /** Given a combo box, return the currently selected namespaces.
  *
@@ -235,7 +239,7 @@ void gnc_ui_update_namespace_picker(GtkWidget *cbwe,
  *
  *  @note This string must be freed by with g_free.
  */
-gchar *gnc_ui_namespace_picker_ns (GtkWidget *cbwe);
+gchar *gnc_ui_namespace_picker_ns (GtkWidget *cbwe) NOEXCEPT;
 
 /** Given a combo box, fill in all the known commodities for the
  *  specified namespace, and then select one.
@@ -250,7 +254,7 @@ gchar *gnc_ui_namespace_picker_ns (GtkWidget *cbwe);
  */
 void gnc_ui_update_commodity_picker(GtkWidget *cbwe,
                                     const gchar *name_space,
-                                    const gchar *sel);
+                                    const gchar *sel) NOEXCEPT;
 /** @} */
 
 #ifdef __cplusplus

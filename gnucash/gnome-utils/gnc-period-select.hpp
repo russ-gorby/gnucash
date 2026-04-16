@@ -34,8 +34,6 @@
 
 #include "gnc-accounting-period.h"
 
-G_BEGIN_DECLS
-
 #define GNC_TYPE_PERIOD_SELECT      (gnc_period_select_get_type())
 G_DECLARE_FINAL_TYPE (GncPeriodSelect, gnc_period_select, GNC, PERIOD_SELECT, GtkBox)
 
@@ -150,8 +148,6 @@ GncAccountingPeriod gnc_period_select_get_active (GncPeriodSelect *period);
  *
  *  @return The starting/ending time. */
 GDate *gnc_period_select_get_date (GncPeriodSelect *period);
-
-G_END_DECLS
 
 #endif /* GNC_PERIOD_SELECT_H */
 

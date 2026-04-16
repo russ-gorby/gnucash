@@ -120,7 +120,11 @@
 #include <gtk/gtk.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 typedef enum
@@ -131,18 +135,18 @@ typedef enum
     GNC_FILE_DIALOG_EXPORT
 } GNCFileDialogType;
 
-void gnc_file_new (GtkWindow *parent);
-gboolean gnc_file_open (GtkWindow *parent);
-void gnc_file_export(GtkWindow *parent);
-void gnc_file_save (GtkWindow *parent);
-void gnc_file_save_as (GtkWindow *parent);
-void gnc_file_do_export(GtkWindow *parent, const char* filename);
-void gnc_file_do_save_as(GtkWindow *parent, const char* filename);
-void gnc_file_revert (GtkWindow *parent);
+void gnc_file_new (GtkWindow *parent) NOEXCEPT;
+gboolean gnc_file_open (GtkWindow *parent) NOEXCEPT;
+void gnc_file_export(GtkWindow *parent) NOEXCEPT;
+void gnc_file_save (GtkWindow *parent) NOEXCEPT;
+void gnc_file_save_as (GtkWindow *parent) NOEXCEPT;
+void gnc_file_do_export(GtkWindow *parent, const char* filename) NOEXCEPT;
+void gnc_file_do_save_as(GtkWindow *parent, const char* filename) NOEXCEPT;
+void gnc_file_revert (GtkWindow *parent) NOEXCEPT;
 
-GList* gnc_file_chooser_get_datafile_filters (void);
+GList* gnc_file_chooser_get_datafile_filters (void) NOEXCEPT;
 
-void gnc_file_chooser_add_filters (GtkFileChooser* file_box, GList *filters);
+void gnc_file_chooser_add_filters (GtkFileChooser* file_box, GList *filters) NOEXCEPT;
 
 /** Tell the user about errors in the backends
 
@@ -150,31 +154,31 @@ void gnc_file_chooser_add_filters (GtkFileChooser* file_box, GList *filters);
 gboolean show_session_error (GtkWindow *parent,
                              QofBackendError io_error,
                              const char *newfile,
-                             GNCFileDialogType type);
+                             GNCFileDialogType type) NOEXCEPT;
 
 char * gnc_file_dialog (GtkWindow *parent,
                         const char * title,
                         GList * filters,
                         const char * starting_dir,
-                        GNCFileDialogType type);
+                        GNCFileDialogType type) NOEXCEPT;
 
 GSList * gnc_file_dialog_multi (GtkWindow *parent,
                                 const char * title,
                                 GList * filters,
                                 const char * starting_dir,
-                                GNCFileDialogType type);
+                                GNCFileDialogType type) NOEXCEPT;
 
 gboolean gnc_file_open_file (GtkWindow *parent,
                              const char *filename,
-                             gboolean open_readonly);
+                             gboolean open_readonly) NOEXCEPT;
 
-gboolean gnc_file_query_save (GtkWindow *parent, gboolean can_cancel);
+gboolean gnc_file_query_save (GtkWindow *parent, gboolean can_cancel) NOEXCEPT;
 
-void gnc_file_quit (void);
+void gnc_file_quit (void) NOEXCEPT;
 
 typedef void (*GNCShutdownCB) (int);
-void gnc_file_set_shutdown_callback (GNCShutdownCB cb);
-gboolean gnc_file_save_in_progress (void);
+void gnc_file_set_shutdown_callback (GNCShutdownCB cb) NOEXCEPT;
+gboolean gnc_file_save_in_progress (void) NOEXCEPT;
 
 #ifdef __cplusplus
 }

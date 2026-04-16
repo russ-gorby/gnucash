@@ -156,28 +156,38 @@ static GList *ac_destroy_cb_list = NULL;
 
 /** Declarations *********************************************************/
 static void gnc_account_window_set_name (AccountWindow *aw);
-
-void gnc_account_renumber_prefix_changed_cb (GtkEditable *editable, RenumberDialog *data);
-void gnc_account_renumber_interval_changed_cb (GtkSpinButton *spinbutton, RenumberDialog *data);
-void gnc_account_renumber_digits_changed_cb (GtkSpinButton *spinbutton, RenumberDialog *data);
-void gnc_account_renumber_response_cb (GtkDialog *dialog, gint response, RenumberDialog *data);
-
-void gnc_account_window_destroy_cb (GtkWidget *object, gpointer data);
-void opening_equity_cb (GtkWidget *w, gpointer data);
 static void gnc_account_parent_changed_cb (GObject *selection, gpointer data);
-void gnc_account_name_changed_cb (GtkWidget *widget, gpointer data);
-void gnc_account_color_default_cb (GtkWidget *widget, gpointer data);
-void gnc_account_name_insert_text_cb (GtkWidget   *entry,
-                                      const gchar *text,
-                                      gint         length,
-                                      gint        *position,
-                                      gpointer     data);
 static void set_auto_interest_box (AccountWindow *aw);
 static gboolean account_commodity_filter (GtkTreeSelection* selection,
                                           GtkTreeModel* unused_model,
                                           GtkTreePath* s_path,
                                           gboolean path_currently_selected,
                                           gpointer user_data);
+
+extern "C" {
+/*
+ * Callbacks / private internal library functions
+ */
+void gnc_account_renumber_prefix_changed_cb (GtkEditable *editable,
+                                             RenumberDialog *data) noexcept;
+void gnc_account_renumber_interval_changed_cb (GtkSpinButton *spinbutton,
+                                               RenumberDialog *data) noexcept;
+void gnc_account_renumber_digits_changed_cb (GtkSpinButton *spinbutton,
+                                             RenumberDialog *data) noexcept;
+void gnc_account_renumber_response_cb (GtkDialog *dialog, gint response,
+                                       RenumberDialog *data) noexcept;
+
+void gnc_account_window_destroy_cb (GtkWidget *object, gpointer data) noexcept;
+void opening_equity_cb (GtkWidget *w, gpointer data) noexcept;
+
+void gnc_account_name_changed_cb (GtkWidget *widget, gpointer data) noexcept;
+void gnc_account_color_default_cb (GtkWidget *widget, gpointer data) noexcept;
+void gnc_account_name_insert_text_cb (GtkWidget   *entry,
+                                      const gchar *text,
+                                      gint         length,
+                                      gint        *position,
+                                      gpointer     data) noexcept;
+}
 
 /** Implementation *******************************************************/
 
@@ -1187,7 +1197,7 @@ gnc_account_window_response_cb (GtkDialog *dialog,
 }
 
 void
-gnc_account_window_destroy_cb (GtkWidget *object, gpointer data)
+gnc_account_window_destroy_cb (GtkWidget *object, gpointer data) noexcept
 {
     auto aw = static_cast<AccountWindow *>(data);
 
@@ -1406,7 +1416,7 @@ gnc_account_name_insert_text_cb (GtkWidget   *entry,
                                  const gchar *text,
                                  gint         length,
                                  gint        *position,
-                                 gpointer     data)
+                                 gpointer     data) noexcept
 {
     GtkEditable *editable = GTK_EDITABLE(entry);
 
@@ -1429,7 +1439,7 @@ gnc_account_name_insert_text_cb (GtkWidget   *entry,
 }
 
 void
-gnc_account_name_changed_cb (GtkWidget *widget, gpointer data)
+gnc_account_name_changed_cb (GtkWidget *widget, gpointer data) noexcept
 {
     auto aw = static_cast<AccountWindow *>(data);
 
@@ -1437,7 +1447,7 @@ gnc_account_name_changed_cb (GtkWidget *widget, gpointer data)
 }
 
 void
-gnc_account_color_default_cb (GtkWidget *widget, gpointer data)
+gnc_account_color_default_cb (GtkWidget *widget, gpointer data) noexcept
 {
     GdkRGBA color;
     auto aw = static_cast<AccountWindow *>(data);
@@ -1524,7 +1534,7 @@ account_commodity_filter (GtkTreeSelection *selection,
 }
 
 void
-opening_equity_cb (GtkWidget *w, gpointer data)
+opening_equity_cb (GtkWidget *w, gpointer data) noexcept
 {
     auto aw = static_cast<AccountWindow *>(data);
 
@@ -1979,7 +1989,7 @@ gnc_split_account_name (QofBook *book, const char *in_name, Account **base_accou
  ************************************************************/
 
 Account *
-gnc_ui_new_accounts_from_name_window (GtkWindow *parent, const char *name)
+gnc_ui_new_accounts_from_name_window (GtkWindow *parent, const char *name) noexcept
 {
     return  gnc_ui_new_accounts_from_name_with_defaults (parent, name, NULL,
                                                          NULL, NULL);
@@ -1990,7 +2000,7 @@ gnc_ui_new_accounts_from_name_with_defaults (GtkWindow *parent,
                                              const char *name,
                                              GList *valid_types,
                                              const gnc_commodity * default_commodity,
-                                             Account * parent_acct)
+                                             Account * parent_acct) noexcept
 {
     QofBook *book;
     AccountWindow *aw;
@@ -2073,7 +2083,7 @@ find_by_account (gpointer find_data, gpointer user_data)
  * Return: EditAccountWindow object
  */
 void
-gnc_ui_edit_account_window (GtkWindow *parent, Account *account)
+gnc_ui_edit_account_window (GtkWindow *parent, Account *account) noexcept
 {
     if (account == NULL)
         return;
@@ -2136,7 +2146,7 @@ gnc_ui_edit_account_window (GtkWindow *parent, Account *account)
 
 void
 gnc_ui_new_account_with_types_and_commodity (GtkWindow *parent, QofBook *book, GList *valid_types,
-                                             gnc_commodity *default_commodity)
+                                             gnc_commodity *default_commodity) noexcept
 {
     gnc_ui_new_account_window_internal (parent, book, NULL, NULL,
                                         valid_types, default_commodity, FALSE);
@@ -2150,7 +2160,7 @@ gnc_ui_new_account_with_types_and_commodity (GtkWindow *parent, QofBook *book, G
  */
 void
 gnc_ui_new_account_window (GtkWindow *parent, QofBook *book,
-                           Account *parent_acct)
+                           Account *parent_acct) noexcept
 {
     g_return_if_fail(book != NULL);
     if (parent_acct && book)
@@ -2171,7 +2181,7 @@ gnc_ui_new_account_window (GtkWindow *parent, QofBook *book,
  * account type has changed.
  */
 void
-gnc_ui_register_account_destroy_callback (void (*cb)(Account *))
+gnc_ui_register_account_destroy_callback (void (*cb)(Account *)) noexcept
 {
     if (!cb)
         return;
@@ -2237,21 +2247,21 @@ gnc_account_renumber_update_examples (RenumberDialog *data)
 
 void
 gnc_account_renumber_prefix_changed_cb (GtkEditable *editable,
-                                        RenumberDialog *data)
+                                        RenumberDialog *data) noexcept
 {
     gnc_account_renumber_update_examples (data);
 }
 
 void
 gnc_account_renumber_interval_changed_cb (GtkSpinButton *spinbutton,
-                                          RenumberDialog *data)
+                                          RenumberDialog *data) noexcept
 {
     gnc_account_renumber_update_examples (data);
 }
 
 void
 gnc_account_renumber_digits_changed_cb (GtkSpinButton *spinbutton,
-                                        RenumberDialog *data)
+                                        RenumberDialog *data) noexcept
 {
     gnc_account_renumber_update_examples (data);
 }
@@ -2259,7 +2269,7 @@ gnc_account_renumber_digits_changed_cb (GtkSpinButton *spinbutton,
 void
 gnc_account_renumber_response_cb (GtkDialog *dialog,
                                   gint response,
-                                  RenumberDialog *data)
+                                  RenumberDialog *data) noexcept
 {
     if (response == GTK_RESPONSE_OK)
     {
@@ -2301,7 +2311,7 @@ gnc_account_renumber_response_cb (GtkDialog *dialog,
 }
 
 void
-gnc_account_renumber_create_dialog (GtkWidget *window, Account *account)
+gnc_account_renumber_create_dialog (GtkWidget *window, Account *account) noexcept
 {
     RenumberDialog *data;
     GtkBuilder *builder;
@@ -2393,7 +2403,7 @@ enable_box_cb (GtkToggleButton *toggle_button, gpointer user_data)
 }
 
 void
-gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account)
+gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) noexcept
 {
     GtkWidget *dialog;
     GtkBuilder *builder;

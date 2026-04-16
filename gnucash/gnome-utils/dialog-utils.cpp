@@ -58,7 +58,7 @@ static QofLogModule log_module = GNC_MOD_GUI;
  * Returns: none                                                    *
  \*******************************************************************/
 void
-gnc_set_label_color(GtkWidget *label, gnc_numeric value)
+gnc_set_label_color(GtkWidget *label, gnc_numeric value) noexcept
 {
     gboolean deficit;
 
@@ -94,7 +94,7 @@ gnc_set_label_color(GtkWidget *label, gnc_numeric value)
  * Returns: nothing                                                 *
  \*******************************************************************/
 void
-gnc_restore_window_size(const char *group, GtkWindow *window, GtkWindow *parent)
+gnc_restore_window_size(const char *group, GtkWindow *window, GtkWindow *parent) noexcept
 {
     gint wpos[2], wsize[2];
     GVariant *geometry;
@@ -199,7 +199,7 @@ gnc_restore_window_size(const char *group, GtkWindow *window, GtkWindow *parent)
  * Returns: nothing                                                 *
 \********************************************************************/
 void
-gnc_save_window_size(const char *group, GtkWindow *window)
+gnc_save_window_size(const char *group, GtkWindow *window) noexcept
 {
     gint wpos[2], wsize[2];
     GVariant *geometry;
@@ -234,7 +234,7 @@ gnc_save_window_size(const char *group, GtkWindow *window)
  * Returns: nothing                                                 *
 \********************************************************************/
 void
-gnc_window_adjust_for_screen(GtkWindow * window)
+gnc_window_adjust_for_screen(GtkWindow * window) noexcept
 {
     GdkWindow *win;
     GdkDisplay *display;
@@ -306,7 +306,7 @@ gnc_window_adjust_for_screen(GtkWindow * window)
  * Returns: nothing                                                 *
 \********************************************************************/
 void
-gnc_label_set_alignment (GtkWidget *widget, gfloat xalign, gfloat yalign)
+gnc_label_set_alignment (GtkWidget *widget, gfloat xalign, gfloat yalign) noexcept
 {
     gtk_label_set_xalign (GTK_LABEL (widget), xalign);
     gtk_label_set_yalign (GTK_LABEL (widget), yalign);
@@ -319,7 +319,7 @@ gnc_label_set_alignment (GtkWidget *widget, gfloat xalign, gfloat yalign)
  * Returns:  GtkTreeViewGridLines setting                           *
 \********************************************************************/
 GtkTreeViewGridLines
-gnc_tree_view_get_grid_lines_pref (void)
+gnc_tree_view_get_grid_lines_pref (void) noexcept
 {
     GtkTreeViewGridLines grid_lines;
     gboolean h_lines = gnc_prefs_get_bool (GNC_PREFS_GROUP_GENERAL, GNC_PREF_GRID_LINES_HORIZONTAL);
@@ -347,7 +347,7 @@ gnc_tree_view_get_grid_lines_pref (void)
  * Returns:  nothing                                                *
 \********************************************************************/
 void
-gnc_widget_style_context_add_class (GtkWidget *widget, const char *gnc_class)
+gnc_widget_style_context_add_class (GtkWidget *widget, const char *gnc_class) noexcept
 {
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
     gtk_style_context_add_class (context, gnc_class);
@@ -361,7 +361,7 @@ gnc_widget_style_context_add_class (GtkWidget *widget, const char *gnc_class)
  * Returns:  nothing                                                *
 \********************************************************************/
 void
-gnc_widget_style_context_remove_class (GtkWidget *widget, const char *gnc_class)
+gnc_widget_style_context_remove_class (GtkWidget *widget, const char *gnc_class) noexcept
 {
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
 
@@ -378,7 +378,7 @@ gnc_widget_style_context_remove_class (GtkWidget *widget, const char *gnc_class)
  * Returns:  TRUE, stop other handlers being invoked for the event  *
 \********************************************************************/
 gboolean
-gnc_draw_arrow_cb (GtkWidget *widget, cairo_t *cr, gpointer direction)
+gnc_draw_arrow_cb (GtkWidget *widget, cairo_t *cr, gpointer direction) noexcept
 {
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
     gint width = gtk_widget_get_allocated_width (widget);
@@ -402,7 +402,7 @@ gnc_draw_arrow_cb (GtkWidget *widget, cairo_t *cr, gpointer direction)
 
 
 gboolean
-gnc_gdate_in_valid_range (GDate *test_date, gboolean warn)
+gnc_gdate_in_valid_range (GDate *test_date, gboolean warn) noexcept
 {
     gboolean use_autoreadonly = qof_book_uses_autoreadonly (gnc_get_current_book());
     GDate *max_date = g_date_new_dmy (1,static_cast<GDateMonth>(1),10000);
@@ -454,7 +454,7 @@ gnc_gdate_in_valid_range (GDate *test_date, gboolean warn)
 gboolean
 gnc_handle_date_accelerator (GdkEventKey *event,
                              struct tm *tm,
-                             const char *date_str)
+                             const char *date_str) noexcept
 {
     GDate gdate;
 
@@ -624,7 +624,7 @@ GModule *allsymbols = NULL;
  *   warning message in case of an error.
  */
 gboolean
-gnc_builder_add_from_file (GtkBuilder *builder, const char *filename, const char *root)
+gnc_builder_add_from_file (GtkBuilder *builder, const char *filename, const char *root) noexcept
 {
     GError* error = NULL;
     char *fname;
@@ -667,7 +667,7 @@ gnc_builder_connect_full_func(GtkBuilder *builder,
                               const gchar *handler_name,
                               GObject *connect_object,
                               GConnectFlags flags,
-                              gpointer user_data)
+                              gpointer user_data) noexcept
 {
     GCallback func;
     GCallback *p_func = &func;
@@ -706,7 +706,7 @@ gnc_builder_connect_full_func(GtkBuilder *builder,
 
 
 void
-gnc_gtk_dialog_add_button (GtkWidget *dialog, const gchar *label, const gchar *icon_name, guint response)
+gnc_gtk_dialog_add_button (GtkWidget *dialog, const gchar *label, const gchar *icon_name, guint response) noexcept
 {
     GtkWidget *button;
 
@@ -734,7 +734,7 @@ gnc_perm_button_cb (GtkButton *perm, gpointer user_data)
 }
 
 gint
-gnc_dialog_run (GtkDialog *dialog, const gchar *pref_name)
+gnc_dialog_run (GtkDialog *dialog, const gchar *pref_name) noexcept
 {
     GtkWidget *perm, *temp;
     gboolean ask = TRUE;
@@ -799,7 +799,7 @@ gnc_dialog_run (GtkDialog *dialog, const gchar *pref_name)
  * imported/entered, since the book options can affect how transactions are
  * created. Note: This dialog is modal! */
 gboolean
-gnc_new_book_option_display (GtkWidget *parent)
+gnc_new_book_option_display (GtkWidget *parent) noexcept
 {
     GtkWidget *window;
     gint result = GTK_RESPONSE_HELP;
@@ -819,7 +819,7 @@ gnc_new_book_option_display (GtkWidget *parent)
 }
 
 gchar*
-gnc_get_negative_color (void)
+gnc_get_negative_color (void) noexcept
 {
     GdkRGBA color;
     GtkWidget *label = gtk_label_new ("Color");
@@ -832,7 +832,7 @@ gnc_get_negative_color (void)
 
 void
 gnc_owner_window_set_title (GtkWindow *window, const char *header,
-                            GtkWidget *owner_entry, GtkWidget *id_entry)
+                            GtkWidget *owner_entry, GtkWidget *id_entry) noexcept
 {
     const char *name = gtk_entry_get_text (GTK_ENTRY (owner_entry));
     if (!name || *name == '\0')

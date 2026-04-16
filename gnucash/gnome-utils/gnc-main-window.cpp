@@ -41,7 +41,6 @@
 
 #include <config.h>
 
-
 #include "gnc-plugin.h"
 #include "gnc-plugin-manager.h"
 #include "gnc-main-window.h"
@@ -118,19 +117,6 @@ enum
 #define GNC_MAIN_WINDOW_NAME "GncMainWindow"
 
 #define DIALOG_BOOK_OPTIONS_CM_CLASS "dialog-book-options"
-
-/**
- * Processes selected options in the Book Options dialog: checks book_currency
- * and use_split_action_for_num to see if features kvp should be set. To be used
- * where ever a new book situation requires book option selection (e.g., not
- * just in Book Options dialog opened from main window but also in new-file
- * assistant).
- *
- *  @param GncOptionDB * options.
- *
- *  @return TRUE if gnc_gui_refresh_all should be called; otherwise FALSE.
- **/
-extern gboolean gnc_book_options_dialog_apply_helper(GncOptionDB * options);
 
 /** Max number of windows allowed */
 [[maybe_unused]] constexpr auto gnc_main_window_max_number {10};
@@ -404,7 +390,7 @@ typedef struct
 
 
 gboolean
-gnc_main_window_is_restoring_pages (GncMainWindow *window)
+gnc_main_window_is_restoring_pages (GncMainWindow *window) noexcept
 {
     GncMainWindowPrivate *priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     return priv->restoring_pages;
@@ -414,7 +400,7 @@ gnc_main_window_is_restoring_pages (GncMainWindow *window)
 /*  Iterator function to walk all pages in all windows, calling the
  *  specified function for each page. */
 void
-gnc_main_window_foreach_page (GncMainWindowPageFunc fn, gpointer user_data)
+gnc_main_window_foreach_page (GncMainWindowPageFunc fn, gpointer user_data) noexcept
 {
     ENTER(" ");
     for (auto w = active_windows; w; w = g_list_next(w))
@@ -874,7 +860,7 @@ cleanup:
 }
 
 void
-gnc_main_window_restore_all_windows(const GKeyFile *keyfile)
+gnc_main_window_restore_all_windows(const GKeyFile *keyfile) noexcept
 {
     gint i, window_count;
     GError *error = nullptr;
@@ -910,7 +896,7 @@ gnc_main_window_restore_all_windows(const GKeyFile *keyfile)
 }
 
 void
-gnc_main_window_restore_default_state (GncMainWindow *window)
+gnc_main_window_restore_default_state (GncMainWindow *window) noexcept
 {
     GAction *action;
 
@@ -1073,7 +1059,7 @@ gnc_main_window_save_window (GncMainWindow *window, GncMainWindowSaveData *data)
 }
 
 void
-gnc_main_window_save_all_windows(GKeyFile *keyfile)
+gnc_main_window_save_all_windows(GKeyFile *keyfile) noexcept
 {
     GncMainWindowSaveData data;
 
@@ -1091,7 +1077,7 @@ gnc_main_window_save_all_windows(GKeyFile *keyfile)
 
 
 gboolean
-gnc_main_window_finish_pending (GncMainWindow *window)
+gnc_main_window_finish_pending (GncMainWindow *window) noexcept
 {
     GncMainWindowPrivate *priv;
     GList *item;
@@ -1111,7 +1097,7 @@ gnc_main_window_finish_pending (GncMainWindow *window)
 
 
 gboolean
-gnc_main_window_all_finish_pending (void)
+gnc_main_window_all_finish_pending (void) noexcept
 {
     const GList *windows, *item;
 
@@ -2367,7 +2353,7 @@ main_window_find_tab_widget (GncMainWindow *window,
 
 void
 main_window_update_page_long_name (GncPluginPage *page,
-                                   const gchar *long_name_in)
+                                   const gchar *long_name_in) noexcept
 {
     GtkWidget *tab_widget;
 
@@ -2409,7 +2395,7 @@ main_window_update_page_long_name (GncPluginPage *page,
 
 void
 main_window_update_page_name (GncPluginPage *page,
-                              const gchar *name_in)
+                              const gchar *name_in) noexcept
 {
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
@@ -2472,7 +2458,7 @@ main_window_update_page_name (GncPluginPage *page,
 
 void
 main_window_update_page_color (GncPluginPage *page,
-                               const gchar *color_in)
+                               const gchar *color_in) noexcept
 {
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
@@ -2546,7 +2532,7 @@ main_window_update_page_color (GncPluginPage *page,
 
 void
 main_window_update_page_set_read_only_icon (GncPluginPage *page,
-                                            gboolean read_only)
+                                            gboolean read_only) noexcept
 {
     GncMainWindow *window;
     GtkWidget *tab_widget;
@@ -3038,7 +3024,7 @@ gnc_main_window_key_press_event (GtkWidget *widget, GdkEventKey *event, gpointer
 /*  Create a new gnc main window plugin.
  */
 GncMainWindow *
-gnc_main_window_new (void)
+gnc_main_window_new (void) noexcept
 {
     auto window{static_cast<GncMainWindow*>(g_object_new (GNC_TYPE_MAIN_WINDOW, nullptr))};
     gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
@@ -3240,7 +3226,7 @@ gnc_main_window_disconnect (GncMainWindow *window,
 
 
 void
-gnc_main_window_display_page (GncPluginPage *page)
+gnc_main_window_display_page (GncPluginPage *page) noexcept
 {
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
@@ -3265,7 +3251,7 @@ gnc_main_window_display_page (GncPluginPage *page)
  */
 void
 gnc_main_window_open_page (GncMainWindow *window,
-                           GncPluginPage *page)
+                           GncPluginPage *page) noexcept
 {
     GncMainWindowPrivate *priv;
     GtkWidget *tab_container, *tab_clickable_area;
@@ -3442,7 +3428,7 @@ gnc_main_window_open_page (GncMainWindow *window,
  *  destroyed.
  */
 void
-gnc_main_window_close_page (GncPluginPage *page)
+gnc_main_window_close_page (GncPluginPage *page) noexcept
 {
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
@@ -3499,7 +3485,7 @@ gnc_main_window_close_page (GncPluginPage *page)
  *  to the current page.
  */
 GncPluginPage *
-gnc_main_window_get_current_page (GncMainWindow *window)
+gnc_main_window_get_current_page (GncMainWindow *window) noexcept
 {
     GncMainWindowPrivate *priv;
 
@@ -3516,7 +3502,7 @@ gnc_main_window_get_current_page (GncMainWindow *window)
 void
 gnc_main_window_manual_merge_actions (GncMainWindow *window,
                                       const gchar *group_name,
-                                      GSimpleActionGroup *group)
+                                      GSimpleActionGroup *group) noexcept
 {
     g_return_if_fail (GNC_IS_MAIN_WINDOW(window));
     g_return_if_fail (group_name != nullptr);
@@ -3588,7 +3574,7 @@ gnc_main_window_merge_actions (GncMainWindow *window,
                                guint n_actions,
                                const gchar **ui_updates,
                                const gchar *ui_filename,
-                               gpointer user_data)
+                               gpointer user_data) noexcept
 {
     GncMainWindowActionData *data;
     GSimpleActionGroup *simple_action_group;
@@ -3624,7 +3610,7 @@ gnc_main_window_merge_actions (GncMainWindow *window,
  */
 void
 gnc_main_window_unmerge_actions (GncMainWindow *window,
-                                 const gchar *group_name)
+                                 const gchar *group_name) noexcept
 {
     g_return_if_fail (GNC_IS_MAIN_WINDOW (window));
     g_return_if_fail (group_name != nullptr);
@@ -3633,7 +3619,7 @@ gnc_main_window_unmerge_actions (GncMainWindow *window,
 }
 
 GAction *
-gnc_main_window_find_action (GncMainWindow *window, const gchar *action_name)
+gnc_main_window_find_action (GncMainWindow *window, const gchar *action_name) noexcept
 {
     GAction *action = nullptr;
 
@@ -3649,7 +3635,7 @@ gnc_main_window_find_action (GncMainWindow *window, const gchar *action_name)
 GAction *
 gnc_main_window_find_action_in_group (GncMainWindow *window,
                                       const gchar *group_name,
-                                      const gchar *action_name)
+                                      const gchar *action_name) noexcept
 {
     GAction *action = nullptr;
 
@@ -3672,7 +3658,7 @@ gnc_main_window_find_action_in_group (GncMainWindow *window,
  */
 GSimpleActionGroup *
 gnc_main_window_get_action_group (GncMainWindow *window,
-                                  const gchar *group_name)
+                                  const gchar *group_name) noexcept
 {
     g_return_val_if_fail (GNC_IS_MAIN_WINDOW(window), nullptr);
     g_return_val_if_fail (group_name != nullptr, nullptr);
@@ -3682,7 +3668,8 @@ gnc_main_window_get_action_group (GncMainWindow *window,
 }
 
 GtkWidget *
-gnc_main_window_toolbar_find_tool_item (GncMainWindow *window, const gchar *action_name)
+gnc_main_window_toolbar_find_tool_item (GncMainWindow *window,
+                                        const gchar *action_name) noexcept
 {
     GncMainWindowPrivate *priv;
 
@@ -3695,7 +3682,7 @@ gnc_main_window_toolbar_find_tool_item (GncMainWindow *window, const gchar *acti
 }
 
 GtkWidget *
-gnc_main_window_menu_find_menu_item (GncMainWindow *window, const gchar *action_name)
+gnc_main_window_menu_find_menu_item (GncMainWindow *window, const gchar *action_name) noexcept
 {
     GncMainWindowPrivate *priv;
     GtkWidget *menu_item;
@@ -3718,7 +3705,7 @@ gnc_main_window_menu_find_menu_item (GncMainWindow *window, const gchar *action_
 
 
 void
-gnc_main_window_menu_add_accelerator_keys (GncMainWindow *window)
+gnc_main_window_menu_add_accelerator_keys (GncMainWindow *window) noexcept
 {
     GncMainWindowPrivate *priv;
 
@@ -3734,7 +3721,7 @@ gboolean
 gnc_main_window_update_menu_for_action (GncMainWindow *window,
                                         const gchar *action_name,
                                         const gchar *label,
-                                        const gchar *tooltip)
+                                        const gchar *tooltip) noexcept
 {
     GncMainWindowPrivate *priv;
     gboolean found = false;
@@ -3759,7 +3746,7 @@ gnc_main_window_update_menu_for_action (GncMainWindow *window,
 void
 gnc_main_window_set_vis_of_items_by_action (GncMainWindow *window,
                                             const gchar **action_names,
-                                            gboolean vis)
+                                            gboolean vis) noexcept
 {
     GncMainWindowPrivate *priv;
 
@@ -3797,7 +3784,7 @@ gnc_main_window_set_vis_of_items_by_action (GncMainWindow *window,
 
 void
 gnc_main_window_init_short_names (GncMainWindow *window,
-                                  GncToolBarShortNames *toolbar_labels)
+                                  GncToolBarShortNames *toolbar_labels) noexcept
 {
     GncMainWindowPrivate *priv;
 
@@ -3862,7 +3849,7 @@ gnc_main_window_update_toolbar (GncMainWindow *window, GncPluginPage *page,
 void
 gnc_main_window_update_menu_and_toolbar (GncMainWindow *window,
                                          GncPluginPage *page,
-                                         const gchar **ui_updates)
+                                         const gchar **ui_updates) noexcept
 {
     GncMainWindowPrivate *priv;
     const gchar *plugin_page_actions_group_name;
@@ -4623,7 +4610,7 @@ gnc_main_window_cmd_page_setup (GSimpleAction *simple,
 }
 
 gboolean
-gnc_book_options_dialog_apply_helper(GncOptionDB * options)
+gnc_book_options_dialog_apply_helper(GncOptionDB * options) noexcept
 {
     QofBook *book = gnc_get_current_book ();
     gboolean use_split_action_for_num_before =
@@ -4698,8 +4685,8 @@ gnc_book_options_dialog_close_cb(GncOptionsDialog * optionwin,
 /** Calls gnc_book_option_num_field_source_change to initiate registered
  * callbacks when num_field_source book option changes so that
  * registers/reports can update themselves; sets feature flag */
-void
-gnc_book_option_num_field_source_change_cb (gboolean num_action)
+ void
+gnc_book_option_num_field_source_change_cb (gboolean num_action) noexcept
 {
     gnc_suspend_gui_refresh ();
     if (num_action)
@@ -4729,7 +4716,7 @@ show_handler (const char *class_name, gint component_id,
 }
 
 GtkWidget *
-gnc_book_options_dialog_cb (gboolean modal, gchar *title, GtkWindow* parent)
+gnc_book_options_dialog_cb (gboolean modal, gchar *title, GtkWindow* parent) noexcept
 {
     auto book = gnc_get_current_book ();
 
@@ -5593,7 +5580,7 @@ gnc_main_window_cmd_help_about (GSimpleAction *simple,
  ************************************************************/
 
 void
-gnc_main_window_show_all_windows(void)
+gnc_main_window_show_all_windows(void) noexcept
 {
     GList *window_iter;
 #ifdef MAC_INTEGRATION
@@ -5612,7 +5599,7 @@ gnc_main_window_show_all_windows(void)
 }
 
 GtkWindow *
-gnc_ui_get_gtk_window (GtkWidget *widget)
+gnc_ui_get_gtk_window (GtkWidget *widget) noexcept
 {
     GtkWidget *toplevel;
 
@@ -5627,7 +5614,7 @@ gnc_ui_get_gtk_window (GtkWidget *widget)
 }
 
 GtkWindow *
-gnc_ui_get_main_window (GtkWidget *widget)
+gnc_ui_get_main_window (GtkWidget *widget) noexcept
 {
     GList *window;
 
@@ -5791,7 +5778,7 @@ gnc_window_main_window_init (GncWindowInterface *iface)
  *  function.
  */
 void
-gnc_main_window_set_progressbar_window (GncMainWindow *window)
+gnc_main_window_set_progressbar_window (GncMainWindow *window) noexcept
 {
     GncWindow *gncwin;
     gncwin = GNC_WINDOW(window);
@@ -5888,7 +5875,7 @@ do_popup_menu (GncPluginPage *page, GdkEventButton *event)
  */
 gboolean
 gnc_main_window_popup_menu_cb (GtkWidget *widget,
-                               GncPluginPage *page)
+                               GncPluginPage *page) noexcept
 {
     ENTER("widget %p, page %p", widget, page);
     do_popup_menu(page, nullptr);
@@ -5904,7 +5891,7 @@ gnc_main_window_popup_menu_cb (GtkWidget *widget,
 gboolean
 gnc_main_window_button_press_cb (GtkWidget *whatever,
                                  GdkEventButton *event,
-                                 GncPluginPage *page)
+                                 GncPluginPage *page) noexcept
 {
     g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), FALSE);
 
@@ -5923,7 +5910,7 @@ gnc_main_window_button_press_cb (GtkWidget *whatever,
 
 void
 gnc_main_window_all_action_set_sensitive (const gchar *action_name,
-                                          gboolean sensitive)
+                                          gboolean sensitive) noexcept
 {
     for (auto tmp = active_windows; tmp; tmp = g_list_next(tmp))
     {
@@ -5933,7 +5920,7 @@ gnc_main_window_all_action_set_sensitive (const gchar *action_name,
 }
 
 GMenuModel *
-gnc_main_window_get_menu_model (GncMainWindow *window)
+gnc_main_window_get_menu_model (GncMainWindow *window) noexcept
 {
     GncMainWindowPrivate *priv;
 
@@ -5945,7 +5932,7 @@ gnc_main_window_get_menu_model (GncMainWindow *window)
 }
 
 gboolean
-gnc_main_window_just_plugin_prefs (GncMainWindow* window)
+gnc_main_window_just_plugin_prefs (GncMainWindow* window) noexcept
 {
     return window->just_plugin_prefs;
 }

@@ -29,8 +29,11 @@
 #include "Account.h"
 
 #ifdef __cplusplus
+#define NOEXCEPT noexcept
 extern "C"
 {
+#else
+#define NOEXCEPT
 #endif
 
 /********************************************************************\
@@ -41,7 +44,8 @@ extern "C"
  *         initial - the initial account to use                     *
  * Return: nothing                                                  *
 \********************************************************************/
-void gnc_stock_split_dialog (GtkWidget *parent, Account * initial);
+void gnc_stock_split_dialog (GtkWidget *parent, Account * initial) NOEXCEPT;
+
 #ifdef __cplusplus
 }
 #endif

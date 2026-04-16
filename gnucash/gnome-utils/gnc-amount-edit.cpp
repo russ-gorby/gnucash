@@ -337,7 +337,7 @@ gnc_amount_edit_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_
 }
 
 GtkWidget *
-gnc_amount_edit_new (void)
+gnc_amount_edit_new (void) noexcept
 {
     auto gae = static_cast<GNCAmountEdit *>(
         g_object_new (GNC_TYPE_AMOUNT_EDIT, NULL)
@@ -401,7 +401,7 @@ exp_validate_quark (void)
 
 gint
 gnc_amount_edit_expr_is_valid (GNCAmountEdit *gae, gnc_numeric *amount,
-                               gboolean empty_ok, GError **error)
+                               gboolean empty_ok, GError **error) noexcept
 {
     const char *string;
     char *error_loc;
@@ -478,7 +478,7 @@ gnc_amount_edit_expr_is_valid (GNCAmountEdit *gae, gnc_numeric *amount,
 }
 
 gboolean
-gnc_amount_edit_evaluate (GNCAmountEdit *gae, GError **error)
+gnc_amount_edit_evaluate (GNCAmountEdit *gae, GError **error) noexcept
 {
     gint result;
     gnc_numeric amount;
@@ -526,7 +526,7 @@ gnc_amount_edit_evaluate (GNCAmountEdit *gae, GError **error)
 }
 
 gnc_numeric
-gnc_amount_edit_get_amount (GNCAmountEdit *gae)
+gnc_amount_edit_get_amount (GNCAmountEdit *gae) noexcept
 {
     g_return_val_if_fail (gae != NULL, gnc_numeric_zero ());
     g_return_val_if_fail (GNC_IS_AMOUNT_EDIT(gae), gnc_numeric_zero ());
@@ -537,7 +537,7 @@ gnc_amount_edit_get_amount (GNCAmountEdit *gae)
 }
 
 double
-gnc_amount_edit_get_damount (GNCAmountEdit *gae)
+gnc_amount_edit_get_damount (GNCAmountEdit *gae) noexcept
 {
     g_return_val_if_fail (gae != NULL, 0.0);
     g_return_val_if_fail (GNC_IS_AMOUNT_EDIT(gae), 0.0);
@@ -548,7 +548,7 @@ gnc_amount_edit_get_damount (GNCAmountEdit *gae)
 }
 
 void
-gnc_amount_edit_set_amount (GNCAmountEdit *gae, gnc_numeric amount)
+gnc_amount_edit_set_amount (GNCAmountEdit *gae, gnc_numeric amount) noexcept
 {
     const char * amount_string;
 
@@ -571,7 +571,7 @@ gnc_amount_edit_set_amount (GNCAmountEdit *gae, gnc_numeric amount)
 }
 
 void
-gnc_amount_edit_set_damount (GNCAmountEdit *gae, double damount)
+gnc_amount_edit_set_damount (GNCAmountEdit *gae, double damount) noexcept
 {
     gnc_numeric amount;
     int fraction;
@@ -591,7 +591,7 @@ gnc_amount_edit_set_damount (GNCAmountEdit *gae, double damount)
 
 void
 gnc_amount_edit_set_print_info (GNCAmountEdit *gae,
-                                GNCPrintAmountInfo print_info)
+                                GNCPrintAmountInfo print_info) noexcept
 {
     g_return_if_fail (gae != NULL);
     g_return_if_fail (GNC_IS_AMOUNT_EDIT(gae));
@@ -601,7 +601,7 @@ gnc_amount_edit_set_print_info (GNCAmountEdit *gae,
 }
 
 void
-gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction)
+gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction) noexcept
 {
     g_return_if_fail (gae != NULL);
     g_return_if_fail (GNC_IS_AMOUNT_EDIT(gae));
@@ -612,7 +612,7 @@ gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction)
 }
 
 GtkWidget *
-gnc_amount_edit_gtk_entry (GNCAmountEdit *gae)
+gnc_amount_edit_gtk_entry (GNCAmountEdit *gae) noexcept
 {
     g_return_val_if_fail (gae != NULL, NULL);
     g_return_val_if_fail (GNC_IS_AMOUNT_EDIT(gae), NULL);
@@ -622,7 +622,7 @@ gnc_amount_edit_gtk_entry (GNCAmountEdit *gae)
 
 void
 gnc_amount_edit_set_evaluate_on_enter (GNCAmountEdit *gae,
-                                       gboolean evaluate_on_enter)
+                                       gboolean evaluate_on_enter) noexcept
 {
     g_return_if_fail (gae != NULL);
     g_return_if_fail (GNC_IS_AMOUNT_EDIT(gae));
@@ -632,7 +632,7 @@ gnc_amount_edit_set_evaluate_on_enter (GNCAmountEdit *gae,
 
 void
 gnc_amount_edit_set_validate_on_change (GNCAmountEdit *gae,
-                                        gboolean validate_on_change)
+                                        gboolean validate_on_change) noexcept
 {
     g_return_if_fail (gae != NULL);
     g_return_if_fail (GNC_IS_AMOUNT_EDIT(gae));
@@ -643,7 +643,7 @@ gnc_amount_edit_set_validate_on_change (GNCAmountEdit *gae,
 void
 gnc_amount_edit_select_region (GNCAmountEdit *gae,
                                gint start_pos,
-                               gint end_pos)
+                               gint end_pos) noexcept
 {
     g_return_if_fail (gae != NULL);
     g_return_if_fail (GNC_IS_AMOUNT_EDIT(gae));
@@ -654,7 +654,7 @@ gnc_amount_edit_select_region (GNCAmountEdit *gae,
 }
 
 void
-gnc_amount_edit_show_warning_symbol (GNCAmountEdit *gae, gboolean show)
+gnc_amount_edit_show_warning_symbol (GNCAmountEdit *gae, gboolean show) noexcept
 {
     g_return_if_fail (gae != NULL);
     g_return_if_fail (GNC_IS_AMOUNT_EDIT(gae));
@@ -663,7 +663,7 @@ gnc_amount_edit_show_warning_symbol (GNCAmountEdit *gae, gboolean show)
 }
 
 void
-gnc_amount_edit_make_mnemonic_target (GNCAmountEdit *gae, GtkWidget *label)
+gnc_amount_edit_make_mnemonic_target (GNCAmountEdit *gae, GtkWidget *label) noexcept
 {
     if (!gae)
         return;

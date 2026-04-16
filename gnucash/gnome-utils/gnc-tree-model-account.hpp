@@ -41,8 +41,6 @@
 
 #include "Account.h"
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_MODEL_ACCOUNT            (gnc_tree_model_account_get_type ())
 G_DECLARE_FINAL_TYPE (GncTreeModelAccount, gnc_tree_model_account, GNC, TREE_MODEL_ACCOUNT, GncTreeModel)
@@ -170,8 +168,6 @@ gboolean gnc_tree_model_account_get_iter_from_account (GncTreeModelAccount *mode
 GtkTreePath *gnc_tree_model_account_get_path_from_account (GncTreeModelAccount *model,
         Account *account);
 /** @} */
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_MODEL_ACCOUNT_H */
 

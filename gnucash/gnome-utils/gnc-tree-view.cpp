@@ -327,7 +327,7 @@ gnc_tree_view_init (GncTreeView *view)
  *  @param obj The new object instance created by the object
  *  system.
  */
- static void
+static void
 gnc_tree_view_constructed (GObject *obj)
 {
     gnc_gobject_tracking_remember(obj);
@@ -537,7 +537,7 @@ view_column_find_by_model_id (GncTreeView *view,
  */
 GtkTreeViewColumn *
 gnc_tree_view_find_column_by_name (GncTreeView *view,
-                                   const gchar *wanted)
+                                   const gchar *wanted) noexcept
 {
     GtkTreeViewColumn *found = NULL;
 
@@ -979,7 +979,7 @@ gnc_tree_view_set_column_order (GncTreeView *view,
  *  @param view The tree view.
  */
 
-void gnc_tree_view_remove_state_information (GncTreeView *view)
+void gnc_tree_view_remove_state_information (GncTreeView *view) noexcept
 {
     GncTreeViewPrivate *priv;
     GKeyFile *state_file = gnc_state_get_current ();
@@ -1007,7 +1007,7 @@ void gnc_tree_view_remove_state_information (GncTreeView *view)
  */
 void
 gnc_tree_view_set_state_section (GncTreeView *view,
-                                 const gchar *section)
+                                 const gchar *section) noexcept
 {
     GncTreeViewPrivate *priv;
     GKeyFile *state_file;
@@ -1121,7 +1121,7 @@ gnc_tree_view_set_state_section (GncTreeView *view,
  *  Parameters are defined in gnc-tree-view.h
  */
 const gchar *
-gnc_tree_view_get_state_section (GncTreeView *view)
+gnc_tree_view_get_state_section (GncTreeView *view) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -1131,7 +1131,7 @@ gnc_tree_view_get_state_section (GncTreeView *view)
     return priv->state_section;
 }
 
-void gnc_tree_view_save_state (GncTreeView *view)
+void gnc_tree_view_save_state (GncTreeView *view) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -1440,7 +1440,7 @@ gnc_tree_view_select_column_cb (GtkTreeViewColumn *column,
 
 void gnc_tree_view_expand_columns (GncTreeView *view,
                                    gchar *first_column_name,
-                                   ...)
+                                   ...) noexcept
 {
     GtkTreeViewColumn *column = NULL;
     va_list args;
@@ -1503,7 +1503,8 @@ update_control_cell_renderers_background (GncTreeView *view, GtkTreeViewColumn *
 /* This function links the cell backgrounds of the two control columns to a column
    in the model that has color strings or a cell data function */
 void
-gnc_tree_view_set_control_column_background (GncTreeView *view, gint column, GtkTreeCellDataFunc func )
+gnc_tree_view_set_control_column_background (GncTreeView *view, gint column,
+                                             GtkTreeCellDataFunc func ) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -1521,7 +1522,7 @@ gnc_tree_view_set_control_column_background (GncTreeView *view, gint column, Gtk
 /* This allows the columns to be setup without the model connected */
 //FIXME I think this should be specified as a parameter to the add columns functions...
 void
-gnc_tree_view_set_sort_user_data (GncTreeView *view, GtkTreeModel *s_model)
+gnc_tree_view_set_sort_user_data (GncTreeView *view, GtkTreeModel *s_model) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -1543,7 +1544,7 @@ gnc_tree_view_set_sort_user_data (GncTreeView *view, GtkTreeModel *s_model)
  */
 void
 gnc_tree_view_set_show_column_menu (GncTreeView *view,
-                                    gboolean visible)
+                                    gboolean visible) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -1563,7 +1564,7 @@ gnc_tree_view_set_show_column_menu (GncTreeView *view,
  *  Parameters are defined in gnc-tree-view.h
  */
 gboolean
-gnc_tree_view_get_show_column_menu (GncTreeView *view)
+gnc_tree_view_get_show_column_menu (GncTreeView *view) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -1599,7 +1600,7 @@ gnc_tree_view_count_visible_columns (GncTreeView *view)
 }
 
 void
-gnc_tree_view_configure_columns (GncTreeView *view)
+gnc_tree_view_configure_columns (GncTreeView *view) noexcept
 {
     GncTreeViewPrivate *priv;
     GtkTreeViewColumn *column;
@@ -1776,7 +1777,7 @@ gnc_tree_view_add_toggle_column (GncTreeView *view,
                                  gint model_data_column,
                                  gint model_visibility_column,
                                  GtkTreeIterCompareFunc column_sort_fn,
-                                 renderer_toggled toggle_edited_cb)
+                                 renderer_toggled toggle_edited_cb) noexcept
 {
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
@@ -1929,7 +1930,7 @@ gnc_tree_view_add_text_column (GncTreeView *view,
                                const gchar *sizing_text,
                                gint model_data_column,
                                gint model_visibility_column,
-                               GtkTreeIterCompareFunc column_sort_fn)
+                               GtkTreeIterCompareFunc column_sort_fn) noexcept
 {
     GtkCellRenderer *renderer;
 
@@ -1961,7 +1962,7 @@ gnc_tree_view_add_text_view_column (GncTreeView *view,
                                     const gchar *sizing_text,
                                     gint model_data_column,
                                     gint model_visibility_column,
-                                    GtkTreeIterCompareFunc column_sort_fn)
+                                    GtkTreeIterCompareFunc column_sort_fn) noexcept
 {
     GtkCellRenderer *renderer;
 
@@ -1992,7 +1993,7 @@ gnc_tree_view_add_pix_column (GncTreeView *view,
                               const gchar *sizing_text,
                               gint model_data_column,
                               gint model_visibility_column,
-                              GtkTreeIterCompareFunc column_sort_fn)
+                              GtkTreeIterCompareFunc column_sort_fn) noexcept
 {
     GtkTreeViewColumn *column;
     PangoLayout* layout;
@@ -2035,7 +2036,7 @@ gnc_tree_view_add_pix_column (GncTreeView *view,
 }
 
 GtkCellRenderer *
-gnc_tree_view_column_get_renderer (GtkTreeViewColumn *column)
+gnc_tree_view_column_get_renderer (GtkTreeViewColumn *column) noexcept
 {
     GList *renderers;
     GtkCellRenderer *cr = NULL;
@@ -2069,7 +2070,7 @@ gnc_tree_view_add_numeric_column (GncTreeView *view,
                                   gint model_data_column,
                                   gint model_color_column,
                                   gint model_visibility_column,
-                                  GtkTreeIterCompareFunc column_sort_fn)
+                                  GtkTreeIterCompareFunc column_sort_fn) noexcept
 {
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
@@ -2107,7 +2108,7 @@ gnc_tree_view_add_numeric_column (GncTreeView *view,
  */
 gint
 gnc_tree_view_append_column (GncTreeView *view,
-                             GtkTreeViewColumn *column)
+                             GtkTreeViewColumn *column) noexcept
 {
     int n = gtk_tree_view_get_n_columns (GTK_TREE_VIEW(view));
 
@@ -2151,7 +2152,7 @@ get_column_next_to (GtkTreeView *tv, GtkTreeViewColumn **col, gboolean backward)
 }
 
 gboolean
-gnc_tree_view_path_is_valid (GncTreeView *view, GtkTreePath *path)
+gnc_tree_view_path_is_valid (GncTreeView *view, GtkTreePath *path) noexcept
 {
     GtkTreeView *tv = GTK_TREE_VIEW(view);
     GtkTreeModel *s_model;
@@ -2163,7 +2164,7 @@ gnc_tree_view_path_is_valid (GncTreeView *view, GtkTreePath *path)
 
 void
 gnc_tree_view_keynav (GncTreeView *view, GtkTreeViewColumn **col,
-                      GtkTreePath *path, GdkEventKey *event)
+                      GtkTreePath *path, GdkEventKey *event) noexcept
 {
     GtkTreeView *tv = GTK_TREE_VIEW(view);
     gint depth;
@@ -2234,7 +2235,9 @@ gnc_tree_view_keynav (GncTreeView *view, GtkTreeViewColumn **col,
 }
 
 void
-gnc_tree_view_set_editing_started_cb (GncTreeView *view, GFunc editing_started_cb, gpointer editing_cb_data)
+gnc_tree_view_set_editing_started_cb (GncTreeView *view,
+                                      GFunc editing_started_cb,
+                                      gpointer editing_cb_data) noexcept
 {
     GncTreeViewPrivate *priv;
 
@@ -2248,7 +2251,9 @@ gnc_tree_view_set_editing_started_cb (GncTreeView *view, GFunc editing_started_c
 }
 
 void
-gnc_tree_view_set_editing_finished_cb (GncTreeView *view, GFunc editing_finished_cb, gpointer editing_cb_data)
+gnc_tree_view_set_editing_finished_cb (GncTreeView *view,
+                                       GFunc editing_finished_cb,
+                                       gpointer editing_cb_data) noexcept
 {
     GncTreeViewPrivate *priv;
 

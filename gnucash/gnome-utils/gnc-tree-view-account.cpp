@@ -726,7 +726,8 @@ gnc_tree_view_account_color_update (gpointer gsettings, gchar *key, gpointer use
  *  show or not the column background in the account color.
  */
 void
-gnc_tree_view_account_column_add_color (GncTreeViewAccount *view, GtkTreeViewColumn *col)
+gnc_tree_view_account_column_add_color (GncTreeViewAccount *view,
+                                        GtkTreeViewColumn *col) noexcept
 {
     GtkCellRenderer *renderer = gnc_tree_view_column_get_renderer(col);
 
@@ -745,7 +746,7 @@ gnc_tree_view_account_column_add_color (GncTreeViewAccount *view, GtkTreeViewCol
  * model.
  */
 GtkTreeView *
-gnc_tree_view_account_new_with_root (Account *root, gboolean show_root)
+gnc_tree_view_account_new_with_root (Account *root, gboolean show_root) noexcept
 {
     GtkTreePath *virtual_root_path = NULL;
 
@@ -1054,7 +1055,7 @@ gnc_tree_view_account_new_with_root (Account *root, gboolean show_root)
  * model.
  */
 GtkTreeView *
-gnc_tree_view_account_new (gboolean show_root)
+gnc_tree_view_account_new (gboolean show_root) noexcept
 {
     Account *root;
 
@@ -1150,7 +1151,7 @@ gnc_tree_view_account_get_iter_from_account (GncTreeViewAccount *view,
 
 gint
 gnc_tree_view_account_count_children (GncTreeViewAccount *view,
-                                      Account *account)
+                                      Account *account) noexcept
 {
     GtkTreeModel *s_model;
     GtkTreeIter s_iter;
@@ -1178,7 +1179,7 @@ gnc_tree_view_account_count_children (GncTreeViewAccount *view,
 }
 
 void
-gnc_tree_view_account_clear_model_cache (GncTreeViewAccount *view)
+gnc_tree_view_account_clear_model_cache (GncTreeViewAccount *view) noexcept
 {
     GtkTreeModel *model, *f_model, *s_model;
 
@@ -1199,7 +1200,7 @@ gnc_tree_view_account_clear_model_cache (GncTreeViewAccount *view)
  */
 void
 gnc_tree_view_account_get_view_info (GncTreeViewAccount *view,
-                                     AccountViewInfo *avi)
+                                     AccountViewInfo *avi) noexcept
 {
     g_return_if_fail(GNC_IS_TREE_VIEW_ACCOUNT(view));
     g_return_if_fail(avi != NULL);
@@ -1213,7 +1214,7 @@ gnc_tree_view_account_get_view_info (GncTreeViewAccount *view,
  */
 void
 gnc_tree_view_account_set_view_info (GncTreeViewAccount *view,
-                                     AccountViewInfo *avi)
+                                     AccountViewInfo *avi) noexcept
 {
     ENTER("%p", view);
     g_return_if_fail(GNC_IS_TREE_VIEW_ACCOUNT(view));
@@ -1257,7 +1258,7 @@ void
 gnc_tree_view_account_set_filter (GncTreeViewAccount *view,
                                   gnc_tree_view_account_filter_func func,
                                   gpointer data,
-                                  GSourceFunc destroy)
+                                  GSourceFunc destroy) noexcept
 {
     ENTER("view %p, filter func %p, data %p, destroy %p",
           view, func, data, destroy);
@@ -1280,7 +1281,7 @@ gnc_tree_view_account_set_filter (GncTreeViewAccount *view,
  * Forces the entire account tree to be re-evaluated for visibility.
  */
 void
-gnc_tree_view_account_refilter (GncTreeViewAccount *view)
+gnc_tree_view_account_refilter (GncTreeViewAccount *view) noexcept
 {
     GtkTreeModel *f_model, *s_model;
 
@@ -1292,7 +1293,7 @@ gnc_tree_view_account_refilter (GncTreeViewAccount *view)
 }
 
 gboolean
-gnc_tree_view_account_filter_by_view_info(Account* acct, gpointer data)
+gnc_tree_view_account_filter_by_view_info(Account* acct, gpointer data) noexcept
 {
     GNCAccountType acct_type;
     AccountViewInfo* avi = (AccountViewInfo*)data;
@@ -1315,7 +1316,7 @@ gnc_tree_view_account_filter_by_view_info(Account* acct, gpointer data)
  */
 Account *
 gnc_tree_view_account_get_account_from_path (GncTreeViewAccount *view,
-        GtkTreePath *s_path)
+                                             GtkTreePath *s_path) noexcept
 {
     GtkTreeIter iter;
 
@@ -1358,7 +1359,7 @@ gnc_tree_view_account_get_account_from_path (GncTreeViewAccount *view,
 
 Account *
 gnc_tree_view_account_get_account_from_iter (GtkTreeModel *s_model,
-        GtkTreeIter  *s_iter)
+                                             GtkTreeIter  *s_iter) noexcept
 {
     GtkTreeModel *model, *f_model;
     GtkTreeIter iter, f_iter;
@@ -1388,7 +1389,7 @@ gnc_tree_view_account_get_account_from_iter (GtkTreeModel *s_model,
  * account tree must be in single selection mode.
  */
 Account *
-gnc_tree_view_account_get_selected_account (GncTreeViewAccount *view)
+gnc_tree_view_account_get_selected_account (GncTreeViewAccount *view) noexcept
 {
     GtkTreeModel *s_model = NULL;
     GtkTreeIter iter, f_iter, s_iter;
@@ -1426,7 +1427,7 @@ gnc_tree_view_account_get_selected_account (GncTreeViewAccount *view)
  */
 void
 gnc_tree_view_account_set_selected_account (GncTreeViewAccount *view,
-        Account *account)
+                                            Account *account) noexcept
 {
     GtkTreeModel *model, *f_model, *s_model;
     GtkTreePath *path, *f_path, *s_path, *parent_path;
@@ -1541,7 +1542,7 @@ get_selected_accounts_helper (GtkTreeModel *s_model,
  * list.
  */
 GList *
-gnc_tree_view_account_get_selected_accounts (GncTreeViewAccount *view)
+gnc_tree_view_account_get_selected_accounts (GncTreeViewAccount *view) noexcept
 {
     GtkTreeSelection *selection;
     GncTreeViewSelectionInfo info;
@@ -1562,8 +1563,8 @@ gnc_tree_view_account_get_selected_accounts (GncTreeViewAccount *view)
  */
 void
 gnc_tree_view_account_set_selected_accounts (GncTreeViewAccount *view,
-        GList *account_list,
-        gboolean show_last)
+                                             GList *account_list,
+                                             gboolean show_last) noexcept
 {
     g_return_if_fail (GNC_IS_TREE_VIEW_ACCOUNT (view));
 
@@ -1636,7 +1637,7 @@ gnc_tree_view_account_set_selected_accounts (GncTreeViewAccount *view,
  */
 void
 gnc_tree_view_account_select_subaccounts (GncTreeViewAccount *view,
-        Account *account)
+                                          Account *account) noexcept
 {
     GtkTreeModel *s_model;
     GtkTreeSelection *selection;
@@ -1708,7 +1709,7 @@ gnc_tree_view_account_select_subaccounts (GncTreeViewAccount *view,
 
 void
 gnc_tree_view_account_expand_to_account (GncTreeViewAccount *view,
-        Account *account)
+                                         Account *account) noexcept
 {
     GtkTreePath *path;
 
@@ -1730,7 +1731,7 @@ gnc_tree_view_account_expand_to_account (GncTreeViewAccount *view,
  * Retrieve the account currently under the cursor.
  */
 Account *
-gnc_tree_view_account_get_cursor_account (GncTreeViewAccount *view)
+gnc_tree_view_account_get_cursor_account (GncTreeViewAccount *view) noexcept
 {
     GtkTreePath *s_path;
     Account *account;
@@ -1841,8 +1842,8 @@ account_cell_property_data_func (GtkTreeViewColumn *tree_column,
 
 GtkTreeViewColumn *
 gnc_tree_view_account_add_property_column (GncTreeViewAccount *view,
-                                      const gchar *column_title,
-                                      const gchar *propname)
+                                           const gchar *column_title,
+                                           const gchar *propname) noexcept
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -1909,7 +1910,7 @@ static void col_source_helper(GtkTreeViewColumn *col, GtkCellRenderer *cell,
  * If col_edited_cb is null, the editing callback (helper) will be
  * effectively disconnected.
  **/
-void
+static void
 gtva_setup_column_renderer_edited_cb(GncTreeViewAccount *account_view,
                                      GtkTreeViewColumn *column,
                                      GtkCellRenderer *renderer,
@@ -1950,7 +1951,7 @@ gnc_tree_view_account_add_custom_column(GncTreeViewAccount *account_view,
                                         GncTreeViewAccountColumnSource
                                         col_source_cb,
                                         GncTreeViewAccountColumnTextEdited
-                                        col_edited_cb)
+                                        col_edited_cb) noexcept
 {
     GtkCellRenderer *renderer;
 
@@ -1964,12 +1965,12 @@ gnc_tree_view_account_add_custom_column(GncTreeViewAccount *account_view,
 
 GtkTreeViewColumn *
 gnc_tree_view_account_add_custom_column_renderer(GncTreeViewAccount *account_view,
-                                        const gchar *column_title,
-                                        GncTreeViewAccountColumnSource
-                                        col_source_cb,
-                                        GncTreeViewAccountColumnTextEdited
-                                        col_edited_cb,
-                                        GtkCellRenderer *renderer)
+                                                 const gchar *column_title,
+                                                 GncTreeViewAccountColumnSource
+                                                 col_source_cb,
+                                                 GncTreeViewAccountColumnTextEdited
+                                                 col_edited_cb,
+                                                 GtkCellRenderer *renderer) noexcept
 {
     g_return_val_if_fail (GNC_IS_TREE_VIEW_ACCOUNT (account_view), NULL);
 
@@ -2006,7 +2007,7 @@ gnc_tree_view_account_add_custom_column_renderer(GncTreeViewAccount *account_vie
  *  account should be hidden. */
 gboolean
 gnc_plugin_page_account_tree_filter_accounts (Account *account,
-        gpointer user_data)
+                                              gpointer user_data) noexcept
 {
     auto fd = static_cast<AccountFilterDialog *>(user_data);
 
@@ -2064,7 +2065,7 @@ gnc_plugin_page_account_tree_filter_accounts (Account *account,
  */
 void
 gppat_filter_show_hidden_toggled_cb (GtkToggleButton *button,
-                                     AccountFilterDialog *fd)
+                                     AccountFilterDialog *fd) noexcept
 {
     g_return_if_fail(GTK_IS_TOGGLE_BUTTON(button));
 
@@ -2083,7 +2084,7 @@ gppat_filter_show_hidden_toggled_cb (GtkToggleButton *button,
  */
 void
 gppat_filter_show_zero_toggled_cb (GtkToggleButton *button,
-                                   AccountFilterDialog *fd)
+                                   AccountFilterDialog *fd) noexcept
 {
     g_return_if_fail(GTK_IS_TOGGLE_BUTTON(button));
 
@@ -2102,7 +2103,7 @@ gppat_filter_show_zero_toggled_cb (GtkToggleButton *button,
  */
 void
 gppat_filter_show_unused_toggled_cb (GtkToggleButton *button,
-                                   AccountFilterDialog *fd)
+                                   AccountFilterDialog *fd) noexcept
 {
     g_return_if_fail(GTK_IS_TOGGLE_BUTTON(button));
 
@@ -2122,7 +2123,7 @@ gppat_filter_show_unused_toggled_cb (GtkToggleButton *button,
  */
 void
 gppat_filter_clear_all_cb (GtkWidget *button,
-                           AccountFilterDialog *fd)
+                           AccountFilterDialog *fd) noexcept
 {
     g_return_if_fail(GTK_IS_BUTTON(button));
 
@@ -2141,7 +2142,7 @@ gppat_filter_clear_all_cb (GtkWidget *button,
  *  @param fd A pointer to the account filter dialog struct. */
 void
 gppat_filter_select_all_cb (GtkWidget *button,
-                            AccountFilterDialog *fd)
+                            AccountFilterDialog *fd) noexcept
 {
     g_return_if_fail(GTK_IS_BUTTON(button));
 
@@ -2161,7 +2162,7 @@ gppat_filter_select_all_cb (GtkWidget *button,
  *  @param fd A pointer to the account filter dialog struct.*/
 void
 gppat_filter_select_default_cb (GtkWidget *button,
-                                AccountFilterDialog *fd)
+                                AccountFilterDialog *fd) noexcept
 {
     ENTER("button %p", button);
     gppat_filter_select_all_cb(button, fd);
@@ -2236,7 +2237,7 @@ gppat_filter_visible_toggled_cb (GtkCellRendererToggle *renderer,
 void
 gppat_filter_response_cb (GtkWidget *dialog,
                           gint       response,
-                          AccountFilterDialog *fd)
+                          AccountFilterDialog *fd) noexcept
 {
     gpointer gptemp;
 
@@ -2263,7 +2264,7 @@ gppat_filter_response_cb (GtkWidget *dialog,
 }
 
 void
-account_filter_dialog_create(AccountFilterDialog *fd, GncPluginPage *page)
+account_filter_dialog_create(AccountFilterDialog *fd, GncPluginPage *page) noexcept
 {
     GtkWidget *dialog, *button;
     GtkTreeView *view;
@@ -2428,7 +2429,7 @@ tree_save_selected_row (GncTreeViewAccount *view,
 void
 gnc_tree_view_account_save(GncTreeViewAccount *view,
                            AccountFilterDialog *fd,
-                           GKeyFile *key_file, const gchar *group_name)
+                           GKeyFile *key_file, const gchar *group_name) noexcept
 {
     bar_t bar;
 
@@ -2463,7 +2464,7 @@ void
 gnc_tree_view_account_save_filter (GncTreeViewAccount *view,
                                    AccountFilterDialog *fd,
                                    GKeyFile *key_file,
-                                   const gchar *group_name)
+                                   const gchar *group_name) noexcept
 {
     g_return_if_fail (key_file != NULL);
     g_return_if_fail (group_name != NULL);
@@ -2530,7 +2531,7 @@ tree_restore_selected_row (GncTreeViewAccount *view,
 void
 gnc_tree_view_account_restore(GncTreeViewAccount *view,
                               AccountFilterDialog *fd,
-                              GKeyFile *key_file, const gchar *group_name)
+                              GKeyFile *key_file, const gchar *group_name) noexcept
 {
     GError *error = NULL;
     gchar *key, *value;
@@ -2628,7 +2629,7 @@ void
 gnc_tree_view_account_restore_filter (GncTreeViewAccount *view,
                                       AccountFilterDialog *fd,
                                       GKeyFile *key_file,
-                                      const gchar *group_name)
+                                      const gchar *group_name) noexcept
 {
     GError *error = NULL;
     gint i;
@@ -2679,7 +2680,8 @@ gnc_tree_view_account_restore_filter (GncTreeViewAccount *view,
 
 // @@fixme -- factor this app-not-gui-specific-logic out.
 void
-gnc_tree_view_account_name_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_name)
+gnc_tree_view_account_name_edited_cb(Account *account, GtkTreeViewColumn *col,
+                                     const gchar *new_name) noexcept
 {
     // check for accounts with the same name among our parent's children.
     // should probably factor this consistency check out to the account
@@ -2697,7 +2699,8 @@ gnc_tree_view_account_name_edited_cb(Account *account, GtkTreeViewColumn *col, c
 }
 
 void
-gnc_tree_view_account_code_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_code)
+gnc_tree_view_account_code_edited_cb(Account *account, GtkTreeViewColumn *col,
+                                     const gchar *new_code) noexcept
 {
     if (g_strcmp0(xaccAccountGetCode(account), new_code) == 0)
         return;
@@ -2705,7 +2708,9 @@ gnc_tree_view_account_code_edited_cb(Account *account, GtkTreeViewColumn *col, c
 }
 
 void
-gnc_tree_view_account_description_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_desc)
+gnc_tree_view_account_description_edited_cb(Account *account,
+                                            GtkTreeViewColumn *col,
+                                            const gchar *new_desc) noexcept
 {
     if (g_strcmp0(xaccAccountGetDescription(account), new_desc) == 0)
         return;
@@ -2713,7 +2718,8 @@ gnc_tree_view_account_description_edited_cb(Account *account, GtkTreeViewColumn 
 }
 
 void
-gnc_tree_view_account_notes_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_notes)
+gnc_tree_view_account_notes_edited_cb(Account *account, GtkTreeViewColumn *col,
+                                      const gchar *new_notes) noexcept
 {
     if (g_strcmp0(xaccAccountGetNotes(account), new_notes) == 0)
         return;
@@ -2742,28 +2748,28 @@ gtva_set_column_editor(GncTreeViewAccount *view,
 
 void
 gnc_tree_view_account_set_name_edited(GncTreeViewAccount *view,
-                                      GncTreeViewAccountColumnTextEdited edited_cb)
+                                      GncTreeViewAccountColumnTextEdited edited_cb) noexcept
 {
     gtva_set_column_editor(view, view->name_column, edited_cb);
 }
 
 void
 gnc_tree_view_account_set_code_edited(GncTreeViewAccount *view,
-                                      GncTreeViewAccountColumnTextEdited edited_cb)
+                                      GncTreeViewAccountColumnTextEdited edited_cb) noexcept
 {
     gtva_set_column_editor(view, view->code_column, edited_cb);
 }
 
 void
 gnc_tree_view_account_set_description_edited(GncTreeViewAccount *view,
-        GncTreeViewAccountColumnTextEdited edited_cb)
+        GncTreeViewAccountColumnTextEdited edited_cb) noexcept
 {
     gtva_set_column_editor(view, view->desc_column, edited_cb);
 }
 
 void
 gnc_tree_view_account_set_notes_edited(GncTreeViewAccount *view,
-                                       GncTreeViewAccountColumnTextEdited edited_cb)
+        GncTreeViewAccountColumnTextEdited edited_cb) noexcept
 {
     gtva_set_column_editor(view, view->notes_column, edited_cb);
 }
@@ -2828,14 +2834,14 @@ gboolean gnc_tree_view_search_compare (GtkTreeModel *model, gint column,
 }
 
 void gnc_tree_view_account_set_editing_started_cb(GncTreeViewAccount *view,
-    GFunc editing_started_cb, gpointer editing_cb_data)
+    GFunc editing_started_cb, gpointer editing_cb_data) noexcept
 {
     gnc_tree_view_set_editing_started_cb (GNC_TREE_VIEW(view),
             editing_started_cb, editing_cb_data);
 }
 
 void gnc_tree_view_account_set_editing_finished_cb(GncTreeViewAccount *view,
-    GFunc editing_finished_cb, gpointer editing_cb_data)
+    GFunc editing_finished_cb, gpointer editing_cb_data) noexcept
 {
     gnc_tree_view_set_editing_finished_cb (GNC_TREE_VIEW(view),
             editing_finished_cb, editing_cb_data);

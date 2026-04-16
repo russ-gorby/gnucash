@@ -341,7 +341,7 @@ match_func (GtkEntryCompletion *completion, const char *entry_str,
  *  @return A GNCCurrencyEdit widget.
  */
 GtkWidget *
-gnc_currency_edit_new (void)
+gnc_currency_edit_new (void) noexcept
 {
     GNCCurrencyEdit *gce;
     GtkListStore *store;
@@ -393,7 +393,7 @@ gnc_currency_edit_new (void)
  */
 void
 gnc_currency_edit_set_currency (GNCCurrencyEdit *gce,
-                                const gnc_commodity *currency)
+                                const gnc_commodity *currency) noexcept
 {
     const gchar *printname;
 
@@ -414,7 +414,7 @@ gnc_currency_edit_set_currency (GNCCurrencyEdit *gce,
  *  structure).
  */
 gnc_commodity *
-gnc_currency_edit_get_currency (GNCCurrencyEdit *gce)
+gnc_currency_edit_get_currency (GNCCurrencyEdit *gce) noexcept
 {
     gnc_commodity *commodity;
     char *mnemonic, *name;
@@ -455,7 +455,7 @@ gnc_currency_edit_get_currency (GNCCurrencyEdit *gce)
  *  @param gce The currency editor widget whose values should be retrieved.
  */
 void
-gnc_currency_edit_clear_display (GNCCurrencyEdit *gce)
+gnc_currency_edit_clear_display (GNCCurrencyEdit *gce) noexcept
 {
     GtkTreeModel *model;
     GtkWidget *entry;

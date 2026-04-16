@@ -25,7 +25,19 @@
 #ifndef DIALOG_TOTD_H
 #define DIALOG_TOTD_H
 
-void gnc_totd_dialog (GtkWindow *parent, gboolean startup);
-void gnc_totd_dialog_reparent (void);
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
+void gnc_totd_dialog (GtkWindow *parent, gboolean startup) NOEXCEPT;
+void gnc_totd_dialog_reparent (void) NOEXCEPT;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

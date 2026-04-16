@@ -29,9 +29,12 @@
 #include "Query.h"
 
 #ifdef __cplusplus
+#define NOEXCEPT noexcept
 extern "C"
 {
-#endif              /* __cplusplus */
+#else
+#define NOEXCEPT
+#endif
 
 #define GNC_TYPE_QUERY_VIEW            (gnc_query_view_get_type ())
 #define GNC_QUERY_VIEW(obj)            G_TYPE_CHECK_INSTANCE_CAST ((obj), GNC_TYPE_QUERY_VIEW, GNCQueryView)
@@ -87,7 +90,7 @@ struct _GNCQueryViewClass
 /***********************************************************
  *                public functions                         *
  ***********************************************************/
-
+// GObject type decl should not be noexcept
 GType gnc_query_view_get_type (void);
 
 /* The param_list remains owned by the caller but is used by the
@@ -95,37 +98,37 @@ GType gnc_query_view_get_type (void);
  * The query will be copied by the query-view so the caller may do
  * whatever they want.
  */
-GtkWidget * gnc_query_view_new (GList *param_list, Query *query);
+GtkWidget * gnc_query_view_new (GList *param_list, Query *query) NOEXCEPT;
 
-void gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query);
+void gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query) NOEXCEPT;
 
-void gnc_query_view_reset_query (GNCQueryView *view, Query *query);
+void gnc_query_view_reset_query (GNCQueryView *view, Query *query) NOEXCEPT;
 
-void gnc_query_view_set_numerics (GNCQueryView *qview, gboolean abs, gboolean inv_sort);
+void gnc_query_view_set_numerics (GNCQueryView *qview, gboolean abs, gboolean inv_sort) NOEXCEPT;
 
-gint gnc_query_view_get_num_entries (GNCQueryView *qview);
+gint gnc_query_view_get_num_entries (GNCQueryView *qview) NOEXCEPT;
 
-gpointer gnc_query_view_get_selected_entry (GNCQueryView *qview);
+gpointer gnc_query_view_get_selected_entry (GNCQueryView *qview) NOEXCEPT;
 
 /** Returns a list of selected entries in the query view.
  *  The returned GList should be freed by the caller */
-GList * gnc_query_view_get_selected_entry_list (GNCQueryView *qview);
+GList * gnc_query_view_get_selected_entry_list (GNCQueryView *qview) NOEXCEPT;
 
-void gnc_query_view_refresh (GNCQueryView *qview);
+void gnc_query_view_refresh (GNCQueryView *qview) NOEXCEPT;
 
-void gnc_query_view_unselect_all (GNCQueryView *qview);
+void gnc_query_view_unselect_all (GNCQueryView *qview) NOEXCEPT;
 
-gboolean gnc_query_view_item_in_view (GNCQueryView *qview, gpointer item);
+gboolean gnc_query_view_item_in_view (GNCQueryView *qview, gpointer item) NOEXCEPT;
 
-void gnc_query_sort_order (GNCQueryView *qview, gint column, GtkSortType order);
+void gnc_query_sort_order (GNCQueryView *qview, gint column, GtkSortType order) NOEXCEPT;
 
-void gnc_query_set_expand_column (GNCQueryView *qview, gint column);
+void gnc_query_set_expand_column (GNCQueryView *qview, gint column) NOEXCEPT;
 
-void gnc_query_scroll_to_selection (GNCQueryView *qview);
+void gnc_query_scroll_to_selection (GNCQueryView *qview) NOEXCEPT;
 
-void gnc_query_force_scroll_to_selection (GNCQueryView *qview);
+void gnc_query_force_scroll_to_selection (GNCQueryView *qview) NOEXCEPT;
 
-void gnc_query_use_scroll_to_selection (GNCQueryView *qview, gboolean scroll);
+void gnc_query_use_scroll_to_selection (GNCQueryView *qview, gboolean scroll) NOEXCEPT;
 
 #ifdef __cplusplus
 }

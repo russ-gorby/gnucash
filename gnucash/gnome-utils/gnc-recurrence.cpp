@@ -234,7 +234,7 @@ gnc_recurrence_init( GncRecurrence *gr )
 
 
 void
-gnc_recurrence_set(GncRecurrence *gr, const Recurrence *r)
+gnc_recurrence_set(GncRecurrence *gr, const Recurrence *r) noexcept
 {
     PeriodType pt;
     guint mult;
@@ -259,7 +259,7 @@ gnc_recurrence_set(GncRecurrence *gr, const Recurrence *r)
 
 
 const Recurrence *
-gnc_recurrence_get(GncRecurrence *gr)
+gnc_recurrence_get(GncRecurrence *gr) noexcept
 {
     guint mult;
     UIPeriodType period;
@@ -361,7 +361,7 @@ gnc_recurrence_class_init( GncRecurrenceClass *klass )
 }
 
 GtkWidget *
-gnc_recurrence_new()
+gnc_recurrence_new() noexcept
 {
     ENTER(" ");
     auto gr = static_cast<GncRecurrence *>(

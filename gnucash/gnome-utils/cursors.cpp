@@ -77,7 +77,7 @@ gnc_ui_set_cursor (GdkWindow *win, GNCCursorType type, gboolean update_now)
  * Return: none                                                     *
 \********************************************************************/
 void
-gnc_set_busy_cursor (GtkWidget *w, gboolean update_now)
+gnc_set_busy_cursor (GtkWidget *w, gboolean update_now) noexcept
 {
     if (w != NULL)
         gnc_ui_set_cursor (gtk_widget_get_window(w), GNC_CURSOR_BUSY, update_now);
@@ -115,7 +115,7 @@ gnc_set_busy_cursor (GtkWidget *w, gboolean update_now)
  * Return: none                                                     *
 \********************************************************************/
 void
-gnc_unset_busy_cursor (GtkWidget *w)
+gnc_unset_busy_cursor (GtkWidget *w) noexcept
 {
     if (w != NULL)
         gnc_ui_set_cursor (gtk_widget_get_window(w), GNC_CURSOR_NORMAL, FALSE);

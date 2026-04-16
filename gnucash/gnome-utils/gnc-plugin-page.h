@@ -39,7 +39,13 @@
 #include <glib.h>
 #include "qof.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 #define GNC_PREF_SUMMARYBAR_POSITION_TOP    "summarybar-position-top"
 #define GNC_PREF_SUMMARYBAR_POSITION_BOTTOM "summarybar-position-bottom"
@@ -208,6 +214,7 @@ typedef struct
  *
  *  @return A GType.
  */
+// GObject type decl should not be noexcept
 GType gnc_plugin_page_get_type (void);
 
 
@@ -222,7 +229,7 @@ GType gnc_plugin_page_get_type (void);
  *
  *  @return A displayable gtk widget.
  */
-GtkWidget *gnc_plugin_page_create_widget (GncPluginPage *plugin_page);
+GtkWidget *gnc_plugin_page_create_widget (GncPluginPage *plugin_page) NOEXCEPT;
 
 
 /** Destroy the display widget that corresponds to this plugin.  This
@@ -232,7 +239,7 @@ GtkWidget *gnc_plugin_page_create_widget (GncPluginPage *plugin_page);
  *  @param plugin_page A pointer to the plugin whose display widget
  *  should be destroyed.
  */
-void gnc_plugin_page_destroy_widget (GncPluginPage *plugin_page);
+void gnc_plugin_page_destroy_widget (GncPluginPage *plugin_page) NOEXCEPT;
 
 
 /** Show/hide the summarybar associated with this page.
@@ -241,7 +248,7 @@ void gnc_plugin_page_destroy_widget (GncPluginPage *plugin_page);
  *
  *  @param visible Whether or not the summarybar should be shown..
  */
-void gnc_plugin_page_show_summarybar (GncPluginPage *page, gboolean visible);
+void gnc_plugin_page_show_summarybar (GncPluginPage *page, gboolean visible) NOEXCEPT;
 
 
 /** Call the plugin specific function that will save the state of a
@@ -258,7 +265,7 @@ void gnc_plugin_page_show_summarybar (GncPluginPage *page, gboolean visible);
  */
 void gnc_plugin_page_save_page (GncPluginPage *page,
                                 GKeyFile *key_file,
-                                const gchar *group_name);
+                                const gchar *group_name) NOEXCEPT;
 
 
 /** This function looks up a specific plugin type by name, and then
@@ -277,7 +284,7 @@ void gnc_plugin_page_save_page (GncPluginPage *page,
 GncPluginPage *gnc_plugin_page_recreate_page (GtkWidget *window,
                                               const gchar *page_type,
                                               GKeyFile *key_file,
-                                              const gchar *group_name);
+                                              const gchar *group_name) NOEXCEPT;
 
 
 /** Add the actions for a content page to the specified window.
@@ -285,7 +292,7 @@ GncPluginPage *gnc_plugin_page_recreate_page (GtkWidget *window,
  *  @param plugin_page A pointer to the page whose actions should be
  *  added to the user interface.
  */
-void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page);
+void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page) NOEXCEPT;
 
 
 /** Retrieve the textual name of a plugin.
@@ -296,7 +303,7 @@ void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page);
  *  @return The name of this plugin.  This string is owned by the
  *  plugin.
  */
-const gchar *gnc_plugin_page_get_plugin_name (GncPluginPage *plugin_page);
+const gchar *gnc_plugin_page_get_plugin_name (GncPluginPage *plugin_page) NOEXCEPT;
 
 
 /** Add a book reference to the specified page.
@@ -305,7 +312,7 @@ const gchar *gnc_plugin_page_get_plugin_name (GncPluginPage *plugin_page);
  *
  *  @param book The book referenced by this page.
  */
-void gnc_plugin_page_add_book (GncPluginPage *page, QofBook *book);
+void gnc_plugin_page_add_book (GncPluginPage *page, QofBook *book) NOEXCEPT;
 
 
 /** Query a page to see if it has a reference to a given book.  This
@@ -319,7 +326,7 @@ void gnc_plugin_page_add_book (GncPluginPage *page, QofBook *book);
  *  @return TRUE if the page refers to the specified book. FALSE
  *  otherwise.
  */
-gboolean gnc_plugin_page_has_book (GncPluginPage *page, QofBook *book);
+gboolean gnc_plugin_page_has_book (GncPluginPage *page, QofBook *book) NOEXCEPT;
 
 
 /** Query a page to see if it has a reference to any book.
@@ -328,7 +335,7 @@ gboolean gnc_plugin_page_has_book (GncPluginPage *page, QofBook *book);
  *
  *  @return TRUE if the page references any books. FALSE otherwise.
  */
-gboolean gnc_plugin_page_has_books (GncPluginPage *page);
+gboolean gnc_plugin_page_has_books (GncPluginPage *page) NOEXCEPT;
 
 
 /** Retrieve a pointer to the GncMainWindow (GtkWindow) containing
@@ -338,7 +345,7 @@ gboolean gnc_plugin_page_has_books (GncPluginPage *page);
  *
  *  @return A pointer to the window.
  */
-GtkWidget *gnc_plugin_page_get_window (GncPluginPage *page);
+GtkWidget *gnc_plugin_page_get_window (GncPluginPage *page) NOEXCEPT;
 
 
 /** Retrieve the name of this page.  This is the string used in the
@@ -349,7 +356,7 @@ GtkWidget *gnc_plugin_page_get_window (GncPluginPage *page);
  *  @return The page's name.  This string is owned by the page and
  *  should not be freed by the caller.
  */
-const gchar *gnc_plugin_page_get_page_name (GncPluginPage *page);
+const gchar *gnc_plugin_page_get_page_name (GncPluginPage *page) NOEXCEPT;
 
 
 /** Set the name of this page.  This is the string used in the window
@@ -359,7 +366,7 @@ const gchar *gnc_plugin_page_get_page_name (GncPluginPage *page);
  *
  *  @param name The new string for the name.
  */
-void gnc_plugin_page_set_page_name (GncPluginPage *page, const char *name);
+void gnc_plugin_page_set_page_name (GncPluginPage *page, const char *name) NOEXCEPT;
 
 
 /** Retrieve the long name of this page.  This is the string used in
@@ -371,7 +378,7 @@ void gnc_plugin_page_set_page_name (GncPluginPage *page, const char *name);
  *  @return The page's name.  This string is owned by the page and
  *  should not be freed by the caller.
  */
-const gchar *gnc_plugin_page_get_page_long_name (GncPluginPage *page);
+const gchar *gnc_plugin_page_get_page_long_name (GncPluginPage *page) NOEXCEPT;
 
 
 /** Set the long name of this page.  This is the string used in the
@@ -381,7 +388,7 @@ const gchar *gnc_plugin_page_get_page_long_name (GncPluginPage *page);
  *
  *  @param name The new string for the name.
  */
-void gnc_plugin_page_set_page_long_name (GncPluginPage *page, const char *name);
+void gnc_plugin_page_set_page_long_name (GncPluginPage *page, const char *name) NOEXCEPT;
 
 
 /** Retrieve the color of this page. This is the color string used
@@ -392,7 +399,7 @@ void gnc_plugin_page_set_page_long_name (GncPluginPage *page, const char *name);
  *  @return The color for this page.  This string is owned by the page and
  *  should not be freed by the caller.
  */
-const gchar *gnc_plugin_page_get_page_color (GncPluginPage *page);
+const gchar *gnc_plugin_page_get_page_color (GncPluginPage *page) NOEXCEPT;
 
 
 /** Set the color of this page. This is the color string used
@@ -403,7 +410,7 @@ const gchar *gnc_plugin_page_get_page_color (GncPluginPage *page);
  *  @param color The color for this page.  This string is owned by the page and
  *  should not be freed by the caller.
  */
-void gnc_plugin_page_set_page_color (GncPluginPage *page, const char *color);
+void gnc_plugin_page_set_page_color (GncPluginPage *page, const char *color) NOEXCEPT;
 
 
 /** Set up the page_changed callback for when the current page is changed.
@@ -414,14 +421,14 @@ void gnc_plugin_page_set_page_color (GncPluginPage *page, const char *color);
  *
  *  @param user_data The page focus function
  */
-void gnc_plugin_page_inserted_cb (GncPluginPage *page, gpointer user_data);
+void gnc_plugin_page_inserted_cb (GncPluginPage *page, gpointer user_data) NOEXCEPT;
 
 
 /** Disconnect the page_changed_id signal callback.
  *
  *  @param page The page whose name should be retrieved.
  */
-void gnc_plugin_page_disconnect_page_changed (GncPluginPage *page);
+void gnc_plugin_page_disconnect_page_changed (GncPluginPage *page) NOEXCEPT;
 
 
 /** Retrieve the statusbar text associated with this page.
@@ -431,7 +438,7 @@ void gnc_plugin_page_disconnect_page_changed (GncPluginPage *page);
  *  @return A pointer to the statusbar text for this page.  This
  *  string is owned by the page and should not be freed by the caller.
  */
-const gchar *gnc_plugin_page_get_statusbar_text (GncPluginPage *page);
+const gchar *gnc_plugin_page_get_statusbar_text (GncPluginPage *page) NOEXCEPT;
 
 
 /** Set the statusbar text associated with this page.
@@ -441,7 +448,7 @@ const gchar *gnc_plugin_page_get_statusbar_text (GncPluginPage *page);
  *  @param name The new statusbar text for the page.
  */
 void gnc_plugin_page_set_statusbar_text (GncPluginPage *page,
-        const char *name);
+        const char *name) NOEXCEPT;
 
 
 /** Retrieve the "use new window" setting associated with this page.
@@ -450,7 +457,7 @@ void gnc_plugin_page_set_statusbar_text (GncPluginPage *page,
  *
  *  @return Whether this page should be created in a new window.
  */
-gboolean gnc_plugin_page_get_use_new_window (GncPluginPage *page);
+gboolean gnc_plugin_page_get_use_new_window (GncPluginPage *page) NOEXCEPT;
 
 
 /** Set the "use new window" setting associated with this page.  If
@@ -463,7 +470,7 @@ gboolean gnc_plugin_page_get_use_new_window (GncPluginPage *page);
  *  @param use_new The new value for this setting.
  */
 void gnc_plugin_page_set_use_new_window (GncPluginPage *page,
-        gboolean use_new);
+        gboolean use_new) NOEXCEPT;
 
 
 /** Retrieve the name of the XML UI file associated with this page.
@@ -473,7 +480,7 @@ void gnc_plugin_page_set_use_new_window (GncPluginPage *page,
  *  @return A pointer to the filename used for the UI.  This
  *  string is owned by the page and should not be freed by the caller.
  */
-const char *gnc_plugin_page_get_ui_description (GncPluginPage *page);
+const char *gnc_plugin_page_get_ui_description (GncPluginPage *page) NOEXCEPT;
 
 
 /** Set an alternate UI for the specified page.  This alternate ui
@@ -487,7 +494,7 @@ const char *gnc_plugin_page_get_ui_description (GncPluginPage *page);
  *  @param ui_filename The filename (no path) of the alternate UI.
  */
 void gnc_plugin_page_set_ui_description (GncPluginPage *page,
-                                         const char *ui_filename);
+                                         const char *ui_filename) NOEXCEPT;
 
 
 /** Retrieve the GtkBuilder object associated with this page.
@@ -495,7 +502,7 @@ void gnc_plugin_page_set_ui_description (GncPluginPage *page,
  *  @param page The page whose UI information should be retrieved.
  *
  *  @return A pointer to the GtkBuilder object for this page. */
-GtkBuilder *gnc_plugin_page_get_builder (GncPluginPage *page);
+GtkBuilder *gnc_plugin_page_get_builder (GncPluginPage *page) NOEXCEPT;
 
 
 /** Retrieve the menu qualifier for this page.
@@ -504,7 +511,7 @@ GtkBuilder *gnc_plugin_page_get_builder (GncPluginPage *page);
  *
  *  @return A qualifier string for this page.
  */
-const gchar * gnc_plugin_page_get_menu_qualifier (GncPluginPage *page);
+const gchar * gnc_plugin_page_get_menu_qualifier (GncPluginPage *page) NOEXCEPT;
 
 /** Set a qualifier string for this page. This string is used when there
  *  is more than one menu associated with the page.
@@ -514,7 +521,7 @@ const gchar * gnc_plugin_page_get_menu_qualifier (GncPluginPage *page);
  *  @param menu_qualifier A string to be used as for the qualifier.
  */
 void gnc_plugin_page_set_menu_qualifier (GncPluginPage *page,
-                                         const char *menu_qualifier);
+                                         const char *menu_qualifier) NOEXCEPT;
 
 /** Retrieve the menu popup qualifier for this page.
  *
@@ -522,7 +529,7 @@ void gnc_plugin_page_set_menu_qualifier (GncPluginPage *page,
  *
  *  @return A qualifier string for this page.
  */
-const gchar * gnc_plugin_page_get_menu_popup_qualifier (GncPluginPage *page);
+const gchar * gnc_plugin_page_get_menu_popup_qualifier (GncPluginPage *page) NOEXCEPT;
 
 /** Set a qualifier string for this page. This string is used when there
  *  is more than one popup menu associated with the page.
@@ -532,7 +539,7 @@ const gchar * gnc_plugin_page_get_menu_popup_qualifier (GncPluginPage *page);
  *  @param menu_qualifier A string to be used as for the qualifier.
  */
 void gnc_plugin_page_set_menu_popup_qualifier (GncPluginPage *page,
-                                               const char *menu_qualifier);
+                                               const char *menu_qualifier) NOEXCEPT;
 
 /** Retrieve the GSimpleActionGroup object associated with this page.
  *
@@ -541,7 +548,7 @@ void gnc_plugin_page_set_menu_popup_qualifier (GncPluginPage *page,
  *
  *  @return A pointer to the GSimpleActionGroup object for this page.
  */
-GSimpleActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
+GSimpleActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page) NOEXCEPT;
 
 /** Create the GSimpleActionGroup object associated with this page.
  *
@@ -556,7 +563,7 @@ GSimpleActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
  *  this page.
  */
 GSimpleActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
-                                                          const gchar *group_name);
+                                                          const gchar *group_name) NOEXCEPT;
 
 /** Retrieve the simple action group name associated with this plugin
  *  page.
@@ -565,7 +572,7 @@ GSimpleActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
  *
  *  @return The simple action group name associated with this plugin.
  */
-const gchar *gnc_plugin_page_get_simple_action_group_name (GncPluginPage *page);
+const gchar *gnc_plugin_page_get_simple_action_group_name (GncPluginPage *page) NOEXCEPT;
 
 
 /** Retrieve a GAction object associated with this page.
@@ -578,13 +585,13 @@ const gchar *gnc_plugin_page_get_simple_action_group_name (GncPluginPage *page);
  *  @return A pointer to the requested GAction object or NULL.
  */
 GAction *gnc_plugin_page_get_action (GncPluginPage *page,
-                                     const gchar *action_name);
+                                     const gchar *action_name) NOEXCEPT;
 
 /* Signals */
-void gnc_plugin_page_inserted (GncPluginPage *plugin_page);
-void gnc_plugin_page_removed (GncPluginPage *plugin_page);
-void gnc_plugin_page_selected (GncPluginPage *plugin_page);
-void gnc_plugin_page_unselected (GncPluginPage *plugin_page);
+void gnc_plugin_page_inserted (GncPluginPage *plugin_page) NOEXCEPT;
+void gnc_plugin_page_removed (GncPluginPage *plugin_page) NOEXCEPT;
+void gnc_plugin_page_selected (GncPluginPage *plugin_page) NOEXCEPT;
+void gnc_plugin_page_unselected (GncPluginPage *plugin_page) NOEXCEPT;
 
 /** Tell a page to finish any outstanding activities.
  *
@@ -593,9 +600,11 @@ void gnc_plugin_page_unselected (GncPluginPage *plugin_page);
  *  @return FALSE if the page could not or would not comply, which
  *  should cancel the pending operation.  TRUE otherwise
  */
-gboolean gnc_plugin_page_finish_pending (GncPluginPage *plugin_page);
+gboolean gnc_plugin_page_finish_pending (GncPluginPage *plugin_page) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_PLUGIN_PAGE_H */
 /** @} */

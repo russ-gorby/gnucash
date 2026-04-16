@@ -34,7 +34,13 @@
 
 #include <gtk/gtk.h>
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_TREE_VIEW            (gnc_tree_view_get_type ())
@@ -137,7 +143,7 @@ gnc_tree_view_add_toggle_column (GncTreeView *view,
                                  gint model_data_column,
                                  gint model_visibility_column,
                                  GtkTreeIterCompareFunc column_sort_fn,
-                                 renderer_toggled toggle_edited_cb);
+                                 renderer_toggled toggle_edited_cb) NOEXCEPT;
 
 /** This function adds a new text column to a GncTreeView base view.
  *  It takes all the parameters necessary to hook a GtkTreeModel
@@ -184,7 +190,7 @@ gnc_tree_view_add_text_column (GncTreeView *view,
                                const gchar *sizing_text,
                                gint model_data_column,
                                gint model_visibility_column,
-                               GtkTreeIterCompareFunc column_sort_fn);
+                               GtkTreeIterCompareFunc column_sort_fn) NOEXCEPT;
 
 /** This function adds a new text view column to a GncTreeView base view.
  *  It takes all the parameters necessary to hook a GtkTreeModel
@@ -231,7 +237,7 @@ gnc_tree_view_add_text_view_column (GncTreeView *view,
                                const gchar *sizing_text,
                                gint model_data_column,
                                gint model_visibility_column,
-                               GtkTreeIterCompareFunc column_sort_fn);
+                               GtkTreeIterCompareFunc column_sort_fn) NOEXCEPT;
 
 /** This function adds a pixbuf view column to a GncTreeView base view.
  *  It takes all the parameters necessary to hook a GtkTreeModel
@@ -272,7 +278,7 @@ gnc_tree_view_add_pix_column (GncTreeView *view,
                               const gchar *sizing_text,
                               gint model_data_column,
                               gint model_visibility_column,
-                              GtkTreeIterCompareFunc column_sort_fn);
+                              GtkTreeIterCompareFunc column_sort_fn) NOEXCEPT;
 
 /** This function adds a new numeric column to a GncTreeView base
  *  view.  It takes all the parameters necessary to hook a
@@ -321,7 +327,7 @@ gnc_tree_view_add_numeric_column (GncTreeView *view,
                                   gint model_data_column,
                                   gint model_color_column,
                                   gint model_visibility_column,
-                                  GtkTreeIterCompareFunc column_sort_fn);
+                                  GtkTreeIterCompareFunc column_sort_fn) NOEXCEPT;
 
 /** Add a column to a view based upon a GncTreeView.  This function
  *  knows about the two special columns on the right side of this type
@@ -336,7 +342,7 @@ gnc_tree_view_add_numeric_column (GncTreeView *view,
  *  @return The index of the newly added column.
  */
 gint gnc_tree_view_append_column (GncTreeView *view,
-                                  GtkTreeViewColumn *column);
+                                  GtkTreeViewColumn *column) NOEXCEPT;
 
 /** @} */
 
@@ -350,7 +356,7 @@ gint gnc_tree_view_append_column (GncTreeView *view,
  *
  *  @param view A pointer to an gnc tree view.
  */
-void gnc_tree_view_configure_columns (GncTreeView *view);
+void gnc_tree_view_configure_columns (GncTreeView *view) NOEXCEPT;
 
 /** Find a tree column given the "pref name".  This
  *  function simply runs the list of all (visible and invisible)
@@ -364,7 +370,7 @@ void gnc_tree_view_configure_columns (GncTreeView *view);
  */
 GtkTreeViewColumn *
 gnc_tree_view_find_column_by_name (GncTreeView *view,
-                                   const gchar *wanted);
+                                   const gchar *wanted) NOEXCEPT;
 
 /** This function is called to set up or remove an association between
  *  a saved state section and the display of a view.  It will first remove
@@ -382,7 +388,7 @@ gnc_tree_view_find_column_by_name (GncTreeView *view,
  *  Use NULL to disconnect saved state association.
  */
 void gnc_tree_view_set_state_section (GncTreeView *view,
-                                      const gchar *section);
+                                      const gchar *section) NOEXCEPT;
 
 /** This function is called to get the current association between a
  *  saved state section and the display of a view.  It returns the same
@@ -392,7 +398,7 @@ void gnc_tree_view_set_state_section (GncTreeView *view,
  *
  *  @return The current state section.
  */
-const gchar *gnc_tree_view_get_state_section (GncTreeView *view);
+const gchar *gnc_tree_view_get_state_section (GncTreeView *view) NOEXCEPT;
 
 
 /** This function is called to completely wipe the treeview's state
@@ -402,7 +408,7 @@ const gchar *gnc_tree_view_get_state_section (GncTreeView *view);
  *
  *  @param view The tree view.
  */
-void gnc_tree_view_remove_state_information(GncTreeView *view);
+void gnc_tree_view_remove_state_information(GncTreeView *view) NOEXCEPT;
 
 
 /** This function is called to write the treeview's state
@@ -411,7 +417,7 @@ void gnc_tree_view_remove_state_information(GncTreeView *view);
  *
  *  @param view The tree view.
  */
-void gnc_tree_view_save_state (GncTreeView *view);
+void gnc_tree_view_save_state (GncTreeView *view) NOEXCEPT;
 
 
 /** This function set the columns that will be allocated the free space
@@ -423,7 +429,7 @@ void gnc_tree_view_save_state (GncTreeView *view);
  */
 void gnc_tree_view_expand_columns (GncTreeView *view,
                                    gchar *first_column_name,
-                                   ...);
+                                   ...) NOEXCEPT;
 
 /** This function links the cell backgrounds of the two control columns
  *  to a column in the model that has color strings or a cell data function
@@ -437,7 +443,7 @@ void gnc_tree_view_expand_columns (GncTreeView *view,
  */
 void
 gnc_tree_view_set_control_column_background (GncTreeView *view, gint column,
-        GtkTreeCellDataFunc func);
+        GtkTreeCellDataFunc func) NOEXCEPT;
 
 /** This allows the columns to be setup without the model connected
  *
@@ -446,7 +452,7 @@ gnc_tree_view_set_control_column_background (GncTreeView *view, gint column,
  *  @param sort model.
  */
 void
-gnc_tree_view_set_sort_user_data (GncTreeView *view, GtkTreeModel *s_model);
+gnc_tree_view_set_sort_user_data (GncTreeView *view, GtkTreeModel *s_model) NOEXCEPT;
 
 /** This function is called to set the "show-column-menu" property on
  *  this view.  This function has no visible effect if the
@@ -458,7 +464,7 @@ gnc_tree_view_set_sort_user_data (GncTreeView *view, GtkTreeModel *s_model);
  */
 void
 gnc_tree_view_set_show_column_menu (GncTreeView *view,
-                                    gboolean visible);
+                                    gboolean visible) NOEXCEPT;
 
 /** This function is called to get the current value of the
  *  "show-column-menu" property.  It returns the same value passed to
@@ -469,7 +475,7 @@ gnc_tree_view_set_show_column_menu (GncTreeView *view,
  *  @return Whether or not the column selection menu should be shown.
  */
 gboolean
-gnc_tree_view_get_show_column_menu (GncTreeView *view);
+gnc_tree_view_get_show_column_menu (GncTreeView *view) NOEXCEPT;
 
 /** Return the "main" cell renderer from a GtkTreeViewColumn added to
  *  a GncTreeView my one of the convenience routines.
@@ -479,7 +485,7 @@ gnc_tree_view_get_show_column_menu (GncTreeView *view);
  *  @returns The cell renderer in use in the column.
  */
 GtkCellRenderer *
-gnc_tree_view_column_get_renderer (GtkTreeViewColumn *column);
+gnc_tree_view_column_get_renderer (GtkTreeViewColumn *column) NOEXCEPT;
 
 
 /* Takes a GdkEventKey and the current path and column for the
@@ -488,30 +494,32 @@ gnc_tree_view_column_get_renderer (GtkTreeViewColumn *column);
  * navigation wrapped a row) path. */
 void
 gnc_tree_view_keynav (GncTreeView *view, GtkTreeViewColumn **col,
-                      GtkTreePath *path, GdkEventKey *event);
+                      GtkTreePath *path, GdkEventKey *event) NOEXCEPT;
 
 /* Returns TRUE if path is a valid path for the treeview */
 gboolean
-gnc_tree_view_path_is_valid (GncTreeView *view, GtkTreePath *path);
+gnc_tree_view_path_is_valid (GncTreeView *view, GtkTreePath *path) NOEXCEPT;
 
 /** Setup a callback for when the user starts editing so appropriate actions can be taken
  *  like disable the actions delete menu option.
  */
 void
 gnc_tree_view_set_editing_started_cb (GncTreeView *view,
-                     GFunc editing_started_cb, gpointer editing_cb_data);
+                     GFunc editing_started_cb, gpointer editing_cb_data) NOEXCEPT;
 
 /** Setup a callback for when the user finishes editing so appropriate actions can be taken
  *  like enable the actions delete menu option.
  */
 void
 gnc_tree_view_set_editing_finished_cb (GncTreeView *view,
-                    GFunc editing_finished_cb, gpointer editing_cb_data);
+                    GFunc editing_finished_cb, gpointer editing_cb_data) NOEXCEPT;
 
 /** @} */
 
 /** @} */
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_TREE_VIEW_H */

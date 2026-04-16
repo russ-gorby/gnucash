@@ -32,31 +32,33 @@
 #include "qof.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_DATE_FORMAT          (gnc_date_format_get_type ())
 G_DECLARE_FINAL_TYPE (GNCDateFormat, gnc_date_format, GNC, DATE_FORMAT, GtkBox)
 
-GtkWidget *gnc_date_format_new            (void);
-GtkWidget *gnc_date_format_new_without_label (void);
-GtkWidget *gnc_date_format_new_with_label (const char *label);
+GtkWidget *gnc_date_format_new(void) NOEXCEPT;
+GtkWidget *gnc_date_format_new_without_label(void) NOEXCEPT;
+GtkWidget *gnc_date_format_new_with_label(const char *label) NOEXCEPT;
 
-void      gnc_date_format_set_format      (GNCDateFormat *gdf, QofDateFormat format);
-QofDateFormat gnc_date_format_get_format     (GNCDateFormat *gdf);
+void gnc_date_format_set_format(GNCDateFormat *gdf, QofDateFormat format) NOEXCEPT;
+QofDateFormat gnc_date_format_get_format(GNCDateFormat *gdf) NOEXCEPT;
 
-void      gnc_date_format_set_months      (GNCDateFormat *gdf,
-        GNCDateMonthFormat months);
-GNCDateMonthFormat gnc_date_format_get_months (GNCDateFormat *gdf);
+void gnc_date_format_set_months(GNCDateFormat *gdf, GNCDateMonthFormat months) NOEXCEPT;
+GNCDateMonthFormat gnc_date_format_get_months(GNCDateFormat *gdf) NOEXCEPT;
 
-void      gnc_date_format_set_years       (GNCDateFormat *gdf,
-        gboolean include_century);
-gboolean  gnc_date_format_get_years       (GNCDateFormat *gdf);
+void gnc_date_format_set_years(GNCDateFormat *gdf, gboolean include_century) NOEXCEPT;
+gboolean gnc_date_format_get_years(GNCDateFormat *gdf) NOEXCEPT;
 
-void      gnc_date_format_set_custom      (GNCDateFormat *gdf, const char *format);
-const char* gnc_date_format_get_custom    (GNCDateFormat *gdf);
+void gnc_date_format_set_custom(GNCDateFormat *gdf, const char *format) NOEXCEPT;
+const char* gnc_date_format_get_custom(GNCDateFormat *gdf) NOEXCEPT;
 
-void      gnc_date_format_refresh         (GNCDateFormat *gdf);
+void gnc_date_format_refresh(GNCDateFormat *gdf) NOEXCEPT;
 
 #ifdef __cplusplus
 }

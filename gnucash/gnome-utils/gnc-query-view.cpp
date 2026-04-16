@@ -86,7 +86,7 @@ static void gnc_query_view_set_query_sort (GNCQueryView *qview,
  * Returns: the query view widget, or NULL if there was a problem.  *
 \********************************************************************/
 void
-gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query)
+gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query) noexcept
 {
     GNCQueryViewPrivate *priv;
 
@@ -112,7 +112,7 @@ gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query)
 }
 
 GtkWidget *
-gnc_query_view_new (GList *param_list, Query *query)
+gnc_query_view_new (GList *param_list, Query *query) noexcept
 {
     g_return_val_if_fail (param_list, NULL);
     g_return_val_if_fail (query, NULL);
@@ -156,7 +156,7 @@ gnc_query_view_new (GList *param_list, Query *query)
     return GTK_WIDGET(qview);
 }
 
-void gnc_query_view_reset_query (GNCQueryView *qview, Query *query)
+void gnc_query_view_reset_query (GNCQueryView *qview, Query *query) noexcept
 {
     g_return_if_fail (qview);
     g_return_if_fail (query);
@@ -224,7 +224,7 @@ sort_iter_compare_func (GtkTreeModel *model,
  *       order   - GTK_SORT_ASCENDING or GTK_SORT_DESCENDING        *
 \********************************************************************/
 void
-gnc_query_sort_order (GNCQueryView *qview, gint column, GtkSortType order)
+gnc_query_sort_order (GNCQueryView *qview, gint column, GtkSortType order) noexcept
 {
     GtkTreeSortable *sortable;
     gint sortcol;
@@ -523,7 +523,7 @@ gnc_query_view_destroy (GtkWidget *widget)
 }
 
 gint
-gnc_query_view_get_num_entries (GNCQueryView *qview)
+gnc_query_view_get_num_entries (GNCQueryView *qview) noexcept
 {
     GtkTreeModel *model;
 
@@ -535,7 +535,7 @@ gnc_query_view_get_num_entries (GNCQueryView *qview)
 }
 
 gpointer
-gnc_query_view_get_selected_entry (GNCQueryView *qview)
+gnc_query_view_get_selected_entry (GNCQueryView *qview) noexcept
 {
     gpointer entry = NULL;
     GList *entries = NULL;
@@ -577,7 +577,7 @@ accumulate_entries (GtkTreeModel *model, GtkTreePath *path,
 }
 
 GList *
-gnc_query_view_get_selected_entry_list (GNCQueryView *qview)
+gnc_query_view_get_selected_entry_list (GNCQueryView *qview) noexcept
 {
     GtkTreeSelection *selection;
     acc_data acc_entries;
@@ -594,7 +594,7 @@ gnc_query_view_get_selected_entry_list (GNCQueryView *qview)
 }
 
 void
-gnc_query_use_scroll_to_selection (GNCQueryView *qview, gboolean scroll)
+gnc_query_use_scroll_to_selection (GNCQueryView *qview, gboolean scroll) noexcept
 {
     g_return_if_fail (qview != NULL);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
@@ -627,7 +627,7 @@ scroll_to_selection (GNCQueryView *qview, gboolean override_scroll)
 }
 
 void
-gnc_query_scroll_to_selection (GNCQueryView *qview)
+gnc_query_scroll_to_selection (GNCQueryView *qview) noexcept
 {
     g_return_if_fail (qview != NULL);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
@@ -636,7 +636,7 @@ gnc_query_scroll_to_selection (GNCQueryView *qview)
 }
 
 void
-gnc_query_force_scroll_to_selection (GNCQueryView *qview)
+gnc_query_force_scroll_to_selection (GNCQueryView *qview) noexcept
 {
     g_return_if_fail (qview != NULL);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
@@ -693,7 +693,7 @@ gnc_query_view_refresh_selected (GNCQueryView *qview, GList *old_entry)
  * Returns: nothing                                                 *
 \********************************************************************/
 void
-gnc_query_view_refresh (GNCQueryView *qview)
+gnc_query_view_refresh (GNCQueryView *qview) noexcept
 {
     GtkTreeModel     *model;
     GList            *selected_entries;
@@ -776,7 +776,7 @@ gnc_query_view_set_query_sort (GNCQueryView *qview, gboolean new_column)
  * Returns: nothing                                                 *
 \********************************************************************/
 void
-gnc_query_set_expand_column (GNCQueryView *qview, gint column)
+gnc_query_set_expand_column (GNCQueryView *qview, gint column) noexcept
 {
     g_return_if_fail (qview != NULL);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
@@ -887,7 +887,7 @@ gnc_query_view_fill (GNCQueryView *qview)
  * Returns: nothing                                                 *
 \********************************************************************/
 void
-gnc_query_view_unselect_all (GNCQueryView *qview)
+gnc_query_view_unselect_all (GNCQueryView *qview) noexcept
 {
     GtkTreeSelection *selection;
 
@@ -898,7 +898,7 @@ gnc_query_view_unselect_all (GNCQueryView *qview)
     gtk_tree_selection_unselect_all (selection);
 }
 
-gboolean gnc_query_view_item_in_view (GNCQueryView *qview, gpointer item)
+gboolean gnc_query_view_item_in_view (GNCQueryView *qview, gpointer item) noexcept
 {
     GtkTreeModel *model;
     GtkTreeIter   iter;
@@ -926,7 +926,7 @@ gboolean gnc_query_view_item_in_view (GNCQueryView *qview, gpointer item)
 }
 
 void
-gnc_query_view_set_numerics (GNCQueryView *qview, gboolean abs, gboolean inv_sort)
+gnc_query_view_set_numerics (GNCQueryView *qview, gboolean abs, gboolean inv_sort) noexcept
 {
     g_return_if_fail (qview);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));

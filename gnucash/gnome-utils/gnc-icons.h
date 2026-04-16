@@ -27,7 +27,13 @@
 #ifndef __GNC_ICONS_H
 #define __GNC_ICONS_H
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 #define GNC_ICON_ACCOUNT "gnc-account"
 #define GNC_ICON_ACCOUNT_REPORT "gnc-account-report"
@@ -57,8 +63,10 @@ G_BEGIN_DECLS
 #define GNC_ICON_DELETE_BUDGET "gnc-account-delete"
 #define GNC_ICON_APP "gnucash-icon"
 
-void gnc_load_app_icons (void);
+void gnc_load_app_icons (void) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_ICONS_H */

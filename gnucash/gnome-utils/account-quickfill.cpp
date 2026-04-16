@@ -197,7 +197,7 @@ build_shared_quickfill (QofBook* book, Account* root, const char* key,
 
 QuickFill*
 gnc_get_shared_account_name_quickfill (Account* root, const char* key,
-                                       AccountBoolCB cb, gpointer cb_data)
+                                       AccountBoolCB cb, gpointer cb_data) noexcept
 {
     QofBook *book = gnc_account_get_book (root);
     auto qfb = static_cast<QFB *>(qof_book_get_data (book, key));
@@ -213,7 +213,7 @@ gnc_get_shared_account_name_quickfill (Account* root, const char* key,
 
 GtkListStore*
 gnc_get_shared_account_name_list_store (Account* root, const char* key,
-                                        AccountBoolCB cb, gpointer cb_data)
+                                        AccountBoolCB cb, gpointer cb_data) noexcept
 {
     QofBook *book = gnc_account_get_book (root);
     auto qfb = static_cast<QFB *>(qof_book_get_data (book, key));

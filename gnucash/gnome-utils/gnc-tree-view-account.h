@@ -40,7 +40,13 @@
 #include "gnc-ui-util.h"
 #include "gnc-plugin-page.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_TREE_VIEW_ACCOUNT            (gnc_tree_view_account_get_type ())
@@ -76,45 +82,46 @@ typedef	struct
 } AccountFilterDialog;
 
 void account_filter_dialog_create(AccountFilterDialog *fd,
-                                  GncPluginPage *page);
+                                  GncPluginPage *page) NOEXCEPT;
 
 gboolean gnc_plugin_page_account_tree_filter_accounts (Account *account,
-        gpointer user_data);
+                                                       gpointer user_data) NOEXCEPT;
 
 /* "Filter By" dialog callbacks */
 void gppat_filter_show_hidden_toggled_cb (GtkToggleButton *togglebutton,
-        AccountFilterDialog *fd);
+                                          AccountFilterDialog *fd) NOEXCEPT;
 void gppat_filter_show_zero_toggled_cb (GtkToggleButton *togglebutton,
-                                        AccountFilterDialog *fd);
+                                        AccountFilterDialog *fd) NOEXCEPT;
 void gppat_filter_show_unused_toggled_cb (GtkToggleButton *togglebutton,
-                                        AccountFilterDialog *fd);
-void gppat_filter_clear_all_cb (GtkWidget *button, AccountFilterDialog *fd);
-void gppat_filter_select_all_cb (GtkWidget *button, AccountFilterDialog *fd);
+                                          AccountFilterDialog *fd) NOEXCEPT;
+void gppat_filter_clear_all_cb (GtkWidget *button, AccountFilterDialog *fd) NOEXCEPT;
+void gppat_filter_select_all_cb (GtkWidget *button, AccountFilterDialog *fd) NOEXCEPT;
 void gppat_filter_select_default_cb (GtkWidget *button,
-                                     AccountFilterDialog *fd);
+                                     AccountFilterDialog *fd) NOEXCEPT;
 void gppat_filter_response_cb (GtkWidget *dialog, gint response,
-                               AccountFilterDialog *fd);
+                               AccountFilterDialog *fd) NOEXCEPT;
 
 /* Saving/Restoring */
 void gnc_tree_view_account_save(GncTreeViewAccount *tree_view,
                                 AccountFilterDialog *fd,
-                                GKeyFile *key_file, const gchar *group_name);
+                                GKeyFile *key_file, const gchar *group_name) NOEXCEPT;
 void gnc_tree_view_account_restore(GncTreeViewAccount *view,
                                    AccountFilterDialog *fd,
                                    GKeyFile *key_file,
-                                   const gchar *group_name);
+                                   const gchar *group_name) NOEXCEPT;
 
 void gnc_tree_view_account_save_filter (GncTreeViewAccount *tree_view,
                                         AccountFilterDialog *fd,
                                         GKeyFile *key_file,
-                                        const gchar *group_name);
+                                        const gchar *group_name) NOEXCEPT;
 void gnc_tree_view_account_restore_filter (GncTreeViewAccount *view,
                                            AccountFilterDialog *fd,
                                            GKeyFile *key_file,
-                                           const gchar *group_name);
+                                           const gchar *group_name) NOEXCEPT;
 
 
 /* Get the GType for an GncTreeViewAccount object. */
+// GObject type decl should not be noexcept
 GType gnc_tree_view_account_get_type (void);
 
 
@@ -134,7 +141,7 @@ GType gnc_tree_view_account_get_type (void);
  *  @return A pointer to a new account tree view.
  */
 GtkTreeView *gnc_tree_view_account_new_with_root (Account *root,
-        gboolean show_root);
+        gboolean show_root) NOEXCEPT;
 
 /** Create a new account tree view.  This view may or may not show a
  *  pseudo top-level account.  The gnucash engine does not have a
@@ -147,7 +154,7 @@ GtkTreeView *gnc_tree_view_account_new_with_root (Account *root,
  *
  *  @return A pointer to a new account tree view.
  */
-GtkTreeView *gnc_tree_view_account_new (gboolean show_root);
+GtkTreeView *gnc_tree_view_account_new (gboolean show_root) NOEXCEPT;
 
 /** @} */
 
@@ -183,27 +190,27 @@ typedef void (*GncTreeViewAccountColumnTextEdited) (Account *account,
 GtkTreeViewColumn * gnc_tree_view_account_add_custom_column(
     GncTreeViewAccount *view, const gchar *column_title,
     GncTreeViewAccountColumnSource source_cb,
-    GncTreeViewAccountColumnTextEdited edited_cb);
+    GncTreeViewAccountColumnTextEdited edited_cb) NOEXCEPT;
 GtkTreeViewColumn *gnc_tree_view_account_add_custom_column_renderer(
     GncTreeViewAccount *account_view, const gchar *column_title,
     GncTreeViewAccountColumnSource col_source_cb,
     GncTreeViewAccountColumnTextEdited col_edited_cb,
-    GtkCellRenderer *renderer);
+    GtkCellRenderer *renderer) NOEXCEPT;
 void gnc_tree_view_account_set_name_edited(GncTreeViewAccount *view,
-        GncTreeViewAccountColumnTextEdited edited_cb);
-void gnc_tree_view_account_name_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_name);
+        GncTreeViewAccountColumnTextEdited edited_cb) NOEXCEPT;
+void gnc_tree_view_account_name_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_name) NOEXCEPT;
 
 void gnc_tree_view_account_set_code_edited(GncTreeViewAccount *view,
-        GncTreeViewAccountColumnTextEdited edited_cb);
-void gnc_tree_view_account_code_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_code);
+        GncTreeViewAccountColumnTextEdited edited_cb) NOEXCEPT;
+void gnc_tree_view_account_code_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_code) NOEXCEPT;
 
 void gnc_tree_view_account_set_description_edited(GncTreeViewAccount *view,
-        GncTreeViewAccountColumnTextEdited edited_cb);
-void gnc_tree_view_account_description_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_desc);
+        GncTreeViewAccountColumnTextEdited edited_cb) NOEXCEPT;
+void gnc_tree_view_account_description_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_desc) NOEXCEPT;
 
 void gnc_tree_view_account_set_notes_edited(GncTreeViewAccount *view,
-        GncTreeViewAccountColumnTextEdited edited_cb);
-void gnc_tree_view_account_notes_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_notes);
+        GncTreeViewAccountColumnTextEdited edited_cb) NOEXCEPT;
+void gnc_tree_view_account_notes_edited_cb(Account *account, GtkTreeViewColumn *col, const gchar *new_notes) NOEXCEPT;
 
 /** Add a new column to the set of columns in an account tree view.
  *  This column will be visible as soon as it is added and will
@@ -219,7 +226,7 @@ void gnc_tree_view_account_notes_edited_cb(Account *account, GtkTreeViewColumn *
 GtkTreeViewColumn *
 gnc_tree_view_account_add_property_column (GncTreeViewAccount *view,
 					   const gchar *column_title,
-					   const gchar *propname);
+					   const gchar *propname) NOEXCEPT;
 
 /** @} */
 
@@ -238,7 +245,7 @@ gnc_tree_view_account_add_property_column (GncTreeViewAccount *view,
  *  @param avi A pointer to an old style filter block to fill in.
  */
 void gnc_tree_view_account_get_view_info (GncTreeViewAccount *account_view,
-        AccountViewInfo *avi);
+        AccountViewInfo *avi) NOEXCEPT;
 
 /** Given pointers to an account tree and old style filter block, this
  *  function will applies the settings specified to the current
@@ -252,7 +259,7 @@ void gnc_tree_view_account_get_view_info (GncTreeViewAccount *account_view,
  *  view.
  */
 void gnc_tree_view_account_set_view_info (GncTreeViewAccount *account_view,
-        AccountViewInfo *avi);
+        AccountViewInfo *avi) NOEXCEPT;
 
 
 /** This is the description of a filter function used by the account tree.
@@ -288,7 +295,7 @@ typedef gboolean (*gnc_tree_view_account_filter_func)(Account *account, gpointer
 void gnc_tree_view_account_set_filter (GncTreeViewAccount *account_view,
                                        gnc_tree_view_account_filter_func func,
                                        gpointer data,
-                                       GSourceFunc destroy);
+                                       GSourceFunc destroy) NOEXCEPT;
 
 /*  This is a convenient filter function for use with
  *  gnc_tree_view_account_set_filter() and the functions in
@@ -299,7 +306,7 @@ void gnc_tree_view_account_set_filter (GncTreeViewAccount *account_view,
  *  can filter by whether an account is hidden or not.
  */
 gboolean gnc_tree_view_account_filter_by_view_info(
-    Account* acct, gpointer data);
+    Account* acct, gpointer data) NOEXCEPT;
 
 
 /** This function forces the account tree filter to be evaluated.  It
@@ -312,7 +319,7 @@ gboolean gnc_tree_view_account_filter_by_view_info(
  *
  *  @param view A pointer to an account tree view.
  */
-void gnc_tree_view_account_refilter (GncTreeViewAccount *view);
+void gnc_tree_view_account_refilter (GncTreeViewAccount *view) NOEXCEPT;
 /** @} */
 
 
@@ -330,7 +337,7 @@ void gnc_tree_view_account_refilter (GncTreeViewAccount *view);
  *  on error.
  */
 gint gnc_tree_view_account_count_children (GncTreeViewAccount *view,
-        Account *account);
+                                           Account *account) NOEXCEPT;
 
 /** This function clears the tree model account cache so the values will
  *  be updated/refreshed.
@@ -338,7 +345,7 @@ gint gnc_tree_view_account_count_children (GncTreeViewAccount *view,
  *  @param view A pointer to an account tree view.
  *
  */
-void gnc_tree_view_account_clear_model_cache (GncTreeViewAccount *view);
+void gnc_tree_view_account_clear_model_cache (GncTreeViewAccount *view) NOEXCEPT;
 
 
 /** This function returns the account associated with the specified
@@ -352,7 +359,7 @@ void gnc_tree_view_account_clear_model_cache (GncTreeViewAccount *view);
  *  @return The account associated with this path.
  */
 Account * gnc_tree_view_account_get_account_from_path (GncTreeViewAccount *view,
-        GtkTreePath *path);
+                                                       GtkTreePath *path) NOEXCEPT;
 
 
 /** This function returns the account associated with the specified
@@ -366,7 +373,7 @@ Account * gnc_tree_view_account_get_account_from_path (GncTreeViewAccount *view,
  *  @return The account associated with this iter.
  */
 Account * gnc_tree_view_account_get_account_from_iter (GtkTreeModel *model,
-        GtkTreeIter  *iter);
+                                                       GtkTreeIter  *iter) NOEXCEPT;
 
 
 /** This function returns the account in the account tree view at the
@@ -377,7 +384,7 @@ Account * gnc_tree_view_account_get_account_from_iter (GtkTreeModel *model,
  *
  *  @return The account at the cursor.
  */
-Account * gnc_tree_view_account_get_cursor_account (GncTreeViewAccount *view);
+Account * gnc_tree_view_account_get_cursor_account (GncTreeViewAccount *view) NOEXCEPT;
 
 
 /** This function returns the account associated with the selected
@@ -391,7 +398,7 @@ Account * gnc_tree_view_account_get_cursor_account (GncTreeViewAccount *view);
  *
  *  @return The selected account, or NULL if no account was selected.
  */
-Account * gnc_tree_view_account_get_selected_account (GncTreeViewAccount *view);
+Account * gnc_tree_view_account_get_selected_account (GncTreeViewAccount *view) NOEXCEPT;
 
 
 /** This function selects an account in the account tree view.  All
@@ -410,7 +417,7 @@ Account * gnc_tree_view_account_get_selected_account (GncTreeViewAccount *view);
  *  @param account A pointer to the account to select.
  */
 void gnc_tree_view_account_set_selected_account (GncTreeViewAccount *view,
-        Account *account);
+                                                 Account *account) NOEXCEPT;
 
 
 /** This function returns a list of the accounts associated with the
@@ -424,7 +431,7 @@ void gnc_tree_view_account_set_selected_account (GncTreeViewAccount *view,
  *
  *  @return A list of accounts, or NULL if no account was selected.
  */
-GList * gnc_tree_view_account_get_selected_accounts (GncTreeViewAccount *view);
+GList * gnc_tree_view_account_get_selected_accounts (GncTreeViewAccount *view) NOEXCEPT;
 
 
 /** This function selects a set of accounts in the account tree view.
@@ -449,8 +456,8 @@ GList * gnc_tree_view_account_get_selected_accounts (GncTreeViewAccount *view);
  *  selected.
  */
 void gnc_tree_view_account_set_selected_accounts (GncTreeViewAccount *view,
-        GList *account_list,
-        gboolean show_last);
+                                                  GList *account_list,
+                                                  gboolean show_last) NOEXCEPT;
 
 
 /** This function selects all sub-accounts of an account in the
@@ -466,7 +473,7 @@ void gnc_tree_view_account_set_selected_accounts (GncTreeViewAccount *view,
  *  selected.
  */
 void gnc_tree_view_account_select_subaccounts (GncTreeViewAccount *view,
-        Account *account);
+                                               Account *account) NOEXCEPT;
 
 /** This function forces the account tree expand whatever levels are
  *  necessary to make the specified account visible.
@@ -475,24 +482,24 @@ void gnc_tree_view_account_select_subaccounts (GncTreeViewAccount *view,
  *
  *  @param account A pointer to the account to show.
  */
-void gnc_tree_view_account_expand_to_account (GncTreeViewAccount *view, Account *account);
+void gnc_tree_view_account_expand_to_account (GncTreeViewAccount *view, Account *account) NOEXCEPT;
 
 /** Add the account color background data function to the GncTreeViewAccount column to
  *  show or not the column background in the account color.
  */
-void gnc_tree_view_account_column_add_color (GncTreeViewAccount *view, GtkTreeViewColumn *col);
+void gnc_tree_view_account_column_add_color (GncTreeViewAccount *view, GtkTreeViewColumn *col) NOEXCEPT;
 
 /** Setup the callback for when the user starts editing the account tree so actions can be disabled
  *  like the delete menu option as required.
  */
 void gnc_tree_view_account_set_editing_started_cb
-    (GncTreeViewAccount *view, GFunc editing_started_cb, gpointer editing_cb_data );
+    (GncTreeViewAccount *view, GFunc editing_started_cb, gpointer editing_cb_data ) NOEXCEPT;
 
 /** Setup the callback for when the user finishes editing the account tree so actions can be enabled
  *  like the delete menu option as required.
  */
 void gnc_tree_view_account_set_editing_finished_cb
-    (GncTreeViewAccount *view, GFunc editing_finished_cb, gpointer editing_cb_data );
+    (GncTreeViewAccount *view, GFunc editing_finished_cb, gpointer editing_cb_data ) NOEXCEPT;
 
 
 /** @} */
@@ -500,6 +507,8 @@ void gnc_tree_view_account_set_editing_finished_cb
 /** @} */
 /** @} */
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_TREE_VIEW_ACCOUNT_H */

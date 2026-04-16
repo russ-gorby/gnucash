@@ -32,7 +32,11 @@
 #define GNC_GENERAL_SELECT_H
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_GENERAL_SELECT          (gnc_general_select_get_type ())
@@ -74,18 +78,18 @@ typedef struct
 } GNCGeneralSelectClass;
 
 
-GtkWidget *gnc_general_select_new            (GNCGeneralSelectType type,
-        GNCGeneralSelectGetStringCB get_string,
-        GNCGeneralSelectNewSelectCB new_select,
-        gpointer cb_arg);
-void       gnc_general_select_set_selected   (GNCGeneralSelect *gsl,
-        gpointer selected);
-gpointer   gnc_general_select_get_selected   (GNCGeneralSelect *gsl);
+GtkWidget *gnc_general_select_new (GNCGeneralSelectType type,
+                                   GNCGeneralSelectGetStringCB get_string,
+                                   GNCGeneralSelectNewSelectCB new_select,
+                                   gpointer cb_arg) NOEXCEPT;
+void gnc_general_select_set_selected (GNCGeneralSelect *gsl,
+                                      gpointer selected) NOEXCEPT;
+gpointer gnc_general_select_get_selected (GNCGeneralSelect *gsl) NOEXCEPT;
 const char *gnc_general_select_get_printname (GNCGeneralSelect *gsl,
-        gpointer selection);
-GType      gnc_general_select_get_type       (void);
-
-void       gnc_general_select_make_mnemonic_target (GNCGeneralSelect *gsl, GtkWidget *label);
+                                              gpointer selection) NOEXCEPT;
+void gnc_general_select_make_mnemonic_target (GNCGeneralSelect *gsl, GtkWidget *label) NOEXCEPT;
+// GObject type decl should not be noexcept
+GType gnc_general_select_get_type (void);
 
 #ifdef __cplusplus
 }

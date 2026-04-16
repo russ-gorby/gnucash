@@ -34,13 +34,17 @@
 #include "Account.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_ACCOUNT_SEL          (gnc_account_sel_get_type())
 G_DECLARE_FINAL_TYPE (GNCAccountSel, gnc_account_sel, GNC, ACCOUNT_SEL, GtkBox)
 
-GtkWidget* gnc_account_sel_new (void);
+GtkWidget* gnc_account_sel_new (void) NOEXCEPT;
 
 /**
  * Sets the GAS to the given account.  If the account doesn't exist in the
@@ -48,13 +52,13 @@ GtkWidget* gnc_account_sel_new (void);
  * NULL, then the first list selection is made if set_default_acct is TRUE.
  **/
 void gnc_account_sel_set_account (GNCAccountSel *gas, Account *acct,
-                                  gboolean set_default_acct);
+                                  gboolean set_default_acct) NOEXCEPT;
 
 /**
  * Returns the currently-selected Account.  If, for some reason the selection
  * is in a bad state, NULL will be returned.
  **/
-Account* gnc_account_sel_get_account (GNCAccountSel *gas);
+Account* gnc_account_sel_get_account (GNCAccountSel *gas) NOEXCEPT;
 
 /**
  * The GNCAccountSel can be setup to filter the accounts displayed.
@@ -64,7 +68,7 @@ Account* gnc_account_sel_get_account (GNCAccountSel *gas);
  **/
 void gnc_account_sel_set_acct_filters (GNCAccountSel *gas,
                                        GList *typeFilters,
-                                       GList *commodityFilters);
+                                       GList *commodityFilters) NOEXCEPT;
 
 /**
  * The GNCAccountSel can be setup to filter the accounts displayed.
@@ -73,7 +77,7 @@ void gnc_account_sel_set_acct_filters (GNCAccountSel *gas,
  * The list is copied, of course.
  **/
 void gnc_account_sel_set_acct_exclude_filter (GNCAccountSel *gas,
-                                              GList *excludeFilter);
+                                              GList *excludeFilter) NOEXCEPT;
 
 
 /**
@@ -82,19 +86,19 @@ void gnc_account_sel_set_acct_exclude_filter (GNCAccountSel *gas,
  * @param gas The GNCAccountSel widget.
  * @param gnc_commodity* A gnc_commodity*
  **/
-void gnc_account_sel_set_default_new_commodity (GNCAccountSel*, gnc_commodity*);
+void gnc_account_sel_set_default_new_commodity (GNCAccountSel*, gnc_commodity*) NOEXCEPT;
 /**
  * Conditional inclusion of a new-account button to the right of the
  * combobox.
  * @param state TRUE if the new-account button is desired, FALSE otherwise.
  **/
-void gnc_account_sel_set_new_account_ability (GNCAccountSel *gas, gboolean state);
+void gnc_account_sel_set_new_account_ability (GNCAccountSel *gas, gboolean state) NOEXCEPT;
 
 /**
  * Conditional call of the new-account window in modal mode.
  * @param state TRUE if the new-account window should be modal, FALSE otherwise.
  **/
-void gnc_account_sel_set_new_account_modal (GNCAccountSel *gas, gboolean state);
+void gnc_account_sel_set_new_account_modal (GNCAccountSel *gas, gboolean state) NOEXCEPT;
 
 /**
  * Get the number of accounts visible.
@@ -102,7 +106,7 @@ void gnc_account_sel_set_new_account_modal (GNCAccountSel *gas, gboolean state);
  * @param gas The GNCAccountSel widget.
  * @return The number of visible accounts from the filter model.
  **/
-gint gnc_account_sel_get_visible_account_num (GNCAccountSel *gas);
+gint gnc_account_sel_get_visible_account_num (GNCAccountSel *gas) NOEXCEPT;
 
 #ifdef __cplusplus
 }

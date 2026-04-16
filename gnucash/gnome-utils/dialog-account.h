@@ -27,8 +27,14 @@
 #include "Account.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
+
+
 
 /* Note: make sure to update the help text for this in prefs.scm if these
  * change!  These macros define the account types for which an auto interest
@@ -71,7 +77,7 @@ account_type_has_auto_interest_payment(type) )
  *  @param account This parameter specifies the account whose data
  *  will be edited.
  */
-void gnc_ui_edit_account_window (GtkWindow *parent, Account *account);
+void gnc_ui_edit_account_window (GtkWindow *parent, Account *account) NOEXCEPT;
 
 
 /** Display a window for creating a new account.  This function will
@@ -91,7 +97,7 @@ void gnc_ui_edit_account_window (GtkWindow *parent, Account *account);
  *  commodity to create. May be NULL.
  */
 void gnc_ui_new_account_with_types_and_commodity (GtkWindow *parent, QofBook *book,
-                                                  GList *valid_types, gnc_commodity*);
+                                                  GList *valid_types, gnc_commodity*) NOEXCEPT;
 
 /** Display a window for creating a new account.  This function will
  *  also initially set the parent account of the new account to what
@@ -108,24 +114,8 @@ void gnc_ui_new_account_with_types_and_commodity (GtkWindow *parent, QofBook *bo
  *  in the specified book.
  */
 void gnc_ui_new_account_window (GtkWindow *parent,
-                                QofBook *book, Account *parent_acct);
+                                QofBook *book, Account *parent_acct) NOEXCEPT;
 
-
-/** Display a window for creating a new account.  This function will
- *  restrict the available account type values to the list specified
- *  by the caller.
- *
- *  @param parent The widget on which to parent the dialog.
- *
- *  @param book The book in which the new account should be created.
- *  This is a required argument.
- *
- *  @param valid_types A GList of GNCAccountType gints [as pointers]
- *  which are allowed to be created.  The calling function is
- *  responsible for freeing this list.
- */
-void gnc_ui_new_account_with_types (GtkWindow *parent, QofBook *book,
-                                    GList *valid_types);
 /** @} */
 
 
@@ -141,7 +131,7 @@ void gnc_ui_new_account_with_types (GtkWindow *parent, QofBook *book,
  *  is not used for determining the initially selected parent account.
  */
 Account * gnc_ui_new_accounts_from_name_window (GtkWindow *parent,
-                                                const char *name);
+                                                const char *name) NOEXCEPT;
 
 
 /** Display a modal window for creating a new account.  This function
@@ -168,7 +158,7 @@ Account * gnc_ui_new_accounts_from_name_with_defaults (GtkWindow *parent,
                                                        const char *name,
                                                        GList *valid_types,
                                                        const gnc_commodity *default_commodity,
-                                                       Account *parent_acct);
+                                                       Account *parent_acct) NOEXCEPT;
 
 /*
  * register a callback that gets called when the account has changed
@@ -176,12 +166,12 @@ Account * gnc_ui_new_accounts_from_name_with_defaults (GtkWindow *parent,
  * this is used by the ledger display to destroy ledgers when the
  * account type has changed.
  */
-void gnc_ui_register_account_destroy_callback (void (*cb)(Account *));
+void gnc_ui_register_account_destroy_callback (void (*cb)(Account *)) NOEXCEPT;
 /** @} */
 
-void gnc_account_renumber_create_dialog (GtkWidget *window, Account *account);
+void gnc_account_renumber_create_dialog (GtkWidget *window, Account *account) NOEXCEPT;
 
-void gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account);
+void gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) NOEXCEPT;
 
 #ifdef __cplusplus
 }

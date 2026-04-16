@@ -27,7 +27,7 @@
 /* ============================================================== */
 
 void
-xxxgtk_textview_set_text (GtkTextView *text, const char *str)
+xxxgtk_textview_set_text (GtkTextView *text, const char *str) noexcept
 {
     GtkTextBuffer *buff = gtk_text_view_get_buffer (text);
     if (!str) str = "";
@@ -36,7 +36,7 @@ xxxgtk_textview_set_text (GtkTextView *text, const char *str)
 }
 
 char *
-xxxgtk_textview_get_text (GtkTextView *text)
+xxxgtk_textview_get_text (GtkTextView *text) noexcept
 {
     GtkTextIter start, end;
     GtkTextBuffer *buff = gtk_text_view_get_buffer (text);

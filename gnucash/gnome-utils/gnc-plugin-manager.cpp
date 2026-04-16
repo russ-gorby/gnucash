@@ -58,7 +58,7 @@ static guint signals[LAST_SIGNAL] = { 0 };
 static GncPluginManager *singleton = NULL;
 
 GncPluginManager *
-gnc_plugin_manager_get (void)
+gnc_plugin_manager_get (void) noexcept
 {
     if (singleton == NULL)
     {
@@ -74,7 +74,7 @@ gnc_plugin_manager_get (void)
 
 void
 gnc_plugin_manager_add_plugin (GncPluginManager *manager,
-                               GncPlugin *plugin)
+                               GncPlugin *plugin) noexcept
 {
     gint index;
 
@@ -98,7 +98,7 @@ gnc_plugin_manager_add_plugin (GncPluginManager *manager,
 
 void
 gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
-                                  GncPlugin *plugin)
+                                  GncPlugin *plugin) noexcept
 {
     gint index;
 
@@ -123,7 +123,7 @@ gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
 }
 
 GList *
-gnc_plugin_manager_get_plugins (GncPluginManager *manager)
+gnc_plugin_manager_get_plugins (GncPluginManager *manager) noexcept
 {
     g_return_val_if_fail (GNC_IS_PLUGIN_MANAGER (manager), NULL);
 
@@ -132,7 +132,7 @@ gnc_plugin_manager_get_plugins (GncPluginManager *manager)
 
 GncPlugin *
 gnc_plugin_manager_get_plugin (GncPluginManager *manager,
-                               const gchar *name)
+                               const gchar *name) noexcept
 {
     g_return_val_if_fail (GNC_IS_PLUGIN_MANAGER (manager), NULL);
     g_return_val_if_fail (name != NULL, NULL);

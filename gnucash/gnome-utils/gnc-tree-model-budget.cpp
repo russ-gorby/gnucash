@@ -67,7 +67,7 @@ static void add_budget_to_model(QofInstance* data, gpointer user_data )
  *
  */
 GtkTreeModel *
-gnc_tree_model_budget_new(QofBook *book)
+gnc_tree_model_budget_new(QofBook *book) noexcept
 {
     GtkListStore* store;
 
@@ -83,7 +83,7 @@ gnc_tree_model_budget_new(QofBook *book)
 }
 
 void
-gnc_tree_view_budget_set_model(GtkTreeView *tv, GtkTreeModel *tm)
+gnc_tree_view_budget_set_model(GtkTreeView *tv, GtkTreeModel *tm) noexcept
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -105,7 +105,7 @@ gnc_tree_view_budget_set_model(GtkTreeView *tv, GtkTreeModel *tm)
 }
 
 GncBudget *
-gnc_tree_model_budget_get_budget(GtkTreeModel *tm, GtkTreeIter *iter)
+gnc_tree_model_budget_get_budget(GtkTreeModel *tm, GtkTreeIter *iter) noexcept
 {
     GncBudget *bgt;
     GncGUID *guid;
@@ -117,7 +117,7 @@ gnc_tree_model_budget_get_budget(GtkTreeModel *tm, GtkTreeIter *iter)
 
 gboolean
 gnc_tree_model_budget_get_iter_for_budget(GtkTreeModel *tm, GtkTreeIter *iter,
-        GncBudget *bgt)
+                                          GncBudget *bgt) noexcept
 {
     const GncGUID *guid1;
     GncGUID *guid2;

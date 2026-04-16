@@ -141,7 +141,7 @@ gnc_plugin_menu_additions_finalize (GObject *object)
  *  @return A pointer to the new object.
  */
 GncPlugin *
-gnc_plugin_menu_additions_new (void)
+gnc_plugin_menu_additions_new (void) noexcept
 {
     GncPlugin *plugin_page = NULL;
 

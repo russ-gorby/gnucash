@@ -35,12 +35,17 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
-void gnc_ui_file_access_for_open (GtkWindow *parent);
-void gnc_ui_file_access_for_save_as (GtkWindow *parent);
-void gnc_ui_file_access_for_export (GtkWindow *parent);
+
+void gnc_ui_file_access_for_open (GtkWindow *parent) NOEXCEPT;
+void gnc_ui_file_access_for_save_as (GtkWindow *parent) NOEXCEPT;
+void gnc_ui_file_access_for_export (GtkWindow *parent) NOEXCEPT;
 
 #ifdef __cplusplus
 }

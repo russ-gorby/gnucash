@@ -38,7 +38,11 @@
 #include <gtk/gtk.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 /** @name gtk Miscellaneous Functions
@@ -49,35 +53,35 @@ extern "C" {
 #define GNC_MENU_ATTRIBUTE_TOOLTIP      "tooltip"
 #define GNC_MENU_ATTRIBUTE_TEMPORARY    "temp"
 
-void gnc_cbwe_set_by_string(GtkComboBox *cbwe, const gchar *text);
-void gnc_cbwe_add_completion (GtkComboBox *cbwe);
-void gnc_cbwe_require_list_item (GtkComboBox *cbwe);
+void gnc_cbwe_set_by_string(GtkComboBox *cbwe, const gchar *text) NOEXCEPT;
+void gnc_cbwe_add_completion (GtkComboBox *cbwe) NOEXCEPT;
+void gnc_cbwe_require_list_item (GtkComboBox *cbwe) NOEXCEPT;
 
-gboolean gnc_is_dark_theme (GdkRGBA *fg_color);
+gboolean gnc_is_dark_theme (GdkRGBA *fg_color) NOEXCEPT;
 void gnc_style_context_get_background_color (GtkStyleContext *context,
                                              GtkStateFlags    state,
-                                             GdkRGBA         *color);
+                                             GdkRGBA         *color) NOEXCEPT;
 void gnc_style_context_get_border_color (GtkStyleContext *context,
                                          GtkStateFlags    state,
-                                         GdkRGBA         *color);
+                                         GdkRGBA         *color) NOEXCEPT;
 
-GtkWidget *gnc_get_dialog_widget_from_id (GtkDialog *dialog, const gchar *id);
+GtkWidget *gnc_get_dialog_widget_from_id (GtkDialog *dialog, const gchar *id) NOEXCEPT;
 
-void gnc_disable_all_actions_in_group (GSimpleActionGroup *action_group);
+void gnc_disable_all_actions_in_group (GSimpleActionGroup *action_group) NOEXCEPT;
 
-void gnc_add_accelerator_keys_for_menu (GtkWidget *menu, GMenuModel *model, GtkAccelGroup *accel_group);
+void gnc_add_accelerator_keys_for_menu (GtkWidget *menu, GMenuModel *model, GtkAccelGroup *accel_group) NOEXCEPT;
 
-GtkWidget *gnc_find_menu_item_by_action_name (GtkWidget *menu, const gchar *action_name);
-GtkWidget *gnc_find_menu_item_by_action_label (GtkWidget *menu, const gchar *action_label);
-GList *gnc_menu_get_items (GtkWidget *menu);
+GtkWidget *gnc_find_menu_item_by_action_name (GtkWidget *menu, const gchar *action_name) NOEXCEPT;
+GtkWidget *gnc_find_menu_item_by_action_label (GtkWidget *menu, const gchar *action_label) NOEXCEPT;
+GList *gnc_menu_get_items (GtkWidget *menu) NOEXCEPT;
 
-GtkWidget *gnc_find_toolbar_item (GtkWidget *toolbar, const gchar *action_name);
+GtkWidget *gnc_find_toolbar_item (GtkWidget *toolbar, const gchar *action_name) NOEXCEPT;
 
 void gnc_menu_item_setup_tooltip_to_statusbar_callback (GtkWidget *menu_item,
-                                                        GtkWidget *statusbar);
+                                                        GtkWidget *statusbar) NOEXCEPT;
 
 void gnc_tool_item_setup_tooltip_to_statusbar_callback (GtkWidget *tool_item,
-                                                        GtkWidget *statusbar);
+                                                        GtkWidget *statusbar) NOEXCEPT;
 
 struct _GncMenuModelSearch
 {
@@ -91,14 +95,14 @@ struct _GncMenuModelSearch
 
 typedef struct _GncMenuModelSearch GncMenuModelSearch;
 
-gboolean gnc_menubar_model_find_item (GMenuModel *menu_model, GncMenuModelSearch *gsm);
-GtkWidget *gnc_menubar_model_find_menu_item (GMenuModel *menu_model, GtkWidget *menu, const gchar *action_name);
+gboolean gnc_menubar_model_find_item (GMenuModel *menu_model, GncMenuModelSearch *gsm) NOEXCEPT;
+GtkWidget *gnc_menubar_model_find_menu_item (GMenuModel *menu_model, GtkWidget *menu, const gchar *action_name) NOEXCEPT;
 
 gboolean gnc_menubar_model_update_item (GMenuModel *menu_model, const gchar *action_name,
                                         const gchar *target, const gchar *label,
-                                        const gchar *accel_name, const gchar *tooltip);
+                                        const gchar *accel_name, const gchar *tooltip) NOEXCEPT;
 
-void gnc_menubar_model_remove_items_with_attrib (GMenuModel *menu_model, const gchar *attrib);
+void gnc_menubar_model_remove_items_with_attrib (GMenuModel *menu_model, const gchar *attrib) NOEXCEPT;
 
 /** @} */
 

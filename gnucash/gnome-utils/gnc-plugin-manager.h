@@ -52,7 +52,13 @@
 
 #include "gnc-plugin.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /** @name Basic Object Implementation */
 /** @{ */
@@ -75,7 +81,7 @@ G_DECLARE_FINAL_TYPE (GncPluginManager, gnc_plugin_manager, GNC, PLUGIN_MANAGER,
  *
  *  @return A pointer to the plugin manager object.
  */
-GncPluginManager *gnc_plugin_manager_get (void);
+GncPluginManager *gnc_plugin_manager_get (void) NOEXCEPT;
 
 
 /** Add a plugin to the list maintained by the plugin manager.
@@ -89,7 +95,7 @@ GncPluginManager *gnc_plugin_manager_get (void);
  *  the plugin after passing it off to the plugin manager.
  */
 void gnc_plugin_manager_add_plugin (GncPluginManager *manager,
-                                    GncPlugin *plugin);
+                                    GncPlugin *plugin) NOEXCEPT;
 
 
 /** Remove a plugin from the list maintained by the plugin manager.
@@ -100,7 +106,7 @@ void gnc_plugin_manager_add_plugin (GncPluginManager *manager,
  *  @param plugin A pointer to the plugin to add.
  */
 void gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
-                                       GncPlugin *plugin);
+                                       GncPlugin *plugin) NOEXCEPT;
 
 
 /** Get a list of all plugins being held by the plugin manager.  This
@@ -113,7 +119,7 @@ void gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
  *  @return A list of plugins.  This list is owned by the caller, and
  *  the must be frees when the caller is finished with it.
  */
-GList *gnc_plugin_manager_get_plugins (GncPluginManager *manager);
+GList *gnc_plugin_manager_get_plugins (GncPluginManager *manager) NOEXCEPT;
 
 
 /** Find a plugin by name from the list of plugins being held by the
@@ -128,11 +134,12 @@ GList *gnc_plugin_manager_get_plugins (GncPluginManager *manager);
  *  couldn't be found.
  */
 GncPlugin *gnc_plugin_manager_get_plugin (GncPluginManager *manager,
-        const gchar *name);
+        const gchar *name) NOEXCEPT;
 /** @} */
 
-
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_PLUGIN_MANAGER_H */
 

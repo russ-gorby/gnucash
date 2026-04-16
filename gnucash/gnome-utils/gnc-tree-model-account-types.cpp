@@ -85,7 +85,7 @@ gnc_tree_model_account_types_finalize (GObject * object)
 }
 
 GtkTreeModel *
-gnc_tree_model_account_types_new (guint32 selected)
+gnc_tree_model_account_types_new (guint32 selected) noexcept
 {
     auto model = static_cast<GncTreeModelAccountTypes *>(
         g_object_new (GNC_TYPE_TREE_MODEL_ACCOUNT_TYPES, NULL)
@@ -119,7 +119,7 @@ gnc_tree_model_account_types_is_valid (GtkTreeModel *model,
 }
 
 GtkTreeModel *
-gnc_tree_model_account_types_filter_using_mask (guint32 types)
+gnc_tree_model_account_types_filter_using_mask (guint32 types) noexcept
 {
     GtkTreeModel *f_model;
 
@@ -135,7 +135,7 @@ gnc_tree_model_account_types_filter_using_mask (guint32 types)
 
 void
 gnc_tree_model_account_types_set_mask (GtkTreeModel *f_model,
-                                       guint32 types)
+                                       guint32 types) noexcept
 {
     g_return_if_fail (f_model);
 
@@ -144,7 +144,7 @@ gnc_tree_model_account_types_set_mask (GtkTreeModel *f_model,
 }
 
 guint32
-gnc_tree_model_account_types_get_mask (GtkTreeModel *f_model)
+gnc_tree_model_account_types_get_mask (GtkTreeModel *f_model) noexcept
 {
     g_return_val_if_fail (f_model, 0);
 
@@ -152,7 +152,7 @@ gnc_tree_model_account_types_get_mask (GtkTreeModel *f_model)
 }
 
 guint32
-gnc_tree_model_account_types_get_selection (GtkTreeSelection *sel)
+gnc_tree_model_account_types_get_selection (GtkTreeSelection *sel) noexcept
 {
     GtkTreeModel *f_model, *model;
     GtkTreePath *path;
@@ -195,7 +195,7 @@ gnc_tree_model_account_types_get_selection (GtkTreeSelection *sel)
 }
 
 GNCAccountType
-gnc_tree_model_account_types_get_selection_single(GtkTreeSelection *sel)
+gnc_tree_model_account_types_get_selection_single(GtkTreeSelection *sel) noexcept
 {
     gint i;
     guint32 selected = gnc_tree_model_account_types_get_selection(sel);
@@ -207,7 +207,7 @@ gnc_tree_model_account_types_get_selection_single(GtkTreeSelection *sel)
 }
 
 GNCAccountType
-gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo)
+gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo) noexcept
 {
     GtkTreeModelSort   *s_model;
     GtkTreeModelFilter *f_model;
@@ -251,7 +251,7 @@ gnc_tree_model_account_types_get_active_combo (GtkComboBox *combo)
 
 void
 gnc_tree_model_account_types_set_selection (GtkTreeSelection *sel,
-        guint32 selected)
+                                            guint32 selected) noexcept
 {
     GtkTreePath *path;
     GtkTreeModelFilter *f_model;
@@ -284,7 +284,7 @@ gnc_tree_model_account_types_set_selection (GtkTreeSelection *sel,
 
 void
 gnc_tree_model_account_types_set_active_combo (GtkComboBox *combo,
-                                               guint32 selected)
+                                               guint32 selected) noexcept
 {
     GtkTreePath *path;
     GtkTreeModelFilter *f_model;

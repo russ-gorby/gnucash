@@ -202,7 +202,7 @@ dqv_window_key_press_cb (GtkWidget *widget, GdkEventKey *event,
 /* PUBLIC INTERFACES */
 
 DialogQueryView *
-gnc_dialog_query_view_new (GtkWindow *parent, GList *param_list, Query *q, const gchar *pref_group)
+gnc_dialog_query_view_new (GtkWindow *parent, GList *param_list, Query *q, const gchar *pref_group) noexcept
 {
     GtkBuilder  *builder;
     DialogQueryView *dqv;
@@ -286,13 +286,13 @@ gnc_dialog_query_view_new (GtkWindow *parent, GList *param_list, Query *q, const
     return dqv;
 }
 
-void gnc_dialog_query_view_set_title (DialogQueryView *dqv, const char *title)
+void gnc_dialog_query_view_set_title (DialogQueryView *dqv, const char *title) noexcept
 {
     if (!dqv || !title) return;
     gtk_window_set_title (GTK_WINDOW (dqv->dialog), title);
 }
 
-void gnc_dialog_query_view_set_label (DialogQueryView *dqv, const char *label)
+void gnc_dialog_query_view_set_label (DialogQueryView *dqv, const char *label) noexcept
 {
     if (!dqv || !label) return;
     gtk_label_set_text (GTK_LABEL(dqv->label), label);
@@ -300,7 +300,7 @@ void gnc_dialog_query_view_set_label (DialogQueryView *dqv, const char *label)
 
 void gnc_dialog_query_view_set_buttons (DialogQueryView *dqv,
                                         GNCDisplayViewButton *buttons,
-                                        gpointer user_data)
+                                        gpointer user_data) noexcept
 {
     GtkWidget *button;
     int i;
@@ -325,14 +325,14 @@ void gnc_dialog_query_view_set_buttons (DialogQueryView *dqv,
 }
 
 void gnc_dialog_query_view_set_numerics (DialogQueryView *dqv, gboolean abs,
-        gboolean inv_sort)
+                                         gboolean inv_sort) noexcept
 {
     if (!dqv) return;
 
     gnc_query_view_set_numerics (GNC_QUERY_VIEW(dqv->qview), abs, inv_sort);
 }
 
-void gnc_dialog_query_view_refresh (DialogQueryView *dqv)
+void gnc_dialog_query_view_refresh (DialogQueryView *dqv) noexcept
 {
     if (!dqv) return;
 
@@ -340,7 +340,7 @@ void gnc_dialog_query_view_refresh (DialogQueryView *dqv)
     gtk_widget_show_all (dqv->dialog);
 }
 
-void gnc_dialog_query_view_destroy (DialogQueryView *dqv)
+void gnc_dialog_query_view_destroy (DialogQueryView *dqv) noexcept
 {
     if (!dqv) return;
     gnc_close_gui_component (dqv->component_id);
@@ -353,7 +353,7 @@ gnc_dialog_query_view_create (GtkWindow *parent, GList *param_list, Query *q,
                               gint sort_column, GtkSortType order,
                               gint expand_column,
                               GNCDisplayViewButton *buttons,
-                              const gchar *pref_group, gpointer user_data)
+                              const gchar *pref_group, gpointer user_data) noexcept
 {
     DialogQueryView *dqv;
 

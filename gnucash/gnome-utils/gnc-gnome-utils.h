@@ -38,18 +38,22 @@
 #include <gnc-main-window.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 /** Initialize the gnome-utils library
  *  Should be run once before using any gnome-utils features.
  */
-void gnc_gnome_utils_init (void);
+void gnc_gnome_utils_init (void) NOEXCEPT;
 
 /** Load a gtk resource configuration file to customize gtk
  *  appearance and behaviour.
  */
-void gnc_add_css_file (void);
+void gnc_add_css_file (void) NOEXCEPT;
 
 /** Launch the systems default help browser, gnome's yelp for linux,
  *  and open to a given link within a given file.
@@ -63,10 +67,10 @@ void gnc_add_css_file (void);
  *  @param anchor The anchor the help browser should scroll to.
  */
 void gnc_gnome_help (GtkWindow *parent, const char *file_name,
-                     const char *anchor);
+                     const char *anchor) NOEXCEPT;
 /** Launch the default browser and open the provided URI.
  */
-void gnc_launch_doclink (GtkWindow *parent, const char *uri);
+void gnc_launch_doclink (GtkWindow *parent, const char *uri) NOEXCEPT;
 
 /** Given a file name, find and load the requested pixmap.  This
  *  routine will display an error message if it can't find the file or
@@ -77,7 +81,7 @@ void gnc_launch_doclink (GtkWindow *parent, const char *uri);
  *  @return A pointer to the pixmap, or NULL of the file couldn't
  *  be found or loaded..
  */
-GtkWidget * gnc_gnome_get_pixmap (const char *name);
+GtkWidget * gnc_gnome_get_pixmap (const char *name) NOEXCEPT;
 
 
 /** Given a file name, find and load the requested pixbuf.  This
@@ -89,7 +93,7 @@ GtkWidget * gnc_gnome_get_pixmap (const char *name);
  *  @return A pointer to the pixbuf, or NULL of the file couldn't
  *  be found or loaded..
  */
-GdkPixbuf * gnc_gnome_get_gdkpixbuf (const char *name);
+GdkPixbuf * gnc_gnome_get_gdkpixbuf (const char *name) NOEXCEPT;
 
 
 /** Shutdown gnucash.  This function will initiate an orderly
@@ -97,13 +101,13 @@ GdkPixbuf * gnc_gnome_get_gdkpixbuf (const char *name);
  *
  *  @param exit_status The exit status for the program.
  */
-void gnc_shutdown (int exit_status);
+void gnc_shutdown (int exit_status) NOEXCEPT;
 
 
 /** Initialize the gnucash gui */
-GncMainWindow *gnc_gui_init (void);
-int gnc_ui_start_event_loop (void);
-gboolean gnucash_ui_is_running (void);
+GncMainWindow *gnc_gui_init (void) NOEXCEPT;
+int gnc_ui_start_event_loop (void) NOEXCEPT;
+gboolean gnucash_ui_is_running (void) NOEXCEPT;
 
 #ifdef __cplusplus
 }

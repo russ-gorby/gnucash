@@ -31,9 +31,13 @@
 #include <gnc-date.h>
 
 #ifdef __cplusplus
+#define NOEXCEPT noexcept
 extern "C"
 {
+#else
+#define NOEXCEPT
 #endif
+
 
 
 /***********************************************************************\
@@ -59,11 +63,11 @@ gnc_dup_trans_dialog (GtkWidget * parent, const char* title,
                       gboolean show_date, time64 *date_p,
                       const char *num, char **out_num,
                       const char *tnum, char **out_tnum,
-                      const char *tdoclink, char **out_tdoclink);
+                      const char *tdoclink, char **out_tdoclink) NOEXCEPT;
 
 gboolean
 gnc_dup_trans_dialog_gdate (GtkWidget * parent, GDate *gdate_p,
-                            const char *num, char **out_num);
+                            const char *num, char **out_num) NOEXCEPT;
 
 
 /**
@@ -77,7 +81,7 @@ gnc_dup_trans_dialog_gdate (GtkWidget * parent, GDate *gdate_p,
  * \return TRUE if user closes dialog with 'OK', otherwise FALSE
  */
 gboolean
-gnc_dup_date_dialog (GtkWidget * parent, const char* title, GDate *date);
+gnc_dup_date_dialog (GtkWidget * parent, const char* title, GDate *date) NOEXCEPT;
 
 /**
  * Opens up a window to ask for a date for the duplicated element
@@ -92,7 +96,7 @@ gnc_dup_date_dialog (GtkWidget * parent, const char* title, GDate *date);
  */
 gboolean
 gnc_dup_time64_dialog (GtkWidget * parent, const char *window_title,
-                       const char* title, time64 *date);
+                       const char* title, time64 *date) NOEXCEPT;
 
 #ifdef __cplusplus
 }

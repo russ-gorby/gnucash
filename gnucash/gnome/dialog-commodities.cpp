@@ -531,7 +531,7 @@ gnc_commodities_window_key_press_cb (GtkWidget *widget, GdkEventKey *event,
  * Return: nothing                                                  *
 \********************************************************************/
 void
-gnc_commodities_dialog (GtkWidget * parent)
+gnc_commodities_dialog (GtkWidget * parent) noexcept
 {
     gint component_id;
 

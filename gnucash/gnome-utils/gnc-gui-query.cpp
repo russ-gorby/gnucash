@@ -52,7 +52,7 @@
 gint
 gnc_ok_cancel_dialog(GtkWindow *parent,
                      gint default_result,
-                     const gchar *format, ...)
+                     const gchar *format, ...) noexcept
 {
     GtkWidget *dialog = NULL;
     gint result;
@@ -87,7 +87,7 @@ gnc_ok_cancel_dialog(GtkWindow *parent,
 
 gboolean
 gnc_action_dialog (GtkWindow *parent, const gchar *action,
-                   gboolean action_default, const gchar *format, ...)
+                   gboolean action_default, const gchar *format, ...) noexcept
 {
     g_return_val_if_fail (action, FALSE);
 
@@ -136,7 +136,7 @@ gnc_action_dialog (GtkWindow *parent, const gchar *action,
 \********************************************************************/
 gboolean
 gnc_verify_dialog(GtkWindow *parent, gboolean yes_is_default,
-                  const gchar *format, ...)
+                  const gchar *format, ...) noexcept
 {
     va_list args;
 
@@ -168,7 +168,8 @@ gnc_verify_dialog(GtkWindow *parent, gboolean yes_is_default,
 }
 
 static void
-gnc_message_dialog_common (GtkWindow *parent, const gchar *format, GtkMessageType msg_type, va_list args)
+gnc_message_dialog_common (GtkWindow *parent, const gchar *format,
+                           GtkMessageType msg_type, va_list args)
 {
     GtkWidget *dialog = NULL;
     gchar *buffer;
@@ -207,7 +208,7 @@ gnc_message_dialog_common (GtkWindow *parent, const gchar *format, GtkMessageTyp
  * Return: none                                                     *
 \********************************************************************/
 void
-gnc_info_dialog (GtkWindow *parent, const gchar *format, ...)
+gnc_info_dialog (GtkWindow *parent, const gchar *format, ...) noexcept
 {
     va_list args;
 
@@ -231,7 +232,7 @@ gnc_info_dialog (GtkWindow *parent, const gchar *format, ...)
 \********************************************************************/
 
 void
-gnc_warning_dialog (GtkWindow *parent, const gchar *format, ...)
+gnc_warning_dialog (GtkWindow *parent, const gchar *format, ...) noexcept
 {
     va_list args;
 
@@ -252,7 +253,7 @@ gnc_warning_dialog (GtkWindow *parent, const gchar *format, ...)
  *                string.                                           *
  * Return: none                                                     *
 \********************************************************************/
-void gnc_error_dialog (GtkWindow* parent, const char* format, ...)
+void gnc_error_dialog (GtkWindow* parent, const char* format, ...) noexcept
 {
     va_list args;
 
@@ -283,7 +284,7 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
                                const char *msg,
                                const char *button_name,
                                int default_value,
-                               GList *radio_list)
+                               GList *radio_list) noexcept
 {
     int radio_result = 0; /* initial selected value is first one */
     GtkWidget *vbox;
@@ -431,7 +432,8 @@ gnc_input_dialog_internal (GtkWidget *parent, const gchar *title, const gchar *m
  *         NULL, if pressed "Cancel"                                *
  \********************************************************************/
 gchar *
-gnc_input_dialog (GtkWidget *parent, const gchar *title, const gchar *msg, const gchar *default_input)
+gnc_input_dialog (GtkWidget *parent, const gchar *title, const gchar *msg,
+                  const gchar *default_input) noexcept
 {
     return gnc_input_dialog_internal (parent, title, msg, default_input, FALSE);
 }
@@ -442,13 +444,14 @@ gnc_input_dialog (GtkWidget *parent, const gchar *title, const gchar *msg, const
  *   user may choose between "Ok" and "Cancel"                      *
  \********************************************************************/
 gchar *
-gnc_input_dialog_with_entry (GtkWidget *parent, const gchar *title, const gchar *msg, const gchar *default_input)
+gnc_input_dialog_with_entry (GtkWidget *parent, const gchar *title,
+                             const gchar *msg, const gchar *default_input) noexcept
 {
     return gnc_input_dialog_internal (parent, title, msg, default_input, TRUE);
 }
 
 void
-gnc_info2_dialog (GtkWidget *parent, const gchar *title, const gchar *msg)
+gnc_info2_dialog (GtkWidget *parent, const gchar *title, const gchar *msg) noexcept
 {
     GtkWidget *view;
     GtkTextBuffer *buffer;

@@ -41,8 +41,6 @@
 
 #include "gnc-commodity.h"
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_MODEL_COMMODITY            (gnc_tree_model_commodity_get_type ())
 G_DECLARE_FINAL_TYPE (GncTreeModelCommodity, gnc_tree_model_commodity, GNC, TREE_MODEL_COMMODITY, GncTreeModel)
@@ -195,8 +193,6 @@ gboolean gnc_tree_model_commodity_get_iter_from_commodity (GncTreeModelCommodity
 GtkTreePath *gnc_tree_model_commodity_get_path_from_commodity (GncTreeModelCommodity *model,
         gnc_commodity *commodity);
 /** @} */
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_MODEL_COMMODITY_H */
 

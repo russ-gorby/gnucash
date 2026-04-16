@@ -1,6 +1,6 @@
 /**
  * gnc-cell-renderer-text-flag.h -- text cell renderer with flag.
- * 
+ *
  * Copyright (C) 2019 Adrian Panella <ianchi74@outlook.com>
  * All rights reserved.
  **/
@@ -32,6 +32,18 @@
 #define GNC_TYPE_CELL_RENDERER_TEXT_FLAG		(gnc_cell_renderer_text_flag_get_type ())
 G_DECLARE_FINAL_TYPE (GncCellRendererTextFlag, gnc_cell_renderer_text_flag, GNC, CELL_RENDERER_TEXT_FLAG, GtkCellRendererText)
 
-GtkCellRenderer *gnc_cell_renderer_text_flag_new(void);
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
+GtkCellRenderer *gnc_cell_renderer_text_flag_new(void) NOEXCEPT;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_CELL_RENDERER_TEXT_FLAG_H__ */

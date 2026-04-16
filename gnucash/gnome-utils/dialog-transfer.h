@@ -27,7 +27,11 @@
 #include "Account.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 typedef struct _xferDialog XferDialog;
@@ -38,22 +42,22 @@ typedef struct _xferDialog XferDialog;
  *         initial - the initial account in the from/to fields
  * Return: XferDialog structure
  */
-XferDialog * gnc_xfer_dialog(GtkWidget * parent, Account *initial);
+XferDialog * gnc_xfer_dialog(GtkWidget * parent, Account *initial) NOEXCEPT;
 
 /** Run the dialog until the user has either successfully completed the
  * transaction (just clicking OK doesn't always count) or clicked Cancel.
  * Return TRUE if the transaction was a success, FALSE otherwise.
  */
-gboolean gnc_xfer_dialog_run_until_done( XferDialog * );
+gboolean gnc_xfer_dialog_run_until_done( XferDialog * ) NOEXCEPT;
 
-void gnc_xfer_dialog_close( XferDialog * );
+void gnc_xfer_dialog_close( XferDialog * ) NOEXCEPT;
 
 /*********** Access routines ***********/
-void gnc_xfer_dialog_set_title( XferDialog *, const gchar * );
+void gnc_xfer_dialog_set_title( XferDialog *, const gchar * ) NOEXCEPT;
 
 /** Set the label of the topmost table */
 void gnc_xfer_dialog_set_information_label( XferDialog *,
-        const gchar * );
+        const gchar * ) NOEXCEPT;
 
 /** Add a button with a user-specified label and "clicked" callback.
  * For now this doesn't offer a lot of flexibility, but it doesn't have to.
@@ -61,37 +65,37 @@ void gnc_xfer_dialog_set_information_label( XferDialog *,
 void gnc_xfer_dialog_add_user_specified_button( XferDialog *xferData,
         const gchar *label,
         GCallback callback,
-        gpointer user_data );
+        gpointer user_data ) NOEXCEPT;
 
 void gnc_xfer_dialog_toggle_currency_table ( XferDialog *xferData,
-        gboolean show_table );
+        gboolean show_table ) NOEXCEPT;
 
 void gnc_xfer_dialog_set_from_account_label( XferDialog *,
-        const gchar * );
-void gnc_xfer_dialog_set_to_account_label( XferDialog *, const gchar * );
+        const gchar * ) NOEXCEPT;
+void gnc_xfer_dialog_set_to_account_label( XferDialog *, const gchar * ) NOEXCEPT;
 
 /** Set the buttons for "Show Income/Expense" */
-void gnc_xfer_dialog_set_from_show_button_active( XferDialog *, gboolean );
-void gnc_xfer_dialog_set_to_show_button_active( XferDialog *, gboolean );
+void gnc_xfer_dialog_set_from_show_button_active( XferDialog *, gboolean ) NOEXCEPT;
+void gnc_xfer_dialog_set_to_show_button_active( XferDialog *, gboolean ) NOEXCEPT;
 
 /**   select the from account in a xfer dialog                       */
 void gnc_xfer_dialog_select_from_account(XferDialog *xferData,
-        Account *account);
+        Account *account) NOEXCEPT;
 /**   select the to account in a xfer dialog                         */
 void gnc_xfer_dialog_select_to_account(XferDialog *xferData,
-                                       Account *account);
+                                       Account *account) NOEXCEPT;
 
-void gnc_xfer_dialog_select_from_currency(XferDialog *xferData, gnc_commodity *cur);
-void gnc_xfer_dialog_select_to_currency(XferDialog *xferData, gnc_commodity *cur);
+void gnc_xfer_dialog_select_from_currency(XferDialog *xferData, gnc_commodity *cur) NOEXCEPT;
+void gnc_xfer_dialog_select_to_currency(XferDialog *xferData, gnc_commodity *cur) NOEXCEPT;
 
 /** Prevent changes to the from account tree in an xfer dialog     */
-void gnc_xfer_dialog_lock_from_account_tree(XferDialog *xferData );
+void gnc_xfer_dialog_lock_from_account_tree(XferDialog *xferData ) NOEXCEPT;
 /** Prevent changes to the to account tree in an xfer dialog */
-void gnc_xfer_dialog_lock_to_account_tree(XferDialog *xferData );
+void gnc_xfer_dialog_lock_to_account_tree(XferDialog *xferData ) NOEXCEPT;
 /** Prevent changes to the from account tree in an xfer dialog */
-void gnc_xfer_dialog_hide_from_account_tree(XferDialog *xferData );
+void gnc_xfer_dialog_hide_from_account_tree(XferDialog *xferData ) NOEXCEPT;
 /** Prevent changes to the to account tree in an xfer dialog */
-void gnc_xfer_dialog_hide_to_account_tree(XferDialog *xferData );
+void gnc_xfer_dialog_hide_to_account_tree(XferDialog *xferData ) NOEXCEPT;
 
 
 /**
@@ -101,10 +105,10 @@ void gnc_xfer_dialog_hide_to_account_tree(XferDialog *xferData );
  *         amount   - the amount to set
  * Return: none
  */
-void gnc_xfer_dialog_set_amount(XferDialog *xferData, gnc_numeric amount);
+void gnc_xfer_dialog_set_amount(XferDialog *xferData, gnc_numeric amount) NOEXCEPT;
 
 /** Set the "sensitive" state of the amount field to the given value */
-void gnc_xfer_dialog_set_amount_sensitive(XferDialog *xferData, gboolean is_sensitive);
+void gnc_xfer_dialog_set_amount_sensitive(XferDialog *xferData, gboolean is_sensitive) NOEXCEPT;
 
 /**
  *   set the description in the given xfer dialog
@@ -114,7 +118,7 @@ void gnc_xfer_dialog_set_amount_sensitive(XferDialog *xferData, gboolean is_sens
  * Return: none
  */
 void gnc_xfer_dialog_set_description(XferDialog *xferData,
-                                     const char *description);
+                                     const char *description) NOEXCEPT;
 
 /**   set the memo in the given xfer dialog
  *
@@ -122,7 +126,7 @@ void gnc_xfer_dialog_set_description(XferDialog *xferData,
  *         memo        - the memo to set
  * Return: none
  */
-void gnc_xfer_dialog_set_memo(XferDialog *xferData, const char *memo);
+void gnc_xfer_dialog_set_memo(XferDialog *xferData, const char *memo) NOEXCEPT;
 
 /**
  *   set the num in the given xfer dialog
@@ -131,7 +135,7 @@ void gnc_xfer_dialog_set_memo(XferDialog *xferData, const char *memo);
  *         num        - the num to set
  * Return: none
  */
-void gnc_xfer_dialog_set_num(XferDialog *xferData, const char *num);
+void gnc_xfer_dialog_set_num(XferDialog *xferData, const char *num) NOEXCEPT;
 
 /**
  *   Set the date in the given xfer dialog
@@ -140,22 +144,22 @@ void gnc_xfer_dialog_set_num(XferDialog *xferData, const char *num);
  *         set_date    - the date to set
  * Return: none
  */
-void gnc_xfer_dialog_set_date(XferDialog *xferData, time64 set_time);
+void gnc_xfer_dialog_set_date(XferDialog *xferData, time64 set_time) NOEXCEPT;
 
 /** Set the "sensitive" state of the date field to the given value */
-void gnc_xfer_dialog_set_date_sensitive(XferDialog *xferData, gboolean is_sensitive);
+void gnc_xfer_dialog_set_date_sensitive(XferDialog *xferData, gboolean is_sensitive) NOEXCEPT;
 
 /** Set the dialog's exchange rate edit.  If price_value is 0, then do
  *  nothing.
  */
 void gnc_xfer_dialog_set_price_edit(XferDialog *xferData,
-				    gnc_numeric price_value);
+				    gnc_numeric price_value) NOEXCEPT;
 
 /** Indicate whether the dialog should quickfill based on the "To" account,
  * rather than the default which is the "From" account.
  */
 void gnc_xfer_dialog_quickfill_to_account(XferDialog *xferData,
-        gboolean qf_to_account );
+        gboolean qf_to_account ) NOEXCEPT;
 
 /**
  *   Set the dialog as an "exchange-dialog", which means that the
@@ -174,7 +178,7 @@ void gnc_xfer_dialog_quickfill_to_account(XferDialog *xferData,
  * Return: none
  */
 void gnc_xfer_dialog_is_exchange_dialog(XferDialog *xferData,
-                                        gnc_numeric * exch_rate);
+                                        gnc_numeric * exch_rate) NOEXCEPT;
 
 
 /** Callback function type for gnc_xfer_dialog_set_txn_cb().
@@ -207,7 +211,7 @@ typedef void (*gnc_xfer_dialog_cb)(Transaction *new_trans,
  * handler. */
 void gnc_xfer_dialog_set_txn_cb(XferDialog *xferData,
                                 gnc_xfer_dialog_cb handler,
-                                gpointer user_data);
+                                gpointer user_data) NOEXCEPT;
 
 /* Uses the XferDialog to obtain from the user an explicit exchange
    rate.  This exchange rate will then be uses to converting 'amount',
@@ -223,7 +227,7 @@ void gnc_xfer_dialog_set_txn_cb(XferDialog *xferData,
 gboolean gnc_xfer_dialog_run_exchange_dialog(
     XferDialog *xfer, gnc_numeric *exch_rate, gnc_numeric amount,
     Account *reg_acc, Transaction *txn, gnc_commodity *xfer_com,
-    gboolean expanded);
+    gboolean expanded) NOEXCEPT;
 
 #ifdef __cplusplus
 }

@@ -483,7 +483,7 @@ _gdc_set_cal_min_size_req (GncDenseCal *dcal)
 }
 
 GtkWidget*
-gnc_dense_cal_new (GtkWindow *parent)
+gnc_dense_cal_new (GtkWindow *parent) noexcept
 {
     auto dcal = static_cast<GncDenseCal *>(g_object_new (GNC_TYPE_DENSE_CAL, NULL));
 
@@ -494,7 +494,7 @@ gnc_dense_cal_new (GtkWindow *parent)
 }
 
 GtkWidget*
-gnc_dense_cal_new_with_model (GtkWindow *parent, GncDenseCalModel *model)
+gnc_dense_cal_new_with_model (GtkWindow *parent, GncDenseCalModel *model) noexcept
 {
     GncDenseCal *cal = GNC_DENSE_CAL(gnc_dense_cal_new (parent));
     gnc_dense_cal_set_model (cal, model);
@@ -512,7 +512,7 @@ recompute_first_of_month_offset (GncDenseCal *dcal)
 }
 
 void
-gnc_dense_cal_set_month (GncDenseCal *dcal, GDateMonth mon)
+gnc_dense_cal_set_month (GncDenseCal *dcal, GDateMonth mon) noexcept
 {
     _gnc_dense_cal_set_month (dcal, mon, TRUE);
 }
@@ -538,7 +538,7 @@ _gnc_dense_cal_set_month (GncDenseCal *dcal, GDateMonth mon, gboolean redraw)
 }
 
 void
-gnc_dense_cal_set_year (GncDenseCal *dcal, guint year)
+gnc_dense_cal_set_year (GncDenseCal *dcal, guint year) noexcept
 {
     _gnc_dense_cal_set_year (dcal, year, TRUE);
 }
@@ -560,7 +560,7 @@ _gnc_dense_cal_set_year (GncDenseCal *dcal, guint year, gboolean redraw)
 }
 
 void
-gnc_dense_cal_set_num_months (GncDenseCal *dcal, guint num_months)
+gnc_dense_cal_set_num_months (GncDenseCal *dcal, guint num_months) noexcept
 {
     GtkListStore *options = _gdc_get_view_options ();
     GtkTreeIter view_opts_iter, iter_closest_to_req;
@@ -614,26 +614,26 @@ gnc_dense_cal_set_num_months (GncDenseCal *dcal, guint num_months)
 }
 
 guint
-gnc_dense_cal_get_num_months (GncDenseCal *dcal)
+gnc_dense_cal_get_num_months (GncDenseCal *dcal) noexcept
 {
     return dcal->numMonths;
 }
 
 void
-gnc_dense_cal_set_months_per_col (GncDenseCal *dcal, guint monthsPerCol)
+gnc_dense_cal_set_months_per_col (GncDenseCal *dcal, guint monthsPerCol) noexcept
 {
     dcal->monthsPerCol = monthsPerCol;
     recompute_x_y_scales (dcal);
 }
 
 GDateMonth
-gnc_dense_cal_get_month (GncDenseCal *dcal)
+gnc_dense_cal_get_month (GncDenseCal *dcal) noexcept
 {
     return dcal->month;
 }
 
 GDateYear
-gnc_dense_cal_get_year (GncDenseCal *dcal)
+gnc_dense_cal_get_year (GncDenseCal *dcal) noexcept
 {
     return dcal->year;
 }
@@ -2027,7 +2027,7 @@ gdc_model_removing_cb (GncDenseCalModel *model, guint remove_tag, gpointer user_
 }
 
 void
-gnc_dense_cal_set_model (GncDenseCal *cal, GncDenseCalModel *model)
+gnc_dense_cal_set_model (GncDenseCal *cal, GncDenseCalModel *model) noexcept
 {
     if (cal->model != NULL)
     {

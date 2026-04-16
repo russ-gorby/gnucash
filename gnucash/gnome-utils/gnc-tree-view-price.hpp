@@ -40,8 +40,6 @@
 #include "gnc-pricedb.h"
 #include "gnc-ui-util.h"
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_VIEW_PRICE            (gnc_tree_view_price_get_type ())
 G_DECLARE_FINAL_TYPE (GncTreeViewPrice, gnc_tree_view_price, GNC, TREE_VIEW_PRICE, GncTreeView)
@@ -200,8 +198,6 @@ GList * gnc_tree_view_price_get_selected_prices (GncTreeViewPrice *view);
 GList * gnc_tree_view_price_get_selected_commodities (GncTreeViewPrice *view);
 
 /** @} */
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_VIEW_PRICE_H */
 

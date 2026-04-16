@@ -39,7 +39,7 @@
  *  entry. */
 void
 gnc_cbwe_set_by_string(GtkComboBox *cbwe,
-                      const gchar *text)
+                      const gchar *text) noexcept
 {
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -162,7 +162,7 @@ gnc_cbwe_focus_out_cb (GtkEntry *entry,
 }
 
 void
-gnc_cbwe_add_completion (GtkComboBox *cbwe)
+gnc_cbwe_add_completion (GtkComboBox *cbwe) noexcept
 {
     GtkEntry *entry;
     GtkEntryCompletion *completion;
@@ -183,7 +183,7 @@ gnc_cbwe_add_completion (GtkComboBox *cbwe)
 }
 
 void
-gnc_cbwe_require_list_item (GtkComboBox *cbwe)
+gnc_cbwe_require_list_item (GtkComboBox *cbwe) noexcept
 {
     GtkEntry *entry;
     GtkEntryCompletion *completion;
@@ -233,7 +233,7 @@ gnc_cbwe_require_list_item (GtkComboBox *cbwe)
  *  @returns TRUE if the theme is considered dark, FALSE otherwise.
  */
 gboolean
-gnc_is_dark_theme (GdkRGBA *fg_color)
+gnc_is_dark_theme (GdkRGBA *fg_color) noexcept
 {
     gboolean is_dark = FALSE;
 
@@ -257,7 +257,7 @@ gnc_is_dark_theme (GdkRGBA *fg_color)
 void
 gnc_style_context_get_background_color (GtkStyleContext *context,
                                         GtkStateFlags    state,
-                                        GdkRGBA         *color)
+                                        GdkRGBA         *color) noexcept
 {
     GdkRGBA *c;
 
@@ -283,7 +283,7 @@ gnc_style_context_get_background_color (GtkStyleContext *context,
 void
 gnc_style_context_get_border_color (GtkStyleContext *context,
                                     GtkStateFlags    state,
-                                    GdkRGBA         *color)
+                                    GdkRGBA         *color) noexcept
 {
     GdkRGBA *c;
 
@@ -330,7 +330,7 @@ find_widget_func (GtkWidget *widget, const gchar *id)
  *  @returns The widget defined by id in the dialog or NULL.
  */
 GtkWidget *
-gnc_get_dialog_widget_from_id (GtkDialog *dialog, const gchar *id)
+gnc_get_dialog_widget_from_id (GtkDialog *dialog, const gchar *id) noexcept
 {
     GtkWidget *content_area = gtk_dialog_get_content_area (dialog);
     return static_cast<GtkWidget *>(
@@ -344,7 +344,7 @@ gnc_get_dialog_widget_from_id (GtkDialog *dialog, const gchar *id)
  *  @param action_group The GSimpleActionGroup
  */
 void
-gnc_disable_all_actions_in_group (GSimpleActionGroup *action_group)
+gnc_disable_all_actions_in_group (GSimpleActionGroup *action_group) noexcept
 {
     gchar **actions;
     gint num_actions;
@@ -433,7 +433,7 @@ add_accel_for_menu_lookup (GtkWidget *widget, gpointer user_data)
  *  @param accel_group The accelerator group to use.
  */
 void
-gnc_add_accelerator_keys_for_menu (GtkWidget *menu, GMenuModel *model, GtkAccelGroup *accel_group)
+gnc_add_accelerator_keys_for_menu (GtkWidget *menu, GMenuModel *model, GtkAccelGroup *accel_group) noexcept
 {
     g_return_if_fail (GTK_IS_WIDGET(menu));
     g_return_if_fail (model != NULL);
@@ -504,7 +504,7 @@ find_menu_item_func (GtkWidget *widget, const gchar *action_name, const gchar *a
  *  @return The menu item widget or NULL.
  */
 GtkWidget *
-gnc_find_menu_item_by_action_name (GtkWidget *menu, const gchar *action_name)
+gnc_find_menu_item_by_action_name (GtkWidget *menu, const gchar *action_name) noexcept
 {
     GtkWidget *ret = NULL;
     const gchar *action_label = NULL;
@@ -535,7 +535,7 @@ gnc_find_menu_item_by_action_name (GtkWidget *menu, const gchar *action_name)
  *  @return The menu item widget or NULL.
  */
 GtkWidget *
-gnc_find_menu_item_by_action_label (GtkWidget *menu, const gchar *action_label)
+gnc_find_menu_item_by_action_label (GtkWidget *menu, const gchar *action_label) noexcept
 {
     GtkWidget *ret = NULL;
     const gchar *action_name = NULL;
@@ -581,7 +581,7 @@ menu_item_list (GtkWidget *widget, gpointer user_data)
  *  @return A GList of menu items or NULL.
  */
 GList *
-gnc_menu_get_items (GtkWidget *menu)
+gnc_menu_get_items (GtkWidget *menu) noexcept
 {
     GList *list = NULL;
 
@@ -623,7 +623,7 @@ find_tool_action (GtkWidget *widget, gpointer user_data)
  *  @return The tool item widget or NULL.
  */
 GtkWidget *
-gnc_find_toolbar_item (GtkWidget *toolbar, const gchar *action_name)
+gnc_find_toolbar_item (GtkWidget *toolbar, const gchar *action_name) noexcept
 {
     find_tool_item_struct ftis;
 
@@ -754,7 +754,7 @@ items_from_model (GMenuModel *model,
  *  @return TRUE if GMenuModel item found or FALSE if not.
  */
 gboolean
-gnc_menubar_model_find_item (GMenuModel *menu_model, GncMenuModelSearch *gsm)
+gnc_menubar_model_find_item (GMenuModel *menu_model, GncMenuModelSearch *gsm) noexcept
 {
 
     g_return_val_if_fail (menu_model != NULL, FALSE);
@@ -787,7 +787,7 @@ gnc_menubar_model_find_item (GMenuModel *menu_model, GncMenuModelSearch *gsm)
  *  @return The GtkMenuItem if found or NULL
  */
 GtkWidget *
-gnc_menubar_model_find_menu_item (GMenuModel *menu_model, GtkWidget *menu, const gchar *action_name)
+gnc_menubar_model_find_menu_item (GMenuModel *menu_model, GtkWidget *menu, const gchar *action_name) noexcept
 {
     GncMenuModelSearch *gsm;
     GtkWidget *menu_item = NULL;
@@ -830,7 +830,7 @@ gnc_menubar_model_find_menu_item (GMenuModel *menu_model, GtkWidget *menu, const
 gboolean
 gnc_menubar_model_update_item (GMenuModel *menu_model, const gchar *action_name,
                                const gchar *target, const gchar *label,
-                               const gchar *accel_name, const gchar *tooltip)
+                               const gchar *accel_name, const gchar *tooltip) noexcept
 {
     GncMenuModelSearch *gsm;
     gboolean found = FALSE;
@@ -996,7 +996,7 @@ remove_items (gpointer data, gpointer user_data)
  *  @param attrib The attribute to look for.
  */
 void
-gnc_menubar_model_remove_items_with_attrib (GMenuModel *menu_model, const gchar *attrib)
+gnc_menubar_model_remove_items_with_attrib (GMenuModel *menu_model, const gchar *attrib) noexcept
 {
     GList *remove_list = NULL;
 
@@ -1065,7 +1065,7 @@ menu_item_deselect_cb (GtkWidget *menu_item, GtkWidget *statusbar)
  */
 void
 gnc_menu_item_setup_tooltip_to_statusbar_callback (GtkWidget *menu_item,
-                                                   GtkWidget *statusbar)
+                                                   GtkWidget *statusbar) noexcept
 {
     g_return_if_fail (menu_item != NULL);
     g_return_if_fail (statusbar != NULL);
@@ -1113,7 +1113,7 @@ tool_item_leave_event (GtkWidget *button, GdkEvent *event,
  */
 void
 gnc_tool_item_setup_tooltip_to_statusbar_callback (GtkWidget *tool_item,
-                                                   GtkWidget *statusbar)
+                                                   GtkWidget *statusbar) noexcept
 {
     GtkWidget *child;
 

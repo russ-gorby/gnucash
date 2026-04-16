@@ -49,8 +49,17 @@ typedef struct _ExtensionInfo
     gboolean accel_assigned;
 } ExtensionInfo;
 
-GSList *gnc_extensions_get_menu_list (void);
-void gnc_extension_invoke_cb (SCM extension, SCM window);
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
+
+
+GSList *gnc_extensions_get_menu_list (void) NOEXCEPT;
+void gnc_extension_invoke_cb (SCM extension, SCM window) NOEXCEPT;
 
 /** This function stores a menu item/callback for later insertion into
  *  the application menus,
@@ -58,11 +67,15 @@ void gnc_extension_invoke_cb (SCM extension, SCM window);
  *  @param extension A scheme object describing the menu to be
  *  inserted.  Functions written in C should use the gnc-plugin cppode.
  */
-void gnc_add_scm_extension (SCM extension);
+void gnc_add_scm_extension (SCM extension) NOEXCEPT;
 
 /** This function releases any memory being held by the 'extensions'
  *  code.  It is called from the window shutdown code.
  */
-void gnc_extensions_shutdown (void);
+void gnc_extensions_shutdown (void) NOEXCEPT;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

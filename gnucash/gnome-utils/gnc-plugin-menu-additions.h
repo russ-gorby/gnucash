@@ -40,7 +40,13 @@
 
 #include "gnc-plugin.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_PLUGIN_MENU_ADDITIONS            (gnc_plugin_menu_additions_get_type ())
@@ -55,9 +61,11 @@ G_DECLARE_FINAL_TYPE (GncPluginMenuAdditions, gnc_plugin_menu_additions, GNC, PL
  *
  *  @return A pointer to the new object.
  */
-GncPlugin *gnc_plugin_menu_additions_new (void);
+GncPlugin *gnc_plugin_menu_additions_new (void) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_PLUGIN_MENU_ADDITIONS_H */
 

@@ -42,7 +42,7 @@
 
 void tree_view_column_set_default_width (GtkTreeView *view,
                                          GtkTreeViewColumn *column,
-                                         const gchar *sizing_text)
+                                         const gchar *sizing_text) noexcept
 {
     PangoLayout* layout;
     int default_width, title_width;

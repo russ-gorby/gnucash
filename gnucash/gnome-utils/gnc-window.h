@@ -44,7 +44,13 @@
 #include <gtk/gtk.h>
 #include "gnc-plugin-page.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_WINDOW            (gnc_window_get_type ())
@@ -67,22 +73,24 @@ struct _GncWindowInterface
 };
 
 /* function prototypes */
-GtkWindow     *gnc_window_get_gtk_window (GncWindow *window);
+GtkWindow     *gnc_window_get_gtk_window (GncWindow *window) NOEXCEPT;
 
-void           gnc_window_update_status (GncWindow *window, GncPluginPage *page);
-void           gnc_window_set_status (GncWindow *window, GncPluginPage *page, const gchar *message);
+void           gnc_window_update_status (GncWindow *window, GncPluginPage *page) NOEXCEPT;
+void           gnc_window_set_status (GncWindow *window, GncPluginPage *page, const gchar *message) NOEXCEPT;
 
-void           gnc_window_set_progressbar_window (GncWindow *window);
-GncWindow     *gnc_window_get_progressbar_window (void);
-GtkWidget     *gnc_window_get_progressbar (GncWindow *window);
-void           gnc_window_show_progress (const char *message, double percentage);
-GtkWidget     *gnc_window_get_menubar (GncWindow *window);
-GtkWidget     *gnc_window_get_toolbar (GncWindow *window);
-GtkWidget     *gnc_window_get_statusbar (GncWindow *window);
-GMenuModel    *gnc_window_get_menubar_model (GncWindow *window);
-GtkAccelGroup *gnc_window_get_accel_group (GncWindow *window);
+void           gnc_window_set_progressbar_window (GncWindow *window) NOEXCEPT;
+GncWindow     *gnc_window_get_progressbar_window (void) NOEXCEPT;
+GtkWidget     *gnc_window_get_progressbar (GncWindow *window) NOEXCEPT;
+void           gnc_window_show_progress (const char *message, double percentage) NOEXCEPT;
+GtkWidget     *gnc_window_get_menubar (GncWindow *window) NOEXCEPT;
+GtkWidget     *gnc_window_get_toolbar (GncWindow *window) NOEXCEPT;
+GtkWidget     *gnc_window_get_statusbar (GncWindow *window) NOEXCEPT;
+GMenuModel    *gnc_window_get_menubar_model (GncWindow *window) NOEXCEPT;
+GtkAccelGroup *gnc_window_get_accel_group (GncWindow *window) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_WINDOW_H */
 

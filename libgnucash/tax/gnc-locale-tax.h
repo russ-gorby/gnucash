@@ -27,8 +27,17 @@
 #include <config.h>
 #include <Account.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void gnc_locale_tax_init (void);
 char *gnc_ui_account_get_tax_info_string (const Account *account);
 char *gnc_ui_account_get_tax_info_sub_acct_string (const Account *account);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

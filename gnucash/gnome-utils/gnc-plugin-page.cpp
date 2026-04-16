@@ -120,7 +120,7 @@ G_DEFINE_TYPE_WITH_CODE(GncPluginPage, gnc_plugin_page, G_TYPE_OBJECT,
  *  widget should encompass all information that goes with this page,
  *  including scroll bars, a summary bar, etc. */
 GtkWidget *
-gnc_plugin_page_create_widget (GncPluginPage *plugin_page)
+gnc_plugin_page_create_widget (GncPluginPage *plugin_page) noexcept
 {
     GncPluginPageClass *klass;
     GtkWidget *widget;
@@ -150,7 +150,7 @@ gnc_plugin_page_create_widget (GncPluginPage *plugin_page)
  *  function will be called by the main/embedded window manipulation
  *  code when a page is closed. */
 void
-gnc_plugin_page_destroy_widget (GncPluginPage *plugin_page)
+gnc_plugin_page_destroy_widget (GncPluginPage *plugin_page) noexcept
 {
     GncPluginPageClass *klass;
 
@@ -167,7 +167,7 @@ gnc_plugin_page_destroy_widget (GncPluginPage *plugin_page)
 /*  Show/hide the summarybar associated with this page. */
 void
 gnc_plugin_page_show_summarybar (GncPluginPage *page,
-                                 gboolean visible)
+                                 gboolean visible) noexcept
 {
     g_return_if_fail (GNC_IS_PLUGIN_PAGE(page));
 
@@ -188,7 +188,7 @@ gnc_plugin_page_show_summarybar (GncPluginPage *page,
 void
 gnc_plugin_page_save_page (GncPluginPage *page,
                            GKeyFile *key_file,
-                           const gchar *group_name)
+                           const gchar *group_name) noexcept
 {
     GncPluginPageClass *klass;
 
@@ -213,7 +213,7 @@ GncPluginPage *
 gnc_plugin_page_recreate_page(GtkWidget *window,
                               const gchar *page_type,
                               GKeyFile *key_file,
-                              const gchar *page_group)
+                              const gchar *page_group) noexcept
 {
     ENTER("type %s, keyfile %p, group %s", page_type, key_file, page_group);
     GType type = g_type_from_name (page_type);
@@ -246,7 +246,7 @@ gnc_plugin_page_recreate_page(GtkWidget *window,
 
 
 void
-gnc_plugin_page_merge_actions (GncPluginPage *page)
+gnc_plugin_page_merge_actions (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
     GError *error = NULL;
@@ -275,7 +275,7 @@ gnc_plugin_page_merge_actions (GncPluginPage *page)
 
 
 GAction *
-gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name)
+gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -291,7 +291,7 @@ gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name)
 
 /*  Retrieve the textual name of a plugin. */
 const gchar *
-gnc_plugin_page_get_plugin_name (GncPluginPage *plugin_page)
+gnc_plugin_page_get_plugin_name (GncPluginPage *plugin_page) noexcept
 {
     GncPluginPageClass *klass;
 
@@ -306,7 +306,7 @@ gnc_plugin_page_get_plugin_name (GncPluginPage *plugin_page)
 
 /* Signals */
 void
-gnc_plugin_page_inserted (GncPluginPage *plugin_page)
+gnc_plugin_page_inserted (GncPluginPage *plugin_page) noexcept
 {
     g_return_if_fail (GNC_IS_PLUGIN_PAGE(plugin_page));
 
@@ -314,7 +314,7 @@ gnc_plugin_page_inserted (GncPluginPage *plugin_page)
 }
 
 void
-gnc_plugin_page_removed (GncPluginPage *plugin_page)
+gnc_plugin_page_removed (GncPluginPage *plugin_page) noexcept
 {
     g_return_if_fail (GNC_IS_PLUGIN_PAGE(plugin_page));
 
@@ -322,7 +322,7 @@ gnc_plugin_page_removed (GncPluginPage *plugin_page)
 }
 
 void
-gnc_plugin_page_selected (GncPluginPage *plugin_page)
+gnc_plugin_page_selected (GncPluginPage *plugin_page) noexcept
 {
     g_return_if_fail (GNC_IS_PLUGIN_PAGE(plugin_page));
 
@@ -330,7 +330,7 @@ gnc_plugin_page_selected (GncPluginPage *plugin_page)
 }
 
 void
-gnc_plugin_page_unselected (GncPluginPage *plugin_page)
+gnc_plugin_page_unselected (GncPluginPage *plugin_page) noexcept
 {
     g_return_if_fail (GNC_IS_PLUGIN_PAGE(plugin_page));
 
@@ -474,7 +474,7 @@ gnc_plugin_page_init (GncPluginPage *page)
  *  @param obj The new object instance created by the object
  *  system.
  */
- static void
+static void
 gnc_plugin_page_constructed (GObject *obj)
 {
     gnc_gobject_tracking_remember(obj);
@@ -650,7 +650,7 @@ gnc_plugin_page_set_property (GObject      *object,
 
 /*  Add a book reference to the specified page. */
 void
-gnc_plugin_page_add_book (GncPluginPage *page, QofBook *book)
+gnc_plugin_page_add_book (GncPluginPage *page, QofBook *book) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -664,7 +664,7 @@ gnc_plugin_page_add_book (GncPluginPage *page, QofBook *book)
 
 /*  Query a page to see if it has a reference to a given book. */
 gboolean
-gnc_plugin_page_has_book (GncPluginPage *page, QofBook *book)
+gnc_plugin_page_has_book (GncPluginPage *page, QofBook *book) noexcept
 {
     GncPluginPagePrivate *priv;
     GList *item;
@@ -686,7 +686,7 @@ gnc_plugin_page_has_book (GncPluginPage *page, QofBook *book)
 
 /*  Query a page to see if it has a reference to any book. */
 gboolean
-gnc_plugin_page_has_books (GncPluginPage *page)
+gnc_plugin_page_has_books (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -700,7 +700,7 @@ gnc_plugin_page_has_books (GncPluginPage *page)
 /*  Retrieve a pointer to the GncMainWindow (GtkWindow) containing
  *  this page. */
 GtkWidget *
-gnc_plugin_page_get_window (GncPluginPage *page)
+gnc_plugin_page_get_window (GncPluginPage *page) noexcept
 {
     g_return_val_if_fail (GNC_IS_PLUGIN_PAGE(page), NULL);
 
@@ -711,7 +711,7 @@ gnc_plugin_page_get_window (GncPluginPage *page)
 /*  Retrieve the name of this page.  This is the string used in the
  *  window title, and in the notebook tab and page selection menus. */
 const gchar *
-gnc_plugin_page_get_page_name (GncPluginPage *page)
+gnc_plugin_page_get_page_name (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -725,7 +725,7 @@ gnc_plugin_page_get_page_name (GncPluginPage *page)
 /*  Set the name of this page.  This is the string used in the window
  *  title, and in the notebook tab and page selection menus. */
 void
-gnc_plugin_page_set_page_name (GncPluginPage *page, const gchar *name)
+gnc_plugin_page_set_page_name (GncPluginPage *page, const gchar *name) noexcept
 {
     GncPluginPagePrivate *priv;
     GncPluginPageClass *klass;
@@ -751,7 +751,7 @@ gnc_plugin_page_set_page_name (GncPluginPage *page, const gchar *name)
  *  the tooltip that is attached to the page name in the notebook
  *  tab. */
 const gchar *
-gnc_plugin_page_get_page_long_name (GncPluginPage *page)
+gnc_plugin_page_get_page_long_name (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -765,7 +765,7 @@ gnc_plugin_page_get_page_long_name (GncPluginPage *page)
 /*  Set the long name of this page.  This is the string used in the
  *  tooltip that is attached to the page name in the notebook tab. */
 void
-gnc_plugin_page_set_page_long_name (GncPluginPage *page, const gchar *name)
+gnc_plugin_page_set_page_long_name (GncPluginPage *page, const gchar *name) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -781,7 +781,7 @@ gnc_plugin_page_set_page_long_name (GncPluginPage *page, const gchar *name)
 
 /*  Get the color of this page.  This is the string used in the notebook tab. */
 const gchar *
-gnc_plugin_page_get_page_color (GncPluginPage *page)
+gnc_plugin_page_get_page_color (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -794,7 +794,7 @@ gnc_plugin_page_get_page_color (GncPluginPage *page)
 
 /*  Set the color of this page.  This is the string used in the notebook tab. */
 void
-gnc_plugin_page_set_page_color (GncPluginPage *page, const gchar *color)
+gnc_plugin_page_set_page_color (GncPluginPage *page, const gchar *color) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -875,7 +875,7 @@ gnc_plugin_page_main_window_changed (GtkWindow *window,
  * the callback for the "page_changed" signal and save a pointer to the
  * page focus function. */
 void
-gnc_plugin_page_inserted_cb (GncPluginPage *page, gpointer user_data)
+gnc_plugin_page_inserted_cb (GncPluginPage *page, gpointer user_data) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -895,7 +895,7 @@ gnc_plugin_page_inserted_cb (GncPluginPage *page, gpointer user_data)
 
 /* disconnect the page_changed callback */
 void
-gnc_plugin_page_disconnect_page_changed (GncPluginPage *page)
+gnc_plugin_page_disconnect_page_changed (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -913,7 +913,7 @@ gnc_plugin_page_disconnect_page_changed (GncPluginPage *page)
 
 /*  Retrieve the statusbar text associated with this page. */
 const gchar *
-gnc_plugin_page_get_statusbar_text (GncPluginPage *page)
+gnc_plugin_page_get_statusbar_text (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -926,7 +926,7 @@ gnc_plugin_page_get_statusbar_text (GncPluginPage *page)
 
 /*  Set the statusbar text associated with this page. */
 void
-gnc_plugin_page_set_statusbar_text (GncPluginPage *page, const gchar *message)
+gnc_plugin_page_set_statusbar_text (GncPluginPage *page, const gchar *message) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -942,7 +942,7 @@ gnc_plugin_page_set_statusbar_text (GncPluginPage *page, const gchar *message)
 
 /*  Retrieve the "use new window" setting associated with this page. */
 gboolean
-gnc_plugin_page_get_use_new_window (GncPluginPage *page)
+gnc_plugin_page_get_use_new_window (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -958,7 +958,7 @@ gnc_plugin_page_get_use_new_window (GncPluginPage *page)
  *  window.  Otherwise the page will be installed into an existing
  *  window. */
 void
-gnc_plugin_page_set_use_new_window (GncPluginPage *page, gboolean use_new)
+gnc_plugin_page_set_use_new_window (GncPluginPage *page, gboolean use_new) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -971,7 +971,7 @@ gnc_plugin_page_set_use_new_window (GncPluginPage *page, gboolean use_new)
 
 /*  Retrieve the name of the XML UI file associated with this page. */
 const gchar *
-gnc_plugin_page_get_ui_description (GncPluginPage *page)
+gnc_plugin_page_get_ui_description (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -986,7 +986,7 @@ gnc_plugin_page_get_ui_description (GncPluginPage *page)
  *  may only use actions specified in the source for the page. */
 void
 gnc_plugin_page_set_ui_description (GncPluginPage *page,
-                                    const char *ui_filename)
+                                    const char *ui_filename) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1002,7 +1002,7 @@ gnc_plugin_page_set_ui_description (GncPluginPage *page,
 
 /*  Retrieve the GtkBuilder object associated with this page. */
 GtkBuilder *
-gnc_plugin_page_get_builder (GncPluginPage *page)
+gnc_plugin_page_get_builder (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1015,7 +1015,7 @@ gnc_plugin_page_get_builder (GncPluginPage *page)
 
 /*  Retrieve the menu qualifier associated with this page. */
 const gchar *
-gnc_plugin_page_get_menu_qualifier (GncPluginPage *page)
+gnc_plugin_page_get_menu_qualifier (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1027,7 +1027,7 @@ gnc_plugin_page_get_menu_qualifier (GncPluginPage *page)
 
 void
 gnc_plugin_page_set_menu_qualifier (GncPluginPage *page,
-                                    const char *menu_qualifier)
+                                    const char *menu_qualifier) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1039,7 +1039,7 @@ gnc_plugin_page_set_menu_qualifier (GncPluginPage *page,
 }
 
 const gchar *
-gnc_plugin_page_get_menu_popup_qualifier (GncPluginPage *page)
+gnc_plugin_page_get_menu_popup_qualifier (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1051,7 +1051,7 @@ gnc_plugin_page_get_menu_popup_qualifier (GncPluginPage *page)
 
 void
 gnc_plugin_page_set_menu_popup_qualifier (GncPluginPage *page,
-                                    const char *menu_qualifier)
+                                    const char *menu_qualifier) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1064,7 +1064,7 @@ gnc_plugin_page_set_menu_popup_qualifier (GncPluginPage *page,
 
 
 GSimpleActionGroup *
-gnc_plugin_page_get_action_group (GncPluginPage *page)
+gnc_plugin_page_get_action_group (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1075,7 +1075,7 @@ gnc_plugin_page_get_action_group (GncPluginPage *page)
 }
 
 GSimpleActionGroup *
-gnc_plugin_page_create_action_group (GncPluginPage *page, const gchar *group_name)
+gnc_plugin_page_create_action_group (GncPluginPage *page, const gchar *group_name) noexcept
 {
     GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
 
@@ -1086,7 +1086,7 @@ gnc_plugin_page_create_action_group (GncPluginPage *page, const gchar *group_nam
 }
 
 const gchar *
-gnc_plugin_page_get_simple_action_group_name (GncPluginPage *page)
+gnc_plugin_page_get_simple_action_group_name (GncPluginPage *page) noexcept
 {
     GncPluginPagePrivate *priv;
 
@@ -1098,7 +1098,7 @@ gnc_plugin_page_get_simple_action_group_name (GncPluginPage *page)
 }
 
 gboolean
-gnc_plugin_page_finish_pending (GncPluginPage *page)
+gnc_plugin_page_finish_pending (GncPluginPage *page) noexcept
 {
     if (!page)
         return TRUE;

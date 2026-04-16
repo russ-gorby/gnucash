@@ -30,7 +30,11 @@
 #include "Recurrence.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_FREQUENCY	  (gnc_frequency_get_type())
@@ -39,35 +43,35 @@ G_DECLARE_FINAL_TYPE (GncFrequency, gnc_frequency, GNC, FREQUENCY, GtkBox)
 /**
  * Either or both param may be NULL for reasonable defaults.
  **/
-GtkWidget* gnc_frequency_new(GList *recurrences, const GDate *start_date);
-GtkWidget* gnc_frequency_new_from_recurrence(GList *recurrences, const GDate *start_date);
+GtkWidget* gnc_frequency_new(GList *recurrences, const GDate *start_date) NOEXCEPT;
+GtkWidget* gnc_frequency_new_from_recurrence(GList *recurrences, const GDate *start_date) NOEXCEPT;
 
 /**
  * Change the given GncFrequency with the given FreqSpec and GDate.
  * If the FreqSpec is NULL, then no change is made to the widget menus.
  * If the date is NULL, then no change is made to the widget date field.
  **/
-void gnc_frequency_setup(GncFrequency *gf, GList *recurrences, const GDate *start_date);
-void gnc_frequency_setup_recurrence(GncFrequency *gf, GList *recurrences, const GDate *start_date);
+void gnc_frequency_setup(GncFrequency *gf, GList *recurrences, const GDate *start_date) NOEXCEPT;
+void gnc_frequency_setup_recurrence(GncFrequency *gf, GList *recurrences, const GDate *start_date) NOEXCEPT;
 
 /**
  * Saves the state of the GncFrequency widget.
  * Updates the given FreqSpec if it's not NULL.
  * Places the date in outDate, if it's not NULL.
  **/
-void gnc_frequency_save_to_recurrence(GncFrequency *gf, GList **recurrences, GDate *out_start_date);
+void gnc_frequency_save_to_recurrence(GncFrequency *gf, GList **recurrences, GDate *out_start_date) NOEXCEPT;
 
 /**
  * Set the label text for the frequency option menu.  In the current
  * implementation, the default label text is "Frequency"
  */
-void gnc_frequency_set_frequency_label_text (GncFrequency *gf, const gchar *txt);
+void gnc_frequency_set_frequency_label_text (GncFrequency *gf, const gchar *txt) NOEXCEPT;
 
 /**
  * Set the label text for the date entry widget. In the current
  * implementation, the default label text is "Start Date"
  */
-void gnc_frequency_set_date_label_text (GncFrequency *gf, const gchar *txt);
+void gnc_frequency_set_date_label_text (GncFrequency *gf, const gchar *txt) NOEXCEPT;
 
 #ifdef __cplusplus
 }

@@ -101,7 +101,7 @@ gnc_gobject_dump_list (const gchar *name, GList *list, gpointer user_data)
  *  memory/object leakage.
  */
 void
-gnc_gobject_tracking_dump (void)
+gnc_gobject_tracking_dump (void) noexcept
 {
     GHashTable *table;
 
@@ -120,7 +120,7 @@ gnc_gobject_tracking_dump (void)
 /** Tell gnucash to remember this object in the database.
  */
 void
-gnc_gobject_tracking_remember (GObject *object)
+gnc_gobject_tracking_remember (GObject *object) noexcept
 {
     g_return_if_fail(G_IS_OBJECT(object));
 
@@ -187,7 +187,7 @@ gnc_gobject_tracking_forget_internal (GObject *object)
 /** Tell gnucash to remember this object in the database.
  */
 void
-gnc_gobject_tracking_forget (GObject *object)
+gnc_gobject_tracking_forget (GObject *object) noexcept
 {
     if (gnc_gobject_tracking_forget_internal(object))
         g_object_weak_unref(object, gnc_gobject_weak_cb, NULL);
@@ -213,7 +213,7 @@ gnc_gobject_weak_cb (gpointer user_data, GObject *object)
 /** Get a list of all known objects of a specified type.
  */
 const GList *
-gnc_gobject_tracking_get_list (const gchar *name)
+gnc_gobject_tracking_get_list (const gchar *name) noexcept
 {
     //printf("Enter %s: name %s\n", G_STRFUNC, name);
     GHashTable *table = gnc_gobject_tracking_table();

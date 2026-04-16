@@ -30,13 +30,17 @@
 #include "qof.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_PREF_GRID_LINES_HORIZONTAL "grid-lines-horizontal"
 #define GNC_PREF_GRID_LINES_VERTICAL   "grid-lines-vertical"
 
-void gnc_set_label_color (GtkWidget *label, gnc_numeric value);
+void gnc_set_label_color (GtkWidget *label, gnc_numeric value) NOEXCEPT;
 
 /********************************************************************\
  * Returns the window size to use for the given option prefix,      *
@@ -48,7 +52,7 @@ void gnc_set_label_color (GtkWidget *label, gnc_numeric value);
  * Returns: nothing                                                 *
  \*******************************************************************/
 void gnc_restore_window_size (const char *prefix, GtkWindow *window,
-                              GtkWindow *parent);
+                              GtkWindow *parent) NOEXCEPT;
 
 /********************************************************************\
  * Save the window size into options whose names are determined     *
@@ -58,7 +62,7 @@ void gnc_restore_window_size (const char *prefix, GtkWindow *window,
  *       window - the window being saved                            *
  * Returns: nothing                                                 *
 \********************************************************************/
-void gnc_save_window_size (const char *section, GtkWindow *window);
+void gnc_save_window_size (const char *section, GtkWindow *window) NOEXCEPT;
 
 /********************************************************************\
  * Adjust the window size if it is bigger than the screen size.     *
@@ -66,7 +70,7 @@ void gnc_save_window_size (const char *section, GtkWindow *window);
  * Args: window - the window to adjust                              *
  * Returns: nothing                                                 *
 \********************************************************************/
-void gnc_window_adjust_for_screen (GtkWindow * window);
+void gnc_window_adjust_for_screen (GtkWindow * window) NOEXCEPT;
 
 /********************************************************************\
  * Sets the alignment of a Label Widget, GTK3 version specific.    *
@@ -76,7 +80,7 @@ void gnc_window_adjust_for_screen (GtkWindow * window);
  *       yalign - y alignment                                       *
  * Returns: nothing                                                 *
 \********************************************************************/
-void gnc_label_set_alignment (GtkWidget *widget, gfloat xalign, gfloat yalign);
+void gnc_label_set_alignment (GtkWidget *widget, gfloat xalign, gfloat yalign) NOEXCEPT;
 
 /********************************************************************\
  * Get the preference for showing tree view grid lines              *
@@ -84,7 +88,7 @@ void gnc_label_set_alignment (GtkWidget *widget, gfloat xalign, gfloat yalign);
  * Args: none                                                       *
  * Returns:  GtkTreeViewGridLines setting                           *
 \********************************************************************/
-GtkTreeViewGridLines gnc_tree_view_get_grid_lines_pref (void);
+GtkTreeViewGridLines gnc_tree_view_get_grid_lines_pref (void) NOEXCEPT;
 
 /********************************************************************\
  * Add a style context to a Widget so it can be altered with css    *
@@ -93,7 +97,7 @@ GtkTreeViewGridLines gnc_tree_view_get_grid_lines_pref (void);
  *       gnc_class - character string for css class name            *
  * Returns:  nothing                                                *
 \********************************************************************/
-void gnc_widget_style_context_add_class (GtkWidget *widget, const char *gnc_class);
+void gnc_widget_style_context_add_class (GtkWidget *widget, const char *gnc_class) NOEXCEPT;
 
 /********************************************************************\
  * Remove a style context class from a Widget                       *
@@ -102,7 +106,7 @@ void gnc_widget_style_context_add_class (GtkWidget *widget, const char *gnc_clas
  *       gnc_class - character string for css class name            *
  * Returns:  nothing                                                *
 \********************************************************************/
-void gnc_widget_style_context_remove_class (GtkWidget *widget, const char *gnc_class);
+void gnc_widget_style_context_remove_class (GtkWidget *widget, const char *gnc_class) NOEXCEPT;
 
 /********************************************************************\
  * Draw an arrow on a Widget so it can be altered with css          *
@@ -112,15 +116,15 @@ void gnc_widget_style_context_remove_class (GtkWidget *widget, const char *gnc_c
  *        direction - 0 for up, 1 for down                          *
  * Returns:  TRUE, stop other handlers being invoked for the event  *
 \********************************************************************/
-gboolean gnc_draw_arrow_cb (GtkWidget *widget, cairo_t *cr, gpointer direction);
+gboolean gnc_draw_arrow_cb (GtkWidget *widget, cairo_t *cr, gpointer direction) NOEXCEPT;
 
-gboolean gnc_gdate_in_valid_range (GDate *test_date, gboolean warn);
+gboolean gnc_gdate_in_valid_range (GDate *test_date, gboolean warn) NOEXCEPT;
 
 gboolean gnc_handle_date_accelerator (GdkEventKey *event,
                                       struct tm *tm,
-                                      const char *date_str);
+                                      const char *date_str) NOEXCEPT;
 
-gboolean gnc_builder_add_from_file (GtkBuilder *builder, const char *filename, const char *root);
+gboolean gnc_builder_add_from_file (GtkBuilder *builder, const char *filename, const char *root) NOEXCEPT;
 
 void gnc_builder_connect_full_func (GtkBuilder *builder,
                                     GObject *signal_object,
@@ -128,7 +132,7 @@ void gnc_builder_connect_full_func (GtkBuilder *builder,
                                     const gchar *handler_name,
                                     GObject *connect_object,
                                     GConnectFlags flags,
-                                    gpointer user_data);
+                                    gpointer user_data) NOEXCEPT;
 
 /** This function generates a button with icon and adds it to a
  *  GtkDialog.  This is similar to just adding a stock button to the
@@ -146,33 +150,28 @@ void gnc_builder_connect_full_func (GtkBuilder *builder,
 void gnc_gtk_dialog_add_button (GtkWidget *dialog,
                                 const gchar *label,
                                 const gchar *icon_name,
-                                guint response);
+                                guint response) NOEXCEPT;
 
 /** Note: This dialog is modal!  (It calls gtk_dialog_run() which is modal.)
  */
 gint
-gnc_dialog_run(GtkDialog *dialog, const gchar *pref_key);
+gnc_dialog_run(GtkDialog *dialog, const gchar *pref_key) NOEXCEPT;
 
 /* If this is a new book, this function can be used to display book options
  * dialog so user can specify options, before any transactions can be
  * imported/entered, since the book options can affect how transactions are
  * created. Note: This dialog is modal! */
-gboolean gnc_new_book_option_display (GtkWidget *parent);
-
-/** This function returns a widget for selecting a cost policy
-  */
-GtkWidget *
-gnc_cost_policy_select_new (void);
+gboolean gnc_new_book_option_display (GtkWidget *parent) NOEXCEPT;
 
 /** This function returns the color string for the CSS 'gnc-class-negative-numbers' class,
  *  the returned value must be freed.
  */
-gchar* gnc_get_negative_color (void);
+gchar* gnc_get_negative_color (void) NOEXCEPT;
 
 
 
 /** This function sets the title of an owner dialog */
-void gnc_owner_window_set_title (GtkWindow*, const char*, GtkWidget*, GtkWidget*);
+void gnc_owner_window_set_title (GtkWindow*, const char*, GtkWidget*, GtkWidget*) NOEXCEPT;
 
 
 #ifdef __cplusplus

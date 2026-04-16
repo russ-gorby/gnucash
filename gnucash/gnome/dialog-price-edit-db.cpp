@@ -950,7 +950,7 @@ gnc_prices_dialog_key_press_cb (GtkWidget *widget, GdkEventKey *event,
  * Return: nothing                                                  *
 \********************************************************************/
 void
-gnc_prices_dialog (GtkWidget * parent)
+gnc_prices_dialog (GtkWidget * parent) noexcept
 {
     PricesDialog *pdb_dialog;
     gint component_id;

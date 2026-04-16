@@ -40,8 +40,6 @@
 #include "gnc-commodity.h"
 #include "gnc-ui-util.h"
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_VIEW_COMMODITY            (gnc_tree_view_commodity_get_type ())
 G_DECLARE_FINAL_TYPE (GncTreeViewCommodity, gnc_tree_view_commodity, GNC, TREE_VIEW_COMMODITY, GncTreeView)
@@ -220,8 +218,6 @@ void gnc_tree_view_commodity_select_subcommodities (GncTreeViewCommodity *view,
         gnc_commodity *commodity);
 
 /** @} */
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_VIEW_COMMODITY_H */
 

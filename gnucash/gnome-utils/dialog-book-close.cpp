@@ -45,7 +45,13 @@
 
 #define DIALOG_BOOK_CLOSE_CM_CLASS "dialog-book-close"
 
-void gnc_book_close_response_cb(GtkDialog *, gint, GtkDialog *);
+extern "C"
+{
+/*
+ * Callbacks / private internal library functions
+ */
+void gnc_book_close_response_cb(GtkDialog *, gint, GtkDialog *) noexcept;
+}
 
 /* This static indicates the debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
@@ -259,7 +265,7 @@ static void destroy_cb(GObject *object, gpointer data)
 
 
 void
-gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused)
+gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) noexcept
 {
     Account* income_acct = NULL;
     Account* expense_acct = NULL;
@@ -312,7 +318,7 @@ gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused)
     LEAVE("");
 }
 
-void gnc_ui_close_book (QofBook* book, GtkWindow *parent)
+void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
 {
     struct CloseBookWindow *cbw;
     GtkBuilder* builder;

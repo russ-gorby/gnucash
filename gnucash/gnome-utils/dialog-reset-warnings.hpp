@@ -22,13 +22,5 @@
  *                                                                     *
  **********************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void gnc_reset_warnings_dialog (GtkWindow *parent);
-
-#ifdef __cplusplus
-}
-#endif
 

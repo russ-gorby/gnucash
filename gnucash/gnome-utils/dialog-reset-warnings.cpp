@@ -54,9 +54,15 @@ typedef struct
     GtkWidget   *applybutton;
 } RWDialog;
 
-void gnc_reset_warnings_select_all_cb (GtkButton *button, gpointer user_data);
-void gnc_reset_warnings_unselect_all_cb (GtkButton *button, gpointer user_data);
-void gnc_reset_warnings_response_cb (GtkDialog *dialog, gint response, gpointer user_data);
+extern "C" {
+/*
+ * Callbacks / private internal library functions
+ */
+void gnc_reset_warnings_select_all_cb (GtkButton *button, gpointer user_data) noexcept;
+void gnc_reset_warnings_unselect_all_cb (GtkButton *button, gpointer user_data) noexcept;
+void gnc_reset_warnings_response_cb (GtkDialog *dialog, gint response, gpointer user_data) noexcept;
+}
+
 static void gnc_reset_warnings_add_section (RWDialog *rw_dialog,
                                             const gchar *section, GtkWidget *box);
 static void gnc_reset_warnings_update_widgets (RWDialog *rw_dialog);
@@ -180,7 +186,7 @@ gnc_reset_warnings_apply_changes (RWDialog *rw_dialog)
 void
 gnc_reset_warnings_response_cb (GtkDialog *dialog,
                                 gint response,
-                                gpointer user_data)
+                                gpointer user_data) noexcept
 {
     auto rw_dialog = static_cast<RWDialog *>(user_data);
 
@@ -230,7 +236,7 @@ gnc_reset_warnings_select_common (RWDialog *rw_dialog,
 
 void
 gnc_reset_warnings_select_all_cb (GtkButton *button,
-                                  gpointer user_data)
+                                  gpointer user_data) noexcept
 {
     auto rw_dialog = static_cast<RWDialog *>(user_data);
     gnc_reset_warnings_select_common(rw_dialog, TRUE);
@@ -239,7 +245,7 @@ gnc_reset_warnings_select_all_cb (GtkButton *button,
 
 void
 gnc_reset_warnings_unselect_all_cb (GtkButton *button,
-                                    gpointer user_data)
+                                    gpointer user_data) noexcept
 {
     auto rw_dialog = static_cast<RWDialog *>(user_data);
     gnc_reset_warnings_select_common(rw_dialog, FALSE);

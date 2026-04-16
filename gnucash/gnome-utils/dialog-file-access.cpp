@@ -66,9 +66,17 @@ typedef struct FileAccessWindow
     GtkEntry            *tf_password;
 } FileAccessWindow;
 
+extern "C"
+{
+/*
+ * Callbacks / private internal library functions
+ */
+// unused externally, should this be static?
 void gnc_ui_file_access_file_activated_cb( GtkFileChooser *chooser,
-        FileAccessWindow *faw );
-void gnc_ui_file_access_response_cb( GtkDialog *, gint, GtkDialog * );
+        FileAccessWindow *faw ) noexcept;
+void gnc_ui_file_access_response_cb( GtkDialog *, gint, GtkDialog * ) noexcept;
+}
+
 static void cb_uri_type_changed_cb( GtkComboBoxText* cb );
 
 static gchar*
@@ -110,7 +118,7 @@ geturl( FileAccessWindow* faw )
 }
 
 void
-gnc_ui_file_access_file_activated_cb( GtkFileChooser *chooser, FileAccessWindow *faw )
+gnc_ui_file_access_file_activated_cb( GtkFileChooser *chooser, FileAccessWindow *faw ) noexcept
 {
     g_return_if_fail( chooser != NULL );
 
@@ -118,7 +126,7 @@ gnc_ui_file_access_file_activated_cb( GtkFileChooser *chooser, FileAccessWindow 
 }
 
 void
-gnc_ui_file_access_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused)
+gnc_ui_file_access_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) noexcept
 {
     gchar *url = NULL;
 
@@ -457,21 +465,21 @@ gnc_ui_file_access (GtkWindow *parent, int type)
 }
 
 void
-gnc_ui_file_access_for_open (GtkWindow *parent)
+gnc_ui_file_access_for_open (GtkWindow *parent) noexcept
 {
     gnc_ui_file_access (parent, FILE_ACCESS_OPEN);
 }
 
 
 void
-gnc_ui_file_access_for_save_as (GtkWindow *parent)
+gnc_ui_file_access_for_save_as (GtkWindow *parent) noexcept
 {
     gnc_ui_file_access (parent, FILE_ACCESS_SAVE_AS);
 }
 
 
 void
-gnc_ui_file_access_for_export (GtkWindow *parent)
+gnc_ui_file_access_for_export (GtkWindow *parent) noexcept
 {
     gnc_ui_file_access (parent, FILE_ACCESS_EXPORT);
 }

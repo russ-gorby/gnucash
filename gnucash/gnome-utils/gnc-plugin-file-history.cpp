@@ -152,7 +152,7 @@ gnc_history_pref_name_to_index (const gchar *pref)
  *  sequence of up to ten preferences.
  */
 void
-gnc_history_add_file (const char *newfile)
+gnc_history_add_file (const char *newfile) noexcept
 {
     gchar *filename, *from, *to;
     gint i, last;
@@ -221,7 +221,7 @@ gnc_history_add_file (const char *newfile)
  *  @param oldfile The name of the file to remove from the list.
  */
 void
-gnc_history_remove_file (const char *oldfile)
+gnc_history_remove_file (const char *oldfile) noexcept
 {
     gchar *filename, *from, *to;
     gint i, j;
@@ -264,7 +264,7 @@ gnc_history_remove_file (const char *oldfile)
  *
  *  @param oldfile The name of the file to test for in the list.
  */
-gboolean gnc_history_test_for_file (const char *oldfile)
+gboolean gnc_history_test_for_file (const char *oldfile) noexcept
 {
     gchar *filename, *from;
     gint i;
@@ -302,7 +302,7 @@ gboolean gnc_history_test_for_file (const char *oldfile)
  *  sequence of up to ten preference names, this is the value of the first preference.
  */
 char *
-gnc_history_get_last (void)
+gnc_history_get_last (void) noexcept
 {
     char *filename, *pref;
 
@@ -586,7 +586,7 @@ gnc_plugin_file_history_finalize (GObject *object)
  *  history menu to any window that is opened.
  */
 GncPlugin *
-gnc_plugin_file_history_new (void)
+gnc_plugin_file_history_new (void) noexcept
 {
     GncPlugin *plugin_page = NULL;
 

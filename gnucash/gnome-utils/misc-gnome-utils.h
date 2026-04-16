@@ -21,12 +21,17 @@
 #define __GTT_UTIL_H__
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
+
 /* Some gtk-like utilities */
-void xxxgtk_textview_set_text (GtkTextView *text, const char *str);
-char * xxxgtk_textview_get_text (GtkTextView *text);
+void xxxgtk_textview_set_text (GtkTextView *text, const char *str) NOEXCEPT;
+char * xxxgtk_textview_get_text (GtkTextView *text) NOEXCEPT;
 
 #ifdef __cplusplus
 }

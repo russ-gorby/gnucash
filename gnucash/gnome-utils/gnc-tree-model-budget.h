@@ -35,8 +35,13 @@
 #include "gnc-budget.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
+
 
 /* The budget list columns. */
 enum
@@ -47,16 +52,16 @@ enum
     BUDGET_LIST_NUM_COLS
 };
 
-GtkTreeModel * gnc_tree_model_budget_new(QofBook *book);
+GtkTreeModel * gnc_tree_model_budget_new(QofBook *book) NOEXCEPT;
 
-void gnc_tree_view_budget_set_model(GtkTreeView *tv, GtkTreeModel *tm);
+void gnc_tree_view_budget_set_model(GtkTreeView *tv, GtkTreeModel *tm) NOEXCEPT;
 
 GncBudget *gnc_tree_model_budget_get_budget(GtkTreeModel *tm,
-        GtkTreeIter *iter);
+        GtkTreeIter *iter) NOEXCEPT;
 
 gboolean gnc_tree_model_budget_get_iter_for_budget(GtkTreeModel *tm,
         GtkTreeIter *iter,
-        GncBudget *bgt);
+        GncBudget *bgt) NOEXCEPT;
 /** @} */
 #ifdef __cplusplus
 }

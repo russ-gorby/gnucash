@@ -2,22 +2,24 @@
 
 add_subdirectory(test)
 
-# Command to generate the swig-gnome-utils.c wrapper file
-gnc_add_swig_guile_command (swig-gnome-utils-c
-    SWIG_GNOME_UTILS_C swig-gnome-utils.c
+# Command to generate the swig-gnome-utils.cpp wrapper file
+set(SWIG_ARGS "-c++" "-procdoc" "sw-gnc-option-doc" "-procdocformat" "plain")
+gnc_add_swig_guile_command (swig-gnome-utils-cpp
+    SWIG_GNOME_UTILS_CPP swig-gnome-utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gnome-utils.i ""
 )
+unset(SWIG_ARGS)
 
-add_dependencies(swig-gnome-utils-c gnc-gnome-utils)
+add_dependencies(swig-gnome-utils-cpp gnc-gnome-utils)
 set (WARNINGS_SCHEMA ${DATADIR_BUILD}/glib-2.0/schemas/org.gnucash.GnuCash.warnings.gschema.xml)
-set (GNC_WARNINGS_C ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.c)
+set (GNC_WARNINGS_CPP ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.cpp)
 set (GNC_WARNINGS_H ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.h)
 
 add_custom_command(
-  OUTPUT ${GNC_WARNINGS_C}
-  DEPENDS ${WARNINGS_SCHEMA} make-gnc-warnings-c.xsl
+  OUTPUT ${GNC_WARNINGS_CPP}
+  DEPENDS ${WARNINGS_SCHEMA} make-gnc-warnings-cpp.xsl
   COMMAND
-    ${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_C} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-c.xsl ${WARNINGS_SCHEMA}
+    ${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_CPP} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-cpp.xsl ${WARNINGS_SCHEMA}
 )
 add_custom_command(
   OUTPUT ${GNC_WARNINGS_H}
@@ -193,8 +195,8 @@ set (gnome_utils_HEADERS
 add_library (gnc-gnome-utils
   ${gnome_utils_SOURCES}
   ${gnome_utils_HEADERS}
-  ${GNC_WARNINGS_C} ${GNC_WARNINGS_H}
-  ${SWIG_GNOME_UTILS_C}
+  ${GNC_WARNINGS_CPP} ${GNC_WARNINGS_H}
+  ${SWIG_GNOME_UTILS_CPP}
   ${gnome_utils_noinst_HEADERS}
 )
 
@@ -268,5 +270,5 @@ add_custom_target(scm-gnome-utils ALL DEPENDS scm-gnome-utils-2 scm-gnome-utils-
 
 set_local_dist(gnome_utils_DIST_local CMakeLists.txt ${gnome_utils_SOURCES} ${gnome_utils_HEADERS}
         ${gnome_utils_noinst_HEADERS} gnome-utils.scm gnome-utils.i gnc-menu-extensions.scm
-        make-gnc-warnings-c.xsl make-gnc-warnings-h.xsl)
+        make-gnc-warnings-cpp.xsl make-gnc-warnings-h.xsl)
 set(gnome_utils_DIST ${gnome_utils_DIST_local} ${test_gnome_utils_DIST} PARENT_SCOPE)

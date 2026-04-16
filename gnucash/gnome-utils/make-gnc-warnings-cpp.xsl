@@ -56,4 +56,4 @@ const GncWarningSpec *gnc_get_warnings (void)
 <xsl:variable name="smallcase" select="'-abcdefghijklmnopqrstuvwxyz'" />
 <xsl:variable name="uppercase" select="'_ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
 
-</xsl:stylesheet> 
+</xsl:stylesheet>

@@ -47,14 +47,14 @@ typedef struct
     gchar* utf8_string;
 } conv_type;
 
-extern gint gnc_xml2_find_ambiguous (const gchar* filename,
-                                     GList* encodings,
-                                     GHashTable** unique,
-                                     GHashTable** ambiguous,
-                                     GList** impossible);
+extern "C" gint gnc_xml2_find_ambiguous (const gchar* filename,
+                                         GList* encodings,
+                                         GHashTable** unique,
+                                         GHashTable** ambiguous,
+                                         GList** impossible);
 
-extern gboolean gnc_xml2_parse_with_subst (QofBackend* xml_be, QofBook* book,
-                                           GHashTable* subst);
+extern "C" gboolean gnc_xml2_parse_with_subst (QofBackend* xml_be, QofBook* book,
+                                               GHashTable* subst);
 /* NOTE: This file uses the term "encoding" even in places where it is not
  * accurate. Please ignore that. Encodings occur in different forms:
  * - as descriptive string, as in the list of system encodings

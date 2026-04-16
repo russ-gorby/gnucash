@@ -33,19 +33,23 @@
 #include "Recurrence.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 #define GNC_TYPE_RECURRENCE	  (gnc_recurrence_get_type())
 G_DECLARE_FINAL_TYPE (GncRecurrence, gnc_recurrence, GNC, RECURRENCE, GtkBox)
 
-GtkWidget * gnc_recurrence_new(void);
+GtkWidget * gnc_recurrence_new(void) NOEXCEPT;
 
-void gnc_recurrence_set(GncRecurrence *gr, const Recurrence *r);
+void gnc_recurrence_set(GncRecurrence *gr, const Recurrence *r) NOEXCEPT;
 
 /* The returned Recurrence is internally owned and is only valid as
    long as the GncRecurrence is around. */
-const Recurrence * gnc_recurrence_get(GncRecurrence *gr);
+const Recurrence * gnc_recurrence_get(GncRecurrence *gr) NOEXCEPT;
 
 #ifdef __cplusplus
 }

@@ -40,7 +40,13 @@
 
 #include "gnc-plugin-page.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 /* type macros */
 #define GNC_TYPE_EMBEDDED_WINDOW            (gnc_embedded_window_get_type ())
@@ -60,7 +66,7 @@ GncEmbeddedWindow *gnc_embedded_window_new (const gchar *action_group_name,
                                             const gchar *ui_filename,
                                             GtkWidget *enclosing_win,
                                             gboolean add_accelerators,
-                                            gpointer user_data);
+                                            gpointer user_data) NOEXCEPT;
 
 
 /** Display a data plugin page in a window.
@@ -70,7 +76,7 @@ GncEmbeddedWindow *gnc_embedded_window_new (const gchar *action_group_name,
  *  @param page The new page of data to be displayed.
  */
 void gnc_embedded_window_open_page (GncEmbeddedWindow *window,
-                                    GncPluginPage *page);
+                                    GncPluginPage *page) NOEXCEPT;
 
 
 /** Remove a data plugin page from a window.
@@ -79,7 +85,7 @@ void gnc_embedded_window_open_page (GncEmbeddedWindow *window,
  *
  *  @param page The page of data to be removed. */
 void gnc_embedded_window_close_page (GncEmbeddedWindow *window,
-                                     GncPluginPage *page);
+                                     GncPluginPage *page) NOEXCEPT;
 
 
 /** Retrieve the plugin that is embedded in the specified window.
@@ -87,9 +93,11 @@ void gnc_embedded_window_close_page (GncEmbeddedWindow *window,
  *  @param window The window whose plugin is desired.
  *
  *  @return A pointer to a GncPluginPage. */
-GncPluginPage *gnc_embedded_window_get_page (GncEmbeddedWindow *window);
+GncPluginPage *gnc_embedded_window_get_page (GncEmbeddedWindow *window) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GNC_EMBEDDED_WINDOW_H */
 

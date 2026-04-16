@@ -42,7 +42,11 @@
 #include <glib-object.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 /** @name Gobject Tracking Functions
@@ -73,13 +77,13 @@ extern "C" {
  *
  *  @param object The fully constructed object to be tracked.
  */
-void gnc_gobject_tracking_remember (GObject *object);
+void gnc_gobject_tracking_remember (GObject *object) NOEXCEPT;
 
 /** Tell gnucash to drop this object from the database.
  *
  *  @param object The object to be dropped.
  */
-void gnc_gobject_tracking_forget (GObject *object);
+void gnc_gobject_tracking_forget (GObject *object) NOEXCEPT;
 
 /** Get a list of all known objects of a specified type.
  *
@@ -90,7 +94,7 @@ void gnc_gobject_tracking_forget (GObject *object);
  *  @return A GList of objects of the specified type.  This list is
  *  owned by the tracking code and must not be modified by the caller.
  */
-const GList *gnc_gobject_tracking_get_list (const gchar *name);
+const GList *gnc_gobject_tracking_get_list (const gchar *name) NOEXCEPT;
 
 
 /** Dump the entire object tracking database via the g_log() family of
@@ -99,7 +103,7 @@ const GList *gnc_gobject_tracking_get_list (const gchar *name);
  *  database and freed.  Any object remaining is the result of a
  *  memory/object leakage.
  */
-void gnc_gobject_tracking_dump (void);
+void gnc_gobject_tracking_dump (void) NOEXCEPT;
 
 /** @} */
 

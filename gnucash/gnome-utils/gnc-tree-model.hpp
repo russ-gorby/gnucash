@@ -37,8 +37,6 @@
 
 #include <gtk/gtk.h>
 
-G_BEGIN_DECLS
-
 /* type macros */
 #define GNC_TYPE_TREE_MODEL            (gnc_tree_model_get_type ())
 G_DECLARE_DERIVABLE_TYPE (GncTreeModel, gnc_tree_model, GNC, TREE_MODEL, GObject)
@@ -52,8 +50,6 @@ struct _GncTreeModelClass
 {
     GObjectClass g_object;	/**< The parent object data. */
 };
-
-G_END_DECLS
 
 #endif /* __GNC_TREE_MODEL_H */
 

@@ -27,7 +27,13 @@
 #include <glib.h>
 #include <glib-object.h>
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
+#endif
 
 #define GNC_TYPE_DENSE_CAL_MODEL (gnc_dense_cal_model_get_type ())
 G_DECLARE_INTERFACE(GncDenseCalModel, gnc_dense_cal_model, GNC, DENSE_CAL_MODEL, GObject)
@@ -45,15 +51,17 @@ struct _GncDenseCalModelInterface
 };
 
 /** @return Caller-owned GList (but not elements).  The Model-user will free. **/
-GList* gnc_dense_cal_model_get_contained (GncDenseCalModel *model);
-gchar* gnc_dense_cal_model_get_name (GncDenseCalModel *model, guint tag);
-gchar* gnc_dense_cal_model_get_info (GncDenseCalModel *model, guint tag);
-gint gnc_dense_cal_model_get_instance_count (GncDenseCalModel *model, guint tag);
+GList* gnc_dense_cal_model_get_contained (GncDenseCalModel *model) NOEXCEPT;
+gchar* gnc_dense_cal_model_get_name (GncDenseCalModel *model, guint tag) NOEXCEPT;
+gchar* gnc_dense_cal_model_get_info (GncDenseCalModel *model, guint tag) NOEXCEPT;
+gint gnc_dense_cal_model_get_instance_count (GncDenseCalModel *model, guint tag) NOEXCEPT;
 void gnc_dense_cal_model_get_instance (GncDenseCalModel *model,
                                        guint tag,
                                        gint instance_index,
-                                       GDate *date);
+                                       GDate *date) NOEXCEPT;
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _GNC_DENSE_CAL_MODEL_H

@@ -40,9 +40,21 @@
 #include "gnc-plugin-page.h"
 
 #ifdef __cplusplus
+#define NOEXCEPT noexcept
 extern "C"
 {
+#else
+#define NOEXCEPT
 #endif
+
+/*
+ * FIXME: not all public functions in gnc-main-window.cpp
+ *  are declared here some are declared in other .h files
+ *  Missing function declarations:
+ *  gnc_book_option_num_field_source_change_cb
+ *  gnc_ui_get_gtk_window
+ *  gnc_ui_get_main_window
+ */
 
 /* type macros */
 #define GNC_TYPE_MAIN_WINDOW            (gnc_main_window_get_type ())
@@ -94,6 +106,7 @@ typedef void (*GncMainWindowPageFunc) (GncPluginPage *page, gpointer user_data);
  *
  *  @return A GType.
  */
+// GObject type decl should not be noexcept
 GType gnc_main_window_get_type (void);
 
 
@@ -101,7 +114,7 @@ GType gnc_main_window_get_type (void);
  *
  *  @return A pointer to the new object.
  */
-GncMainWindow *gnc_main_window_new (void);
+GncMainWindow *gnc_main_window_new (void) NOEXCEPT;
 
 
 /** Bring the window containing the specified page to the top of the
@@ -109,7 +122,7 @@ GncMainWindow *gnc_main_window_new (void);
  *
  *  @param page The existing page to be displayed.
  */
-void gnc_main_window_display_page (GncPluginPage *page);
+void gnc_main_window_display_page (GncPluginPage *page) NOEXCEPT;
 
 
 /** Display a data plugin page in a window.  If the page already
@@ -125,7 +138,7 @@ void gnc_main_window_display_page (GncPluginPage *page);
  *  page of data the should be brought to the top and displayed.
  */
 void gnc_main_window_open_page (GncMainWindow *window,
-                                GncPluginPage *page);
+                                GncPluginPage *page) NOEXCEPT;
 
 
 /** Remove a data plugin page from a window and display the previous
@@ -135,7 +148,7 @@ void gnc_main_window_open_page (GncMainWindow *window,
  *
  *  @param page The page of data to be removed.
  */
-void gnc_main_window_close_page (GncPluginPage *page);
+void gnc_main_window_close_page (GncPluginPage *page) NOEXCEPT;
 
 
 /**  Iterator function to walk all pages in all windows, calling the
@@ -146,7 +159,7 @@ void gnc_main_window_close_page (GncPluginPage *page);
  *   @param user_data A data pointer passed to each call of the function.
  */
 void gnc_main_window_foreach_page (GncMainWindowPageFunc fn,
-                                   gpointer user_data);
+                                   gpointer user_data) NOEXCEPT;
 
 
 /** Retrieve a pointer to the page that is currently at the front of
@@ -163,7 +176,7 @@ void gnc_main_window_foreach_page (GncMainWindowPageFunc fn,
  *  the specified window.  If the window pointer is invalid or the
  *  window is empty, this function will return NULL.
  */
-GncPluginPage *gnc_main_window_get_current_page (GncMainWindow *window);
+GncPluginPage *gnc_main_window_get_current_page (GncMainWindow *window) NOEXCEPT;
 
 /** Update the name of the page in the main window.
  *
@@ -172,7 +185,7 @@ GncPluginPage *gnc_main_window_get_current_page (GncMainWindow *window);
 */
 void
 main_window_update_page_name (GncPluginPage *page,
-                              const gchar *name_in);
+                              const gchar *name_in) NOEXCEPT;
 
 /** Update the long name of the page in the main window.
  *
@@ -181,7 +194,7 @@ main_window_update_page_name (GncPluginPage *page,
 */
 void
 main_window_update_page_long_name (GncPluginPage *page,
-                                   const gchar *long_name_in);
+                                   const gchar *long_name_in) NOEXCEPT;
 
 /** Update the color on the page tabs in the main window.
  *
@@ -190,7 +203,7 @@ main_window_update_page_long_name (GncPluginPage *page,
 */
 void
 main_window_update_page_color (GncPluginPage *page,
-                               const gchar *color_in);
+                               const gchar *color_in) NOEXCEPT;
 
 /** Update the icon on the page tabs in the main window.
  *
@@ -200,7 +213,7 @@ main_window_update_page_color (GncPluginPage *page,
 */
 void
 main_window_update_page_set_read_only_icon (GncPluginPage *page,
-                                            gboolean read_only);
+                                            gboolean read_only) NOEXCEPT;
 
 /** Manually add a set of actions to the specified window.  Plugins
  *  whose user interface is not hard coded (e.g. the menu-additions *
@@ -218,7 +231,7 @@ main_window_update_page_set_read_only_icon (GncPluginPage *page,
  */
 void gnc_main_window_manual_merge_actions (GncMainWindow *window,
                                            const gchar *group_name,
-                                           GSimpleActionGroup *group);
+                                           GSimpleActionGroup *group) NOEXCEPT;
 
 
 /** Add a set of actions to the specified window.  This function
@@ -251,7 +264,7 @@ void gnc_main_window_merge_actions (GncMainWindow *window,
                                     guint n_entries,
                                     const gchar **ui_updates,
                                     const gchar *ui_filename,
-                                    gpointer user_data);
+                                    gpointer user_data) NOEXCEPT;
 
 
 /** Remove a set of actions from the specified window.  This function
@@ -266,7 +279,7 @@ void gnc_main_window_merge_actions (GncMainWindow *window,
  *  the same name provided when the actions were installed.
  */
 void gnc_main_window_unmerge_actions (GncMainWindow *window,
-                                      const gchar *group_name);
+                                      const gchar *group_name) NOEXCEPT;
 
 /** Show or hide menu and toolbar items based on a NULL terminated
  *  list of action names
@@ -281,7 +294,7 @@ void gnc_main_window_unmerge_actions (GncMainWindow *window,
  */
 void gnc_main_window_set_vis_of_items_by_action (GncMainWindow *window,
                                                  const gchar **action_names,
-                                                 gboolean vis);
+                                                 gboolean vis) NOEXCEPT;
 
 /** Find the menu item with the given action name for the window
  *  specified.
@@ -294,7 +307,7 @@ void gnc_main_window_set_vis_of_items_by_action (GncMainWindow *window,
  *  @return The found menu item widget or NULL.
  */
 GtkWidget *gnc_main_window_menu_find_menu_item (GncMainWindow *window,
-                                                const gchar *action_name);
+                                                const gchar *action_name) NOEXCEPT;
 
 /** Find the toolbar item with the given action name for the window
  *  specified.
@@ -307,7 +320,7 @@ GtkWidget *gnc_main_window_menu_find_menu_item (GncMainWindow *window,
  *  @return The found tool item widget or NULL.
  */
 GtkWidget * gnc_main_window_toolbar_find_tool_item (GncMainWindow *window,
-                                                    const gchar *action_name);
+                                                    const gchar *action_name) NOEXCEPT;
 
 /** Find the GMenuModel item given the action name for the window
  *  specified.
@@ -326,7 +339,7 @@ GtkWidget * gnc_main_window_toolbar_find_tool_item (GncMainWindow *window,
 gboolean gnc_main_window_update_menu_for_action (GncMainWindow *window,
                                                  const gchar *action_name,
                                                  const gchar *label,
-                                                 const gchar *tooltip);
+                                                 const gchar *tooltip) NOEXCEPT;
 
 /** Scan the main window menu and add accelerator keys to main window
  *  accelerator group.
@@ -335,7 +348,7 @@ gboolean gnc_main_window_update_menu_for_action (GncMainWindow *window,
  *  be updated.
  *
  */
-void gnc_main_window_menu_add_accelerator_keys (GncMainWindow *window);
+void gnc_main_window_menu_add_accelerator_keys (GncMainWindow *window) NOEXCEPT;
 
 /** A structure for defining alternate action names for use in the
  *  toolbar.  All toolbar buttons are homogeneous in size and are sized
@@ -360,7 +373,7 @@ typedef struct
  *  GncToolBarShortNames items.
  */
 void gnc_main_window_init_short_names (GncMainWindow *window,
-                                       GncToolBarShortNames *toolbar_labels);
+                                       GncToolBarShortNames *toolbar_labels) NOEXCEPT;
 
 
 /** Retrieve a specific set of user interface actions from a window.
@@ -377,7 +390,7 @@ void gnc_main_window_init_short_names (GncMainWindow *window,
  *  returned.
  */
 GSimpleActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
-                                                      const gchar *group_name);
+                                                      const gchar *group_name) NOEXCEPT;
 
 
 /** Set the window where all progressbar updates should occur.  This
@@ -386,7 +399,7 @@ GSimpleActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
  *
  *  @param window The window to use for all progressbar updates.
  */
-void gnc_main_window_set_progressbar_window( GncMainWindow *window );
+void gnc_main_window_set_progressbar_window( GncMainWindow *window ) NOEXCEPT;
 
 
 /** Callback function invoked when the user clicks in the content of
@@ -408,7 +421,7 @@ void gnc_main_window_set_progressbar_window( GncMainWindow *window );
  */
 gboolean gnc_main_window_button_press_cb (GtkWidget *whatever,
         GdkEventButton *event,
-        GncPluginPage *page);
+        GncPluginPage *page) NOEXCEPT;
 
 /** Callback function invoked when the user requests that Gnucash
  *  popup the contextual menu via the keyboard context-menu request
@@ -424,14 +437,14 @@ gboolean gnc_main_window_button_press_cb (GtkWidget *whatever,
  *  handled.
  */
 gboolean gnc_main_window_popup_menu_cb (GtkWidget *widget,
-        GncPluginPage *page);
+        GncPluginPage *page) NOEXCEPT;
 
 
 /** Restore the persistent state of all windows.
  *
  *  @param keyfile The GKeyFile containing persistent window state.
  */
-void gnc_main_window_restore_all_windows(const GKeyFile *keyfile);
+void gnc_main_window_restore_all_windows(const GKeyFile *keyfile) NOEXCEPT;
 
 /** Check if the main window is restoring the plugin pages. This is
  *  used on report pages to delay the creation of the report till the
@@ -441,17 +454,17 @@ void gnc_main_window_restore_all_windows(const GKeyFile *keyfile);
  *
  *  @return TRUE if pages are being restored
  */
-gboolean gnc_main_window_is_restoring_pages (GncMainWindow *window);
+gboolean gnc_main_window_is_restoring_pages (GncMainWindow *window) NOEXCEPT;
 
 /** Save the persistent state of all windows.
  *
  *  @param keyfile The GKeyFile to contain persistent window state.
  */
-void gnc_main_window_save_all_windows(GKeyFile *keyfile);
+void gnc_main_window_save_all_windows(GKeyFile *keyfile) NOEXCEPT;
 
 /** Restore the persistent state of one window to a sane default.
  */
-void gnc_main_window_restore_default_state(GncMainWindow *window);
+void gnc_main_window_restore_default_state(GncMainWindow *window) NOEXCEPT;
 
 
 /** Tell a window to finish any outstanding activities.  This function
@@ -463,7 +476,7 @@ void gnc_main_window_restore_default_state(GncMainWindow *window);
  *
  *  @return FALSE if any page could not or would not comply, which
  *  should cancel the pending operation.  TRUE otherwise */
-gboolean gnc_main_window_finish_pending (GncMainWindow *window);
+gboolean gnc_main_window_finish_pending (GncMainWindow *window) NOEXCEPT;
 
 
 /** Tell all pages in all windows to finish any outstanding
@@ -474,7 +487,7 @@ gboolean gnc_main_window_finish_pending (GncMainWindow *window);
  *
  *  @return FALSE if any page could not or would not comply, which
  *  should cancel the pending operation.  TRUE otherwise */
-gboolean gnc_main_window_all_finish_pending (void);
+gboolean gnc_main_window_all_finish_pending (void) NOEXCEPT;
 
 /** Change the sensitivity of a command in all windows.  This can be
  *  used to serialize access to a command so that in cannot be
@@ -484,7 +497,7 @@ gboolean gnc_main_window_all_finish_pending (void);
  *
  *  @param sensitive Whether or not the user should be able to invoke
  *  this action. */
-void gnc_main_window_all_action_set_sensitive (const gchar *action_name, gboolean sensitive);
+void gnc_main_window_all_action_set_sensitive (const gchar *action_name, gboolean sensitive) NOEXCEPT;
 
 /** Find the GAction in the main window.
  *
@@ -497,7 +510,7 @@ void gnc_main_window_all_action_set_sensitive (const gchar *action_name, gboolea
  *  returned.
  */
 GAction *gnc_main_window_find_action (GncMainWindow *window,
-                                      const gchar *action_name);
+                                      const gchar *action_name) NOEXCEPT;
 
 /** Find the GAction in a specific action group for window.
  *
@@ -511,7 +524,7 @@ GAction *gnc_main_window_find_action (GncMainWindow *window,
  */
 GAction *gnc_main_window_find_action_in_group (GncMainWindow *window,
                                                const gchar *group_name,
-                                               const gchar *action_name);
+                                               const gchar *action_name) NOEXCEPT;
 
 /** Return the GMenuModel for the main window menu bar.
  *
@@ -519,7 +532,7 @@ GAction *gnc_main_window_find_action_in_group (GncMainWindow *window,
  *
  *  @return The GMenuModel or NULL.
  */
-GMenuModel *gnc_main_window_get_menu_model (GncMainWindow *window);
+GMenuModel *gnc_main_window_get_menu_model (GncMainWindow *window) NOEXCEPT;
 
 /** Update the main window menu with the placeholders listed in
  *  ui_updates and load the page specific toolbar.
@@ -532,14 +545,14 @@ GMenuModel *gnc_main_window_get_menu_model (GncMainWindow *window);
  */
 void gnc_main_window_update_menu_and_toolbar (GncMainWindow *window,
                                               GncPluginPage *page,
-                                              const gchar **ui_updates);
+                                              const gchar **ui_updates) NOEXCEPT;
 
 /**
  * Shows all main windows.
  **/
-void gnc_main_window_show_all_windows(void);
+void gnc_main_window_show_all_windows(void) NOEXCEPT;
 
-gboolean gnc_main_window_just_plugin_prefs (GncMainWindow* window);
+gboolean gnc_main_window_just_plugin_prefs (GncMainWindow* window) NOEXCEPT;
 
 /**
  * Opens the Book Options dialog.
@@ -555,7 +568,7 @@ gboolean gnc_main_window_just_plugin_prefs (GncMainWindow* window);
  *  when started in modal mode.
  **/
 GtkWidget *gnc_book_options_dialog_cb (gboolean modal, gchar *title,
-                                       GtkWindow *parent);
+                                       GtkWindow *parent) NOEXCEPT;
 
 /**
  * Processes selected options in the Book Options dialog: checks book_currency
@@ -568,7 +581,7 @@ GtkWidget *gnc_book_options_dialog_cb (gboolean modal, gchar *title,
  *
  *  @return TRUE if gnc_gui_refresh_all should be called; otherwise FALSE.
  **/
-gboolean gnc_book_options_dialog_apply_helper(GncOptionDB * options);
+gboolean gnc_book_options_dialog_apply_helper(GncOptionDB * options) NOEXCEPT;
 
 #ifdef __cplusplus
 }

@@ -36,7 +36,11 @@
 #include "gnc-date.h"
 
 #ifdef __cplusplus
-extern "C" {
+#define NOEXCEPT noexcept
+extern "C"
+{
+#else
+#define NOEXCEPT
 #endif
 
 typedef enum
@@ -93,10 +97,10 @@ typedef struct
     void (*time_changed) (GNCDateEdit *gde);
 } GNCDateEditClass;
 
-GType     gnc_date_edit_get_type        (void);
+// GObject type decl should not be noexcept
+GType gnc_date_edit_get_type(void);
 
-GtkWidget *gnc_date_edit_new            (time64 the_time,
-        int show_time, int use_24_format);
+GtkWidget *gnc_date_edit_new(time64 the_time, int show_time, int use_24_format) NOEXCEPT;
 
 /**
  * Create a new GncDateEdit widget from a glade file.  The widget
@@ -116,29 +120,29 @@ GtkWidget *gnc_date_edit_new            (time64 the_time,
  */
 GtkWidget *gnc_date_edit_new_glade (gchar *widget_name,
                                     gchar *string1, gchar *string2,
-                                    gint int1, gint int2);
+                                    gint int1, gint int2) NOEXCEPT;
 
 GtkWidget *gnc_date_edit_new_flags      (time64 the_time,
-        GNCDateEditFlags flags);
+                                         GNCDateEditFlags flags) NOEXCEPT;
 
-void      gnc_date_edit_set_gdate       (GNCDateEdit *gde, const GDate *date);
-void      gnc_date_edit_set_time        (GNCDateEdit *gde, time64 the_time);
+void      gnc_date_edit_set_gdate       (GNCDateEdit *gde, const GDate *date) NOEXCEPT;
+void      gnc_date_edit_set_time        (GNCDateEdit *gde, time64 the_time) NOEXCEPT;
 
 void      gnc_date_edit_set_popup_range (GNCDateEdit *gde,
-                                         int low_hour, int up_hour);
+                                         int low_hour, int up_hour) NOEXCEPT;
 
-void      gnc_date_edit_get_gdate       (GNCDateEdit *gde, GDate *date);
-time64    gnc_date_edit_get_date        (GNCDateEdit *gde);
-time64    gnc_date_edit_get_date_end    (GNCDateEdit *gde);
+void      gnc_date_edit_get_gdate       (GNCDateEdit *gde, GDate *date) NOEXCEPT;
+time64    gnc_date_edit_get_date        (GNCDateEdit *gde) NOEXCEPT;
+time64    gnc_date_edit_get_date_end    (GNCDateEdit *gde) NOEXCEPT;
 
 void      gnc_date_edit_set_flags       (GNCDateEdit *gde,
-        GNCDateEditFlags flags);
-int       gnc_date_edit_get_flags       (GNCDateEdit *gde);
+                                         GNCDateEditFlags flags) NOEXCEPT;
+int       gnc_date_edit_get_flags       (GNCDateEdit *gde) NOEXCEPT;
 
-void      gnc_date_activates_default    (GNCDateEdit *gde, gboolean state);
-void      gnc_date_grab_focus           (GNCDateEdit *gde);
+void      gnc_date_activates_default    (GNCDateEdit *gde, gboolean state) NOEXCEPT;
+void      gnc_date_grab_focus           (GNCDateEdit *gde) NOEXCEPT;
 
-void      gnc_date_make_mnemonic_target (GNCDateEdit *gde, GtkWidget *label);
+void      gnc_date_make_mnemonic_target (GNCDateEdit *gde, GtkWidget *label) NOEXCEPT;
 
 #ifdef __cplusplus
 }

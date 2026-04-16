@@ -28,6 +28,11 @@
 
 /* ================================================================ */
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 /** Fix budget signs
  * For GnuCash 5.0 onwards - fix budget signs
  * A feature is set if we have completed reversal.
@@ -39,5 +44,8 @@
  */
 gboolean gnc_maybe_scrub_all_budget_signs (QofBook *book);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _GNC_SCRUBBUDGET_H_
