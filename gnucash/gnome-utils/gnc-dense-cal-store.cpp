@@ -94,7 +94,7 @@ GncDenseCalStore*
 gnc_dense_cal_store_new (int num_marks) noexcept
 {
     auto model = static_cast<GncDenseCalStore *>(
-        g_object_new (GNC_TYPE_DENSE_CAL_STORE, NULL)
+        g_object_new (GNC_TYPE_DENSE_CAL_STORE, nullptr)
     );
     model->num_marks = num_marks;
     model->cal_marks = g_new0 (GDate*, num_marks);
@@ -124,7 +124,7 @@ gnc_dense_cal_store_clear (GncDenseCalStore *model) noexcept
 void
 gnc_dense_cal_store_update_name (GncDenseCalStore *model, const gchar *name) noexcept
 {
-    if (model->name != NULL)
+    if (model->name != nullptr)
         g_free (model->name);
 
     model->name = g_strdup (name);
@@ -134,7 +134,7 @@ gnc_dense_cal_store_update_name (GncDenseCalStore *model, const gchar *name) noe
 void
 gnc_dense_cal_store_update_info (GncDenseCalStore *model, const gchar *info) noexcept
 {
-    if (model->info != NULL)
+    if (model->info != nullptr)
         g_free (model->info);
 
     model->info = g_strdup (info);
@@ -206,7 +206,7 @@ gnc_dense_cal_store_update_recurrences_date_end (GncDenseCalStore *model,
 static GList*
 gdcs_get_contained (GncDenseCalModel *model)
 {
-    GList *rtn = NULL;
+    GList *rtn = nullptr;
     rtn = g_list_append (rtn, GUINT_TO_POINTER(1));
     return rtn;
 }
@@ -248,31 +248,31 @@ static void
 gnc_dense_cal_store_finalize (GObject *obj)
 {
     GncDenseCalStore *store;
-    g_return_if_fail (obj != NULL);
+    g_return_if_fail (obj != nullptr);
 
     store = GNC_DENSE_CAL_STORE(obj);
 
-    if (store->name != NULL)
+    if (store->name != nullptr)
     {
         g_free (store->name);
-        store->name = NULL;
+        store->name = nullptr;
     }
 
-    if (store->info != NULL)
+    if (store->info != nullptr)
     {
         g_free (store->info);
-        store->info = NULL;
+        store->info = nullptr;
     }
 
     for (int i = 0; i < store->num_marks; i++)
     {
         g_free (store->cal_marks[i]);
-        store->cal_marks[i] = NULL;
+        store->cal_marks[i] = nullptr;
     }
-    if (store->cal_marks != NULL)
+    if (store->cal_marks != nullptr)
     {
         g_free (store->cal_marks);
-        store->cal_marks = NULL;
+        store->cal_marks = nullptr;
     }
 
     G_OBJECT_CLASS(gnc_dense_cal_store_parent_class)->finalize (obj);

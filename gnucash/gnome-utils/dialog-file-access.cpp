@@ -82,14 +82,14 @@ static void cb_uri_type_changed_cb( GtkComboBoxText* cb );
 static gchar*
 geturl( FileAccessWindow* faw )
 {
-    gchar* url = NULL;
-    const gchar* host = NULL;
-    const gchar* username = NULL;
-    const gchar* password = NULL;
+    gchar* url = nullptr;
+    const gchar* host = nullptr;
+    const gchar* username = nullptr;
+    const gchar* password = nullptr;
     /* Not const as return value of gtk_combo_box_text_get_active_text must be freed */
-    gchar* type = NULL;
+    gchar* type = nullptr;
     /* Not const as return value of gtk_file_chooser_get_filename must be freed */
-    gchar* path = NULL;
+    gchar* path = nullptr;
 
     type = gtk_combo_box_text_get_active_text (faw->cb_uri_type);
     if (gnc_uri_is_file_scheme (type))
@@ -98,7 +98,7 @@ geturl( FileAccessWindow* faw )
         if ( !path ) /* file protocol was chosen but no filename was set */
         {
             g_free (type);
-            return NULL;
+            return nullptr;
         }
     }
     else                    /* db protocol was chosen */
@@ -120,20 +120,20 @@ geturl( FileAccessWindow* faw )
 void
 gnc_ui_file_access_file_activated_cb( GtkFileChooser *chooser, FileAccessWindow *faw ) noexcept
 {
-    g_return_if_fail( chooser != NULL );
+    g_return_if_fail( chooser != nullptr );
 
-    gnc_ui_file_access_response_cb( GTK_DIALOG(faw->dialog), GTK_RESPONSE_OK, NULL );
+    gnc_ui_file_access_response_cb( GTK_DIALOG(faw->dialog), GTK_RESPONSE_OK, nullptr );
 }
 
 void
 gnc_ui_file_access_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) noexcept
 {
-    gchar *url = NULL;
+    gchar *url = nullptr;
 
-    g_return_if_fail( dialog != NULL );
+    g_return_if_fail( dialog != nullptr );
 
     auto faw = static_cast<FileAccessWindow *>(g_object_get_data( G_OBJECT(dialog), "FileAccessWindow" ));
-    g_return_if_fail( faw != NULL );
+    g_return_if_fail( faw != nullptr );
 
     switch ( response )
     {
@@ -143,7 +143,7 @@ gnc_ui_file_access_response_cb(GtkDialog *dialog, gint response, GtkDialog *unus
 
     case GTK_RESPONSE_OK:
         url = geturl( faw );
-        if ( url == NULL )
+        if ( url == nullptr )
         {
             return;
         }
@@ -227,14 +227,14 @@ set_widget_sensitivity_for_uri_type( FileAccessWindow* faw, const gchar* uri_typ
 static void
 cb_uri_type_changed_cb( GtkComboBoxText* cb )
 {
-    g_return_if_fail( cb != NULL );
+    g_return_if_fail( cb != nullptr );
 
     GtkWidget *dialog = gtk_widget_get_toplevel( GTK_WIDGET(cb) );
-    g_return_if_fail( dialog != NULL );
+    g_return_if_fail( dialog != nullptr );
     auto faw = static_cast<FileAccessWindow *>(
         g_object_get_data( G_OBJECT(dialog), "FileAccessWindow" )
     );
-    g_return_if_fail( faw != NULL );
+    g_return_if_fail( faw != nullptr );
 
     const gchar *type = gtk_combo_box_text_get_active_text( cb );
     set_widget_sensitivity_for_uri_type( faw, type );
@@ -246,7 +246,7 @@ get_default_database( void )
     const gchar* default_db;
 
     default_db = g_getenv( "GNC_DEFAULT_DATABASE" );
-    if ( default_db == NULL )
+    if ( default_db == nullptr )
     {
         default_db = DEFAULT_DATABASE;
     }
@@ -272,17 +272,17 @@ gnc_ui_file_access (GtkWindow *parent, int type)
     gint access_method_index = -1;
     gint active_access_method_index = -1;
     const gchar* default_db;
-    const gchar *button_label = NULL;
-    const gchar *settings_section = NULL;
+    const gchar *button_label = nullptr;
+    const gchar *settings_section = nullptr;
     gchar *last;
 
     g_return_if_fail( type == FILE_ACCESS_OPEN || type == FILE_ACCESS_SAVE_AS || type == FILE_ACCESS_EXPORT );
 
     FileAccessWindow *faw = g_new0(FileAccessWindow, 1);
-    g_return_if_fail( faw != NULL );
+    g_return_if_fail( faw != nullptr );
 
     faw->type = type;
-    faw->starting_dir = NULL;
+    faw->starting_dir = nullptr;
 
     /* Open the dialog */
     GtkBuilder *builder = gtk_builder_new();
@@ -321,7 +321,7 @@ gnc_ui_file_access (GtkWindow *parent, int type)
         fileChooserAction = GTK_FILE_CHOOSER_ACTION_SAVE;
         settings_section = GNC_PREFS_GROUP_OPEN_SAVE;
         gtk_widget_destroy(faw->readonly_checkbutton);
-        faw->readonly_checkbutton = NULL;
+        faw->readonly_checkbutton = nullptr;
         break;
 
     case FILE_ACCESS_EXPORT:
@@ -330,12 +330,12 @@ gnc_ui_file_access (GtkWindow *parent, int type)
         fileChooserAction = GTK_FILE_CHOOSER_ACTION_SAVE;
         settings_section = GNC_PREFS_GROUP_EXPORT;
         gtk_widget_destroy(faw->readonly_checkbutton);
-        faw->readonly_checkbutton = NULL;
+        faw->readonly_checkbutton = nullptr;
         break;
     }
 
     GtkButton *op = GTK_BUTTON(gtk_builder_get_object (builder, "pb_op" ));
-    if ( op != NULL )
+    if ( op != nullptr )
         gtk_button_set_label( op, button_label );
 
     GtkWidget *file_chooser = GTK_WIDGET(gtk_builder_get_object (builder, "file_chooser" ));
@@ -363,7 +363,7 @@ gnc_ui_file_access (GtkWindow *parent, int type)
     gtk_file_chooser_set_current_folder(faw->fileChooser, faw->starting_dir);
 
     g_object_connect( G_OBJECT(faw->fileChooser), "signal::file-activated",
-                      gnc_ui_file_access_file_activated_cb, faw, NULL );
+                      gnc_ui_file_access_file_activated_cb, faw, nullptr );
 
     GtkWidget *uri_type_container = GTK_WIDGET(gtk_builder_get_object (builder, "vb_uri_type_container" ));
     faw->cb_uri_type = GTK_COMBO_BOX_TEXT(gtk_combo_box_text_new());
@@ -371,15 +371,15 @@ gnc_ui_file_access (GtkWindow *parent, int type)
     gtk_box_set_child_packing( GTK_BOX(uri_type_container), GTK_WIDGET(faw->cb_uri_type),
                                /*expand*/TRUE, /*fill*/FALSE, /*padding*/0, GTK_PACK_START );
     g_object_connect( G_OBJECT(faw->cb_uri_type),
-                      "signal::changed", cb_uri_type_changed_cb, NULL,
-                      NULL );
+                      "signal::changed", cb_uri_type_changed_cb, nullptr,
+                      nullptr );
 
     /* Autoconnect signals */
     gtk_builder_connect_signals_full (builder, gnc_builder_connect_full_func, faw);
 
     /* See what qof backends are available and add appropriate ones to the combo box */
     GList *list = qof_backend_get_registered_access_method_list();
-    for ( GList *node = list; node != NULL; node = node->next )
+    for ( GList *node = list; node != nullptr; node = node->next )
     {
         auto access_method = static_cast<const gchar *>(node->data);
 

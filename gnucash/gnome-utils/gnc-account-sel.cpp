@@ -116,7 +116,7 @@ gas_set_property (GObject *object, guint param_id,
 {
     GNCAccountSel *gas;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(object));
 
     gas = GNC_ACCOUNT_SEL(object);
@@ -165,7 +165,7 @@ gas_get_property (GObject *object, guint param_id,
 {
     GNCAccountSel *gas;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(object));
 
     gas = GNC_ACCOUNT_SEL(object);
@@ -237,8 +237,8 @@ gnc_account_sel_class_init (GNCAccountSelClass *klass)
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
                       0,
-                      NULL,
-                      NULL,
+                      nullptr,
+                      nullptr,
                       g_cclosure_marshal_VOID__VOID,
                       G_TYPE_NONE,
                       0);
@@ -250,8 +250,8 @@ combo_changed_cb (GNCAccountSel *gas, gpointer combo)
     GtkTreeModel *fmodel;
     GtkTreeIter fiter;
     GtkTreeIter iter;
-    GtkTreePath *path = NULL;
-    GtkTreePath *saved_account_path = NULL;
+    GtkTreePath *path = nullptr;
+    GtkTreePath *saved_account_path = nullptr;
     gboolean emit_signal = TRUE;
 
     if (!gtk_combo_box_get_active_iter (GTK_COMBO_BOX(gas->combo), &fiter))
@@ -286,11 +286,11 @@ static char*
 normalize_and_fold (char* utf8_string)
 {
     char *normalized, *folded;
-    g_return_val_if_fail (utf8_string && *utf8_string, NULL);
+    g_return_val_if_fail (utf8_string && *utf8_string, nullptr);
 
     normalized = g_utf8_normalize (utf8_string, -1, G_NORMALIZE_NFC);
     if (!normalized)
-        return NULL;
+        return nullptr;
     folded = g_utf8_casefold (normalized, -1);
     g_free (normalized);
     return folded;
@@ -302,7 +302,7 @@ completion_function (GtkEntryCompletion *completion, const char *key,
 {
     GNCAccountSel *gas = GNC_ACCOUNT_SEL(user_data);
     GtkTreeModel *fmodel = gtk_combo_box_get_model (GTK_COMBO_BOX(gas->combo));
-    gchar *full_name = NULL;
+    gchar *full_name = nullptr;
     gboolean ret = FALSE;
 
     gtk_tree_model_get (fmodel, iter, ACCT_COL_NAME, &full_name, -1);
@@ -312,7 +312,7 @@ completion_function (GtkEntryCompletion *completion, const char *key,
         gchar *full_name_folded = normalize_and_fold (full_name);
 
         // key is normalised and casefolded
-        if (g_strrstr (full_name_folded, key) != NULL)
+        if (g_strrstr (full_name_folded, key) != nullptr)
             ret = TRUE;
 
         g_free (full_name_folded);
@@ -325,11 +325,11 @@ static char*
 normalize_and_lower (const char* utf8_string)
 {
     char *normalized, *lowered;
-    g_return_val_if_fail (utf8_string && *utf8_string, NULL);
+    g_return_val_if_fail (utf8_string && *utf8_string, nullptr);
 
     normalized = g_utf8_normalize (utf8_string, -1, G_NORMALIZE_NFC);
     if (!normalized)
-        return NULL;
+        return nullptr;
     lowered = g_utf8_strdown (normalized, -1);
     g_free (normalized);
     return lowered;
@@ -486,7 +486,7 @@ update_entry_and_refilter (GNCAccountSel *gas)
     gtk_editable_delete_text (GTK_EDITABLE(entry), 0, -1);
     if (gas->saved_account_ref)
         gtk_tree_row_reference_free (gas->saved_account_ref);
-    gas->saved_account_ref = NULL;
+    gas->saved_account_ref = nullptr;
     gtk_combo_box_set_active (GTK_COMBO_BOX(gas->combo), -1);
     gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER(fmodel));
 }
@@ -522,7 +522,7 @@ icon_release_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos,
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(h_placeholder), gas->hide_placeholder);
     h_hidden = gtk_check_menu_item_new_with_mnemonic (_("Hide _Hidden Accounts"));
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(h_hidden), gas->hide_hidden);
-    gtk_menu_attach_to_widget (GTK_MENU(menu), GTK_WIDGET(gas), NULL);
+    gtk_menu_attach_to_widget (GTK_MENU(menu), GTK_WIDGET(gas), nullptr);
     gtk_menu_shell_append (GTK_MENU_SHELL(menu), h_placeholder);
     gtk_menu_shell_append (GTK_MENU_SHELL(menu), h_hidden);
     gtk_widget_show_all (menu);
@@ -591,7 +591,7 @@ row_has_been_deleted_in_store_cb (GtkTreeModel *model, GtkTreePath *path, gpoint
 
     saved_account_path = gtk_tree_row_reference_get_path (gas->saved_account_ref);
 
-    if (saved_account_path == NULL) // path is already invalid after row delete
+    if (saved_account_path == nullptr) // path is already invalid after row delete
     {
         GtkEntry *entry = GTK_ENTRY(gtk_bin_get_child (GTK_BIN(gas->combo)));
         auto cbptr = reinterpret_cast<gpointer>(combo_changed_cb);
@@ -600,7 +600,7 @@ row_has_been_deleted_in_store_cb (GtkTreeModel *model, GtkTreePath *path, gpoint
         gtk_combo_box_set_active (GTK_COMBO_BOX(gas->combo), -1);
         gtk_editable_delete_text (GTK_EDITABLE(entry), 0, -1);
         gtk_tree_row_reference_free (gas->saved_account_ref);
-        gas->saved_account_ref = NULL;
+        gas->saved_account_ref = nullptr;
         g_signal_emit_by_name (gas, "account_sel_changed");
         g_signal_handlers_unblock_by_func (gas->combo, cbptr, gas);
     }
@@ -622,7 +622,7 @@ row_has_been_changed_in_store_cb (GtkTreeModel *model, GtkTreePath *path,
     if (gtk_tree_path_compare (path, saved_account_path) == 0)
     {
         GtkEntry *entry = GTK_ENTRY(gtk_bin_get_child (GTK_BIN(gas->combo)));
-        gchar *account_full_name = NULL;
+        gchar *account_full_name = nullptr;
         gint position = 0;
         auto cbptr = reinterpret_cast<gpointer>(combo_changed_cb);
 
@@ -657,33 +657,33 @@ gnc_account_sel_init (GNCAccountSel *gas)
 
     gtk_orientable_set_orientation (GTK_ORIENTABLE(gas), GTK_ORIENTATION_HORIZONTAL);
 
-    gas->default_new_commodity = NULL;
-    gas->acctTypeFilters = NULL;
-    gas->acctCommodityFilters = NULL;
-    gas->acctExcludeList = NULL;
-    gas->newAccountButton = NULL;
+    gas->default_new_commodity = nullptr;
+    gas->acctTypeFilters = nullptr;
+    gas->acctCommodityFilters = nullptr;
+    gas->acctExcludeList = nullptr;
+    gas->newAccountButton = nullptr;
     gas->hide_placeholder = TRUE;
     gas->hide_hidden = TRUE;
-    gas->saved_account_ref = NULL;
+    gas->saved_account_ref = nullptr;
     gas->row_changed_id = 0;
     gas->row_deleted_id = 0;
 
-    g_object_set (gas, "spacing", 2, (gchar*)NULL);
+    g_object_set (gas, "spacing", 2, (gchar*)nullptr);
 
     // Set the name for this widget so it can be easily manipulated with css
     gtk_widget_set_name (GTK_WIDGET(gas), "gnc-id-account-select");
 
     // We are just using the quickfill list store which will be the same for all
-    gas->store = gnc_get_shared_account_name_list_store (root, QKEY, NULL, NULL);
+    gas->store = gnc_get_shared_account_name_list_store (root, QKEY, nullptr, nullptr);
 
     // set sort order
     gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(gas->store),
                                           ACCT_COL_NAME, GTK_SORT_ASCENDING);
 
     // the filter will be unique for each GAS.
-    filter_model = gtk_tree_model_filter_new (GTK_TREE_MODEL(gas->store), NULL);
+    filter_model = gtk_tree_model_filter_new (GTK_TREE_MODEL(gas->store), nullptr);
     gtk_tree_model_filter_set_visible_func (GTK_TREE_MODEL_FILTER(filter_model),
-                                            account_is_visible_func, gas, NULL);
+                                            account_is_visible_func, gas, nullptr);
 
     widget = gtk_combo_box_new_with_model_and_entry (GTK_TREE_MODEL(filter_model));
     g_object_unref (G_OBJECT(filter_model));
@@ -711,7 +711,7 @@ gnc_account_sel_init (GNCAccountSel *gas)
     completion = gtk_entry_get_completion (GTK_ENTRY(entry));
     gtk_entry_completion_set_match_func (completion,
                                          (GtkEntryCompletionMatchFunc)completion_function,
-                                         gas, NULL);
+                                         gas, nullptr);
 
     // Set default entry to none and blank entry
     gtk_combo_box_set_active (GTK_COMBO_BOX(gas->combo), -1);
@@ -731,7 +731,7 @@ GtkWidget *
 gnc_account_sel_new (void) noexcept
 {
     auto gas = static_cast<GNCAccountSel *>(
-        g_object_new (GNC_TYPE_ACCOUNT_SEL, NULL)
+        g_object_new (GNC_TYPE_ACCOUNT_SEL, nullptr)
     );
 
     return GTK_WIDGET(gas);
@@ -796,7 +796,7 @@ gnc_account_sel_set_account (GNCAccountSel *gas, Account *acct,
     GtkTreeModel *fmodel;
     gas_find_data data;
 
-    g_return_if_fail (gas != NULL);
+    g_return_if_fail (gas != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
 
     fmodel = gtk_combo_box_get_model (GTK_COMBO_BOX(gas->combo));
@@ -835,11 +835,11 @@ gnc_account_sel_get_account (GNCAccountSel *gas) noexcept
     GtkTreeIter iter;
     Account *acc;
 
-    g_return_val_if_fail (gas != NULL, NULL);
-    g_return_val_if_fail (GNC_IS_ACCOUNT_SEL(gas), NULL);
+    g_return_val_if_fail (gas != nullptr, nullptr);
+    g_return_val_if_fail (GNC_IS_ACCOUNT_SEL(gas), nullptr);
 
     if (!gtk_combo_box_get_active_iter (GTK_COMBO_BOX(gas->combo), &fiter))
-        return NULL;
+        return nullptr;
 
     fmodel = gtk_combo_box_get_model (GTK_COMBO_BOX(gas->combo));
 
@@ -855,19 +855,19 @@ void
 gnc_account_sel_set_acct_filters (GNCAccountSel *gas, GList *typeFilters,
                                   GList *commodityFilters) noexcept
 {
-    g_return_if_fail (gas != NULL);
+    g_return_if_fail (gas != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
 
-    if (gas->acctTypeFilters != NULL)
+    if (gas->acctTypeFilters != nullptr)
     {
         g_list_free (gas->acctTypeFilters);
-        gas->acctTypeFilters = NULL;
+        gas->acctTypeFilters = nullptr;
     }
 
-    if (gas->acctCommodityFilters != NULL)
+    if (gas->acctCommodityFilters != nullptr)
     {
         g_list_free (gas->acctCommodityFilters);
-        gas->acctCommodityFilters = NULL;
+        gas->acctCommodityFilters = nullptr;
     }
 
     /* This works because the GNCAccountTypes in the list are
@@ -887,13 +887,13 @@ void
 gnc_account_sel_set_acct_exclude_filter (GNCAccountSel *gas,
                                          GList *excludeFilter) noexcept
 {
-    g_return_if_fail (gas != NULL);
+    g_return_if_fail (gas != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
 
-    if (gas->acctExcludeList != NULL)
+    if (gas->acctExcludeList != nullptr)
     {
         g_list_free (gas->acctExcludeList);
-        gas->acctExcludeList = NULL;
+        gas->acctExcludeList = nullptr;
     }
 
     if (excludeFilter)
@@ -915,7 +915,7 @@ gnc_account_sel_finalize (GObject *object)
 {
     GNCAccountSel *gas;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(object));
 
     gas = GNC_ACCOUNT_SEL(object);
@@ -937,7 +937,7 @@ gnc_account_sel_dispose (GObject *object)
 {
     GNCAccountSel *gas;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(object));
 
     gas = GNC_ACCOUNT_SEL(object);
@@ -952,7 +952,7 @@ gnc_account_sel_dispose (GObject *object)
 
     if (gas->saved_account_ref)
         gtk_tree_row_reference_free (gas->saved_account_ref);
-    gas->saved_account_ref = NULL;
+    gas->saved_account_ref = nullptr;
 
     G_OBJECT_CLASS (gnc_account_sel_parent_class)->dispose (object);
 }
@@ -961,10 +961,10 @@ void
 gnc_account_sel_set_new_account_ability (GNCAccountSel *gas,
                                          gboolean state) noexcept
 {
-    g_return_if_fail (gas != NULL);
+    g_return_if_fail (gas != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
 
-    if (state == (gas->newAccountButton != NULL))
+    if (state == (gas->newAccountButton != nullptr))
     {
         /* We're already in that state; don't do anything. */
         return;
@@ -976,7 +976,7 @@ gnc_account_sel_set_new_account_ability (GNCAccountSel *gas,
         /* destroy the existing button. */
         gtk_container_remove (GTK_CONTAINER(gas), gas->newAccountButton);
         gtk_widget_destroy (gas->newAccountButton);
-        gas->newAccountButton = NULL;
+        gas->newAccountButton = nullptr;
         return;
     }
 
@@ -998,7 +998,7 @@ void
 gnc_account_sel_set_new_account_modal (GNCAccountSel *gas,
                                        gboolean state) noexcept
 {
-    g_return_if_fail (gas != NULL);
+    g_return_if_fail (gas != nullptr);
     g_return_if_fail (GNC_IS_ACCOUNT_SEL(gas));
 
     gas->isModal = state;
@@ -1012,8 +1012,8 @@ gas_new_account_click (GtkButton *b, gpointer user_data)
 
     if (gas->isModal)
     {
-        Account *account = gnc_ui_new_accounts_from_name_with_defaults (parent, NULL, gas->acctTypeFilters,
-                                                                        gas->default_new_commodity, NULL);
+        Account *account = gnc_ui_new_accounts_from_name_with_defaults (parent, nullptr, gas->acctTypeFilters,
+                                                                        gas->default_new_commodity, nullptr);
         if (account)
             gnc_account_sel_set_account (gas, account, FALSE);
     }
@@ -1027,10 +1027,10 @@ gnc_account_sel_get_visible_account_num (GNCAccountSel *gas) noexcept
 {
     GtkTreeModel *fmodel;
 
-    g_return_val_if_fail (gas != NULL, 0);
+    g_return_val_if_fail (gas != nullptr, 0);
     g_return_val_if_fail (GNC_IS_ACCOUNT_SEL(gas), 0);
 
     fmodel = gtk_combo_box_get_model (GTK_COMBO_BOX(gas->combo));
 
-    return gtk_tree_model_iter_n_children (fmodel, NULL);
+    return gtk_tree_model_iter_n_children (fmodel, nullptr);
 }

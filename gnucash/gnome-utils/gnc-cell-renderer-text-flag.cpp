@@ -234,7 +234,7 @@ GtkCellRenderer *
 gnc_cell_renderer_text_flag_new(void) noexcept
 {
     return static_cast<GtkCellRenderer *>(
-        g_object_new(GNC_TYPE_CELL_RENDERER_TEXT_FLAG, NULL)
+        g_object_new(GNC_TYPE_CELL_RENDERER_TEXT_FLAG, nullptr)
     );
 }
 

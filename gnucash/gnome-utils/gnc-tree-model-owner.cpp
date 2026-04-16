@@ -121,7 +121,7 @@ gnc_tree_model_owner_update_color (gpointer gsettings, gchar *key, gpointer user
     g_return_if_fail(GNC_IS_TREE_MODEL_OWNER(user_data));
     auto model = static_cast<GncTreeModelOwner *>(user_data);
     bool use_red = gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED);
-    model->negative_color = use_red ? "red" : NULL;
+    model->negative_color = use_red ? "red" : nullptr;
 }
 /************************************************************/
 /*               g_object required functions                */
@@ -152,10 +152,10 @@ gnc_tree_model_owner_init (GncTreeModelOwner *model)
 
     red = gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED);
 
-    model->book       = NULL;
-    model->owner_list = NULL;
+    model->book       = nullptr;
+    model->owner_list = nullptr;
     model->owner_type = GNC_OWNER_NONE;
-    model->negative_color = red ? "red" : NULL;
+    model->negative_color = red ? "red" : nullptr;
 
     gnc_prefs_register_cb(GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED,
                           reinterpret_cast<gpointer>(gnc_tree_model_owner_update_color),
@@ -169,7 +169,7 @@ gnc_tree_model_owner_finalize (GObject *object)
 {
     GncTreeModelOwner *model;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_TREE_MODEL_OWNER (object));
 
     ENTER("model %p", object);
@@ -179,8 +179,8 @@ gnc_tree_model_owner_finalize (GObject *object)
     if (model->owner_list)
         g_list_free_full (model->owner_list, (GDestroyNotify) gncOwnerFree);
 
-    model->book       = NULL;
-    model->owner_list = NULL;
+    model->book       = nullptr;
+    model->owner_list = nullptr;
 
     G_OBJECT_CLASS(gnc_tree_model_owner_parent_class)->finalize (object);
     LEAVE(" ");
@@ -189,7 +189,7 @@ gnc_tree_model_owner_finalize (GObject *object)
 static void
 gnc_tree_model_owner_dispose (GObject *object)
 {
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_TREE_MODEL_OWNER (object));
 
     ENTER("model %p", object);
@@ -220,7 +220,7 @@ gnc_tree_model_owner_dispose (GObject *object)
 GtkTreeModel *
 gnc_tree_model_owner_new (GncOwnerType owner_type)
 {
-    GncTreeModelOwner *model = NULL;
+    GncTreeModelOwner *model = nullptr;
 
     ENTER("owner_type %d", owner_type);
     const GList *item = gnc_gobject_tracking_get_list(GNC_TREE_MODEL_OWNER_NAME);
@@ -236,7 +236,7 @@ gnc_tree_model_owner_new (GncOwnerType owner_type)
     }
 
     model = static_cast<GncTreeModelOwner *>(
-        g_object_new (GNC_TYPE_TREE_MODEL_OWNER, NULL)
+        g_object_new (GNC_TYPE_TREE_MODEL_OWNER, nullptr)
     );
 
     model->book = gnc_get_current_book();
@@ -264,7 +264,7 @@ iter_to_string (GtkTreeIter *iter)
     static GPrivate gtmits_buffer_key = G_PRIVATE_INIT(g_free);
 
     auto string = static_cast<gchar *>(g_private_get (&gtmits_buffer_key));
-    if (string == NULL)
+    if (string == nullptr)
     {
         string = static_cast<gchar *>(g_malloc(ITER_STRING_LEN + 1));
         g_private_set (&gtmits_buffer_key, string);
@@ -384,7 +384,7 @@ gnc_tree_model_owner_get_iter (GtkTreeModel *tree_model,
     auto owner = static_cast<GncOwner *>(
         g_list_nth_data (model->owner_list, indices[0])
     );
-    if (owner == NULL)
+    if (owner == nullptr)
     {
         iter->stamp = 0;
         LEAVE("bad index");
@@ -394,7 +394,7 @@ gnc_tree_model_owner_get_iter (GtkTreeModel *tree_model,
     iter->stamp = model->stamp;
     iter->user_data = owner;
     iter->user_data2 = GINT_TO_POINTER (indices[0]);
-    iter->user_data3 = NULL;
+    iter->user_data3 = nullptr;
 
     LEAVE("iter %s", iter_to_string (iter));
     return TRUE;
@@ -409,17 +409,17 @@ gnc_tree_model_owner_get_path (GtkTreeModel *tree_model,
     GtkTreePath *path;
     gint i;
 
-    g_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), NULL);
-    g_return_val_if_fail (iter != NULL, NULL);
-    g_return_val_if_fail (iter->user_data != NULL, NULL);
-    g_return_val_if_fail (iter->stamp == model->stamp, NULL);
+    g_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), nullptr);
+    g_return_val_if_fail (iter != nullptr, nullptr);
+    g_return_val_if_fail (iter->user_data != nullptr, nullptr);
+    g_return_val_if_fail (iter->stamp == model->stamp, nullptr);
 
     ENTER("model %p, iter %s", model, iter_to_string(iter));
 
-    if (model->owner_list == NULL)
+    if (model->owner_list == nullptr)
     {
         LEAVE("failed (1)");
-        return NULL;
+        return nullptr;
     }
 
     owner = (GncOwner *) iter->user_data;
@@ -430,7 +430,7 @@ gnc_tree_model_owner_get_path (GtkTreeModel *tree_model,
     {
         gtk_tree_path_free (path);
         LEAVE("failed (3)");
-        return NULL;
+        return nullptr;
     }
     gtk_tree_path_prepend_index (path, i);
 
@@ -450,7 +450,7 @@ gnc_tree_model_owner_set_color(GncTreeModelOwner *model,
     if (negative)
         g_value_set_static_string (value, model->negative_color);
     else
-        g_value_set_static_string (value, NULL);
+        g_value_set_static_string (value, nullptr);
 }
 
 static void
@@ -462,11 +462,11 @@ gnc_tree_model_owner_get_value (GtkTreeModel *tree_model,
     GncTreeModelOwner *model = GNC_TREE_MODEL_OWNER (tree_model);
     GncOwner *owner;
     gboolean negative; /* used to set "deficit style" also known as red numbers */
-    gchar *string = NULL;
+    gchar *string = nullptr;
 
     g_return_if_fail (GNC_IS_TREE_MODEL_OWNER (model));
-    g_return_if_fail (iter != NULL);
-    g_return_if_fail (iter->user_data != NULL);
+    g_return_if_fail (iter != nullptr);
+    g_return_if_fail (iter->user_data != nullptr);
     g_return_if_fail (iter->stamp == model->stamp);
 
     ENTER("model %p, iter %s, col %d", tree_model,
@@ -617,8 +617,8 @@ gnc_tree_model_owner_iter_next (GtkTreeModel *tree_model,
     gint i;
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), FALSE);
-    g_return_val_if_fail (iter != NULL, FALSE);
-    g_return_val_if_fail (iter->user_data != NULL, FALSE);
+    g_return_val_if_fail (iter != nullptr, FALSE);
+    g_return_val_if_fail (iter->user_data != nullptr, FALSE);
     g_return_val_if_fail (iter->stamp == model->stamp, FALSE);
 
     ENTER("model %p, iter %s", tree_model, iter_to_string (iter));
@@ -626,7 +626,7 @@ gnc_tree_model_owner_iter_next (GtkTreeModel *tree_model,
     /* Get the *next* sibling owner. */
     i = GPOINTER_TO_INT (iter->user_data2);
     owner = static_cast<GncOwner *>(g_list_nth_data (model->owner_list, i + 1));
-    if (owner == NULL)
+    if (owner == nullptr)
     {
         iter->stamp = 0;
         LEAVE("failed (3)");
@@ -635,7 +635,7 @@ gnc_tree_model_owner_iter_next (GtkTreeModel *tree_model,
 
     iter->user_data = owner;
     iter->user_data2 = GINT_TO_POINTER (i + 1);
-    iter->user_data3 = NULL;
+    iter->user_data3 = nullptr;
 
     LEAVE("iter %s", iter_to_string(iter));
     return TRUE;
@@ -661,7 +661,7 @@ gnc_tree_model_owner_iter_children (GtkTreeModel *tree_model,
     {
         iter->user_data = g_list_nth_data (model->owner_list, 0);
         iter->user_data2 = GINT_TO_POINTER (0);
-        iter->user_data3 = NULL;
+        iter->user_data3 = nullptr;
         iter->stamp = model->stamp;
         LEAVE("iter (2) %s", iter_to_string(iter));
         return TRUE;
@@ -694,9 +694,9 @@ gnc_tree_model_owner_iter_n_children (GtkTreeModel *tree_model,
 
     /* Owner lists don't have children, so always return 0, except for
      * the special case this request comes for the special "root" iter
-     * (NULL). For that exception we return the size of the owner list.
+     * (nullptr). For that exception we return the size of the owner list.
      */
-    if (iter == NULL)
+    if (iter == nullptr)
         return (gint) g_list_length (model->owner_list);
 
     g_return_val_if_fail (
@@ -738,7 +738,7 @@ gnc_tree_model_owner_iter_nth_child (GtkTreeModel *tree_model,
     {
         iter->user_data = g_list_nth_data (model->owner_list, n);
         iter->user_data2 = GINT_TO_POINTER (n);
-        iter->user_data3 = NULL;
+        iter->user_data3 = nullptr;
         iter->stamp = model->stamp;
         LEAVE("iter (2) %s", iter_to_string(iter));
         return TRUE;
@@ -774,10 +774,10 @@ GncOwner *
 gnc_tree_model_owner_get_owner (GncTreeModelOwner *model,
                                 GtkTreeIter *iter)
 {
-    g_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), NULL);
-    g_return_val_if_fail (iter != NULL, NULL);
-    g_return_val_if_fail (iter->user_data != NULL, NULL);
-    g_return_val_if_fail (iter->stamp == model->stamp, NULL);
+    g_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), nullptr);
+    g_return_val_if_fail (iter != nullptr, nullptr);
+    g_return_val_if_fail (iter->user_data != nullptr, nullptr);
+    g_return_val_if_fail (iter->stamp == model->stamp, nullptr);
 
     return (GncOwner *) iter->user_data;
 }
@@ -796,8 +796,8 @@ gnc_tree_model_owner_get_iter_from_owner (GncTreeModelOwner *model,
 
     ENTER("model %p, owner %p, iter %p", model, owner, iter);
     gnc_leave_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), FALSE);
-    gnc_leave_return_val_if_fail ((owner != NULL), FALSE);
-    gnc_leave_return_val_if_fail ((iter != NULL), FALSE);
+    gnc_leave_return_val_if_fail ((owner != nullptr), FALSE);
+    gnc_leave_return_val_if_fail ((iter != nullptr), FALSE);
 
     owner_in_list = g_list_find_custom (model->owner_list, (gconstpointer)owner, (GCompareFunc)gncOwnerGCompareFunc);
     if (owner_in_list)
@@ -805,14 +805,14 @@ gnc_tree_model_owner_get_iter_from_owner (GncTreeModelOwner *model,
         iter->stamp = model->stamp;
         iter->user_data = owner_in_list->data;
         iter->user_data2 = GINT_TO_POINTER (g_list_position (model->owner_list, owner_in_list));
-        iter->user_data3 = NULL;
+        iter->user_data3 = nullptr;
         LEAVE("iter %s", iter_to_string (iter));
         return TRUE;
     }
     else
     {
         iter->stamp = 0;
-        iter->user_data = NULL;
+        iter->user_data = nullptr;
         LEAVE("Owner not found in list");
         return FALSE;
     }
@@ -831,14 +831,14 @@ gnc_tree_model_owner_get_path_from_owner (GncTreeModelOwner *model,
     GtkTreePath *tree_path;
 
     ENTER("model %p, owner %p", model, owner);
-    gnc_leave_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), NULL);
-    gnc_leave_return_val_if_fail (owner != NULL, NULL);
+    gnc_leave_return_val_if_fail (GNC_IS_TREE_MODEL_OWNER (model), nullptr);
+    gnc_leave_return_val_if_fail (owner != nullptr, nullptr);
 
     if (!gnc_tree_model_owner_get_iter_from_owner (model, owner,
             &tree_iter))
     {
         LEAVE("no iter");
-        return NULL;
+        return nullptr;
     }
 
     tree_path = gtk_tree_model_get_path (GTK_TREE_MODEL(model), &tree_iter);
@@ -900,7 +900,7 @@ gnc_tree_model_owner_event_handler (QofInstance *entity,
                                     GncTreeModelOwner *model,
                                     GncEventData *ed)
 {
-    GtkTreePath *path = NULL;
+    GtkTreePath *path = nullptr;
     GtkTreeIter iter;
     GncOwner owner;
 

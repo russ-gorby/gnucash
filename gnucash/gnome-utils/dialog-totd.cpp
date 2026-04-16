@@ -86,11 +86,11 @@ static void
 gnc_new_tip_number (TotdDialog *totd_dialog, gint offset)
 {
 
-    gchar **tip_components = NULL;
+    gchar **tip_components = nullptr;
     gchar *tip;
 
     ENTER("TotdDialog %p, offset %d", totd_dialog, offset);
-    g_return_if_fail (tip_list != NULL);
+    g_return_if_fail (tip_list != nullptr);
     current_tip_number += offset;
     DEBUG("clamp %d to '0 <= x < %d'", current_tip_number, tip_count);
     if (current_tip_number < 0)
@@ -110,14 +110,14 @@ gnc_new_tip_number (TotdDialog *totd_dialog, gint offset)
     /* If the tip is empty, g_strsplit will return an empty list. This
      * shouldn't normally happen, but make sure we don't crash just in
      * case */
-    if (tip_components == NULL)
+    if (tip_components == nullptr)
     {
         tip = g_strdup("");
     }
     else
     {
         /* Use printf to do the substitution. Note that if there is no |
-         * in the tip, tip_components[1] will be the terminating NULL,
+         * in the tip, tip_components[1] will be the terminating nullptr,
          * so this will never cause an out-of-bounds array access.
          */
         tip = g_strdup_printf( _(tip_components[0]), tip_components[1]);
@@ -181,9 +181,9 @@ gnc_totd_dialog_startup_toggled_cb (GtkToggleButton *button,
 static gboolean
 gnc_totd_initialize (void)
 {
-    gchar *filename = NULL, *contents = NULL, *new_str = NULL;
+    gchar *filename = nullptr, *contents = nullptr, *new_str = nullptr;
     gsize length;
-    GError *error = NULL;
+    GError *error = nullptr;
     int tip;
 
     /* Find the file */
@@ -207,7 +207,7 @@ gnc_totd_initialize (void)
     {
 	tip_list = g_strsplit(contents, "\n", 0);
         g_free(contents);
-        contents = NULL;
+        contents = nullptr;
     }
 
     tip_count = g_strv_length (tip_list);
@@ -222,7 +222,7 @@ gnc_totd_initialize (void)
                 contents = g_strdup (tip_list[tip]);
             else
             {
-                new_str = g_strjoin ("\n", contents, tip_list[tip], NULL);
+                new_str = g_strjoin ("\n", contents, tip_list[tip], nullptr);
                 g_free (contents);
                 contents = new_str;
             }
@@ -231,7 +231,7 @@ gnc_totd_initialize (void)
 
     /* Split cleaned up contents into multiple strings again */
     g_strfreev (tip_list);
-    tip_list = NULL;
+    tip_list = nullptr;
     if (contents)
     {
         tip_list = g_strsplit(contents, "\n", 0);
@@ -281,7 +281,7 @@ show_handler (const char *class_name, gint component_id,
     }
 
     gtk_window_set_transient_for (GTK_WINDOW (totd_dialog->dialog),
-                                  gnc_ui_get_main_window (NULL));
+                                  gnc_ui_get_main_window (nullptr));
     LEAVE(" ");
     return(TRUE);
 }
@@ -333,14 +333,14 @@ gnc_totd_dialog (GtkWindow *parent, gboolean startup) noexcept
 
      /* Don't continue when no tips were found, to prevent
      * gnc_new_tip_number doesn't handle that case (it would try to
-     * display the terminating NULL). There's nothing to show
+     * display the terminating nullptr). There's nothing to show
      * anyway...*/
     if (tip_count < 1)
     {
         PWARN("No tips found - Tips of the day window won't be displayed.");
         return;
     }
-    if (gnc_forall_gui_components(DIALOG_TOTD_CM_CLASS, show_handler, NULL))
+    if (gnc_forall_gui_components(DIALOG_TOTD_CM_CLASS, show_handler, nullptr))
     {
         return;
     }
@@ -374,7 +374,7 @@ gnc_totd_dialog (GtkWindow *parent, gboolean startup) noexcept
     gtk_widget_show(GTK_WIDGET (totd_dialog->dialog));
 
     gnc_register_gui_component(DIALOG_TOTD_CM_CLASS,
-                               NULL, close_handler, totd_dialog);
+                               nullptr, close_handler, totd_dialog);
 
     g_object_unref(G_OBJECT(builder));
 
@@ -392,5 +392,5 @@ gnc_totd_dialog (GtkWindow *parent, gboolean startup) noexcept
 void
 gnc_totd_dialog_reparent (void) noexcept
 {
-    gnc_forall_gui_components(DIALOG_TOTD_CM_CLASS, show_handler, NULL);
+    gnc_forall_gui_components(DIALOG_TOTD_CM_CLASS, show_handler, nullptr);
 }

@@ -44,9 +44,9 @@ typedef enum
 static void
 gnc_ui_set_cursor (GdkWindow *win, GNCCursorType type, gboolean update_now)
 {
-    GdkCursor *cursor = NULL;
+    GdkCursor *cursor = nullptr;
 
-    if (win == NULL)
+    if (win == nullptr)
         return;
 
     if (type != GNC_CURSOR_NORMAL)
@@ -79,7 +79,7 @@ gnc_ui_set_cursor (GdkWindow *win, GNCCursorType type, gboolean update_now)
 void
 gnc_set_busy_cursor (GtkWidget *w, gboolean update_now) noexcept
 {
-    if (w != NULL)
+    if (w != nullptr)
         gnc_ui_set_cursor (gtk_widget_get_window(w), GNC_CURSOR_BUSY, update_now);
     else
     {
@@ -90,7 +90,7 @@ gnc_set_busy_cursor (GtkWidget *w, gboolean update_now) noexcept
          * and release them all after the loop finishes.
          */
         GList *containerstop = gtk_window_list_toplevels (), *node;
-        g_list_foreach (containerstop, (GFunc)g_object_ref, NULL);
+        g_list_foreach (containerstop, (GFunc)g_object_ref, nullptr);
 
         for (node = containerstop; node; node = node->next)
         {
@@ -117,7 +117,7 @@ gnc_set_busy_cursor (GtkWidget *w, gboolean update_now) noexcept
 void
 gnc_unset_busy_cursor (GtkWidget *w) noexcept
 {
-    if (w != NULL)
+    if (w != nullptr)
         gnc_ui_set_cursor (gtk_widget_get_window(w), GNC_CURSOR_NORMAL, FALSE);
     else
     {

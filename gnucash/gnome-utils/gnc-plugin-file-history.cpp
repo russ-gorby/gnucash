@@ -79,16 +79,16 @@ static void gnc_plugin_file_history_cmd_open_file (GSimpleAction *simple, GVaria
  *  by the user.  The typical limit is four. */
 static GActionEntry gnc_plugin_actions [] =
 {
-    { "RecentFile0Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile1Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile2Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile3Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile4Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile5Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile6Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile7Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile8Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
-    { "RecentFile9Action", gnc_plugin_file_history_cmd_open_file, NULL, NULL, NULL },
+    { "RecentFile0Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile1Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile2Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile3Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile4Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile5Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile6Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile7Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile8Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
+    { "RecentFile9Action", gnc_plugin_file_history_cmd_open_file, nullptr, nullptr, nullptr },
 };
 /** The number of actions provided by this plugin. */
 static guint gnc_plugin_n_actions = G_N_ELEMENTS(gnc_plugin_actions);
@@ -96,7 +96,7 @@ static guint gnc_plugin_n_actions = G_N_ELEMENTS(gnc_plugin_actions);
 /** The default menu items that need to be add to the menu */
 static const gchar *gnc_plugin_load_ui_items [] =
 {
-    NULL,
+    nullptr,
 };
 
 /** The instance data structure for a file history plugin. */
@@ -157,9 +157,9 @@ gnc_history_add_file (const char *newfile) noexcept
     gchar *filename, *from, *to;
     gint i, last;
 
-    if (newfile == NULL)
+    if (newfile == nullptr)
         return;
-    if (!g_utf8_validate(newfile, -1, NULL))
+    if (!g_utf8_validate(newfile, -1, nullptr))
         return;
 
     /*
@@ -228,7 +228,7 @@ gnc_history_remove_file (const char *oldfile) noexcept
 
     if (!oldfile)
         return;
-    if (!g_utf8_validate(oldfile, -1, NULL))
+    if (!g_utf8_validate(oldfile, -1, nullptr))
         return;
 
     for (i = 0, j = 0; i < MAX_HISTORY_FILES; i++)
@@ -272,7 +272,7 @@ gboolean gnc_history_test_for_file (const char *oldfile) noexcept
 
     if (!oldfile)
         return FALSE;
-    if (!g_utf8_validate(oldfile, -1, NULL))
+    if (!g_utf8_validate(oldfile, -1, nullptr))
         return FALSE;
 
     for (i = 0; i < MAX_HISTORY_FILES; i++)
@@ -413,7 +413,7 @@ gnc_history_update_action (GncMainWindow *window,
 
     action_name = g_strdup_printf ("RecentFile%dAction", index);
 
-    gsm->search_action_label = NULL;
+    gsm->search_action_label = nullptr;
     gsm->search_action_name = action_name;
 
     if (gnc_menubar_model_find_item (gnc_main_window_get_menu_model(window), gsm))
@@ -442,7 +442,7 @@ gnc_history_update_action (GncMainWindow *window,
         gchar *label_name = gnc_history_generate_label (index, filename);
         gchar *tooltip = gnc_history_generate_tooltip (index, filename);
         gchar *full_action_name = g_strconcat (PLUGIN_ACTIONS_NAME, ".",
-                                               action_name, NULL);
+                                               action_name, nullptr);
 
         item = g_menu_item_new (label_name, full_action_name);
         g_menu_item_set_attribute (item, GNC_MENU_ATTRIBUTE_TOOLTIP, "s", tooltip);
@@ -588,10 +588,10 @@ gnc_plugin_file_history_finalize (GObject *object)
 GncPlugin *
 gnc_plugin_file_history_new (void) noexcept
 {
-    GncPlugin *plugin_page = NULL;
+    GncPlugin *plugin_page = nullptr;
 
     ENTER("");
-    plugin_page = GNC_PLUGIN (g_object_new (GNC_TYPE_PLUGIN_FILE_HISTORY, NULL));
+    plugin_page = GNC_PLUGIN (g_object_new (GNC_TYPE_PLUGIN_FILE_HISTORY, nullptr));
     LEAVE("plugin %p", plugin_page);
     return plugin_page;
 }
@@ -622,7 +622,7 @@ gnc_plugin_file_history_add_to_window (GncPlugin *plugin,
                                        GQuark type)
 {
     auto fptr = reinterpret_cast<gpointer>(gnc_plugin_history_list_changed);
-    gnc_prefs_register_cb (GNC_PREFS_GROUP_HISTORY, NULL, fptr, window);
+    gnc_prefs_register_cb (GNC_PREFS_GROUP_HISTORY, nullptr, fptr, window);
     gnc_history_update_menus(window);
 }
 
@@ -644,7 +644,7 @@ gnc_plugin_file_history_remove_from_window (GncPlugin *plugin,
                                             GQuark type)
 {
     auto fptr = reinterpret_cast<gpointer>(gnc_plugin_history_list_changed);
-    gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_HISTORY, NULL, fptr, window);
+    gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_HISTORY, nullptr, fptr, window);
 }
 
 /************************************************************
@@ -674,7 +674,7 @@ gnc_plugin_file_history_cmd_open_file (GSimpleAction *simple,
     const gchar *action_name;
 
     g_return_if_fail (G_IS_SIMPLE_ACTION(simple));
-    g_return_if_fail (data != NULL);
+    g_return_if_fail (data != nullptr);
 
     if (!gnc_main_window_finish_pending(data->window))
       return;
@@ -692,7 +692,7 @@ gnc_plugin_file_history_cmd_open_file (GSimpleAction *simple,
     /* also opens new account page */
     gnc_file_open_file (GTK_WINDOW (data->window),
                         filename, /*open_readonly*/ FALSE);
-    gnc_window_set_progressbar_window (NULL);
+    gnc_window_set_progressbar_window (nullptr);
 
     g_free (pref);
     g_free (filename);

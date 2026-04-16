@@ -29,8 +29,8 @@
 #undef G_LOG_DOMAIN
 #define G_LOG_DOMAIN "gnc.printing"
 
-static GtkPrintSettings *print_settings = NULL;
-static GtkPageSetup *page_setup = NULL;
+static GtkPrintSettings *print_settings = nullptr;
+static GtkPageSetup *page_setup = nullptr;
 G_LOCK_DEFINE_STATIC(print_settings);
 G_LOCK_DEFINE_STATIC(page_setup);
 
@@ -70,7 +70,7 @@ gnc_print_operation_init(GtkPrintOperation *op, const gchar* jobname) noexcept
 void
 gnc_ui_page_setup(GtkWindow *parent) noexcept
 {
-    GtkPrintSettings *settings = NULL;
+    GtkPrintSettings *settings = nullptr;
     GtkPageSetup *old_page_setup, *new_page_setup;
 
     /* Get a reference to the current print settings */

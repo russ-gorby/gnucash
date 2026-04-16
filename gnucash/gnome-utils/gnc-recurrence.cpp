@@ -144,10 +144,10 @@ something_changed( GtkWidget *wid, gpointer d )
     gnc_date_edit_get_gdate(GNC_DATE_EDIT(gr->gde_start), &start);
 
     if (pt == GNCR_MONTH)
-        g_object_set(G_OBJECT(gr->nth_weekday), "visible", TRUE, NULL);
+        g_object_set(G_OBJECT(gr->nth_weekday), "visible", TRUE, nullptr);
     else
     {
-        g_object_set(G_OBJECT(gr->nth_weekday), "visible", FALSE, NULL);
+        g_object_set(G_OBJECT(gr->nth_weekday), "visible", FALSE, nullptr);
         gtk_toggle_button_set_active(
             GTK_TOGGLE_BUTTON(gr->nth_weekday), FALSE);
     }
@@ -169,7 +169,7 @@ something_changed( GtkWidget *wid, gpointer d )
         show_last = FALSE;
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gr->gcb_eom), FALSE);
     }
-    g_object_set(G_OBJECT(gr->gcb_eom), "visible", show_last, NULL);
+    g_object_set(G_OBJECT(gr->gcb_eom), "visible", show_last, nullptr);
 
     g_signal_emit_by_name(d, "changed");
 }
@@ -183,7 +183,7 @@ gnc_recurrence_init( GncRecurrence *gr )
     GtkWidget *w;
     GtkBuilder *builder;
 
-    recurrenceSet(&gr->recurrence, 1, PERIOD_MONTH, NULL, WEEKEND_ADJ_NONE);
+    recurrenceSet(&gr->recurrence, 1, PERIOD_MONTH, nullptr, WEEKEND_ADJ_NONE);
 
     // Set the name for this widget so it can be easily manipulated with css
     gtk_widget_set_name (GTK_WIDGET(gr), "gnc-id-recurrence");
@@ -196,7 +196,7 @@ gnc_recurrence_init( GncRecurrence *gr )
 
     vb = GTK_BOX(gtk_builder_get_object (builder, "RecurrenceEntryVBox"));
     hb = GTK_BOX(gtk_builder_get_object (builder, "Startdate_hbox"));
-    w = gnc_date_edit_new (gnc_time (NULL), FALSE, FALSE);
+    w = gnc_date_edit_new (gnc_time (nullptr), FALSE, FALSE);
     gr->gde_start = w;
     gtk_box_pack_start (GTK_BOX (hb), w, TRUE, TRUE, 0);
     gtk_widget_show (w);
@@ -351,8 +351,8 @@ gnc_recurrence_class_init( GncRecurrenceClass *klass )
 		  G_OBJECT_CLASS_TYPE (object_class),
 		  G_SIGNAL_RUN_FIRST,
 		  0,
-		  NULL,
-		  NULL,
+		  nullptr,
+		  nullptr,
 		  g_cclosure_marshal_VOID__VOID,
 		  G_TYPE_NONE,
 		  0);
@@ -365,7 +365,7 @@ gnc_recurrence_new() noexcept
 {
     ENTER(" ");
     auto gr = static_cast<GncRecurrence *>(
-        g_object_new(gnc_recurrence_get_type(), NULL)
+        g_object_new(gnc_recurrence_get_type(), nullptr)
     );
     LEAVE(" ");
     return GTK_WIDGET(gr);

@@ -62,10 +62,10 @@ typedef struct
 static guint  suspend_counter = 0;
 /* Some code foolishly uses 0 instead of NO_COMPONENT, so we start with 1. */
 static gint   next_component_id = 1;
-static GList *components = NULL;
+static GList *components = nullptr;
 
-static ComponentEventInfo changes = { NULL, NULL, FALSE };
-static ComponentEventInfo changes_backup = { NULL, NULL, FALSE };
+static ComponentEventInfo changes = { nullptr, nullptr, FALSE };
+static ComponentEventInfo changes_backup = { nullptr, nullptr, FALSE };
 
 
 /* This static indicates the debugging module that this .o belongs to.  */
@@ -113,10 +113,10 @@ clear_mask_hash_helper (gpointer key, gpointer value, gpointer user_data)
 static void
 clear_mask_hash (GHashTable *hash)
 {
-    if (hash == NULL)
+    if (hash == nullptr)
         return;
 
-    g_hash_table_foreach (hash, clear_mask_hash_helper, NULL);
+    g_hash_table_foreach (hash, clear_mask_hash_helper, nullptr);
 }
 
 static gboolean
@@ -131,7 +131,7 @@ destroy_mask_hash_helper (gpointer key, gpointer value, gpointer user_data)
 static void
 destroy_mask_hash (GHashTable *hash)
 {
-    g_hash_table_foreach_remove (hash, destroy_mask_hash_helper, NULL);
+    g_hash_table_foreach_remove (hash, destroy_mask_hash_helper, nullptr);
     g_hash_table_destroy (hash);
 }
 
@@ -152,10 +152,10 @@ destroy_event_hash_helper (gpointer key, gpointer value, gpointer user_data)
 static void
 clear_event_hash (GHashTable *hash)
 {
-    if (hash == NULL)
+    if (hash == nullptr)
         return;
 
-    g_hash_table_foreach_remove (hash, destroy_event_hash_helper, NULL);
+    g_hash_table_foreach_remove (hash, destroy_event_hash_helper, nullptr);
 }
 
 static void
@@ -204,7 +204,7 @@ add_event (ComponentEventInfo *cei, const GncGUID *entity,
     else
     {
         auto ei = static_cast<EventInfo *>(g_hash_table_lookup (hash, entity));
-        if (ei == NULL)
+        if (ei == nullptr)
         {
             GncGUID *key;
 
@@ -296,7 +296,7 @@ gnc_component_manager_init (void) noexcept
     changes_backup.event_masks = g_hash_table_new (g_str_hash, g_str_equal);
     changes_backup.entity_events = guid_hash_table_new ();
 
-    handler_id = qof_event_register_handler (gnc_cm_event_handler, NULL);
+    handler_id = qof_event_register_handler (gnc_cm_event_handler, nullptr);
 }
 
 void
@@ -309,16 +309,16 @@ gnc_component_manager_shutdown (void) noexcept
     }
 
     destroy_mask_hash (changes.event_masks);
-    changes.event_masks = NULL;
+    changes.event_masks = nullptr;
 
     destroy_event_hash (changes.entity_events);
-    changes.entity_events = NULL;
+    changes.entity_events = nullptr;
 
     destroy_mask_hash (changes_backup.event_masks);
-    changes_backup.event_masks = NULL;
+    changes_backup.event_masks = nullptr;
 
     destroy_event_hash (changes_backup.entity_events);
-    changes_backup.entity_events = NULL;
+    changes_backup.entity_events = nullptr;
 
     qof_event_unregister_handler (handler_id);
 }
@@ -334,13 +334,13 @@ find_component (gint component_id)
             return ci;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 static GList *
 find_components_by_data (gpointer user_data)
 {
-    GList *list = NULL;
+    GList *list = nullptr;
 
     for (GList *node = components; node; node = node->next)
     {
@@ -356,7 +356,7 @@ find_components_by_data (gpointer user_data)
 static GList *
 find_components_by_session (gpointer session)
 {
-    GList *list = NULL;
+    GList *list = nullptr;
 
     for (GList *node = components; node; node = node->next)
     {
@@ -375,7 +375,7 @@ gnc_register_gui_component_internal (const char * component_class)
     ComponentInfo *ci;
     gint component_id;
 
-    g_return_val_if_fail (component_class, NULL);
+    g_return_val_if_fail (component_class, nullptr);
 
     /* look for a free handler id */
     component_id = next_component_id;
@@ -399,7 +399,7 @@ gnc_register_gui_component_internal (const char * component_class)
 
     ci->component_class = g_strdup (component_class);
     ci->component_id = component_id;
-    ci->session = NULL;
+    ci->session = nullptr;
 
     components = g_list_prepend (components, ci);
 
@@ -447,7 +447,7 @@ gnc_gui_component_watch_entity (gint component_id,
 {
     ComponentInfo *ci;
 
-    if (entity == NULL)
+    if (entity == nullptr)
         return;
 
     ci = find_component (component_id);
@@ -524,13 +524,13 @@ gnc_unregister_gui_component (gint component_id) noexcept
     components = g_list_remove (components, ci);
 
     destroy_mask_hash (ci->watch_info.event_masks);
-    ci->watch_info.event_masks = NULL;
+    ci->watch_info.event_masks = nullptr;
 
     destroy_event_hash (ci->watch_info.entity_events);
-    ci->watch_info.entity_events = NULL;
+    ci->watch_info.entity_events = nullptr;
 
     g_free (ci->component_class);
-    ci->component_class = NULL;
+    ci->component_class = nullptr;
 
     g_free (ci);
 
@@ -621,7 +621,7 @@ changes_match (ComponentEventInfo *cei, ComponentEventInfo *changes)
     ComponentEventInfo *big_cei;
     GHashTable *smalltable;
 
-    if (cei == NULL)
+    if (cei == nullptr)
         return FALSE;
 
     /* check types first, for efficiency */
@@ -676,7 +676,7 @@ gnc_gui_refresh_internal (gboolean force)
     fprintf (stderr, "%srefresh!\n", force ? "forced " : "");
 #endif
 
-    list = find_component_ids_by_class (NULL);
+    list = find_component_ids_by_class (nullptr);
     // reverse the list so class GncPluginPageRegister is before register-single
     list = g_list_reverse (list);
 
@@ -702,7 +702,7 @@ gnc_gui_refresh_internal (gboolean force)
 #if CM_DEBUG
                 fprintf (stderr, "calling %s:%d C handler\n", ci->component_class, ci->component_id);
 #endif
-                ci->refresh_handler (NULL, ci->user_data);
+                ci->refresh_handler (nullptr, ci->user_data);
             }
         }
         else if (changes_match (&ci->watch_info, &changes_backup))
@@ -838,10 +838,10 @@ gnc_find_gui_components (const char *component_class,
                          GNCComponentFindHandler find_handler,
                          gpointer find_data) noexcept
 {
-    GList *list = NULL;
+    GList *list = nullptr;
 
     if (!component_class)
-        return NULL;
+        return nullptr;
 
     for (GList *node = components; node; node = node->next)
     {
@@ -872,11 +872,11 @@ gnc_find_first_gui_component (const char *component_class,
              find_handler, find_data);
 #endif
     if (!component_class)
-        return NULL;
+        return nullptr;
 
     list = gnc_find_gui_components (component_class, find_handler, find_data);
     if (!list)
-        return NULL;
+        return nullptr;
 
     user_data = list->data;
 
@@ -891,7 +891,7 @@ gnc_find_first_gui_component (const char *component_class,
 static GList *
 find_component_ids_by_class (const char *component_class)
 {
-    GList *list = NULL;
+    GList *list = nullptr;
     GList *node;
 
     for (node = components; node; node = node->next)

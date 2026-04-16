@@ -48,10 +48,10 @@ gnc_window_default_init (GncWindowInterface *klass)
 GtkWindow *
 gnc_window_get_gtk_window (GncWindow *window) noexcept
 {
-    g_return_val_if_fail(GNC_WINDOW (window), NULL);
+    g_return_val_if_fail(GNC_WINDOW (window), nullptr);
 
     /* mandatory */
-    g_return_val_if_fail(GNC_WINDOW_GET_IFACE (window)->get_gtk_window, NULL);
+    g_return_val_if_fail(GNC_WINDOW_GET_IFACE (window)->get_gtk_window, nullptr);
 
     return GNC_WINDOW_GET_IFACE (window)->get_gtk_window (window);
 }
@@ -59,10 +59,10 @@ gnc_window_get_gtk_window (GncWindow *window) noexcept
 GtkWidget *
 gnc_window_get_statusbar (GncWindow *window) noexcept
 {
-    g_return_val_if_fail(GNC_WINDOW (window), NULL);
+    g_return_val_if_fail(GNC_WINDOW (window), nullptr);
 
     /* mandatory */
-    g_return_val_if_fail(GNC_WINDOW_GET_IFACE (window)->get_statusbar, NULL);
+    g_return_val_if_fail(GNC_WINDOW_GET_IFACE (window)->get_statusbar, nullptr);
 
     return GNC_WINDOW_GET_IFACE (window)->get_statusbar (window);
 }
@@ -70,11 +70,11 @@ gnc_window_get_statusbar (GncWindow *window) noexcept
 GtkWidget *
 gnc_window_get_progressbar (GncWindow *window) noexcept
 {
-    g_return_val_if_fail(GNC_WINDOW (window), NULL);
+    g_return_val_if_fail(GNC_WINDOW (window), nullptr);
 
     /* optional */
-    if (GNC_WINDOW_GET_IFACE (window)->get_progressbar == NULL)
-        return NULL;
+    if (GNC_WINDOW_GET_IFACE (window)->get_progressbar == nullptr)
+        return nullptr;
 
     return GNC_WINDOW_GET_IFACE (window)->get_progressbar (window);
 }
@@ -82,11 +82,11 @@ gnc_window_get_progressbar (GncWindow *window) noexcept
 GtkWidget *
 gnc_window_get_menubar (GncWindow *window) noexcept
 {
-    g_return_val_if_fail (GNC_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_WINDOW(window), nullptr);
 
     /* optional */
-    if (GNC_WINDOW_GET_IFACE(window)->get_menubar == NULL)
-        return NULL;
+    if (GNC_WINDOW_GET_IFACE(window)->get_menubar == nullptr)
+        return nullptr;
 
     return GNC_WINDOW_GET_IFACE(window)->get_menubar (window);
 }
@@ -94,11 +94,11 @@ gnc_window_get_menubar (GncWindow *window) noexcept
 GtkWidget *
 gnc_window_get_toolbar (GncWindow *window) noexcept
 {
-    g_return_val_if_fail (GNC_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_WINDOW(window), nullptr);
 
     /* optional */
-    if (GNC_WINDOW_GET_IFACE(window)->get_toolbar == NULL)
-        return NULL;
+    if (GNC_WINDOW_GET_IFACE(window)->get_toolbar == nullptr)
+        return nullptr;
 
     return GNC_WINDOW_GET_IFACE(window)->get_toolbar (window);
 }
@@ -106,11 +106,11 @@ gnc_window_get_toolbar (GncWindow *window) noexcept
 GMenuModel *
 gnc_window_get_menubar_model (GncWindow *window) noexcept
 {
-    g_return_val_if_fail (GNC_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_WINDOW(window), nullptr);
 
     /* optional */
-    if (GNC_WINDOW_GET_IFACE(window)->get_menubar_model == NULL)
-        return NULL;
+    if (GNC_WINDOW_GET_IFACE(window)->get_menubar_model == nullptr)
+        return nullptr;
 
     return GNC_WINDOW_GET_IFACE(window)->get_menubar_model (window);
 }
@@ -118,11 +118,11 @@ gnc_window_get_menubar_model (GncWindow *window) noexcept
 GtkAccelGroup *
 gnc_window_get_accel_group (GncWindow *window) noexcept
 {
-    g_return_val_if_fail (GNC_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_WINDOW(window), nullptr);
 
     /* optional */
-    if (GNC_WINDOW_GET_IFACE(window)->get_accel_group == NULL)
-        return NULL;
+    if (GNC_WINDOW_GET_IFACE(window)->get_accel_group == nullptr)
+        return nullptr;
 
     return GNC_WINDOW_GET_IFACE(window)->get_accel_group (window);
 }
@@ -164,15 +164,15 @@ gnc_window_set_status (GncWindow *window, GncPluginPage *page,
  * all the way down to the backend and then back out again.  Not too
  * bad from C, but also has to be done in Scheme.
  */
-static GncWindow *progress_bar_hack_window = NULL;
+static GncWindow *progress_bar_hack_window = nullptr;
 
 /*
- * Must be set to a valid window or to NULL (no window).
+ * Must be set to a valid window or to nullptr (no window).
  */
 void
 gnc_window_set_progressbar_window (GncWindow *window) noexcept
 {
-    if (window != NULL)
+    if (window != nullptr)
     {
         g_return_if_fail(GNC_WINDOW (window));
     }
@@ -196,11 +196,11 @@ gnc_window_show_progress (const char *message, double percentage) noexcept
     double curr_fraction;
 
     window = progress_bar_hack_window;
-    if (window == NULL)
+    if (window == nullptr)
         return;
 
     progressbar = gnc_window_get_progressbar (window);
-    if (progressbar == NULL)
+    if (progressbar == nullptr)
     {
         DEBUG( "no progressbar in hack-window" );
         return;
@@ -219,7 +219,7 @@ gnc_window_show_progress (const char *message, double percentage) noexcept
     {
         gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar), " ");
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar), 0.0);
-        if (GNC_WINDOW_GET_IFACE(window)->ui_set_sensitive != NULL)
+        if (GNC_WINDOW_GET_IFACE(window)->ui_set_sensitive != nullptr)
             GNC_WINDOW_GET_IFACE(window)->ui_set_sensitive(window, TRUE);
     }
     else
@@ -227,7 +227,7 @@ gnc_window_show_progress (const char *message, double percentage) noexcept
         if (message && *message)
             gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar), message);
         if ((percentage == 0.0) &&
-                (GNC_WINDOW_GET_IFACE(window)->ui_set_sensitive != NULL))
+                (GNC_WINDOW_GET_IFACE(window)->ui_set_sensitive != nullptr))
             GNC_WINDOW_GET_IFACE(window)->ui_set_sensitive(window, FALSE);
         if (percentage <= 100.0)
         {

@@ -58,7 +58,7 @@ static const gchar *icon_files[] =
     GNC_ICON_INVOICE_EDIT,
     GNC_ICON_INVOICE_DUPLICATE,
     GNC_ICON_PDF_EXPORT,
-    NULL
+    nullptr
 };
 
 void
@@ -71,10 +71,10 @@ gnc_load_app_icons (void) noexcept
     gchar **path;
     gint n_elements, i;
 
-    default_path = g_build_filename (pkgdatadir, "icons", NULL);
+    default_path = g_build_filename (pkgdatadir, "icons", nullptr);
     gtk_icon_theme_append_search_path (icon_theme, default_path);
     g_free (default_path);
-    default_path = g_build_filename (datadir, "icons", NULL);
+    default_path = g_build_filename (datadir, "icons", nullptr);
     gtk_icon_theme_append_search_path (icon_theme, default_path);
     g_free (default_path);
     g_free (pkgdatadir);

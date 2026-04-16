@@ -175,7 +175,7 @@ gnc_period_sample_combobox_changed (GtkComboBox *box, GncPeriodSelect *period)
     g_object_set (G_OBJECT (period),
                   "active",
                   gtk_combo_box_get_active (box),
-                  NULL);
+                  nullptr);
 }
 
 
@@ -214,7 +214,7 @@ static void
 gnc_period_select_set_active_internal (GncPeriodSelect *period,
                                        GncAccountingPeriod which)
 {
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period != nullptr);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
     g_return_if_fail(which >= 0);
     g_return_if_fail(which <  GNC_ACCOUNTING_PERIOD_LAST);
@@ -243,17 +243,17 @@ gnc_period_select_set_active_internal (GncPeriodSelect *period,
  @{ */
 
 /*  Get the current value of the fiscal year end setting from a
- *  GncPeriodSelect widget.  If the result is NULL then fiscal years
+ *  GncPeriodSelect widget.  If the result is nullptr then fiscal years
  *  are not currently supported.
  */
 GDate *
 gnc_period_select_get_fy_end (GncPeriodSelect *period)
 {
-    g_return_val_if_fail(period != NULL, NULL);
-    g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), NULL);
+    g_return_val_if_fail(period != nullptr, nullptr);
+    g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), nullptr);
 
     if (!period->fy_end)
-        return NULL;
+        return nullptr;
     return g_date_new_dmy(g_date_get_day(period->fy_end),
                           g_date_get_month(period->fy_end),
                           G_DATE_BAD_YEAR);
@@ -261,7 +261,7 @@ gnc_period_select_get_fy_end (GncPeriodSelect *period)
 
 
 /*  Set the fiscal year end on a GncPeriodSelect widget.  If set to a
- *  value other than NULL then widget will include fiscal accounting
+ *  value other than nullptr then widget will include fiscal accounting
  *  period like "this fiscal year".
  */
 void
@@ -270,7 +270,7 @@ gnc_period_select_set_fy_end (GncPeriodSelect *period, const GDate *fy_end)
     const gchar *label;
     gint i;
 
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period != nullptr);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
 
     if (period->fy_end)
@@ -284,7 +284,7 @@ gnc_period_select_set_fy_end (GncPeriodSelect *period, const GDate *fy_end)
     }
     else
     {
-        period->fy_end = NULL;
+        period->fy_end = nullptr;
     }
 
     if (fy_end)
@@ -315,7 +315,7 @@ gnc_period_select_set_date_common (GncPeriodSelect *period, const GDate *date)
         period->date_base = g_date_new_dmy(g_date_get_day(date),
                                          g_date_get_month(date),
                                          g_date_get_year(date));
-        if (period->date_label == NULL)
+        if (period->date_label == nullptr)
         {
             period->date_label = gtk_label_new("");
             gtk_widget_set_margin_start (GTK_WIDGET(period->date_label), 6);
@@ -329,9 +329,9 @@ gnc_period_select_set_date_common (GncPeriodSelect *period, const GDate *date)
     if (period->date_base)
     {
         g_date_free(period->date_base);
-        period->date_base = NULL;
+        period->date_base = nullptr;
         gtk_widget_destroy(period->date_label);
-        period->date_label = NULL;
+        period->date_label = nullptr;
     }
 }
 
@@ -342,10 +342,10 @@ gnc_period_select_set_date_common (GncPeriodSelect *period, const GDate *date)
 gboolean
 gnc_period_select_get_show_date (GncPeriodSelect *period)
 {
-    g_return_val_if_fail(period != NULL, FALSE);
+    g_return_val_if_fail(period != nullptr, FALSE);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), FALSE);
 
-    return (period->date_base != NULL);
+    return (period->date_base != nullptr);
 }
 
 /*  Set the "show date" setting on a GncPeriodSelect widget.  If set
@@ -357,18 +357,18 @@ gnc_period_select_set_show_date (GncPeriodSelect *period, const gboolean show_da
 {
     GDate date;
 
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period != nullptr);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
 
     if (show_date)
     {
         g_date_clear(&date, 1);
-        gnc_gdate_set_time64(&date, gnc_time (NULL));
+        gnc_gdate_set_time64(&date, gnc_time (nullptr));
         gnc_period_select_set_date_common(period, &date);
     }
     else
     {
-        gnc_period_select_set_date_common(period, NULL);
+        gnc_period_select_set_date_common(period, nullptr);
     }
 }
 
@@ -376,11 +376,11 @@ gnc_period_select_set_show_date (GncPeriodSelect *period, const gboolean show_da
 GDate *
 gnc_period_select_get_date_base (GncPeriodSelect *period)
 {
-    g_return_val_if_fail(period != NULL, NULL);
-    g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), NULL);
+    g_return_val_if_fail(period != nullptr, nullptr);
+    g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), nullptr);
 
     if (!period->date_base)
-        return NULL;
+        return nullptr;
     return g_date_new_dmy(g_date_get_day(period->date_base),
                           g_date_get_month(period->date_base),
                           g_date_get_year(period->date_base));
@@ -393,7 +393,7 @@ gnc_period_select_get_date_base (GncPeriodSelect *period)
 void
 gnc_period_select_set_date_base (GncPeriodSelect *period, const GDate *date_base)
 {
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period != nullptr);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
 
     gnc_period_select_set_date_common(period, date_base);
@@ -508,7 +508,7 @@ gnc_period_select_class_init (GncPeriodSelectClass *klass)
                                     G_OBJECT_CLASS_TYPE (klass),
                                     G_SIGNAL_RUN_FIRST,
                                     0,
-                                    NULL, NULL,
+                                    nullptr, nullptr,
                                     g_cclosure_marshal_VOID__VOID,
                                     G_TYPE_NONE,
                                     0);
@@ -577,7 +577,7 @@ gnc_period_select_init (GncPeriodSelect *period)
 static void
 gnc_period_select_finalize (GObject *object)
 {
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_PERIOD_SELECT (object));
 
     GncPeriodSelect *period = GNC_PERIOD_SELECT(object);
@@ -613,7 +613,7 @@ gnc_period_select_finalize (GObject *object)
 GtkWidget *
 gnc_period_select_new (gboolean starting_labels)
 {
-    auto period = static_cast<GncPeriodSelect *>(g_object_new(GNC_TYPE_PERIOD_SELECT, NULL));
+    auto period = static_cast<GncPeriodSelect *>(g_object_new(GNC_TYPE_PERIOD_SELECT, nullptr));
 
     /* Set up private data structures */
     period->selector   = gtk_combo_box_text_new();
@@ -675,12 +675,12 @@ void
 gnc_period_select_set_active (GncPeriodSelect *period,
                               GncAccountingPeriod which)
 {
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period != nullptr);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
     g_return_if_fail(which >= 0);
     g_return_if_fail(which <  GNC_ACCOUNTING_PERIOD_LAST);
 
-    g_object_set (G_OBJECT (period), "active", which, NULL);
+    g_object_set (G_OBJECT (period), "active", which, nullptr);
 }
 
 
@@ -691,7 +691,7 @@ gnc_period_select_set_active (GncPeriodSelect *period,
 GncAccountingPeriod
 gnc_period_select_get_active (GncPeriodSelect *period)
 {
-    g_return_val_if_fail(period != NULL,
+    g_return_val_if_fail(period != nullptr,
                          static_cast<GncAccountingPeriod>(-1));
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period),
                          static_cast<GncAccountingPeriod>(-1));
@@ -709,14 +709,14 @@ gnc_period_select_get_active (GncPeriodSelect *period)
 GDate *
 gnc_period_select_get_date (GncPeriodSelect *period)
 {
-    g_return_val_if_fail(period != NULL, 0);
+    g_return_val_if_fail(period != nullptr, 0);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), 0);
 
     auto which = static_cast<GncAccountingPeriod>(
         gtk_combo_box_get_active(GTK_COMBO_BOX(period->selector))
     );
     if (which == -1)
-        return NULL;
+        return nullptr;
 
     if (period->start)
         return gnc_accounting_period_start_gdate(which, period->fy_end,

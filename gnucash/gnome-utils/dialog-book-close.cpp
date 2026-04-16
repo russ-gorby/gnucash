@@ -95,8 +95,8 @@ struct CACBTransactionList
 static struct CACBTransactionList*
 find_or_create_txn(struct CloseAccountsCB* cacb, gnc_commodity* cmdty)
 {
-    g_return_val_if_fail(cacb, NULL);
-    g_return_val_if_fail(cmdty, NULL);
+    g_return_val_if_fail(cacb, nullptr);
+    g_return_val_if_fail(cmdty, nullptr);
 
     auto txn = static_cast<struct CACBTransactionList *>(
         g_hash_table_lookup(cacb->txns, cmdty)
@@ -108,7 +108,7 @@ find_or_create_txn(struct CloseAccountsCB* cacb, gnc_commodity* cmdty)
         txn->total = gnc_numeric_zero();
         txn->txn = xaccMallocTransaction(cacb->cbw->book);
         xaccTransBeginEdit(txn->txn);
-        xaccTransSetDateEnteredSecs(txn->txn, gnc_time (NULL));
+        xaccTransSetDateEnteredSecs(txn->txn, gnc_time (nullptr));
         xaccTransSetDatePostedSecsNormalized(txn->txn, cacb->cbw->close_date);
 
         xaccTransSetDescription(txn->txn, cacb->cbw->desc);
@@ -142,7 +142,7 @@ static void close_accounts_cb(Account *a, gpointer data)
     if (gnc_numeric_zero_p(bal))
         return;
 
-    gnc_commodity *acct_commodity = gnc_account_or_default_currency(a, NULL);
+    gnc_commodity *acct_commodity = gnc_account_or_default_currency(a, nullptr);
     g_assert(acct_commodity);
 
     struct CACBTransactionList *txn = find_or_create_txn(cacb, acct_commodity);
@@ -228,7 +228,7 @@ static void close_accounts_of_type(struct CloseBookWindow* cbw,
     cacb.acct_type = acct_type;
     cacb.txns = g_hash_table_new_full(g_direct_hash,
                                       (GEqualFunc)gnc_commodity_equal,
-                                      NULL, g_free);
+                                      nullptr, g_free);
 
     /* Iterate through all accounts and set up the balancing splits */
     root_acct = gnc_book_get_root_account(cbw->book);
@@ -267,8 +267,8 @@ static void destroy_cb(GObject *object, gpointer data)
 void
 gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) noexcept
 {
-    Account* income_acct = NULL;
-    Account* expense_acct = NULL;
+    Account* income_acct = nullptr;
+    Account* expense_acct = nullptr;
 
     ENTER("dialog %p, response %d, unused %p", dialog, response, unused);
 
@@ -323,7 +323,7 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
     struct CloseBookWindow *cbw;
     GtkBuilder* builder;
     GtkWidget* box;
-    GList* equity_list = NULL;
+    GList* equity_list = nullptr;
 
     g_return_if_fail(book);
 
@@ -340,14 +340,14 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
     gtk_widget_set_name (GTK_WIDGET(cbw->dialog), "gnc-id-book-close");
 
     /* parent */
-    if (parent != NULL)
+    if (parent != nullptr)
         gtk_window_set_transient_for (GTK_WINDOW(cbw->dialog), GTK_WINDOW(parent));
 
     PINFO("Closed Book Window is %p, Dialog is %p", cbw, cbw->dialog);
 
     /* close date */
     box = GTK_WIDGET(gtk_builder_get_object (builder,  "date_box"));
-    cbw->close_date_widget = gnc_date_edit_new(gnc_time (NULL), FALSE, FALSE);
+    cbw->close_date_widget = gnc_date_edit_new(gnc_time (nullptr), FALSE, FALSE);
     gtk_box_pack_start(GTK_BOX(box), cbw->close_date_widget, TRUE, TRUE, 0);
 
     /* income acct */
@@ -355,7 +355,7 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
     box = GTK_WIDGET(gtk_builder_get_object (builder, "income_acct_box"));
     cbw->income_acct_widget = gnc_account_sel_new();
     gnc_account_sel_set_acct_filters(GNC_ACCOUNT_SEL(cbw->income_acct_widget),
-                                     equity_list, NULL);
+                                     equity_list, nullptr);
     gnc_account_sel_set_new_account_ability(GNC_ACCOUNT_SEL(cbw->income_acct_widget), TRUE);
     gtk_box_pack_start(GTK_BOX(box), cbw->income_acct_widget, TRUE, TRUE, 0);
 
@@ -363,7 +363,7 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
     box = GTK_WIDGET(gtk_builder_get_object (builder, "expense_acct_box"));
     cbw->expense_acct_widget = gnc_account_sel_new();
     gnc_account_sel_set_acct_filters(GNC_ACCOUNT_SEL(cbw->expense_acct_widget),
-                                     equity_list, NULL);
+                                     equity_list, nullptr);
     gnc_account_sel_set_new_account_ability(GNC_ACCOUNT_SEL(cbw->expense_acct_widget), TRUE);
     gtk_box_pack_start(GTK_BOX(box), cbw->expense_acct_widget, TRUE, TRUE, 0);
 
@@ -375,11 +375,11 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
 
     /* Register dialog with component manager */
     cbw->component_manager_id =
-        gnc_register_gui_component(DIALOG_BOOK_CLOSE_CM_CLASS, NULL, close_handler,
+        gnc_register_gui_component(DIALOG_BOOK_CLOSE_CM_CLASS, nullptr, close_handler,
                                    cbw->dialog);
     gnc_gui_component_set_session(cbw->component_manager_id,
                                   gnc_get_current_session());
-    g_signal_connect(cbw->dialog, "destroy", G_CALLBACK(destroy_cb), NULL);
+    g_signal_connect(cbw->dialog, "destroy", G_CALLBACK(destroy_cb), nullptr);
 
     /* Clean up the data structure when the dialog is destroyed */
     g_object_set_data_full(G_OBJECT(cbw->dialog), "CloseBookWindow", cbw, g_free);

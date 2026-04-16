@@ -142,7 +142,7 @@ gnc_tree_model_account_update_color (gpointer gsettings, gchar *key, gpointer us
     if (use_red)
         model->negative_color = gnc_get_negative_color ();
     else
-        model->negative_color = NULL;
+        model->negative_color = nullptr;
 }
 
 /************************************************************/
@@ -174,8 +174,8 @@ gnc_tree_model_account_init (GncTreeModelAccount *model)
 
     use_red = gnc_prefs_get_bool (GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED);
 
-    model->book = NULL;
-    model->root = NULL;
+    model->book = nullptr;
+    model->root = nullptr;
 
     if (model->negative_color)
         g_free (model->negative_color);
@@ -183,7 +183,7 @@ gnc_tree_model_account_init (GncTreeModelAccount *model)
     if (use_red)
         model->negative_color = gnc_get_negative_color ();
     else
-        model->negative_color = NULL;
+        model->negative_color = nullptr;
 
     // create the account values cache hash
     model->account_values_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
@@ -201,14 +201,14 @@ gnc_tree_model_account_finalize (GObject *object)
 {
     GncTreeModelAccount *model;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(object));
 
     ENTER("model %p", object);
 
     model = GNC_TREE_MODEL_ACCOUNT(object);
 
-    model->book = NULL;
+    model->book = nullptr;
 
     G_OBJECT_CLASS(gnc_tree_model_account_parent_class)->finalize (object);
     LEAVE(" ");
@@ -219,7 +219,7 @@ gnc_tree_model_account_dispose (GObject *object)
 {
     GncTreeModelAccount *model;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(object));
 
     ENTER("model %p", object);
@@ -242,7 +242,7 @@ gnc_tree_model_account_dispose (GObject *object)
                                  reinterpret_cast<gpointer>(gnc_tree_model_account_update_color),
                                  model);
 
-    model->root = NULL;
+    model->root = nullptr;
     G_OBJECT_CLASS(gnc_tree_model_account_parent_class)->dispose (object);
     LEAVE(" ");
 }
@@ -255,7 +255,7 @@ gnc_tree_model_account_dispose (GObject *object)
 GtkTreeModel *
 gnc_tree_model_account_new (Account *root)
 {
-    GncTreeModelAccount *model = NULL;
+    GncTreeModelAccount *model = nullptr;
     const GList *item;
 
     ENTER("root %p", root);
@@ -272,7 +272,7 @@ gnc_tree_model_account_new (Account *root)
     }
 
     model = static_cast<GncTreeModelAccount *>(
-        g_object_new (GNC_TYPE_TREE_MODEL_ACCOUNT, NULL)
+        g_object_new (GNC_TYPE_TREE_MODEL_ACCOUNT, nullptr)
     );
 
     model->book = gnc_get_current_book();
@@ -299,7 +299,7 @@ iter_to_string (GtkTreeIter *iter)
     static GPrivate gtmits_buffer_key = G_PRIVATE_INIT(g_free);
 
     auto string = static_cast<gchar *>(g_private_get (&gtmits_buffer_key));
-    if (string == NULL)
+    if (string == nullptr)
     {
         string = static_cast<gchar *>(g_malloc(ITER_STRING_LEN + 1));
         g_private_set (&gtmits_buffer_key, string);
@@ -445,13 +445,13 @@ gnc_tree_model_account_get_iter (GtkTreeModel *tree_model,
         return FALSE;
     }
 
-    parent = NULL;
+    parent = nullptr;
     account = model->root;
     for (i = 1; i < gtk_tree_path_get_depth (path); i++)
     {
         parent = account;
         account = gnc_account_nth_child (parent, indices[i]);
-        if (account == NULL)
+        if (account == nullptr)
         {
             iter->stamp = 0;
             LEAVE("bad index");
@@ -477,17 +477,17 @@ gnc_tree_model_account_get_path (GtkTreeModel *tree_model,
     GtkTreePath *path;
     gint i;
 
-    g_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), NULL);
-    g_return_val_if_fail (iter != NULL, NULL);
-    g_return_val_if_fail (iter->user_data != NULL, NULL);
-    g_return_val_if_fail (iter->stamp == model->stamp, NULL);
+    g_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), nullptr);
+    g_return_val_if_fail (iter != nullptr, nullptr);
+    g_return_val_if_fail (iter->user_data != nullptr, nullptr);
+    g_return_val_if_fail (iter->stamp == model->stamp, nullptr);
 
     ENTER("model %p, iter %s", model, iter_to_string (iter));
 
-    if (model->root == NULL)
+    if (model->root == nullptr)
     {
         LEAVE("failed (1)");
-        return NULL;
+        return nullptr;
     }
 
     account = (Account *) iter->user_data;
@@ -501,7 +501,7 @@ gnc_tree_model_account_get_path (GtkTreeModel *tree_model,
         {
             gtk_tree_path_free (path);
             LEAVE("failed (3)");
-            return NULL;
+            return nullptr;
         }
         gtk_tree_path_prepend_index (path, i);
         account = parent;
@@ -527,7 +527,7 @@ gnc_tree_model_account_set_color (GncTreeModelAccount *model,
     if (negative)
         g_value_set_static_string (value, model->negative_color);
     else
-        g_value_set_static_string (value, NULL);
+        g_value_set_static_string (value, nullptr);
 }
 
 static gchar *
@@ -582,7 +582,7 @@ gnc_tree_model_account_clear_cache (GncTreeModelAccount *model)
         model->account_values_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
                                                            g_free, g_free);
 
-        gtk_tree_model_foreach (GTK_TREE_MODEL(model), row_changed_foreach_func, NULL);
+        gtk_tree_model_foreach (GTK_TREE_MODEL(model), row_changed_foreach_func, nullptr);
     }
 }
 
@@ -641,8 +641,8 @@ gnc_tree_model_account_get_cached_value (GncTreeModelAccount *model, Account *ac
                                          gint column, gchar **cached_string)
 {
     gchar acct_guid_str[GUID_ENCODING_LENGTH + 1];
-    gchar *key = NULL;
-    gpointer value = NULL;
+    gchar *key = nullptr;
+    gpointer value = nullptr;
 
     if ((!model->account_values_hash) || (!account))
         return FALSE;
@@ -651,7 +651,7 @@ gnc_tree_model_account_get_cached_value (GncTreeModelAccount *model, Account *ac
     key = g_strdup_printf ("%s,%d", acct_guid_str, column);
 
     gboolean found = g_hash_table_lookup_extended (model->account_values_hash, key,
-                                          NULL, &value);
+                                          nullptr, &value);
 
      if (found)
          *cached_string = g_strdup (static_cast<gchar *>(value));
@@ -673,7 +673,7 @@ gnc_tree_model_account_set_cached_value (GncTreeModelAccount *model, Account *ac
     {
         gchar acct_guid_str[GUID_ENCODING_LENGTH + 1];
         const gchar *str = g_value_get_string (value);
-        gchar *key = NULL;
+        gchar *key = nullptr;
 
         guid_to_string_buff (xaccAccountGetGUID (account), acct_guid_str);
         key = g_strdup_printf ("%s,%d", acct_guid_str, column);
@@ -692,13 +692,13 @@ gnc_tree_model_account_get_value (GtkTreeModel *tree_model,
     Account *account;
     gboolean negative; /* used to set "deficit style" also known as red numbers */
     gchar *string;
-    gchar *cached_string = NULL;
+    gchar *cached_string = nullptr;
 
     time64 last_date;
 
     g_return_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model));
-    g_return_if_fail (iter != NULL);
-    g_return_if_fail (iter->user_data != NULL);
+    g_return_if_fail (iter != nullptr);
+    g_return_if_fail (iter->user_data != nullptr);
     g_return_if_fail (iter->stamp == model->stamp);
 
     ENTER("model %p, iter %s, col %d", tree_model,
@@ -972,14 +972,14 @@ gnc_tree_model_account_iter_next (GtkTreeModel *tree_model,
     gint i;
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), FALSE);
-    g_return_val_if_fail (iter != NULL, FALSE);
-    g_return_val_if_fail (iter->user_data != NULL, FALSE);
+    g_return_val_if_fail (iter != nullptr, FALSE);
+    g_return_val_if_fail (iter->user_data != nullptr, FALSE);
     g_return_val_if_fail (iter->stamp == model->stamp, FALSE);
 
     ENTER("model %p, iter %s", tree_model, iter_to_string (iter));
 
     parent = (Account *) iter->user_data2;
-    if (parent == NULL)
+    if (parent == nullptr)
     {
         /* This is the root. There is no next. */
         LEAVE("at root");
@@ -989,7 +989,7 @@ gnc_tree_model_account_iter_next (GtkTreeModel *tree_model,
     /* Get the *next* sibling account. */
     i = GPOINTER_TO_INT(iter->user_data3);
     account = gnc_account_nth_child (parent, i + 1);
-    if (account == NULL)
+    if (account == nullptr)
     {
         iter->stamp = 0;
         LEAVE("failed (3)");
@@ -1018,7 +1018,7 @@ gnc_tree_model_account_iter_children (GtkTreeModel *tree_model,
 
     model = GNC_TREE_MODEL_ACCOUNT(tree_model);
 
-    if (model->root == NULL)
+    if (model->root == nullptr)
     {
         iter->stamp = 0;
         LEAVE("failed (no root)");
@@ -1029,21 +1029,21 @@ gnc_tree_model_account_iter_children (GtkTreeModel *tree_model,
     if (!parent_iter)
     {
         iter->user_data = model->root;
-        iter->user_data2 = NULL;
+        iter->user_data2 = nullptr;
         iter->user_data3 = GINT_TO_POINTER(0);
         iter->stamp = model->stamp;
         LEAVE("iter (2) %s", iter_to_string (iter));
         return TRUE;
     }
 
-    gnc_leave_return_val_if_fail (parent_iter != NULL, FALSE);
-    gnc_leave_return_val_if_fail (parent_iter->user_data != NULL, FALSE);
+    gnc_leave_return_val_if_fail (parent_iter != nullptr, FALSE);
+    gnc_leave_return_val_if_fail (parent_iter->user_data != nullptr, FALSE);
     gnc_leave_return_val_if_fail (parent_iter->stamp == model->stamp, FALSE);
 
     parent = (Account *)parent_iter->user_data;
     account = gnc_account_nth_child (parent, 0);
 
-    if (account == NULL)
+    if (account == nullptr)
     {
         iter->stamp = 0;
         LEAVE("failed (child account is null)");
@@ -1071,8 +1071,8 @@ gnc_tree_model_account_iter_has_child (GtkTreeModel *tree_model,
 
     model = GNC_TREE_MODEL_ACCOUNT(tree_model);
 
-    gnc_leave_return_val_if_fail (iter != NULL, FALSE);
-    gnc_leave_return_val_if_fail (iter->user_data != NULL, FALSE);
+    gnc_leave_return_val_if_fail (iter != nullptr, FALSE);
+    gnc_leave_return_val_if_fail (iter->user_data != nullptr, FALSE);
     gnc_leave_return_val_if_fail (iter->stamp == model->stamp, FALSE);
 
     account = (Account *) iter->user_data;
@@ -1098,7 +1098,7 @@ gnc_tree_model_account_iter_n_children (GtkTreeModel *tree_model,
 
     model = GNC_TREE_MODEL_ACCOUNT(tree_model);
 
-    if (iter == NULL)
+    if (iter == nullptr)
     {
         /* How many children does the invisible root node
          * have. One! Its the real root account node. */
@@ -1106,8 +1106,8 @@ gnc_tree_model_account_iter_n_children (GtkTreeModel *tree_model,
         return 1;
     }
 
-    gnc_leave_return_val_if_fail (iter != NULL, FALSE);
-    gnc_leave_return_val_if_fail (iter->user_data != NULL, FALSE);
+    gnc_leave_return_val_if_fail (iter != nullptr, FALSE);
+    gnc_leave_return_val_if_fail (iter->user_data != nullptr, FALSE);
     gnc_leave_return_val_if_fail (iter->stamp == model->stamp, FALSE);
 
     num = gnc_account_n_children (static_cast<const Account*>(iter->user_data));
@@ -1152,19 +1152,19 @@ gnc_tree_model_account_iter_nth_child (GtkTreeModel *tree_model,
         }
 
         iter->user_data = model->root;
-        iter->user_data2 = NULL;
+        iter->user_data2 = nullptr;
         iter->user_data3 = GINT_TO_POINTER(0);
         iter->stamp = model->stamp;
         LEAVE("root %s", iter_to_string (iter));
         return TRUE;
     }
 
-    gnc_leave_return_val_if_fail (parent_iter->user_data != NULL, FALSE);
+    gnc_leave_return_val_if_fail (parent_iter->user_data != nullptr, FALSE);
     gnc_leave_return_val_if_fail (parent_iter->stamp == model->stamp, FALSE);
 
     parent = (Account *)parent_iter->user_data;
     account = gnc_account_nth_child (parent, n);
-    if (account == NULL)
+    if (account == nullptr)
     {
         iter->stamp = 0;
         LEAVE("failed (2)");
@@ -1207,13 +1207,13 @@ gnc_tree_model_account_iter_parent (GtkTreeModel *tree_model,
 
     model = GNC_TREE_MODEL_ACCOUNT(tree_model);
 
-    gnc_leave_return_val_if_fail (child != NULL, FALSE);
-    gnc_leave_return_val_if_fail (child->user_data != NULL, FALSE);
+    gnc_leave_return_val_if_fail (child != nullptr, FALSE);
+    gnc_leave_return_val_if_fail (child->user_data != nullptr, FALSE);
     gnc_leave_return_val_if_fail (child->stamp == model->stamp, FALSE);
 
     account = (Account *) child->user_data;
     account = gnc_account_get_parent (account);
-    if (account == NULL)
+    if (account == nullptr)
     {
         /* Can't go up from the root node */
         iter->stamp = 0;
@@ -1222,7 +1222,7 @@ gnc_tree_model_account_iter_parent (GtkTreeModel *tree_model,
     }
 
     parent = gnc_account_get_parent (account);
-    if (parent == NULL)
+    if (parent == nullptr)
     {
         /* Now at the root. */
         i = 0;
@@ -1252,10 +1252,10 @@ Account *
 gnc_tree_model_account_get_account (GncTreeModelAccount *model,
                                     GtkTreeIter *iter)
 {
-    g_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), NULL);
-    g_return_val_if_fail (iter != NULL, NULL);
-    g_return_val_if_fail (iter->user_data != NULL, NULL);
-    g_return_val_if_fail (iter->stamp == model->stamp, NULL);
+    g_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), nullptr);
+    g_return_val_if_fail (iter != nullptr, nullptr);
+    g_return_val_if_fail (iter->user_data != nullptr, nullptr);
+    g_return_val_if_fail (iter->stamp == model->stamp, nullptr);
 
     return (Account *) iter->user_data;
 }
@@ -1275,15 +1275,15 @@ gnc_tree_model_account_get_iter_from_account (GncTreeModelAccount *model,
 
     ENTER("model %p, account %p, iter %p", model, account, iter);
     gnc_leave_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), FALSE);
-    gnc_leave_return_val_if_fail ((account != NULL), FALSE);
-    gnc_leave_return_val_if_fail ((iter != NULL), FALSE);
+    gnc_leave_return_val_if_fail ((account != nullptr), FALSE);
+    gnc_leave_return_val_if_fail ((iter != nullptr), FALSE);
 
     iter->user_data = account;
     iter->stamp = model->stamp;
 
     if (account == model->root)
     {
-        iter->user_data2 = NULL;
+        iter->user_data2 = nullptr;
         iter->user_data3 = GINT_TO_POINTER(0);
         LEAVE("Matched root");
         return TRUE;
@@ -1316,14 +1316,14 @@ gnc_tree_model_account_get_path_from_account (GncTreeModelAccount *model,
     GtkTreePath *tree_path;
 
     ENTER("model %p, account %p", model, account);
-    gnc_leave_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), NULL);
-    gnc_leave_return_val_if_fail (account != NULL, NULL);
+    gnc_leave_return_val_if_fail (GNC_IS_TREE_MODEL_ACCOUNT(model), nullptr);
+    gnc_leave_return_val_if_fail (account != nullptr, nullptr);
 
     if (!gnc_tree_model_account_get_iter_from_account (model, account,
             &tree_iter))
     {
         LEAVE("no iter");
-        return NULL;
+        return nullptr;
     }
 
     tree_path = gtk_tree_model_get_path (GTK_TREE_MODEL(model), &tree_iter);
@@ -1415,7 +1415,7 @@ gnc_tree_model_account_event_handler (QofInstance *entity,
                                       GncEventData *ed)
 {
     const gchar *parent_name;
-    GtkTreePath *path = NULL;
+    GtkTreePath *path = nullptr;
     GtkTreeIter iter;
     Account *account, *parent;
 

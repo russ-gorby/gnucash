@@ -58,9 +58,9 @@ static void
 gnc_general_select_forall (GtkContainer *container, gboolean include_internals,
                            GtkCallback callback, gpointer callback_data)
 {
-    g_return_if_fail (container != NULL);
+    g_return_if_fail (container != nullptr);
     g_return_if_fail (GNC_IS_GENERAL_SELECT (container));
-    g_return_if_fail (callback != NULL);
+    g_return_if_fail (callback != nullptr);
 
     /* Let GtkBox handle things only if the internal widgets need
      * to be poked. */
@@ -90,7 +90,7 @@ gnc_general_select_class_init (GNCGeneralSelectClass *klass)
                      G_SIGNAL_RUN_FIRST,
                      G_STRUCT_OFFSET(GNCGeneralSelectClass,
                                      changed),
-                     NULL, NULL,
+                     nullptr, nullptr,
                      g_cclosure_marshal_VOID__VOID,
                      G_TYPE_NONE, 0);
 
@@ -99,7 +99,7 @@ gnc_general_select_class_init (GNCGeneralSelectClass *klass)
     object_class->dispose = gnc_general_select_dispose;
     object_class->finalize = gnc_general_select_finalize;
 
-    klass->changed = NULL;
+    klass->changed = nullptr;
 }
 
 static void
@@ -111,13 +111,13 @@ gnc_general_select_init (GNCGeneralSelect *gsl)
     gtk_widget_set_name (GTK_WIDGET(gsl), "gnc-id-general-select");
 
     gsl->disposed = FALSE;
-    gsl->selected_item = NULL;
+    gsl->selected_item = nullptr;
 }
 
 static void
 gnc_general_select_finalize (GObject *object)
 {
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_GENERAL_SELECT (object));
 
     G_OBJECT_CLASS (gnc_general_select_parent_class)->finalize (object);
@@ -128,7 +128,7 @@ gnc_general_select_dispose (GObject *object)
 {
     GNCGeneralSelect *gsl;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_GENERAL_SELECT (object));
 
     gsl = GNC_GENERAL_SELECT (object);
@@ -140,10 +140,10 @@ gnc_general_select_dispose (GObject *object)
 
 
     gtk_widget_destroy(GTK_WIDGET(gsl->entry));
-    gsl->entry = NULL;
+    gsl->entry = nullptr;
 
     gtk_widget_destroy(GTK_WIDGET(gsl->button));
-    gsl->button = NULL;
+    gsl->button = nullptr;
 
     G_OBJECT_CLASS (gnc_general_select_parent_class)->dispose (object);
 }
@@ -158,8 +158,8 @@ select_cb(GtkButton * button, gpointer user_data)
     gpointer new_selection = (gsl->new_select)(gsl->cb_arg, gsl->selected_item,
                                       toplevel);
 
-    /* NULL return means cancel; no change */
-    if (new_selection == NULL)
+    /* nullptr return means cancel; no change */
+    if (new_selection == nullptr)
         return;
 
     gnc_general_select_set_selected (gsl, new_selection);
@@ -200,11 +200,11 @@ gnc_general_select_new (GNCGeneralSelectType type,
                         GNCGeneralSelectNewSelectCB new_select,
                         gpointer cb_arg) noexcept
 {
-    g_return_val_if_fail (get_string != NULL, NULL);
-    g_return_val_if_fail (new_select != NULL, NULL);
+    g_return_val_if_fail (get_string != nullptr, nullptr);
+    g_return_val_if_fail (new_select != nullptr, nullptr);
 
     auto gsl = static_cast<GNCGeneralSelect *>(
-        g_object_new(GNC_TYPE_GENERAL_SELECT, NULL, NULL)
+        g_object_new(GNC_TYPE_GENERAL_SELECT, nullptr, nullptr)
     );
 
     create_children (gsl, type);
@@ -225,8 +225,8 @@ gnc_general_select_new (GNCGeneralSelectType type,
 const char *
 gnc_general_select_get_printname (GNCGeneralSelect *gsl, gpointer selection) noexcept
 {
-    g_return_val_if_fail (gsl != NULL, NULL);
-    g_return_val_if_fail (selection != NULL, NULL);
+    g_return_val_if_fail (gsl != nullptr, nullptr);
+    g_return_val_if_fail (selection != nullptr, nullptr);
 
     return (gsl->get_string)(selection);
 }
@@ -245,12 +245,12 @@ gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection) noex
 {
     const char *text;
 
-    g_return_if_fail(gsl != NULL);
+    g_return_if_fail(gsl != nullptr);
     g_return_if_fail(GNC_IS_GENERAL_SELECT(gsl));
 
     gsl->selected_item = selection;
 
-    if (selection == NULL)
+    if (selection == nullptr)
         text = "";
     else
         text = gnc_general_select_get_printname(gsl, selection);
@@ -269,8 +269,8 @@ gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection) noex
 gpointer
 gnc_general_select_get_selected (GNCGeneralSelect *gsl) noexcept
 {
-    g_return_val_if_fail(gsl != NULL, NULL);
-    g_return_val_if_fail(GNC_IS_GENERAL_SELECT(gsl), NULL);
+    g_return_val_if_fail(gsl != nullptr, nullptr);
+    g_return_val_if_fail(GNC_IS_GENERAL_SELECT(gsl), nullptr);
 
     return gsl->selected_item;
 }

@@ -104,8 +104,8 @@ gnc_date_format_class_init (GNCDateFormatClass *klass)
                       G_OBJECT_CLASS_TYPE (gobject_class),
                       G_SIGNAL_RUN_FIRST,
                       0,
-                      NULL,
-                      NULL,
+                      nullptr,
+                      nullptr,
                       g_cclosure_marshal_VOID__VOID,
                       G_TYPE_NONE,
                       0);
@@ -172,7 +172,7 @@ gnc_date_format_init (GNCDateFormat *gdf)
 static void
 gnc_date_format_finalize (GObject *object)
 {
-    g_return_if_fail(object != NULL);
+    g_return_if_fail(object != nullptr);
     g_return_if_fail(GNC_IS_DATE_FORMAT(object));
 
     G_OBJECT_CLASS(gnc_date_format_parent_class)->finalize (object);
@@ -190,19 +190,19 @@ gnc_date_format_finalize (GObject *object)
 GtkWidget *
 gnc_date_format_new (void) noexcept
 {
-    return gnc_date_format_new_with_label (NULL);
+    return gnc_date_format_new_with_label (nullptr);
 }
 
 
 GtkWidget *
 gnc_date_format_new_without_label (void) noexcept
 {
-    GtkWidget *widget = gnc_date_format_new_with_label(NULL);
+    GtkWidget *widget = gnc_date_format_new_with_label(nullptr);
     GNCDateFormat *gdf = GNC_DATE_FORMAT(widget);
 
     // remove the first column which has the label
     gtk_grid_remove_column (GTK_GRID(gdf->table), 0);
-    gdf->label = NULL;
+    gdf->label = nullptr;
     return widget;
 }
 
@@ -220,7 +220,7 @@ GtkWidget *
 gnc_date_format_new_with_label (const char *label) noexcept
 {
     auto gdf = static_cast<GNCDateFormat *>(
-        g_object_new(GNC_TYPE_DATE_FORMAT, NULL)
+        g_object_new(GNC_TYPE_DATE_FORMAT, nullptr)
     );
 
     if (label)
@@ -257,7 +257,7 @@ gnc_date_format_get_format (GNCDateFormat *gdf) noexcept
 void
 gnc_date_format_set_months (GNCDateFormat *gdf, GNCDateMonthFormat months) noexcept
 {
-    GtkWidget *button = NULL;
+    GtkWidget *button = nullptr;
 
     g_return_if_fail(gdf);
     g_return_if_fail(GNC_IS_DATE_FORMAT(gdf));
@@ -331,7 +331,7 @@ gnc_date_format_set_custom (GNCDateFormat *gdf, const char *format) noexcept
     g_return_if_fail(gdf);
     g_return_if_fail(GNC_IS_DATE_FORMAT(gdf));
 
-    if (format == NULL || *format == '\0')
+    if (format == nullptr || *format == '\0')
         return;
 
     gtk_entry_set_text(GTK_ENTRY(gdf->custom_entry), format);
@@ -461,13 +461,13 @@ gnc_date_format_refresh (GNCDateFormat *gdf) noexcept
      * signals.
      */
     g_signal_handlers_block_matched(gdf->custom_entry, G_SIGNAL_MATCH_DATA,
-                                    0, 0, NULL, NULL, gdf);
+                                    0, 0, nullptr, nullptr, gdf);
     gtk_entry_set_text(GTK_ENTRY(gdf->custom_entry), format);
     g_signal_handlers_unblock_matched(gdf->custom_entry, G_SIGNAL_MATCH_DATA,
-                                      0, 0, NULL, NULL, gdf);
+                                      0, 0, nullptr, nullptr, gdf);
 
     /* Visual feedback on what the date will look like. */
-    secs_now = gnc_time (NULL);
+    secs_now = gnc_time (nullptr);
     gnc_localtime_r (&secs_now, &today);
     qof_strftime(date_string, MAX_DATE_LEN, format, &today);
     gtk_label_set_text(GTK_LABEL(gdf->sample_label), date_string);

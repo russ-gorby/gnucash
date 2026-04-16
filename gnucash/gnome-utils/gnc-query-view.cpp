@@ -83,7 +83,7 @@ static void gnc_query_view_set_query_sort (GNCQueryView *qview,
  *                                                                  *
  * Args: param_list - the list of params                            *
  *       query      - the query to use to find entries              *
- * Returns: the query view widget, or NULL if there was a problem.  *
+ * Returns: the query view widget, or nullptr if there was a problem.  *
 \********************************************************************/
 void
 gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query) noexcept
@@ -114,12 +114,12 @@ gnc_query_view_construct (GNCQueryView *qview, GList *param_list, Query *query) 
 GtkWidget *
 gnc_query_view_new (GList *param_list, Query *query) noexcept
 {
-    g_return_val_if_fail (param_list, NULL);
-    g_return_val_if_fail (query, NULL);
+    g_return_val_if_fail (param_list, nullptr);
+    g_return_val_if_fail (query, nullptr);
 
     /* Add 1 to param_list length for extra pointer column */
     int columns = g_list_length (param_list) + 1;
-    GNCQueryView *qview = GNC_QUERY_VIEW(g_object_new (gnc_query_view_get_type (), NULL));
+    GNCQueryView *qview = GNC_QUERY_VIEW(g_object_new (gnc_query_view_get_type (), nullptr));
 
     gsize array_size = sizeof(GType) * columns;
     auto types = static_cast<GType *>(g_slice_alloc (array_size));
@@ -186,10 +186,10 @@ gnc_query_view_init (GNCQueryView *qview)
     // Set the name for this widget so it can be easily manipulated with css
     gtk_widget_set_name (GTK_WIDGET(qview), "gnc-id-query-view-view");
 
-    qview->query = NULL;
+    qview->query = nullptr;
 
     qview->num_columns = 0;
-    qview->column_params = NULL;
+    qview->column_params = nullptr;
 
     qview->use_scroll_to_selection = FALSE;
 
@@ -202,7 +202,7 @@ gnc_query_view_init (GNCQueryView *qview)
     priv = GNC_QUERY_VIEW_GET_PRIVATE(qview);
     priv->component_id = gnc_register_gui_component ("gnc-query-view-cm-class",
                                                      gnc_query_view_refresh_handler,
-                                                     NULL, qview);
+                                                     nullptr, qview);
 }
 
 static gint
@@ -229,7 +229,7 @@ gnc_query_sort_order (GNCQueryView *qview, gint column, GtkSortType order) noexc
     GtkTreeSortable *sortable;
     gint sortcol;
 
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     sortable = GTK_TREE_SORTABLE(gtk_tree_view_get_model (GTK_TREE_VIEW(qview)));
@@ -250,9 +250,9 @@ gnc_query_sort_cb (GtkTreeSortable *sortable, gpointer user_data)
     gint          sortcol;
     gboolean      new_column = FALSE;
 
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
-    g_return_if_fail (qview->query != NULL);
+    g_return_if_fail (qview->query != nullptr);
 
     gtk_tree_sortable_get_sort_column_id (sortable, &sortcol, &type);
 
@@ -341,7 +341,7 @@ gnc_query_view_init_view (GNCQueryView *qview)
             gtk_tree_view_column_set_sort_column_id (col, i+1);
             gtk_tree_sortable_set_sort_func (sortable, i+1,
                                              sort_iter_compare_func,
-                                             GINT_TO_POINTER(i+1), NULL);
+                                             GINT_TO_POINTER(i+1), nullptr);
         }
 
         const char *type = gnc_search_param_get_param_type (((GNCSearchParam *) param));
@@ -353,7 +353,7 @@ gnc_query_view_init_view (GNCQueryView *qview)
             /* pack cell renderer toggle into tree view column */
             gtk_tree_view_column_pack_start (col, renderer, TRUE);
             gtk_tree_view_column_add_attribute (col, renderer, "active", i+1);
-            g_object_set (renderer, "xalign", algn, NULL);
+            g_object_set (renderer, "xalign", algn, nullptr);
             g_object_set_data (G_OBJECT(renderer), "column", GINT_TO_POINTER(i+1));
             g_signal_connect (renderer, "toggled",
                               G_CALLBACK(gnc_query_view_toggled_cb), view);
@@ -365,13 +365,13 @@ gnc_query_view_init_view (GNCQueryView *qview)
             /* pack cell renderer text into tree view column */
             gtk_tree_view_column_pack_start (col, renderer, TRUE);
             gtk_tree_view_column_add_attribute (col, renderer, "text", i+1);
-            g_object_set (renderer, "xalign", algn, NULL);
+            g_object_set (renderer, "xalign", algn, nullptr);
             g_object_set_data (G_OBJECT(renderer), "column", GINT_TO_POINTER(i+1));
         }
     }
 
     /* set initial sort order */
-    gtk_tree_sortable_set_default_sort_func (sortable, NULL, NULL, NULL);
+    gtk_tree_sortable_set_default_sort_func (sortable, nullptr, nullptr, nullptr);
     gtk_tree_sortable_set_sort_column_id (sortable, 1, GTK_SORT_DESCENDING);
 
     g_signal_connect (sortable, "sort-column-changed",
@@ -381,11 +381,11 @@ gnc_query_view_init_view (GNCQueryView *qview)
     selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(view));
     g_signal_connect (selection, "changed",
                       G_CALLBACK(gnc_query_view_select_row_cb),
-                      NULL);
+                      nullptr);
 
     g_signal_connect (view, "row-activated",
                       G_CALLBACK(gnc_query_view_double_click_cb),
-                      NULL);
+                      nullptr);
 }
 
 static void
@@ -398,7 +398,7 @@ gnc_query_view_class_init (GNCQueryViewClass *klass)
                      G_TYPE_FROM_CLASS(widget_class),
                      G_SIGNAL_RUN_FIRST,
                      G_STRUCT_OFFSET(GNCQueryViewClass, column_toggled),
-                     NULL, NULL,
+                     nullptr, nullptr,
                      g_cclosure_marshal_VOID__POINTER,
                      G_TYPE_NONE,
                      1,
@@ -409,7 +409,7 @@ gnc_query_view_class_init (GNCQueryViewClass *klass)
                      G_TYPE_FROM_CLASS(widget_class),
                      G_SIGNAL_RUN_FIRST,
                      G_STRUCT_OFFSET(GNCQueryViewClass, row_selected),
-                     NULL, NULL,
+                     nullptr, nullptr,
                      g_cclosure_marshal_VOID__POINTER,
                      G_TYPE_NONE,
                      1,
@@ -420,7 +420,7 @@ gnc_query_view_class_init (GNCQueryViewClass *klass)
                      G_TYPE_FROM_CLASS(widget_class),
                      G_SIGNAL_RUN_FIRST,
                      G_STRUCT_OFFSET(GNCQueryViewClass, double_click_entry),
-                     NULL, NULL,
+                     nullptr, nullptr,
                      g_cclosure_marshal_VOID__POINTER,
                      G_TYPE_NONE,
                      1,
@@ -428,9 +428,9 @@ gnc_query_view_class_init (GNCQueryViewClass *klass)
 
     widget_class->destroy = gnc_query_view_destroy;
 
-    klass->column_toggled = NULL;
-    klass->row_selected = NULL;
-    klass->double_click_entry = NULL;
+    klass->column_toggled = nullptr;
+    klass->row_selected = nullptr;
+    klass->double_click_entry = nullptr;
 }
 
 static void
@@ -452,7 +452,7 @@ gnc_query_view_double_click_cb (GtkTreeView       *view,
     GNCQueryView     *qview = GNC_QUERY_VIEW(view);
     GtkTreeModel     *model;
     GtkTreeIter       iter;
-    gpointer          entry = NULL;
+    gpointer          entry = nullptr;
 
     model = gtk_tree_view_get_model (GTK_TREE_VIEW(view));
 
@@ -472,7 +472,7 @@ gnc_query_view_toggled_cb (GtkCellRendererToggle *cell_renderer,
     GtkTreeIter       iter;
     GtkTreePath      *treepath;
     gint             *indices;
-    gpointer          entry = NULL;
+    gpointer          entry = nullptr;
     gboolean          toggled;
     gint              column;
 
@@ -516,7 +516,7 @@ gnc_query_view_destroy (GtkWidget *widget)
     if (qview->query)
     {
         qof_query_destroy (qview->query);
-        qview->query = NULL;
+        qview->query = nullptr;
     }
 
     GTK_WIDGET_CLASS(gnc_query_view_parent_class)->destroy (widget);
@@ -527,22 +527,22 @@ gnc_query_view_get_num_entries (GNCQueryView *qview) noexcept
 {
     GtkTreeModel *model;
 
-    g_return_val_if_fail (qview != NULL, 0);
+    g_return_val_if_fail (qview != nullptr, 0);
     g_return_val_if_fail (GNC_IS_QUERY_VIEW(qview), 0);
 
     model = gtk_tree_view_get_model (GTK_TREE_VIEW(qview));
-    return gtk_tree_model_iter_n_children (model, NULL);
+    return gtk_tree_model_iter_n_children (model, nullptr);
 }
 
 gpointer
 gnc_query_view_get_selected_entry (GNCQueryView *qview) noexcept
 {
-    gpointer entry = NULL;
-    GList *entries = NULL;
+    gpointer entry = nullptr;
+    GList *entries = nullptr;
     gint num_entries = 0;
 
-    g_return_val_if_fail (qview != NULL, NULL);
-    g_return_val_if_fail (GNC_IS_QUERY_VIEW(qview), NULL);
+    g_return_val_if_fail (qview != nullptr, nullptr);
+    g_return_val_if_fail (GNC_IS_QUERY_VIEW(qview), nullptr);
 
     entries = gnc_query_view_get_selected_entry_list (qview);
     if (entries)
@@ -568,7 +568,7 @@ accumulate_entries (GtkTreeModel *model, GtkTreePath *path,
                     GtkTreeIter *iter, gpointer data)
 {
     acc_data *acc_entries = (acc_data*)data;
-    gpointer entry = NULL;
+    gpointer entry = nullptr;
     GList *entries = acc_entries->entries;
 
     gtk_tree_model_get (model, iter, 0, &entry, -1);
@@ -582,10 +582,10 @@ gnc_query_view_get_selected_entry_list (GNCQueryView *qview) noexcept
     GtkTreeSelection *selection;
     acc_data acc_entries;
 
-    g_return_val_if_fail (qview != NULL, NULL);
-    g_return_val_if_fail (GNC_IS_QUERY_VIEW(qview), NULL);
+    g_return_val_if_fail (qview != nullptr, nullptr);
+    g_return_val_if_fail (GNC_IS_QUERY_VIEW(qview), nullptr);
 
-    acc_entries.entries = NULL;
+    acc_entries.entries = nullptr;
     selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(qview));
     gtk_tree_selection_selected_foreach (selection, accumulate_entries,
                                          &acc_entries);
@@ -596,7 +596,7 @@ gnc_query_view_get_selected_entry_list (GNCQueryView *qview) noexcept
 void
 gnc_query_use_scroll_to_selection (GNCQueryView *qview, gboolean scroll) noexcept
 {
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     qview->use_scroll_to_selection = scroll;
@@ -614,14 +614,14 @@ scroll_to_selection (GNCQueryView *qview, gboolean override_scroll)
     selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(qview));
 
     /* Ensure last selected item, if any, can be seen */
-    path_list = gtk_tree_selection_get_selected_rows (selection, NULL);
+    path_list = gtk_tree_selection_get_selected_rows (selection, nullptr);
     node = g_list_last (path_list);
 
     if (node)
     {
         auto tree_path = static_cast<GtkTreePath *>(node->data);
         gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW(qview),
-                                      tree_path, NULL, FALSE, 0.0, 0.0);
+                                      tree_path, nullptr, FALSE, 0.0, 0.0);
     }
     g_list_free_full (path_list, (GDestroyNotify) gtk_tree_path_free);
 }
@@ -629,7 +629,7 @@ scroll_to_selection (GNCQueryView *qview, gboolean override_scroll)
 void
 gnc_query_scroll_to_selection (GNCQueryView *qview) noexcept
 {
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     scroll_to_selection (qview, FALSE);
@@ -638,7 +638,7 @@ gnc_query_scroll_to_selection (GNCQueryView *qview) noexcept
 void
 gnc_query_force_scroll_to_selection (GNCQueryView *qview) noexcept
 {
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     scroll_to_selection (qview, TRUE);
@@ -653,7 +653,7 @@ gnc_query_view_refresh_selected (GNCQueryView *qview, GList *old_entry)
     GList            *node;
     gboolean          valid;
 
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     model = gtk_tree_view_get_model (GTK_TREE_VIEW(qview));
@@ -698,7 +698,7 @@ gnc_query_view_refresh (GNCQueryView *qview) noexcept
     GtkTreeModel     *model;
     GList            *selected_entries;
 
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     selected_entries = gnc_query_view_get_selected_entry_list (qview);
@@ -754,8 +754,8 @@ gnc_query_view_set_query_sort (GNCQueryView *qview, gboolean new_column)
         GSList *p1, *p2;
 
         p1 = gnc_search_param_get_param_path (param);
-        p2 = g_slist_prepend (NULL, const_cast<char *>(QUERY_DEFAULT_SORT));
-        qof_query_set_sort_order (qview->query, p1, p2, NULL);
+        p2 = g_slist_prepend (nullptr, const_cast<char *>(QUERY_DEFAULT_SORT));
+        qof_query_set_sort_order (qview->query, p1, p2, nullptr);
     }
 
     qof_query_set_sort_increasing (qview->query,
@@ -778,7 +778,7 @@ gnc_query_view_set_query_sort (GNCQueryView *qview, gboolean new_column)
 void
 gnc_query_set_expand_column (GNCQueryView *qview, gint column) noexcept
 {
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     GtkTreeView *view = GTK_TREE_VIEW(qview);
@@ -812,7 +812,7 @@ gnc_query_view_fill (GNCQueryView *qview)
 
     for (GList *item = entries; item; item = item->next)
     {
-        QofParam *qp = NULL;
+        QofParam *qp = nullptr;
         GList *node;
         int i;
         GtkTreeIter iter;
@@ -891,7 +891,7 @@ gnc_query_view_unselect_all (GNCQueryView *qview) noexcept
 {
     GtkTreeSelection *selection;
 
-    g_return_if_fail (qview != NULL);
+    g_return_if_fail (qview != nullptr);
     g_return_if_fail (GNC_IS_QUERY_VIEW(qview));
 
     selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(qview));

@@ -281,19 +281,19 @@ enum _GdcViewOptsColumns
     VIEW_OPTS_COLUMN_NUM_MONTHS_PER_COLUMN
 };
 
-static GtkListStore *_cal_view_options = NULL;
+static GtkListStore *_cal_view_options = nullptr;
 static GtkListStore*
 _gdc_get_view_options (void)
 {
-    if (_cal_view_options == NULL)
+    if (_cal_view_options == nullptr)
     {
         _cal_view_options = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
-        gtk_list_store_insert_with_values (_cal_view_options, NULL, G_MAXINT, 0, _("12 months"), 1, 12, 2, 3, -1);
-        gtk_list_store_insert_with_values (_cal_view_options, NULL, G_MAXINT, 0, _("6 months"), 1, 6, 2, 2, -1);
-        gtk_list_store_insert_with_values (_cal_view_options, NULL, G_MAXINT, 0, _("4 months"), 1, 4, 2, 2, -1);
-        gtk_list_store_insert_with_values (_cal_view_options, NULL, G_MAXINT, 0, _("3 months"), 1, 3, 2, 2, -1);
-        gtk_list_store_insert_with_values (_cal_view_options, NULL, G_MAXINT, 0, _("2 months"), 1, 2, 2, 1, -1);
-        gtk_list_store_insert_with_values (_cal_view_options, NULL, G_MAXINT, 0, _("1 month"), 1, 1, 2, 1, -1);
+        gtk_list_store_insert_with_values (_cal_view_options, nullptr, G_MAXINT, 0, _("12 months"), 1, 12, 2, 3, -1);
+        gtk_list_store_insert_with_values (_cal_view_options, nullptr, G_MAXINT, 0, _("6 months"), 1, 6, 2, 2, -1);
+        gtk_list_store_insert_with_values (_cal_view_options, nullptr, G_MAXINT, 0, _("4 months"), 1, 4, 2, 2, -1);
+        gtk_list_store_insert_with_values (_cal_view_options, nullptr, G_MAXINT, 0, _("3 months"), 1, 3, 2, 2, -1);
+        gtk_list_store_insert_with_values (_cal_view_options, nullptr, G_MAXINT, 0, _("2 months"), 1, 2, 2, 1, -1);
+        gtk_list_store_insert_with_values (_cal_view_options, nullptr, G_MAXINT, 0, _("1 month"), 1, 1, 2, 1, -1);
     }
 
     return _cal_view_options;
@@ -355,9 +355,9 @@ gnc_dense_cal_init (GncDenseCal *dcal)
 
     dcal->disposed = FALSE;
     dcal->initialized = FALSE;
-    dcal->markData = NULL;
+    dcal->markData = nullptr;
     dcal->numMarks = 0;
-    dcal->marks = NULL;
+    dcal->marks = nullptr;
     dcal->lastMarkTag = 0;
 
     dcal->showPopup = FALSE;
@@ -389,9 +389,9 @@ gnc_dense_cal_init (GncDenseCal *dcal)
         tree_data = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
         tree_view = GTK_TREE_VIEW(gtk_tree_view_new_with_model (GTK_TREE_MODEL(tree_data)));
         gtk_tree_view_insert_column_with_attributes (tree_view, -1, _("Name"),
-                                                     gtk_cell_renderer_text_new (), "text", 0, NULL);
+                                                     gtk_cell_renderer_text_new (), "text", 0, nullptr);
         gtk_tree_view_insert_column_with_attributes (tree_view, -1, _("Frequency"),
-                                                     gtk_cell_renderer_text_new (), "text", 1, NULL);
+                                                     gtk_cell_renderer_text_new (), "text", 1, nullptr);
         gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW(tree_view)), GTK_SELECTION_NONE);
         g_object_set_data (G_OBJECT(dcal->transPopup), "model", tree_data);
         g_object_unref (tree_data);
@@ -431,7 +431,7 @@ gnc_dense_cal_init (GncDenseCal *dcal)
         int width_88, height_88;
         int width_XXX, height_XXX;
 
-        layout = gtk_widget_create_pango_layout (GTK_WIDGET(dcal), NULL);
+        layout = gtk_widget_create_pango_layout (GTK_WIDGET(dcal), nullptr);
 
         pango_layout_set_text (layout, "88", -1);
         pango_layout_get_pixel_size (layout, &width_88, &height_88);
@@ -485,7 +485,7 @@ _gdc_set_cal_min_size_req (GncDenseCal *dcal)
 GtkWidget*
 gnc_dense_cal_new (GtkWindow *parent) noexcept
 {
-    auto dcal = static_cast<GncDenseCal *>(g_object_new (GNC_TYPE_DENSE_CAL, NULL));
+    auto dcal = static_cast<GncDenseCal *>(g_object_new (GNC_TYPE_DENSE_CAL, nullptr));
 
     gtk_window_set_transient_for (GTK_WINDOW(dcal->transPopup),
                                   GTK_WINDOW(parent));
@@ -642,7 +642,7 @@ static void
 gnc_dense_cal_dispose (GObject *object)
 {
     GncDenseCal *dcal;
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_DENSE_CAL(object));
 
     dcal = GNC_DENSE_CAL(object);
@@ -655,13 +655,13 @@ gnc_dense_cal_dispose (GObject *object)
     {
         gtk_widget_hide (GTK_WIDGET(dcal->transPopup));
         gtk_widget_destroy (GTK_WIDGET(dcal->transPopup));
-        dcal->transPopup = NULL;
+        dcal->transPopup = nullptr;
     }
 
     if (dcal->surface)
     {
         cairo_surface_destroy (dcal->surface);
-        dcal->surface = NULL;
+        dcal->surface = nullptr;
     }
 
     /* FIXME: we have a bunch of cleanup to do, here. */
@@ -676,7 +676,7 @@ gnc_dense_cal_dispose (GObject *object)
 static void
 gnc_dense_cal_finalize (GObject *object)
 {
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_DENSE_CAL(object));
 
     G_OBJECT_CLASS(gnc_dense_cal_parent_class)->finalize(object);
@@ -700,7 +700,7 @@ gnc_dense_cal_realize (GtkWidget *widget, gpointer user_data)
 {
     GncDenseCal *dcal;
 
-    g_return_if_fail (widget != NULL);
+    g_return_if_fail (widget != nullptr);
     g_return_if_fail (GNC_IS_DENSE_CAL(user_data));
     dcal = GNC_DENSE_CAL(user_data);
 
@@ -728,7 +728,7 @@ gdc_reconfig (GncDenseCal *dcal)
 static void
 _gdc_compute_min_size (GncDenseCal *dcal, guint *min_width, guint *min_height)
 {
-    if (min_width != NULL)
+    if (min_width != nullptr)
     {
         *min_width =
             (dcal->leftPadding * 2)
@@ -737,7 +737,7 @@ _gdc_compute_min_size (GncDenseCal *dcal, guint *min_width, guint *min_height)
             + ((num_cols (dcal) - 1) * COL_BORDER_SIZE);
     }
 
-    if (min_height != NULL)
+    if (min_height != nullptr)
     {
         *min_height =
             (dcal->topPadding * 2)
@@ -802,7 +802,7 @@ gdc_free_all_mark_data (GncDenseCal *dcal)
         g_list_free (dcal->marks[i]);
     }
     g_free (dcal->marks);
-    dcal->marks = NULL;
+    dcal->marks = nullptr;
     /* Remove the old mark data. */
     for (l = dcal->markData; l; l = l->next)
     {
@@ -813,13 +813,13 @@ gdc_free_all_mark_data (GncDenseCal *dcal)
         g_free (mark);
     }
     g_list_free (dcal->markData);
-    dcal->markData = NULL;
+    dcal->markData = nullptr;
 }
 
 static void
 recompute_mark_storage (GncDenseCal *dcal)
 {
-    if (dcal->marks == NULL)
+    if (dcal->marks == nullptr)
         goto createNew;
     gdc_free_all_mark_data (dcal);
 
@@ -939,7 +939,7 @@ gnc_dense_cal_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
     GncDenseCal *dcal;
 
-    g_return_val_if_fail (widget != NULL, FALSE);
+    g_return_val_if_fail (widget != nullptr, FALSE);
     g_return_val_if_fail (GNC_IS_DENSE_CAL(user_data), FALSE);
 
     dcal = GNC_DENSE_CAL(user_data);
@@ -971,7 +971,7 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
         return;
 
     cr = cairo_create (dcal->surface);
-    layout = gtk_widget_create_pango_layout (GTK_WIDGET(dcal), NULL);
+    layout = gtk_widget_create_pango_layout (GTK_WIDGET(dcal), nullptr);
 
     gtk_widget_get_allocation (GTK_WIDGET(dcal->cal_drawing_area), &alloc);
     stylectxt = gtk_widget_get_style_context (GTK_WIDGET(dcal->cal_drawing_area));
@@ -989,21 +989,21 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
     /* get the colors */
     {
          GdkRGBA color;
-         const gchar *class_extension = NULL;
+         const gchar *class_extension = nullptr;
 
          gtk_style_context_get_color (stylectxt, GTK_STATE_FLAG_NORMAL, &color);
 
           if (gnc_is_dark_theme (&color))
               class_extension = "-dark";
 
-          primary_color_class = g_strconcat ("primary", class_extension, NULL);
-          secondary_color_class = g_strconcat ("secondary", class_extension, NULL);
-          marker_color_class = g_strconcat ("markers", class_extension, NULL);
+          primary_color_class = g_strconcat ("primary", class_extension, nullptr);
+          secondary_color_class = g_strconcat ("secondary", class_extension, nullptr);
+          marker_color_class = g_strconcat ("markers", class_extension, nullptr);
     }
 
     /* lets confirm text height size */
     pango_layout_set_text (layout, "S", -1);
-    pango_layout_get_pixel_size (layout, NULL, &dcal->label_height);
+    pango_layout_get_pixel_size (layout, nullptr, &dcal->label_height);
     dcal->month_side_bar_width = dcal->label_height + (dcal->bar_label_padding * 2);
     dcal->day_top_bar_height = dcal->label_height + (dcal->bar_label_padding * 2);
 
@@ -1024,12 +1024,12 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
         /* Paint the weeks for the upcoming N months. */
         for (i = 0; i < dcal->numMonths; i++)
         {
-            mcList = NULL;
+            mcList = nullptr;
             month_coords (dcal, i, &mcList);
             dcal->monthPositions[i].x = floor (i / dcal->monthsPerCol)
                                             * (col_width (dcal) + COL_BORDER_SIZE);
             dcal->monthPositions[i].y = ((GdkRectangle*)mcList->next->next->next->data)->y;
-            for (mcListIter = mcList; mcListIter != NULL; mcListIter = mcListIter->next)
+            for (mcListIter = mcList; mcListIter != nullptr; mcListIter = mcListIter->next)
             {
                 rect = (GdkRectangle*)mcListIter->data;
                 gtk_style_context_save (stylectxt);
@@ -1042,7 +1042,7 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
                 gtk_render_background (stylectxt, cr, rect->x, rect->y, rect->width, rect->height);
                 gtk_style_context_restore (stylectxt);
             }
-            g_list_foreach (mcList, free_rect, NULL);
+            g_list_foreach (mcList, free_rect, nullptr);
             g_list_free (mcList);
         }
         gtk_style_context_restore (stylectxt);
@@ -1060,7 +1060,7 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
 
         for (i = 0; i < dcal->numMarks; i++)
         {
-            if (dcal->marks[i] != NULL)
+            if (dcal->marks[i] != nullptr)
             {
                 int center_x, center_y, radius;
 
@@ -1134,7 +1134,7 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
 
         /* draw the day of the week labels */
         pango_layout_set_text (layout, "88", -1);
-        pango_layout_get_pixel_size (layout, &maxWidth, NULL);
+        pango_layout_get_pixel_size (layout, &maxWidth, nullptr);
 
         if (dcal->x_scale > maxWidth)
         {
@@ -1154,7 +1154,7 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
                 gchar day_label_str[day_label_str_len + 1];
                 day_label (day_label_str, day_label_str_len, (j + dcal->day_of_week_start) % 7);
                 pango_layout_set_text (layout, day_label_str, -1);
-                pango_layout_get_pixel_size (layout, &day_label_width, NULL);
+                pango_layout_get_pixel_size (layout, &day_label_width, nullptr);
                 label_x_offset = x
                                  + (j * day_width (dcal))
                                  + (day_width (dcal) / 2)
@@ -1256,7 +1256,7 @@ gnc_dense_cal_draw_to_buffer (GncDenseCal *dcal)
                     gint dayh = day_height (dcal);
                     gint bw = (border.left + border.right) / 2;
 
-                    gtk_css_provider_load_from_data (provider, frame_css, -1, NULL);
+                    gtk_css_provider_load_from_data (provider, frame_css, -1, nullptr);
                     gtk_style_context_add_provider (stylectxt, GTK_STYLE_PROVIDER(provider),
                                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
                     g_object_unref (provider);
@@ -1335,7 +1335,7 @@ populate_hover_window (GncDenseCal *dcal)
         }
 
         // if there are no rows, add one
-        if (gtk_tree_model_iter_n_children (GTK_TREE_MODEL(model), NULL) == 0)
+        if (gtk_tree_model_iter_n_children (GTK_TREE_MODEL(model), nullptr) == 0)
         {
             GtkTreeIter iter;
             gtk_list_store_insert (model, &iter, -1);
@@ -1683,7 +1683,7 @@ month_coords (GncDenseCal *dcal, int monthOfCal, GList **outList)
         rect->width = (7 - start) * day_width (dcal);
         rect->height = week_height (dcal);
         *outList = g_list_append (*outList, (gpointer)rect);
-        rect = NULL;
+        rect = nullptr;
     }
 
     /* Get the middle weeks. */
@@ -1707,7 +1707,7 @@ month_coords (GncDenseCal *dcal, int monthOfCal, GList **outList)
             rect->height = week_height (dcal);
 
             *outList = g_list_append (*outList, (gpointer)rect);
-            rect = NULL;
+            rect = nullptr;
         }
     }
 
@@ -1731,7 +1731,7 @@ month_coords (GncDenseCal *dcal, int monthOfCal, GList **outList)
         rect->height = week_height (dcal);
 
         *outList = g_list_append (*outList, (gpointer)rect);
-        rect = NULL;
+        rect = nullptr;
     }
 
     g_date_free (startD);
@@ -2029,11 +2029,11 @@ gdc_model_removing_cb (GncDenseCalModel *model, guint remove_tag, gpointer user_
 void
 gnc_dense_cal_set_model (GncDenseCal *cal, GncDenseCalModel *model) noexcept
 {
-    if (cal->model != NULL)
+    if (cal->model != nullptr)
     {
         gdc_remove_markings (cal);
         g_object_unref (G_OBJECT(cal->model));
-        cal->model = NULL;
+        cal->model = nullptr;
     }
     cal->model = model;
     g_object_ref (G_OBJECT(model));
@@ -2067,14 +2067,14 @@ gdc_mark_add (GncDenseCal *dcal,
     }
 
     newMark = g_new0 (gdc_mark_data, 1);
-    newMark->name = NULL;
+    newMark->name = nullptr;
     if (name)
         newMark->name = g_strdup (name);
-    newMark->info = NULL;
+    newMark->info = nullptr;
     if (info)
         newMark->info = g_strdup (info);
     newMark->tag = tag;
-    newMark->ourMarks = NULL;
+    newMark->ourMarks = nullptr;
     DEBUG("saving mark with tag [%d]", newMark->tag);
 
     for (i = 0; i < size; i++)
@@ -2112,25 +2112,25 @@ gdc_mark_remove (GncDenseCal *dcal, guint mark_to_remove, gboolean redraw)
         return;
     }
 
-    mark_data = NULL;
-    for (iter = dcal->markData; iter != NULL; iter = iter->next)
+    mark_data = nullptr;
+    for (iter = dcal->markData; iter != nullptr; iter = iter->next)
     {
         mark_data = (gdc_mark_data*)iter->data;
         if (mark_data->tag == mark_to_remove)
             break;
     }
-    if (iter == NULL)
+    if (iter == nullptr)
     {
         PINFO("couldn't find tag [%d]", mark_to_remove);
         return;
     }
-    if (mark_data == NULL)
+    if (mark_data == nullptr)
     {
         DEBUG("mark_data == null");
         return;
     }
 
-    for (calendar_marks = mark_data->ourMarks; calendar_marks != NULL; calendar_marks = calendar_marks->next)
+    for (calendar_marks = mark_data->ourMarks; calendar_marks != nullptr; calendar_marks = calendar_marks->next)
     {
         day_of_cal = GPOINTER_TO_INT(calendar_marks->data);
         dcal->marks[day_of_cal] = g_list_remove (dcal->marks[day_of_cal], mark_data);

@@ -229,7 +229,7 @@ gboolean gnc_tree_model_price_get_iter_from_price (GncTreeModelPrice *model,
  *
  *  @return A pointer to a GtkTreePath describing the location of this
  *  price.  This pointer must be freed by the caller when no longer
- *  needed.  This routine will return NULL if the price does not exist
+ *  needed.  This routine will return nullptr if the price does not exist
  *  in the tree. */
 GtkTreePath *gnc_tree_model_price_get_path_from_price (GncTreeModelPrice *model,
         GNCPrice *price);

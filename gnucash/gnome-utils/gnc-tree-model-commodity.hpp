@@ -188,7 +188,7 @@ gboolean gnc_tree_model_commodity_get_iter_from_commodity (GncTreeModelCommodity
  *
  *  @return A pointer to a GtkTreePath describing the location of this
  *  commodity.  This pointer must be freed by the caller when no
- *  longer needed.  This routine will return NULL if the commodity
+ *  longer needed.  This routine will return nullptr if the commodity
  *  does not exist in the tree. */
 GtkTreePath *gnc_tree_model_commodity_get_path_from_commodity (GncTreeModelCommodity *model,
         gnc_commodity *commodity);

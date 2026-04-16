@@ -61,7 +61,7 @@
 /* This static indicates the debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
 
-static GNCShutdownCB shutdown_cb = NULL;
+static GNCShutdownCB shutdown_cb = nullptr;
 static gint save_in_progress = 0;
 
 typedef bool (*CharToBool)(const char*);
@@ -78,14 +78,14 @@ gnc_file_chooser_get_datafile_filters (void) noexcept
        and must not be translated*/
     const char* datafiles = N_("Datafiles only (*.gnucash, *.xac)");
     const char* backups = N_("Backups only (*.gnucash.*.gnucash, *.xac.*.xac)");
-    GList* rv = NULL;
+    GList* rv = nullptr;
 
     GtkFileFilter *filter = gtk_file_filter_new ();
     gtk_file_filter_set_name (filter, _(datafiles));
     gtk_file_filter_add_custom (filter, GTK_FILE_FILTER_FILENAME,
                                 (GtkFileFilterFunc)datafile_filter,
                                 reinterpret_cast<gpointer>(gnc_filename_is_datafile),
-                                NULL);
+                                nullptr);
     rv = g_list_prepend (rv, filter);
 
     filter = gtk_file_filter_new ();
@@ -93,7 +93,7 @@ gnc_file_chooser_get_datafile_filters (void) noexcept
     gtk_file_filter_add_custom (filter, GTK_FILE_FILTER_FILENAME,
                                 (GtkFileFilterFunc)datafile_filter,
                                 reinterpret_cast<gpointer>(gnc_filename_is_backup),
-                                NULL);
+                                nullptr);
     rv = g_list_prepend (rv, filter);
 
     return g_list_reverse (rv);
@@ -103,7 +103,7 @@ void
 gnc_file_chooser_add_filters (GtkFileChooser* file_box, GList *filters) noexcept
 {
     g_return_if_fail (GTK_IS_WIDGET (file_box));
-    if (filters == NULL) return;
+    if (filters == nullptr) return;
 
     for (GList* node = filters; node; node = node->next)
         gtk_file_chooser_add_filter (file_box, GTK_FILE_FILTER (node->data));
@@ -129,12 +129,12 @@ gnc_file_dialog_int (GtkWindow *parent,
                      )
 {
     GtkWidget *file_box;
-    char *file_name = NULL;
-    gchar * okbutton = NULL;
-    const gchar *ok_icon = NULL;
+    char *file_name = nullptr;
+    gchar * okbutton = nullptr;
+    const gchar *ok_icon = nullptr;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint response;
-    GSList* file_name_list = NULL;
+    GSList* file_name_list = nullptr;
 
     ENTER(" ");
 
@@ -143,26 +143,26 @@ gnc_file_dialog_int (GtkWindow *parent,
     case GNC_FILE_DIALOG_OPEN:
         action = GTK_FILE_CHOOSER_ACTION_OPEN;
         okbutton = _("_Open");
-        if (title == NULL)
+        if (title == nullptr)
             title = _("Open");
         break;
     case GNC_FILE_DIALOG_IMPORT:
         action = GTK_FILE_CHOOSER_ACTION_OPEN;
         okbutton = _("_Import");
-        if (title == NULL)
+        if (title == nullptr)
             title = _("Import");
         break;
     case GNC_FILE_DIALOG_SAVE:
         action = GTK_FILE_CHOOSER_ACTION_SAVE;
         okbutton = _("_Save");
-        if (title == NULL)
+        if (title == nullptr)
             title = _("Save");
         break;
     case GNC_FILE_DIALOG_EXPORT:
         action = GTK_FILE_CHOOSER_ACTION_SAVE;
         okbutton = _("_Export");
         ok_icon = "go-next";
-        if (title == NULL)
+        if (title == nullptr)
             title = _("Export");
         break;
 
@@ -173,7 +173,7 @@ gnc_file_dialog_int (GtkWindow *parent,
                    parent,
                    action,
                    _("_Cancel"), GTK_RESPONSE_CANCEL,
-                   NULL);
+                   nullptr);
     if (multi)
         gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_box), TRUE);
 
@@ -189,7 +189,7 @@ gnc_file_dialog_int (GtkWindow *parent,
 
     gtk_window_set_modal(GTK_WINDOW(file_box), TRUE);
 
-    if (filters != NULL)
+    if (filters != nullptr)
         gnc_file_chooser_add_filters (GTK_FILE_CHOOSER (file_box), filters);
 
     response = gtk_dialog_run(GTK_DIALOG(file_box));
@@ -207,7 +207,7 @@ gnc_file_dialog_int (GtkWindow *parent,
         {
             /* look for constructs like postgres://foo */
             file_name = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER (file_box));
-            if (file_name != NULL)
+            if (file_name != nullptr)
             {
                 if (strstr (file_name, "file://") == file_name)
                 {
@@ -246,7 +246,7 @@ gnc_file_dialog (GtkWindow *parent,
                  GNCFileDialogType type
                  ) noexcept
 {
-    gchar* file_name = NULL;
+    gchar* file_name = nullptr;
     GSList* ret = gnc_file_dialog_int (parent, title, filters, starting_dir, type, FALSE);
     if (ret)
         file_name = g_strdup (static_cast<const char *>(ret->data));
@@ -291,7 +291,7 @@ show_session_error (GtkWindow *parent,
     gchar *displayname;
     gint response;
 
-    if (NULL == newfile)
+    if (nullptr == newfile)
     {
         displayname = g_strdup(_("(null)"));
     }
@@ -400,7 +400,7 @@ show_session_error (GtkWindow *parent,
         gtk_dialog_add_buttons(GTK_DIALOG(dialog),
                                _("_Cancel"), GTK_RESPONSE_CANCEL,
                                label, GTK_RESPONSE_YES,
-                               NULL);
+                               nullptr);
         if (!parent)
             gtk_window_set_skip_taskbar_hint(GTK_WINDOW(dialog), FALSE);
         response = gtk_dialog_run(GTK_DIALOG(dialog));
@@ -645,7 +645,7 @@ gnc_file_new (GtkWindow *parent) noexcept
     /* start a new book */
     gnc_get_current_session ();
 
-    gnc_hook_run(HOOK_NEW_BOOK, NULL);
+    gnc_hook_run(HOOK_NEW_BOOK, nullptr);
 
     gnc_gui_refresh_all ();
 
@@ -686,7 +686,7 @@ gnc_file_query_save (GtkWindow *parent, gboolean can_cancel) noexcept
                                         GTK_BUTTONS_NONE,
                                         "%s", title);
         oldest_change = qof_book_get_session_dirty_time(current_book);
-        minutes = (gnc_time (NULL) - oldest_change) / 60 + 1;
+        minutes = (gnc_time (nullptr) - oldest_change) / 60 + 1;
         gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
                 ngettext("If you don't save, changes from the past %d minute will be discarded.",
                          "If you don't save, changes from the past %d minutes will be discarded.",
@@ -735,7 +735,7 @@ get_account_sep_warning (QofBook *book)
     const char *sep = gnc_get_account_separator_string ();
     GList *violation_accts = gnc_account_list_name_violations (book, sep);
     if (!violation_accts)
-        return NULL;
+        return nullptr;
 
     gchar *rv = gnc_account_name_violations_errmsg (sep, violation_accts);
     g_list_free_full (violation_accts, g_free);
@@ -761,7 +761,7 @@ run_post_load_scrubs (GtkWindow *parent, QofBook *book)
           "Accounts preference. Please review the budgets and amend "
           "signs if necessary.");
 
-    GList *infos = NULL;
+    GList *infos = nullptr;
 
     qof_event_suspend();
 
@@ -802,11 +802,11 @@ gnc_post_file_open (GtkWindow *parent, const char * filename, gboolean is_readon
     char * newfile;
     QofBackendError io_err = ERR_BACKEND_NO_ERR;
 
-    gchar *scheme   = NULL;
-    gchar *hostname = NULL;
-    gchar *username = NULL;
-    gchar *password = NULL;
-    gchar *path = NULL;
+    gchar *scheme   = nullptr;
+    gchar *hostname = nullptr;
+    gchar *username = nullptr;
+    gchar *password = nullptr;
+    gchar *path = nullptr;
     gint32 port = 0;
 
 
@@ -839,7 +839,7 @@ RESTART:
     if (!gnc_uri_is_file_scheme (scheme) && !password)
     {
         gboolean have_valid_pw = FALSE;
-        have_valid_pw = gnc_keyring_get_password ( NULL, scheme, hostname, port,
+        have_valid_pw = gnc_keyring_get_password ( nullptr, scheme, hostname, port,
                         path, &username, &password );
         if (!have_valid_pw)
             return FALSE;
@@ -864,7 +864,7 @@ RESTART:
     qof_event_suspend ();
 
     /* Change the mouse to a busy cursor */
-    gnc_set_busy_cursor (NULL, TRUE);
+    gnc_set_busy_cursor (nullptr, TRUE);
 
     /* -------------- BEGIN CORE SESSION CODE ------------- */
     /* -- this code is almost identical in FileOpen and FileSaveAs -- */
@@ -895,12 +895,12 @@ RESTART:
         else
             directory = gnc_get_default_directory (GNC_PREFS_GROUP_OPEN_SAVE);
 
-        filename = gnc_file_dialog (parent, NULL, NULL, directory,
+        filename = gnc_file_dialog (parent, nullptr, nullptr, directory,
                                     GNC_FILE_DIALOG_OPEN);
         /* Suppress trying to save the empty session. */
         qof_book_mark_session_saved (qof_session_get_book (new_session));
         qof_session_destroy (new_session);
-        new_session = NULL;
+        new_session = nullptr;
         g_free (directory);
         goto RESTART;
     }
@@ -908,7 +908,7 @@ RESTART:
     else if (ERR_BACKEND_LOCKED == io_err || ERR_BACKEND_READONLY == io_err)
     {
         GtkWidget *dialog;
-        gchar *displayname = NULL;
+        gchar *displayname = nullptr;
 
         char *fmt1 = _("GnuCash could not obtain the lock for %s.");
         char *fmt2 = ((ERR_BACKEND_LOCKED == io_err) ?
@@ -1041,7 +1041,7 @@ RESTART:
         xaccLogDisable();
         gnc_window_show_progress(_("Loading user data…"), 0.0);
         qof_session_load (new_session, gnc_window_show_progress);
-        gnc_window_show_progress(NULL, -1.0);
+        gnc_window_show_progress(nullptr, -1.0);
         xaccLogEnable();
 
         if (is_readonly)
@@ -1061,7 +1061,7 @@ RESTART:
                 /* try to load once again */
                 gnc_window_show_progress(_("Loading user data…"), 0.0);
                 qof_session_load (new_session, gnc_window_show_progress);
-                gnc_window_show_progress(NULL, -1.0);
+                gnc_window_show_progress(nullptr, -1.0);
                 xaccLogEnable();
                 io_err = qof_session_get_error (new_session);
             }
@@ -1091,7 +1091,7 @@ RESTART:
             uh_oh = FALSE;
         }
         new_root = gnc_book_get_root_account (qof_session_get_book (new_session));
-        if (uh_oh) new_root = NULL;
+        if (uh_oh) new_root = nullptr;
 
         /* Umm, came up empty-handed, but no error:
          * The backend forgot to set an error. So make one up. */
@@ -1116,9 +1116,9 @@ RESTART:
                 gnc_error_dialog (parent, msg, "");
                 g_free (msg);
             }
-            if (template_root != NULL)
+            if (template_root != nullptr)
             {
-                GList *child = NULL;
+                GList *child = nullptr;
                 GList *children = gnc_account_get_descendants (template_root);
 
                 for (child = children; child; child = g_list_next (child))
@@ -1126,7 +1126,7 @@ RESTART:
                     Account *acc = GNC_ACCOUNT (child->data);
                     GList *splits = xaccAccountGetSplitList (acc);
                     g_list_foreach (splits,
-                                    (GFunc)gnc_sx_scrub_split_numerics, NULL);
+                                    (GFunc)gnc_sx_scrub_split_numerics, nullptr);
                     g_list_free (splits);
                 }
                 g_list_free (children);
@@ -1140,7 +1140,7 @@ RESTART:
     g_free (password);
     g_free (path);
 
-    gnc_unset_busy_cursor (NULL);
+    gnc_unset_busy_cursor (nullptr);
 
     /* going down -- abandon ship */
     if (uh_oh)
@@ -1197,8 +1197,8 @@ gboolean
 gnc_file_open (GtkWindow *parent) noexcept
 {
     const gchar * newfile;
-    gchar *last = NULL;
-    gchar *default_dir = NULL;
+    gchar *last = nullptr;
+    gchar *default_dir = nullptr;
     gboolean result;
 
     if (!gnc_file_query_save (parent, TRUE))
@@ -1254,7 +1254,7 @@ void
 gnc_file_export (GtkWindow *parent) noexcept
 {
     const char *filename;
-    char *default_dir = NULL;        /* Default to last open */
+    char *default_dir = nullptr;        /* Default to last open */
     char *last;
 
     ENTER(" ");
@@ -1322,11 +1322,11 @@ gnc_file_do_export(GtkWindow *parent, const char * filename) noexcept
     gchar *newfile;
     const gchar *oldfile;
 
-    gchar *scheme   = NULL;
-    gchar *hostname = NULL;
-    gchar *username = NULL;
-    gchar *password = NULL;
-    gchar *path = NULL;
+    gchar *scheme   = nullptr;
+    gchar *hostname = nullptr;
+    gchar *username = nullptr;
+    gchar *password = nullptr;
+    gchar *path = nullptr;
     gint32 port = 0;
 
     ENTER(" ");
@@ -1389,7 +1389,7 @@ gnc_file_do_export(GtkWindow *parent, const char * filename) noexcept
 
     /* -- this session code is NOT identical in FileOpen and FileSaveAs -- */
 
-    new_session = qof_session_new (NULL);
+    new_session = qof_session_new (nullptr);
     qof_session_begin (new_session, newfile, SESSION_NEW_STORE);
 
     io_err = qof_session_get_error (new_session);
@@ -1424,12 +1424,12 @@ gnc_file_do_export(GtkWindow *parent, const char * filename) noexcept
     /* --------------- END CORE SESSION CODE -------------- */
 
     /* use the current session to save to file */
-    gnc_set_busy_cursor (NULL, TRUE);
+    gnc_set_busy_cursor (nullptr, TRUE);
     gnc_window_show_progress(_("Exporting file…"), 0.0);
     ok = qof_session_export (new_session, current_session,
                              gnc_window_show_progress);
-    gnc_window_show_progress(NULL, -1.0);
-    gnc_unset_busy_cursor (NULL);
+    gnc_window_show_progress(nullptr, -1.0);
+    gnc_unset_busy_cursor (nullptr);
     xaccLogDisable();
     qof_session_destroy (new_session);
     xaccLogEnable();
@@ -1484,11 +1484,11 @@ gnc_file_save (GtkWindow *parent) noexcept
 
     /* use the current session to save to file */
     save_in_progress++;
-    gnc_set_busy_cursor (NULL, TRUE);
+    gnc_set_busy_cursor (nullptr, TRUE);
     gnc_window_show_progress(_("Writing file…"), 0.0);
     qof_session_save (session, gnc_window_show_progress);
-    gnc_window_show_progress(NULL, -1.0);
-    gnc_unset_busy_cursor (NULL);
+    gnc_window_show_progress(nullptr, -1.0);
+    gnc_unset_busy_cursor (nullptr);
     save_in_progress--;
 
     /* Make sure everything's OK - disk could be full, file could have
@@ -1520,7 +1520,7 @@ void
 gnc_file_save_as (GtkWindow *parent) noexcept
 {
     const gchar *filename;
-    gchar *default_dir = NULL;        /* Default to last open */
+    gchar *default_dir = nullptr;        /* Default to last open */
     gchar *last;
 
     ENTER(" ");
@@ -1562,11 +1562,11 @@ gnc_file_do_save_as (GtkWindow *parent, const char* filename) noexcept
     gchar *newfile;
     const gchar *oldfile;
 
-    gchar *scheme   = NULL;
-    gchar *hostname = NULL;
-    gchar *username = NULL;
-    gchar *password = NULL;
-    gchar *path = NULL;
+    gchar *scheme   = nullptr;
+    gchar *hostname = nullptr;
+    gchar *username = nullptr;
+    gchar *password = nullptr;
+    gchar *path = nullptr;
     gint32 port = 0;
 
 
@@ -1639,7 +1639,7 @@ gnc_file_do_save_as (GtkWindow *parent, const char* filename) noexcept
 
     save_in_progress++;
 
-    new_session = qof_session_new (NULL);
+    new_session = qof_session_new (nullptr);
     qof_session_begin (new_session, newfile, SESSION_NEW_STORE);
 
     io_err = qof_session_get_error (new_session);
@@ -1727,11 +1727,11 @@ gnc_file_do_save_as (GtkWindow *parent, const char* filename) noexcept
     qof_event_resume();
 
 
-    gnc_set_busy_cursor (NULL, TRUE);
+    gnc_set_busy_cursor (nullptr, TRUE);
     gnc_window_show_progress(_("Writing file…"), 0.0);
     qof_session_save (new_session, gnc_window_show_progress);
-    gnc_window_show_progress(NULL, -1.0);
-    gnc_unset_busy_cursor (NULL);
+    gnc_window_show_progress(nullptr, -1.0);
+    gnc_unset_busy_cursor (nullptr);
 
     io_err = qof_session_get_error( new_session );
     if ( ERR_BACKEND_NO_ERR != io_err )
@@ -1743,7 +1743,7 @@ gnc_file_do_save_as (GtkWindow *parent, const char* filename) noexcept
         qof_event_suspend();
         qof_session_swap_data( new_session, session );
         qof_session_destroy( new_session );
-        new_session = NULL;
+        new_session = nullptr;
         qof_event_resume();
     }
     else
@@ -1754,7 +1754,7 @@ gnc_file_do_save_as (GtkWindow *parent, const char* filename) noexcept
         gnc_clear_current_session();
         gnc_set_current_session( new_session );
         qof_event_resume();
-        session = NULL;
+        session = nullptr;
 
         xaccReopenLog();
         gnc_add_history (new_session);
@@ -1782,7 +1782,7 @@ gnc_file_revert (GtkWindow *parent) noexcept
     fileurl = qof_session_get_url(session);
     if (!strlen (fileurl))
         fileurl = _("<unknown>");
-    if ((tmp = strrchr(fileurl, '/')) != NULL)
+    if ((tmp = strrchr(fileurl, '/')) != nullptr)
         filename = tmp + 1;
     else
         filename = fileurl;
@@ -1800,7 +1800,7 @@ gnc_file_quit (void) noexcept
 
     if (!gnc_current_session_exist ())
         return;
-    gnc_set_busy_cursor (NULL, TRUE);
+    gnc_set_busy_cursor (nullptr, TRUE);
     session = gnc_get_current_session ();
 
     /* disable events; otherwise the mass deletion of accounts and
@@ -1813,7 +1813,7 @@ gnc_file_quit (void) noexcept
     gnc_clear_current_session();
 
     qof_event_resume ();
-    gnc_unset_busy_cursor (NULL);
+    gnc_unset_busy_cursor (nullptr);
 }
 
 void

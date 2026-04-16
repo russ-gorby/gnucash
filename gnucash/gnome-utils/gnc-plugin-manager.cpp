@@ -55,18 +55,18 @@ enum
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
-static GncPluginManager *singleton = NULL;
+static GncPluginManager *singleton = nullptr;
 
 GncPluginManager *
 gnc_plugin_manager_get (void) noexcept
 {
-    if (singleton == NULL)
+    if (singleton == nullptr)
     {
         singleton = static_cast<GncPluginManager *>(
-            g_object_new (GNC_TYPE_PLUGIN_MANAGER, NULL)
+            g_object_new (GNC_TYPE_PLUGIN_MANAGER, nullptr)
         );
         gnc_hook_add_dangler (HOOK_SHUTDOWN,
-                              gnc_plugin_manager_shutdown, NULL, NULL);
+                              gnc_plugin_manager_shutdown, nullptr, nullptr);
     }
 
     return singleton;
@@ -125,7 +125,7 @@ gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
 GList *
 gnc_plugin_manager_get_plugins (GncPluginManager *manager) noexcept
 {
-    g_return_val_if_fail (GNC_IS_PLUGIN_MANAGER (manager), NULL);
+    g_return_val_if_fail (GNC_IS_PLUGIN_MANAGER (manager), nullptr);
 
     return g_list_copy (manager->plugins);
 }
@@ -134,8 +134,8 @@ GncPlugin *
 gnc_plugin_manager_get_plugin (GncPluginManager *manager,
                                const gchar *name) noexcept
 {
-    g_return_val_if_fail (GNC_IS_PLUGIN_MANAGER (manager), NULL);
-    g_return_val_if_fail (name != NULL, NULL);
+    g_return_val_if_fail (GNC_IS_PLUGIN_MANAGER (manager), nullptr);
+    g_return_val_if_fail (name != nullptr, nullptr);
 
     return GNC_PLUGIN (g_hash_table_lookup (manager->plugins_table, name));
 }
@@ -152,7 +152,7 @@ gnc_plugin_manager_class_init (GncPluginManagerClass *klass)
                                           G_OBJECT_CLASS_TYPE (klass),
                                           G_SIGNAL_RUN_FIRST,
                                           0,
-                                          NULL, NULL,
+                                          nullptr, nullptr,
                                           g_cclosure_marshal_VOID__OBJECT,
                                           G_TYPE_NONE,
                                           1,
@@ -161,7 +161,7 @@ gnc_plugin_manager_class_init (GncPluginManagerClass *klass)
                                             G_OBJECT_CLASS_TYPE (klass),
                                             G_SIGNAL_RUN_FIRST,
                                             0,
-                                            NULL, NULL,
+                                            nullptr, nullptr,
                                             g_cclosure_marshal_VOID__OBJECT,
                                             G_TYPE_NONE,
                                             1,
@@ -171,7 +171,7 @@ gnc_plugin_manager_class_init (GncPluginManagerClass *klass)
 static void
 gnc_plugin_manager_init (GncPluginManager *manager)
 {
-    manager->plugins_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+    manager->plugins_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, nullptr);
 }
 
 static void
@@ -184,11 +184,11 @@ gnc_plugin_manager_dispose (GObject *object)
     if (manager->plugins_table)
     {
         g_hash_table_destroy (manager->plugins_table);
-        manager->plugins_table = NULL;
+        manager->plugins_table = nullptr;
 
-        g_list_foreach (manager->plugins, (GFunc)g_object_unref, NULL);
+        g_list_foreach (manager->plugins, (GFunc)g_object_unref, nullptr);
         g_list_free (manager->plugins);
-        manager->plugins = NULL;
+        manager->plugins = nullptr;
     }
 
     G_OBJECT_CLASS (gnc_plugin_manager_parent_class)->dispose (object);
@@ -205,9 +205,9 @@ gnc_plugin_manager_finalize (GObject *object)
 static void
 gnc_plugin_manager_shutdown (gpointer dummy, gpointer dummy2)
 {
-    if (singleton != NULL)
+    if (singleton != nullptr)
     {
         g_object_unref(singleton);
-        singleton = NULL;
+        singleton = nullptr;
     }
 }

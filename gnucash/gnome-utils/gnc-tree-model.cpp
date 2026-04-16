@@ -95,7 +95,7 @@ static void
 gnc_tree_model_finalize (GObject *object)
 {
     ENTER("model %p", object);
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_TREE_MODEL (object));
 
     gnc_gobject_tracking_forget(object);

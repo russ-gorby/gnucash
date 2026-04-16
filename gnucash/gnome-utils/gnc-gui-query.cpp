@@ -54,13 +54,13 @@ gnc_ok_cancel_dialog(GtkWindow *parent,
                      gint default_result,
                      const gchar *format, ...) noexcept
 {
-    GtkWidget *dialog = NULL;
+    GtkWidget *dialog = nullptr;
     gint result;
     gchar *buffer;
     va_list args;
 
     if (!parent)
-        parent = gnc_ui_get_main_window (NULL);
+        parent = gnc_ui_get_main_window (nullptr);
 
     va_start(args, format);
     buffer = g_strdup_vprintf(format, args);
@@ -92,7 +92,7 @@ gnc_action_dialog (GtkWindow *parent, const gchar *action,
     g_return_val_if_fail (action, FALSE);
 
     if (!parent)
-        parent = gnc_ui_get_main_window (NULL);
+        parent = gnc_ui_get_main_window (nullptr);
 
     va_list args;
     va_start(args, format);
@@ -141,7 +141,7 @@ gnc_verify_dialog(GtkWindow *parent, gboolean yes_is_default,
     va_list args;
 
     if (!parent)
-        parent = gnc_ui_get_main_window (NULL);
+        parent = gnc_ui_get_main_window (nullptr);
 
     va_start(args, format);
     gchar *buffer = g_strdup_vprintf(format, args);
@@ -171,11 +171,11 @@ static void
 gnc_message_dialog_common (GtkWindow *parent, const gchar *format,
                            GtkMessageType msg_type, va_list args)
 {
-    GtkWidget *dialog = NULL;
+    GtkWidget *dialog = nullptr;
     gchar *buffer;
 
     if (!parent)
-        parent = gnc_ui_get_main_window (NULL);
+        parent = gnc_ui_get_main_window (nullptr);
 
     buffer = g_strdup_vprintf(format, args);
     auto flags = static_cast<GtkDialogFlags>(
@@ -293,7 +293,7 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
     GtkWidget *radio_button;
     GtkWidget *dialog;
     GtkWidget *dvbox;
-    GSList *group = NULL;
+    GSList *group = nullptr;
     GList *node;
     int i;
 
@@ -340,7 +340,7 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           _("_Cancel"), GTK_RESPONSE_CANCEL,
                                           button_name, GTK_RESPONSE_OK,
-                                          NULL);
+                                          nullptr);
 
     /* default to ok */
     gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
@@ -363,7 +363,7 @@ gnc_input_dialog_internal (GtkWidget *parent, const gchar *title, const gchar *m
     gint result;
     GtkWidget *view;
     GtkTextBuffer *buffer;
-    gchar *user_input = NULL;
+    gchar *user_input = nullptr;
     GtkTextIter start, end;
 
     /* Create the widgets */
@@ -374,7 +374,7 @@ gnc_input_dialog_internal (GtkWidget *parent, const gchar *title, const gchar *m
                                           flags,
                                           _("_OK"), GTK_RESPONSE_ACCEPT,
                                           _("_Cancel"), GTK_RESPONSE_REJECT,
-                                          NULL);
+                                          nullptr);
     GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
     // add a label
@@ -424,12 +424,12 @@ gnc_input_dialog_internal (GtkWidget *parent, const gchar *title, const gchar *m
  *                                                                  *
  * NOTE: This function does not return until the dialog is closed   *
  *                                                                  *
- * Args:   parent  - the parent window or NULL                      *
+ * Args:   parent  - the parent window or nullptr                      *
  *         title   - the title of the dialog                        *
  *         msg     - the message to display                         *
  *         default_input - will be displayed as default input       *
  * Return: the input (text) the user entered, if pressed "Ok"       *
- *         NULL, if pressed "Cancel"                                *
+ *         nullptr, if pressed "Cancel"                                *
  \********************************************************************/
 gchar *
 gnc_input_dialog (GtkWidget *parent, const gchar *title, const gchar *msg,
@@ -462,11 +462,11 @@ gnc_info2_dialog (GtkWidget *parent, const gchar *title, const gchar *msg) noexc
         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT
     );
     GtkWidget* dialog = gtk_dialog_new_with_buttons (
-        title, GTK_WINDOW (parent), flags, _("_OK"), GTK_RESPONSE_ACCEPT, NULL);
+        title, GTK_WINDOW (parent), flags, _("_OK"), GTK_RESPONSE_ACCEPT, nullptr);
     GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
     // add a scroll area
-    GtkWidget* scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+    GtkWidget* scrolledwindow = gtk_scrolled_window_new (nullptr, nullptr);
     gtk_box_pack_start(GTK_BOX(content_area), scrolledwindow, TRUE, TRUE, 0);
 
     // add a textview

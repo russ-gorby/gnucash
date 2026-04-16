@@ -783,7 +783,7 @@ gnc_ui_source_menu_create(QuoteSourceType type)
             supported = gnc_quote_source_get_supported(source);
             gtk_list_store_append(store, &iter);
             gtk_list_store_set(store, &iter,
-                               SOURCE_COL_NAME, g_dpgettext2(NULL, "FQ Source", name),
+                               SOURCE_COL_NAME, g_dpgettext2(nullptr, "FQ Source", name),
                                SOURCE_COL_FQ_SUPPORTED, supported,
                                -1);
         }

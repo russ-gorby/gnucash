@@ -126,8 +126,8 @@ gnc_frequency_class_init( GncFrequencyClass *klass )
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
                       0,
-                      NULL,
-                      NULL,
+                      nullptr,
+                      nullptr,
                       g_cclosure_marshal_VOID__VOID,
                       G_TYPE_NONE,
                       0);
@@ -199,7 +199,7 @@ gnc_frequency_init(GncFrequency *gf)
     gf->nb = GTK_NOTEBOOK(o);
     o = GTK_WIDGET(gtk_builder_get_object (builder, "freq_combobox"));
     gf->freqComboBox = GTK_COMBO_BOX(o);
-    gf->startDate = GNC_DATE_EDIT(gnc_date_edit_new(time(NULL), FALSE, FALSE));
+    gf->startDate = GNC_DATE_EDIT(gnc_date_edit_new(time(nullptr), FALSE, FALSE));
     /* Add the new widget to the table. */
     {
         GtkWidget *table = GTK_WIDGET(gtk_builder_get_object (builder, "gncfreq_table"));
@@ -208,7 +208,7 @@ gnc_frequency_init(GncFrequency *gf)
         gtk_widget_set_hexpand (GTK_WIDGET(gf->startDate), FALSE);
         gtk_widget_set_valign (GTK_WIDGET(gf->startDate), GTK_ALIGN_CENTER);
         gtk_widget_set_halign (GTK_WIDGET(gf->startDate), GTK_ALIGN_CENTER);
-        g_object_set (GTK_WIDGET(gf->startDate), "margin", 0, NULL);
+        g_object_set (GTK_WIDGET(gf->startDate), "margin", 0, nullptr);
     }
     GtkBox *vb = GTK_BOX(gtk_builder_get_object (builder, "gncfreq_vbox"));
     gf->vb = vb;
@@ -219,7 +219,7 @@ gnc_frequency_init(GncFrequency *gf)
     {
         o = GTK_WIDGET(gtk_builder_get_object (builder, combo_box.name));
         gtk_combo_box_set_active(GTK_COMBO_BOX(o), 0);
-        if (combo_box.fn != NULL)
+        if (combo_box.fn != nullptr)
         {
             g_signal_connect(o, "changed", G_CALLBACK(combo_box.fn), gf);
         }
@@ -230,7 +230,7 @@ gnc_frequency_init(GncFrequency *gf)
     {
         o = GTK_WIDGET(gtk_builder_get_object (builder, push_button.name));
         gtk_combo_box_set_active(GTK_COMBO_BOX(o), 0);
-        if (push_button.fn != NULL)
+        if (push_button.fn != nullptr)
         {
             g_signal_connect(o, "changed", G_CALLBACK(push_button.fn), gf);
         }
@@ -276,7 +276,7 @@ gnc_frequency_destroy (GtkWidget *widget)
     GncFrequency *gf;
 
     ENTER("frequency %p", widget);
-    g_return_if_fail (widget != NULL);
+    g_return_if_fail (widget != nullptr);
     g_return_if_fail (GNC_IS_FREQUENCY (widget));
 
     gf = GNC_FREQUENCY (widget);
@@ -285,7 +285,7 @@ gnc_frequency_destroy (GtkWidget *widget)
     {
         DEBUG("removing builder");
         g_object_unref(G_OBJECT(gf->builder));
-        gf->builder = NULL;
+        gf->builder = nullptr;
     }
 
     GTK_WIDGET_CLASS (gnc_frequency_parent_class)->destroy (widget);
@@ -374,7 +374,7 @@ gnc_frequency_new_from_recurrence(GList *recurrences, const GDate *start_date) n
 GtkWidget*
 gnc_frequency_new(GList *recurrences, const GDate *start_date) noexcept
 {
-    auto toRet = static_cast<GncFrequency *>(g_object_new(gnc_frequency_get_type(), NULL));
+    auto toRet = static_cast<GncFrequency *>(g_object_new(gnc_frequency_get_type(), nullptr));
     gnc_frequency_setup_recurrence(toRet, recurrences, start_date);
     return GTK_WIDGET(toRet);
 }
@@ -445,14 +445,14 @@ gnc_frequency_setup(GncFrequency *gf, GList *recurrences, const GDate *start_dat
     gboolean made_changes = FALSE;
 
     // setup start-date, if present
-    if (start_date != NULL
+    if (start_date != nullptr
             && g_date_valid(start_date))
     {
         gnc_date_edit_set_gdate(gf->startDate, start_date);
         made_changes = TRUE;
     }
 
-    if (recurrences == NULL)
+    if (recurrences == nullptr)
     {
         goto maybe_signal;
         // return...
@@ -462,7 +462,7 @@ gnc_frequency_setup(GncFrequency *gf, GList *recurrences, const GDate *start_dat
     {
         if (recurrenceListIsWeeklyMultiple(recurrences))
         {
-            for (; recurrences != NULL; recurrences = recurrences->next)
+            for (; recurrences != nullptr; recurrences = recurrences->next)
             {
                 _setup_weekly_recurrence(gf, (Recurrence*)recurrences->data);
             }
@@ -650,10 +650,10 @@ gnc_frequency_save_to_recurrence(GncFrequency *gf, GList **recurrences, GDate *o
     GDate start_date;
 
     gnc_date_edit_get_gdate(gf->startDate, &start_date);
-    if (out_start_date != NULL)
+    if (out_start_date != nullptr)
         *out_start_date = start_date;
 
-    if (recurrences == NULL)
+    if (recurrences == nullptr)
         return;
 
     gint page_index = gtk_notebook_get_current_page(gf->nb);

@@ -69,12 +69,12 @@ GtkWidget * gnc_period_select_new_glade (gchar *widget_name,
  @{ */
 
 /** Set the fiscal year end on a GncPeriodSelect widget.  If set to a
- *  value other than NULL then widget will include fiscal accounting
+ *  value other than nullptr then widget will include fiscal accounting
  *  period like "this fiscal year".
  *
  *  @param period The GncPeriodSelect widget to update.
  *
- *  @param fy_end The new fiscal year end value, or NULL if no fiscal
+ *  @param fy_end The new fiscal year end value, or nullptr if no fiscal
  *  year is set.  Note that only the month and day fields need be
  *  valid in the provided GDate.
  */
@@ -82,13 +82,13 @@ void gnc_period_select_set_fy_end (GncPeriodSelect *period, const GDate *fy_end)
 
 
 /** Get the current value of the fiscal year end setting from a
- *  GncPeriodSelect widget.  If the result is NULL then fiscal years
+ *  GncPeriodSelect widget.  If the result is nullptr then fiscal years
  *  are not currently supported.
  *
  *  @param period The GncPeriodSelect widget to query.
  *
  *  @return A pointer to a GDate containing the fiscal year end value,
- *  or NULL if no fiscal year end is set.  Note that only the month
+ *  or nullptr if no fiscal year end is set.  Note that only the month
  *  and day fields are valid in the returned GDate.
  */
 GDate *gnc_period_select_get_fy_end (GncPeriodSelect *period);

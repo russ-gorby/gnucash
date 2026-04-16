@@ -117,7 +117,7 @@ gnc_embedded_window_open_page (GncEmbeddedWindow *window,
 {
     g_return_if_fail (GNC_IS_EMBEDDED_WINDOW (window));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
-    g_return_if_fail (window->page == NULL);
+    g_return_if_fail (window->page == nullptr);
 
     ENTER("window %p, page %p", window, page);
     window->page = page;
@@ -148,7 +148,7 @@ gnc_embedded_window_close_page (GncEmbeddedWindow *window,
     }
 
     gtk_container_remove (GTK_CONTAINER(window), GTK_WIDGET(page->notebook_page));
-    window->page = NULL;
+    window->page = nullptr;
     gnc_plugin_page_removed (page);
 
     gnc_plugin_page_destroy_widget (page);
@@ -197,7 +197,7 @@ gnc_embedded_window_class_init (GncEmbeddedWindowClass *klass)
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
                       0,
-                      NULL, NULL,
+                      nullptr, nullptr,
                       g_cclosure_marshal_VOID__OBJECT,
                       G_TYPE_NONE, 1,
                       G_TYPE_OBJECT);
@@ -247,7 +247,7 @@ gnc_embedded_window_constructed (GObject *obj)
 static void
 gnc_embedded_window_finalize (GObject *object)
 {
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_EMBEDDED_WINDOW (object));
 
     ENTER("object %p", object);
@@ -266,7 +266,7 @@ gnc_embedded_window_dispose (GObject *object)
 {
     GncEmbeddedWindow *window;
 
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_EMBEDDED_WINDOW (object));
 
     ENTER("object %p", object);
@@ -277,7 +277,7 @@ gnc_embedded_window_dispose (GObject *object)
         DEBUG("unreffing page %p (count currently %d)", window->page,
               G_OBJECT(window->page)->ref_count);
         g_object_unref(window->page);
-        window->page = NULL;
+        window->page = nullptr;
     }
 
     G_OBJECT_CLASS (gnc_embedded_window_parent_class)->dispose (object);
@@ -305,7 +305,7 @@ gnc_embedded_window_setup_window (GncEmbeddedWindow *window)
     gtk_widget_show (window->statusbar);
     gtk_box_pack_end (GTK_BOX (window), window->statusbar, FALSE, TRUE, 0);
 
-    window->simple_action_group = NULL;
+    window->simple_action_group = nullptr;
     LEAVE(" ");
 }
 
@@ -321,7 +321,7 @@ gnc_embedded_window_new (const gchar *action_group_name,
                          gpointer user_data) noexcept
 {
     gchar *ui_fullname;
-    GError *error = NULL;
+    GError *error = nullptr;
     GtkBuilder *builder;
 
     ENTER("group %s, first %p, num %d, ui file %s, parent %p, add accelerators %d, user data %p",
@@ -329,13 +329,13 @@ gnc_embedded_window_new (const gchar *action_group_name,
           enclosing_win, add_accelerators, user_data);
 
     auto window = static_cast<GncEmbeddedWindow *>(
-        g_object_new (GNC_TYPE_EMBEDDED_WINDOW, NULL)
+        g_object_new (GNC_TYPE_EMBEDDED_WINDOW, nullptr)
     );
 
     builder = gtk_builder_new ();
     gtk_builder_set_translation_domain (builder, PROJECT_NAME);
 
-    ui_fullname = g_strconcat (GNUCASH_RESOURCE_PREFIX "/", ui_filename, NULL);
+    ui_fullname = g_strconcat (GNUCASH_RESOURCE_PREFIX "/", ui_filename, nullptr);
 
     gtk_builder_add_from_resource (builder, ui_fullname, &error);
 
@@ -343,7 +343,7 @@ gnc_embedded_window_new (const gchar *action_group_name,
     {
         g_critical ("Failed to load, Error %s", error->message);
         g_error_free (error);
-        return NULL;
+        return nullptr;
     }
 
     window->menubar_model = (GMenuModel *)gtk_builder_get_object (builder, "embeddedwin-menu");
@@ -353,7 +353,7 @@ gnc_embedded_window_new (const gchar *action_group_name,
     gtk_widget_show (GTK_WIDGET(window->menubar));
 
     window->toolbar = (GtkWidget *)gtk_builder_get_object (builder, "embeddedwin-toolbar");
-    g_object_set (window->toolbar, "toolbar-style", GTK_TOOLBAR_BOTH, NULL);
+    g_object_set (window->toolbar, "toolbar-style", GTK_TOOLBAR_BOTH, nullptr);
     gtk_container_add (GTK_CONTAINER(window->menu_dock), GTK_WIDGET(window->toolbar));
     gtk_widget_show (GTK_WIDGET(window->toolbar));
 
@@ -392,7 +392,7 @@ gnc_embedded_window_get_gtk_window (GncWindow *window_in)
 {
     GncEmbeddedWindow *window;
 
-    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW (window_in), NULL);
+    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW (window_in), nullptr);
 
     window = GNC_EMBEDDED_WINDOW(window_in);
     return GTK_WINDOW(window->parent_window);
@@ -409,7 +409,7 @@ gnc_embedded_window_get_statusbar (GncWindow *window_in)
 {
     GncEmbeddedWindow *window;
 
-    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW (window_in), NULL);
+    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW (window_in), nullptr);
 
     window = GNC_EMBEDDED_WINDOW(window_in);
     return window->statusbar;
@@ -424,7 +424,7 @@ gnc_embedded_window_get_statusbar (GncWindow *window_in)
 static GtkWidget *
 gnc_embedded_window_get_menubar (GncWindow *window)
 {
-    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), nullptr);
 
     return GNC_EMBEDDED_WINDOW (window)->menubar;
 }
@@ -437,7 +437,7 @@ gnc_embedded_window_get_menubar (GncWindow *window)
 static GtkWidget *
 gnc_embedded_window_get_toolbar (GncWindow *window)
 {
-    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), nullptr);
 
     return GNC_EMBEDDED_WINDOW (window)->toolbar;
 }
@@ -450,7 +450,7 @@ gnc_embedded_window_get_toolbar (GncWindow *window)
 static GMenuModel *
 gnc_embedded_window_get_menubar_model (GncWindow *window)
 {
-    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), nullptr);
 
     return GNC_EMBEDDED_WINDOW (window)->menubar_model;
 }
@@ -463,7 +463,7 @@ gnc_embedded_window_get_menubar_model (GncWindow *window)
 static GtkAccelGroup *
 gnc_embedded_window_get_accel_group (GncWindow *window)
 {
-    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), NULL);
+    g_return_val_if_fail (GNC_IS_EMBEDDED_WINDOW(window), nullptr);
 
     return GNC_EMBEDDED_WINDOW (window)->accel_group;
 }

@@ -94,7 +94,7 @@ shared_quickfill_find_accounts (GtkTreeModel* model,
                                 GtkTreeIter* iter,
                                 gpointer user_data)
 {
-    Account* account = NULL;
+    Account* account = nullptr;
     auto data = static_cast<find_data *>(user_data);
 
     gtk_tree_model_get (model, iter, ACCOUNT_POINTER, &account, -1);
@@ -105,7 +105,7 @@ shared_quickfill_find_accounts (GtkTreeModel* model,
             GtkTreeRowReference *ref = gtk_tree_row_reference_new (model, path);
             data->refs = g_list_append (data->refs, ref);
             data->accounts = g_list_delete_link (data->accounts, tmp);
-            return (data->accounts == NULL);
+            return (data->accounts == nullptr);
         }
     }
     return FALSE;
@@ -126,7 +126,7 @@ load_shared_qf_cb (Account* account, gpointer data)
     }
 
     char *name = gnc_get_account_name_for_register (account);
-    if (NULL == name)
+    if (nullptr == name)
         return;
     gnc_quickfill_insert (qfb->qf, name, QUICKFILL_ALPHA);
     if (qfb->load_list_store)
@@ -235,11 +235,11 @@ listen_for_account_events (QofInstance* entity, QofEventId event_type,
 {
     auto qfb = static_cast<QFB *>(user_data);
     QuickFill* qf = qfb->qf;
-    QuickFill* match = NULL;
+    QuickFill* match = nullptr;
     GtkTreeIter iter;
     find_data data = { 0 };
-    GtkTreePath* path = NULL;
-    GList* tmp = NULL;
+    GtkTreePath* path = nullptr;
+    GList* tmp = nullptr;
 
     if (0 == (event_type & (QOF_EVENT_MODIFY | QOF_EVENT_ADD | QOF_EVENT_REMOVE)))
         return;
@@ -258,7 +258,7 @@ listen_for_account_events (QofInstance* entity, QofEventId event_type,
     }
 
     char *name = gnc_get_account_name_for_register (account);
-    if (NULL == name)
+    if (nullptr == name)
     {
         LEAVE ("account has no name");
         return;
@@ -282,7 +282,7 @@ listen_for_account_events (QofInstance* entity, QofEventId event_type,
          * store.  Otherwise its a simple update of the name string. */
         for (tmp = data.refs; tmp; tmp = g_list_next (tmp))
         {
-            gchar* old_name = NULL, *new_name = NULL;
+            gchar* old_name = nullptr, *new_name = nullptr;
             path = gtk_tree_row_reference_get_path (
                 static_cast<GtkTreeRowReference *>(tmp->data)
             );
@@ -354,7 +354,7 @@ listen_for_account_events (QofInstance* entity, QofEventId event_type,
         gnc_quickfill_remove (qfb->qf, name, QUICKFILL_ALPHA);
 
         /* Does the account exist in the model? */
-        data.accounts = g_list_append (NULL, account);
+        data.accounts = g_list_append (nullptr, account);
         gtk_tree_model_foreach (GTK_TREE_MODEL (qfb->list_store),
                                 shared_quickfill_find_accounts, &data);
 

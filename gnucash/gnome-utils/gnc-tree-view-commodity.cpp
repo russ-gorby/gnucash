@@ -86,7 +86,7 @@ gnc_tree_view_commodity_init (GncTreeViewCommodity *view)
 static void
 gnc_tree_view_commodity_finalize (GObject *object)
 {
-    g_return_if_fail (object != NULL);
+    g_return_if_fail (object != nullptr);
     g_return_if_fail (GNC_IS_TREE_VIEW_COMMODITY (object));
 
     ENTER("view %p", object);
@@ -97,7 +97,7 @@ gnc_tree_view_commodity_finalize (GObject *object)
 static void
 gnc_tree_view_commodity_destroy (GtkWidget *widget)
 {
-    g_return_if_fail (widget != NULL);
+    g_return_if_fail (widget != nullptr);
     g_return_if_fail (GNC_IS_TREE_VIEW_COMMODITY (widget));
 
     ENTER("view %p", widget);
@@ -260,7 +260,7 @@ sort_by_fraction (GtkTreeModel *f_model,
     gnc_commodity *comm_a, *comm_b;
     gint fraction_a, fraction_b;
 
-    if (!get_commodities (f_model, f_iter_a, f_iter_b, NULL, &comm_a, &comm_b))
+    if (!get_commodities (f_model, f_iter_a, f_iter_b, nullptr, &comm_a, &comm_b))
         return sort_namespace (f_model, f_iter_a, f_iter_b);
 
     fraction_a = gnc_commodity_get_fraction (comm_a);
@@ -284,7 +284,7 @@ sort_by_quote_flag (GtkTreeModel *f_model,
     gnc_commodity *comm_a, *comm_b;
     gboolean flag_a, flag_b;
 
-    if (!get_commodities (f_model, f_iter_a, f_iter_b, NULL, &comm_a, &comm_b))
+    if (!get_commodities (f_model, f_iter_a, f_iter_b, nullptr, &comm_a, &comm_b))
         return sort_namespace (f_model, f_iter_a, f_iter_b);
 
     flag_a = gnc_commodity_get_quote_flag(comm_a);
@@ -323,7 +323,7 @@ gnc_tree_view_commodity_new (QofBook *book,
     model = gnc_tree_model_commodity_new (book, ct);
 
     /* Set up the view private filter on the common model. */
-    f_model = gtk_tree_model_filter_new (model, NULL);
+    f_model = gtk_tree_model_filter_new (model, nullptr);
     g_object_unref(G_OBJECT(model));
     s_model = gtk_tree_model_sort_new_with_model (f_model);
     g_object_unref(G_OBJECT(f_model));
@@ -331,7 +331,7 @@ gnc_tree_view_commodity_new (QofBook *book,
     /* Create our view */
     auto view = static_cast<GncTreeView *>(
         g_object_new (GNC_TYPE_TREE_VIEW_COMMODITY,
-                      "name", "gnc-id-commodity-tree", NULL)
+                      "name", "gnc-id-commodity-tree", nullptr)
     );
     gtk_tree_view_set_model (GTK_TREE_VIEW (view), s_model);
     g_object_unref(G_OBJECT(s_model));
@@ -344,43 +344,43 @@ gnc_tree_view_commodity_new (QofBook *book,
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW(view), FALSE);
 
     gnc_tree_view_add_text_column (
-              view, _("Namespace"), "namespace", NULL, "NASDAQ",
+              view, _("Namespace"), "namespace", nullptr, "NASDAQ",
               GNC_TREE_MODEL_COMMODITY_COL_NAMESPACE,
               GNC_TREE_VIEW_COLUMN_VISIBLE_ALWAYS,
               sort_by_commodity_string);
     col = gnc_tree_view_add_text_column (
-              view, _("Symbol"), "symbol", NULL, "ACMEACME",
+              view, _("Symbol"), "symbol", nullptr, "ACMEACME",
               GNC_TREE_MODEL_COMMODITY_COL_MNEMONIC,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
     g_object_set_data(G_OBJECT(col), DEFAULT_VISIBLE, GINT_TO_POINTER(1));
     col = gnc_tree_view_add_text_column (
-              view, _("Name"), "name", NULL, "Acme Corporation, Inc.",
+              view, _("Name"), "name", nullptr, "Acme Corporation, Inc.",
               GNC_TREE_MODEL_COMMODITY_COL_FULLNAME,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
     g_object_set_data(G_OBJECT(col), DEFAULT_VISIBLE, GINT_TO_POINTER(1));
     gnc_tree_view_add_text_column (
-              view, _("Print Name"), "printname", NULL,
+              view, _("Print Name"), "printname", nullptr,
               "ACMEACME (Acme Corporation, Inc.)",
               GNC_TREE_MODEL_COMMODITY_COL_PRINTNAME,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
     col = gnc_tree_view_add_text_column (
-              view, _("Display symbol"), "user_symbol", NULL, "ACME",
+              view, _("Display symbol"), "user_symbol", nullptr, "ACME",
               GNC_TREE_MODEL_COMMODITY_COL_USER_SYMBOL,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
     g_object_set_data(G_OBJECT(col), DEFAULT_VISIBLE, GINT_TO_POINTER(1));
     gnc_tree_view_add_text_column (
-              view, _("Unique Name"), "uniquename", NULL,
+              view, _("Unique Name"), "uniquename", nullptr,
               "NASDAQ::ACMEACME", GNC_TREE_MODEL_COMMODITY_COL_UNIQUE_NAME,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
     col = gnc_tree_view_add_text_column (
               /* Translators: Again replace CUSIP by the name of your
                  National Securities Identifying Number. */
-              view, _("ISIN/CUSIP"), "cusip_code", NULL, "US1234567890",
+              view, _("ISIN/CUSIP"), "cusip_code", nullptr, "US1234567890",
               GNC_TREE_MODEL_COMMODITY_COL_CUSIP,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
@@ -398,14 +398,14 @@ gnc_tree_view_commodity_new (QofBook *book,
               GNC_TREE_MODEL_COMMODITY_COL_QUOTE_FLAG,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_quote_flag,
-              NULL);
+              nullptr);
     gnc_tree_view_add_text_column (
-              view, _("Source"), "quote_source", NULL, "alphavantage",
+              view, _("Source"), "quote_source", nullptr, "alphavantage",
               GNC_TREE_MODEL_COMMODITY_COL_QUOTE_SOURCE,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
     col = gnc_tree_view_add_text_column (
-              view, _("Timezone"), "quote_timezone", NULL, "America/New_York",
+              view, _("Timezone"), "quote_timezone", nullptr, "America/New_York",
               GNC_TREE_MODEL_COMMODITY_COL_QUOTE_TZ,
               GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
               sort_by_commodity_string);
@@ -421,7 +421,7 @@ gnc_tree_view_commodity_new (QofBook *book,
     /* Sort on the name column by default. This allows for a consistent
      * sort if commodities are briefly removed and re-added. */
     if (!gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(s_model),
-            NULL, NULL))
+            nullptr, nullptr))
     {
         gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(s_model),
                                              GNC_TREE_MODEL_COMMODITY_COL_FULLNAME,
@@ -453,8 +453,8 @@ gnc_tree_view_commodity_get_iter_from_commodity (GncTreeViewCommodity *view,
     GtkTreeIter iter, f_iter;
 
     g_return_val_if_fail(GNC_IS_TREE_VIEW_COMMODITY(view), FALSE);
-    g_return_val_if_fail(commodity != NULL, FALSE);
-    g_return_val_if_fail(s_iter != NULL, FALSE);
+    g_return_val_if_fail(commodity != nullptr, FALSE);
+    g_return_val_if_fail(s_iter != nullptr, FALSE);
 
     ENTER("view %p, commodity %p (%s)", view, commodity, gnc_commodity_get_mnemonic(commodity));
 
@@ -508,7 +508,7 @@ gnc_tree_view_commodity_filter_helper (GtkTreeModel *model,
     auto fd = static_cast<filter_user_data *>(data);
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_COMMODITY (model), FALSE);
-    g_return_val_if_fail (iter != NULL, FALSE);
+    g_return_val_if_fail (iter != nullptr, FALSE);
 
     if (gnc_tree_model_commodity_iter_is_namespace (GNC_TREE_MODEL_COMMODITY(model), iter))
     {
@@ -546,7 +546,7 @@ gnc_tree_view_commodity_set_filter (GncTreeViewCommodity *view,
                                     GDestroyNotify destroy)
 {
     g_return_if_fail(GNC_IS_TREE_VIEW_COMMODITY(view));
-    g_return_if_fail((ns_func != NULL) || (cm_func != NULL));
+    g_return_if_fail((ns_func != nullptr) || (cm_func != nullptr));
 
     ENTER("view %p, ns func %p, cm func %p, data %p, destroy %p",
           view, ns_func, cm_func, data, destroy);
@@ -562,7 +562,7 @@ gnc_tree_view_commodity_set_filter (GncTreeViewCommodity *view,
 
     /* disconnect model from view */
     g_object_ref (G_OBJECT(s_model));
-    gtk_tree_view_set_model (GTK_TREE_VIEW(view), NULL);
+    gtk_tree_view_set_model (GTK_TREE_VIEW(view), nullptr);
 
     gtk_tree_model_filter_set_visible_func (GTK_TREE_MODEL_FILTER (f_model),
                                             gnc_tree_view_commodity_filter_helper,
@@ -614,7 +614,7 @@ gnc_tree_view_commodity_get_selected_commodity (GncTreeViewCommodity *view)
     GtkTreeIter iter, f_iter, s_iter;
     gnc_commodity *commodity;
 
-    g_return_val_if_fail (GNC_IS_TREE_VIEW_COMMODITY (view), NULL);
+    g_return_val_if_fail (GNC_IS_TREE_VIEW_COMMODITY (view), nullptr);
 
     ENTER("view %p", view);
 
@@ -622,7 +622,7 @@ gnc_tree_view_commodity_get_selected_commodity (GncTreeViewCommodity *view)
     if (!gtk_tree_selection_get_selected (selection, &s_model, &s_iter))
     {
         LEAVE("no commodity, get_selected failed");
-        return NULL;
+        return nullptr;
     }
 
     gtk_tree_model_sort_convert_iter_to_child_iter (GTK_TREE_MODEL_SORT (s_model),
@@ -652,7 +652,7 @@ gnc_tree_view_commodity_get_selected_namespace (GncTreeViewCommodity *view)
     GtkTreeIter iter, f_iter, s_iter;
     gnc_commodity_namespace *ns;
 
-    g_return_val_if_fail (GNC_IS_TREE_VIEW_COMMODITY(view), NULL);
+    g_return_val_if_fail (GNC_IS_TREE_VIEW_COMMODITY(view), nullptr);
 
     ENTER("view %p", view);
 
@@ -660,7 +660,7 @@ gnc_tree_view_commodity_get_selected_namespace (GncTreeViewCommodity *view)
     if (!gtk_tree_selection_get_selected (selection, &s_model, &s_iter))
     {
         LEAVE("no namespace, get_selected failed");
-        return NULL;
+        return nullptr;
     }
 
     gtk_tree_model_sort_convert_iter_to_child_iter (GTK_TREE_MODEL_SORT (s_model),

@@ -206,7 +206,7 @@ create_content_box()
 static GtkGrid*
 create_options_box(GtkBox* content_box)
 {
-    auto options_scrolled_win = gtk_scrolled_window_new(NULL, NULL);
+    auto options_scrolled_win = gtk_scrolled_window_new(nullptr, nullptr);
     gtk_box_pack_start(GTK_BOX(content_box), options_scrolled_win,
                        TRUE, TRUE, 0);
 
@@ -218,7 +218,7 @@ create_options_box(GtkBox* content_box)
     gtk_grid_set_row_spacing (GTK_GRID(options_box), 6);
     gtk_grid_set_column_spacing (GTK_GRID(options_box), 6);
     gtk_widget_set_halign (GTK_WIDGET(options_box), GTK_ALIGN_START);
-    
+
     gtk_container_set_border_width(GTK_CONTAINER(options_box), 0);
     gtk_container_add (GTK_CONTAINER(options_scrolled_win),
                        GTK_WIDGET(options_box));
@@ -337,14 +337,14 @@ GncOptionsDialog::build_contents(GncOptionDB  *odb, bool show_dialog)
 {
     gint default_page = -1;
 
-    g_return_if_fail (odb != NULL);
+    g_return_if_fail (odb != nullptr);
 
     m_option_db = odb;
 
     auto default_section = odb->get_default_section();
 
     PINFO("Default Section name is %s",
-          default_section ? default_section->get_name().c_str() : "NULL");
+          default_section ? default_section->get_name().c_str() : "nullptr");
 
     odb->foreach_section(
         [this, default_section, &default_page]
@@ -362,7 +362,7 @@ GncOptionsDialog::build_contents(GncOptionDB  *odb, bool show_dialog)
         GtkTreeIter iter;
 
         auto model{gtk_tree_view_get_model(GTK_TREE_VIEW(m_page_list_view))};
-        gtk_tree_model_iter_nth_child(model, &iter, NULL, default_page);
+        gtk_tree_model_iter_nth_child(model, &iter, nullptr, default_page);
         gtk_tree_selection_select_iter (selection, &iter);
         gtk_notebook_set_current_page(GTK_NOTEBOOK(m_notebook), default_page);
     }
@@ -518,7 +518,7 @@ static void
 component_close_handler (gpointer data)
 {
     GncOptionsDialog *win = static_cast<decltype(win)>(data);
-    dialog_cancel_button_cb (NULL, win);
+    dialog_cancel_button_cb (nullptr, win);
 }
 
 /** Constructs a GncOptionsDialog

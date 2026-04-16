@@ -55,7 +55,7 @@ const SecretSchema* gnucash_get_secret_schema(void)
             { "server", SECRET_SCHEMA_ATTRIBUTE_STRING },
             { "port", SECRET_SCHEMA_ATTRIBUTE_INTEGER },
             { "user", SECRET_SCHEMA_ATTRIBUTE_STRING },
-            { "NULL", static_cast<SecretSchemaAttributeType>(0) },
+            { "nullptr", static_cast<SecretSchemaAttributeType>(0) },
         }
     };
 
@@ -73,33 +73,33 @@ void gnc_keyring_set_password (const gchar *access_method,
                                const gchar* password)
 {
 #ifdef HAVE_LIBSECRET
-    GError* error = NULL;
-    gchar* label = NULL;
+    GError* error = nullptr;
+    gchar* label = nullptr;
 
-    g_return_if_fail(access_method != NULL && server != NULL &&
-                     service != NULL && user != NULL && password != NULL);
+    g_return_if_fail(access_method != nullptr && server != nullptr &&
+                     service != nullptr && user != nullptr && password != nullptr);
 
     label = g_strdup_printf("GnuCash password for %s://%s@%s", access_method, user, server);
 
     if (port == 0)
         secret_password_store_sync (SECRET_SCHEMA_GNUCASH, SECRET_COLLECTION_DEFAULT,
-                                    label, password, NULL, &error,
+                                    label, password, nullptr, &error,
                                     "protocol", access_method,
                                     "server", server,
                                     "user", user,
-                                    NULL);
+                                    nullptr);
     else
         secret_password_store_sync (SECRET_SCHEMA_GNUCASH, SECRET_COLLECTION_DEFAULT,
-                                    label, password, NULL, &error,
+                                    label, password, nullptr, &error,
                                     "protocol", access_method,
                                     "server", server,
                                     "port", port,
                                     "user", user,
-                                    NULL);
+                                    nullptr);
 
     g_free(label);
 
-    if (error != NULL)
+    if (error != nullptr)
     {
         PWARN ("libsecret error: %s", error->message);
         PWARN ("The user will be prompted for a password again next time.");
@@ -109,12 +109,12 @@ void gnc_keyring_set_password (const gchar *access_method,
     GnomeKeyringResult  gkr_result;
     guint32 item_id = 0;
 
-    g_return_if_fail(access_method != NULL && server != NULL &&
-                     service != NULL && user != NULL && password != NULL);
+    g_return_if_fail(access_method != nullptr && server != nullptr &&
+                     service != nullptr && user != nullptr && password != nullptr);
 
     gkr_result = gnome_keyring_set_network_password_sync
-        (NULL, user, NULL, server, service,
-         access_method, NULL, port, password, &item_id);
+        (nullptr, user, nullptr, server, service,
+         access_method, nullptr, port, password, &item_id);
 
     if (gkr_result != GNOME_KEYRING_RESULT_OK)
     {
@@ -125,10 +125,10 @@ void gnc_keyring_set_password (const gchar *access_method,
 #endif /* HAVE_GNOME_KEYRING */
 #ifdef HAVE_OSX_KEYCHAIN
     OSStatus status;
-    SecKeychainItemRef *itemRef = NULL;
+    SecKeychainItemRef *itemRef = nullptr;
 
-    g_return_if_fail(access_method != NULL && server != NULL &&
-                     service != NULL && user != NULL && password != NULL);
+    g_return_if_fail(access_method != nullptr && server != nullptr &&
+                     service != nullptr && user != nullptr && password != nullptr);
     /* mysql and postgres aren't valid protocols on Mac OS X.
      * So we use the security domain parameter to allow us to
      * distinguish between these two.
@@ -137,7 +137,7 @@ void gnc_keyring_set_password (const gchar *access_method,
     //       I may have to do a lookup first and if it exists, run some
     //       update function instead
     status =
-        SecKeychainAddInternetPassword (NULL, /* keychain */
+        SecKeychainAddInternetPassword (nullptr, /* keychain */
                                         strlen(server), server, /* servername */
                                         strlen(access_method),
                                         access_method,  /* securitydomain */
@@ -152,7 +152,7 @@ void gnc_keyring_set_password (const gchar *access_method,
 
     if ( status != noErr )
     {
-        CFStringRef osx_resultstring = SecCopyErrorMessageString( status, NULL );
+        CFStringRef osx_resultstring = SecCopyErrorMessageString( status, nullptr );
         const gchar *resultstring =
             CFStringGetCStringPtr(osx_resultstring,
                                   GetApplicationTextEncoding());
@@ -175,11 +175,11 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
     gboolean password_found = FALSE;
     gchar *db_path, *heading;
 #ifdef HAVE_LIBSECRET
-    GError* error = NULL;
+    GError* error = nullptr;
     char* libsecret_password;
 #elif HAVE_GNOME_KEYRING
     GnomeKeyringResult  gkr_result;
-    GList *found_list = NULL;
+    GList *found_list = nullptr;
     GnomeKeyringNetworkPasswordData *found;
 #endif
 #ifdef HAVE_OSX_KEYCHAIN
@@ -188,10 +188,10 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
     OSStatus status;
 #endif
 
-    g_return_val_if_fail (user != NULL, FALSE);
-    g_return_val_if_fail (password != NULL, FALSE);
+    g_return_val_if_fail (user != nullptr, FALSE);
+    g_return_val_if_fail (password != nullptr, FALSE);
 
-    *password = NULL;
+    *password = nullptr;
 
 #ifdef HAVE_LIBSECRET
     /* Workaround for https://bugs.gnucash.org/show_bug.cgi?id=746873
@@ -201,33 +201,33 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
      * sometimes fails to do so. More details can be found in the bug reports
      * referenced above. */
     secret_password_store_sync (SECRET_SCHEMA_GNUCASH, SECRET_COLLECTION_DEFAULT,
-                                "Dummy password", "dummy", NULL, &error,
+                                "Dummy password", "dummy", nullptr, &error,
                                 "protocol", PROJECT_NAME,
                                 "server", PROJECT_NAME,
                                 "user", PROJECT_NAME,
-                                NULL);
-    secret_password_clear_sync (SECRET_SCHEMA_GNUCASH, NULL, &error,
+                                nullptr);
+    secret_password_clear_sync (SECRET_SCHEMA_GNUCASH, nullptr, &error,
                                 "protocol", PROJECT_NAME,
                                 "server", PROJECT_NAME,
                                 "user", PROJECT_NAME,
-                                NULL);
+                                nullptr);
 
     /* Note: only use the port attribute if it  was set by the user. */
     if (port == 0)
-        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_GNUCASH, NULL, &error,
+        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_GNUCASH, nullptr, &error,
                                                           "protocol", access_method,
                                                           "server", server,
                                                           "user", *user,
-                                                          NULL);
+                                                          nullptr);
     else
-        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_GNUCASH, NULL, &error,
+        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_GNUCASH, nullptr, &error,
                                                           "protocol", access_method,
                                                           "server", server,
                                                           "port", port,
                                                           "user", *user,
-                                                          NULL);
+                                                          nullptr);
 
-    if (libsecret_password != NULL) {
+    if (libsecret_password != nullptr) {
         *password = g_strdup (libsecret_password);
         secret_password_free (libsecret_password);
         return TRUE;
@@ -235,14 +235,14 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
 
     /* No password found yet. Perhaps it was written with a port equal to 0.
      * Gnucash versions prior to 2.6.7 did this unfortunately... */
-    libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_GNUCASH, NULL, &error,
+    libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_GNUCASH, nullptr, &error,
                                                       "protocol", access_method,
                                                       "server", server,
                                                       "port", 0,
                                                       "user", *user,
-                                                      NULL);
+                                                      nullptr);
 
-    if (libsecret_password != NULL) {
+    if (libsecret_password != nullptr) {
         *password = g_strdup (libsecret_password);
         secret_password_free (libsecret_password);
 
@@ -255,22 +255,22 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
     /* No password was found while querying libsecret using the gnucash schema,
        Look for a password stored via gnome-keyring instead */
     if (port == 0)
-        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_COMPAT_NETWORK, NULL, &error,
+        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_COMPAT_NETWORK, nullptr, &error,
                                                           "protocol", access_method,
                                                           "server", server,
                                                           "object", service,
                                                           "user", *user,
-                                                          NULL);
+                                                          nullptr);
     else
-        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_COMPAT_NETWORK, NULL, &error,
+        libsecret_password = secret_password_lookup_sync (SECRET_SCHEMA_COMPAT_NETWORK, nullptr, &error,
                                                           "protocol", access_method,
                                                           "server", server,
                                                           "port", port,
                                                           "object", service,
                                                           "user", *user,
-                                                          NULL);
+                                                          nullptr);
 
-    if (libsecret_password != NULL) {
+    if (libsecret_password != nullptr) {
         *password = g_strdup (libsecret_password);
         secret_password_free (libsecret_password);
 
@@ -282,15 +282,15 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
 
     /* Something went wrong while attempting to access libsecret
      * Log the error message and carry on... */
-    if (error != NULL) {
+    if (error != nullptr) {
         PWARN ("libsecret access failed: %s.", error->message);
         g_error_free(error);
     }
 
 #elif HAVE_GNOME_KEYRING
     gkr_result = gnome_keyring_find_network_password_sync
-        ( *user, NULL, server, service,
-          access_method, NULL, port, &found_list );
+        ( *user, nullptr, server, service,
+          access_method, nullptr, port, &found_list );
 
     if (gkr_result == GNOME_KEYRING_RESULT_OK)
     {
@@ -313,9 +313,9 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
      * So we use the security domain parameter to allow us to
      * distinguish between these two.
      */
-    if (*user != NULL)
+    if (*user != nullptr)
     {
-        status = SecKeychainFindInternetPassword( NULL,
+        status = SecKeychainFindInternetPassword( nullptr,
                                                   strlen(server), server,
                                                   strlen(access_method), access_method,
                                                   strlen(*user), *user,
@@ -324,17 +324,17 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
                                                   kSecProtocolTypeAny,
                                                   kSecAuthenticationTypeDefault,
                                                   &password_length, &password_data,
-                                                  NULL);
+                                                  nullptr);
 
         if ( status == noErr )
         {
             *password = g_strndup(password_data, password_length);
-            SecKeychainItemFreeContent(NULL, password_data);
+            SecKeychainItemFreeContent(nullptr, password_data);
             return TRUE;
         }
         else
         {
-            CFStringRef osx_resultstring = SecCopyErrorMessageString( status, NULL );
+            CFStringRef osx_resultstring = SecCopyErrorMessageString( status, nullptr );
             const gchar *resultstring = CFStringGetCStringPtr(osx_resultstring,
                                                               GetApplicationTextEncoding());
             PWARN ( "OS X keychain error: %s", resultstring );
@@ -359,7 +359,7 @@ gboolean gnc_keyring_get_password ( GtkWidget *parent,
         db_path );
 
     password_found = gnc_get_username_password ( parent, heading,
-                                                 *user, NULL,
+                                                 *user, nullptr,
                                                  user, password );
     g_free ( db_path );
     g_free ( heading );

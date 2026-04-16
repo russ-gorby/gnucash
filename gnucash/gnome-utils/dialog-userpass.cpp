@@ -43,8 +43,8 @@ gnc_get_username_password (GtkWidget *parent,
     GtkBuilder *builder;
     gint result;
 
-    g_return_val_if_fail (username != NULL, FALSE);
-    g_return_val_if_fail (password != NULL, FALSE);
+    g_return_val_if_fail (username != nullptr, FALSE);
+    g_return_val_if_fail (password != nullptr, FALSE);
 
     builder = gtk_builder_new();
     gnc_builder_add_from_file (builder, "dialog-userpass.glade", "username_password_dialog");
@@ -83,8 +83,8 @@ gnc_get_username_password (GtkWidget *parent,
         return TRUE;
     }
 
-    *username = NULL;
-    *password = NULL;
+    *username = nullptr;
+    *password = nullptr;
 
     g_object_unref(G_OBJECT(builder));
 

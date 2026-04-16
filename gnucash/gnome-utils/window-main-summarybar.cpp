@@ -101,7 +101,7 @@ typedef struct
 static GNCCurrencyAcc *
 gnc_ui_get_currency_accumulator(GList **list, gnc_commodity * currency, gint total_mode)
 {
-    GNCCurrencyAcc *found = NULL;
+    GNCCurrencyAcc *found = nullptr;
 
     for (GList *current = g_list_first(*list); current; current = g_list_next(current))
     {
@@ -136,13 +136,13 @@ gnc_ui_accounts_recurse (Account *parent, GList **currency_list,
     gnc_numeric end_amount_default_currency;
     GNCAccountType account_type;
     gnc_commodity * account_currency;
-    GNCCurrencyAcc *currency_accum = NULL;
-    GNCCurrencyAcc *grand_total_accum = NULL;
-    GNCCurrencyAcc *non_curr_accum = NULL;
+    GNCCurrencyAcc *currency_accum = nullptr;
+    GNCCurrencyAcc *grand_total_accum = nullptr;
+    GNCCurrencyAcc *non_curr_accum = nullptr;
     GList *children, *node;
     gboolean non_currency = FALSE;
 
-    if (parent == NULL) return;
+    if (parent == nullptr) return;
 
     children = gnc_account_get_children(parent);
     for (node = children; node; node = g_list_next(node))
@@ -299,7 +299,7 @@ get_total_mode_label (GNCCurrencyAcc *currency_accum)
 {
     const char *mnemonic = gnc_commodity_get_nice_symbol (currency_accum->currency);
     char *label_str;
-    if (mnemonic == NULL)
+    if (mnemonic == nullptr)
         mnemonic = "";
     // i.e., "$, grand total," [profits: $12,345.67, assets: $23,456.78]
     switch (currency_accum->total_mode)
@@ -357,7 +357,7 @@ gnc_main_window_summary_refresh (GNCMainSummary * summary)
     Account *root = gnc_get_current_root_account ();
 
     options.default_currency = gnc_default_currency ();
-    if (options.default_currency == NULL)
+    if (options.default_currency == nullptr)
     {
         options.default_currency = xaccAccountGetCommodity(root);
     }
@@ -369,7 +369,7 @@ gnc_main_window_summary_refresh (GNCMainSummary * summary)
     options.start_date = gnc_accounting_period_fiscal_start();
     options.end_date = gnc_accounting_period_fiscal_end();
 
-    GList *currency_list = NULL;
+    GList *currency_list = nullptr;
 
     /* grand total should be first in the list */
     if (options.grand_total)
@@ -388,7 +388,7 @@ gnc_main_window_summary_refresh (GNCMainSummary * summary)
         char asset_amount_string[256], profit_amount_string[256];
 
         g_object_ref(summary->datamodel);
-        gtk_combo_box_set_model(GTK_COMBO_BOX(summary->totals_combo), NULL);
+        gtk_combo_box_set_model(GTK_COMBO_BOX(summary->totals_combo), nullptr);
         gtk_list_store_clear(summary->datamodel);
         for (GList *current = g_list_first(currency_list); current; current = g_list_next(current))
         {
@@ -499,35 +499,35 @@ check_string_for_markup (gchar *string)
     gchar **strings;
     gchar *ret_string = g_strdup (string);
 
-    if (g_strrstr (ret_string, "&") != NULL)
+    if (g_strrstr (ret_string, "&") != nullptr)
     {
         strings = g_strsplit (ret_string, "&", -1);
         g_free (ret_string);
         ret_string = g_strjoinv ("&amp;", strings);
         g_strfreev (strings);
     }
-    if (g_strrstr (ret_string, "<") != NULL)
+    if (g_strrstr (ret_string, "<") != nullptr)
     {
         strings = g_strsplit (ret_string, "<", -1);
         g_free (ret_string);
         ret_string = g_strjoinv ("&lt;", strings);
         g_strfreev (strings);
     }
-    if (g_strrstr (ret_string, ">") != NULL)
+    if (g_strrstr (ret_string, ">") != nullptr)
     {
         strings = g_strsplit (ret_string, ">", -1);
         g_free (ret_string);
         ret_string = g_strjoinv ("&gt;", strings);
         g_strfreev (strings);
     }
-    if (g_strrstr (ret_string, "\"") != NULL)
+    if (g_strrstr (ret_string, "\"") != nullptr)
     {
         strings = g_strsplit (ret_string, "\"", -1);
         g_free (ret_string);
         ret_string = g_strjoinv ("&quot;", strings);
         g_strfreev (strings);
     }
-    if (g_strrstr (ret_string, "'") != NULL)
+    if (g_strrstr (ret_string, "'") != nullptr)
     {
         strings = g_strsplit (ret_string, "'", -1);
         g_free (ret_string);
@@ -549,9 +549,9 @@ cdf (GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model
     viewcol = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (cell), "view_column"));
 
     if (summary->combo_popped)
-        g_object_set (cell, "xalign", 0.0, NULL);
+        g_object_set (cell, "xalign", 0.0, nullptr);
     else
-        g_object_set (cell, "xalign", 0.5, NULL);
+        g_object_set (cell, "xalign", 0.5, nullptr);
 
     gtk_tree_model_get (GTK_TREE_MODEL (tree_model), iter,
                             COLUMN_MNEMONIC_TYPE, &type,
@@ -563,17 +563,17 @@ cdf (GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model
                             COLUMN_PROFITS_NEG, &profits_neg, -1);
 
     if (viewcol == 0)
-        g_object_set (cell, "text", type, NULL);
+        g_object_set (cell, "text", type, nullptr);
 
     if (viewcol == 2)
     {
         gchar *a_string, *checked_string = check_string_for_markup (assets_val);
         if ((summary->show_negative_color == TRUE) && (assets_neg == TRUE))
-            a_string = g_strconcat (assets, " <span foreground='", summary->negative_color, "'>", checked_string, "</span>", NULL);
+            a_string = g_strconcat (assets, " <span foreground='", summary->negative_color, "'>", checked_string, "</span>", nullptr);
         else
-            a_string = g_strconcat (assets, " ", checked_string, NULL);
+            a_string = g_strconcat (assets, " ", checked_string, nullptr);
 
-        g_object_set (cell, "markup", a_string, NULL);
+        g_object_set (cell, "markup", a_string, nullptr);
         g_free (a_string);
         g_free (checked_string);
     }
@@ -582,11 +582,11 @@ cdf (GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model
     {
         gchar *p_string, *checked_string = check_string_for_markup (profits_val);
         if ((summary->show_negative_color == TRUE) && (profits_neg == TRUE))
-            p_string = g_strconcat (profits, " <span foreground='", summary->negative_color, "'>", checked_string, "</span>", NULL);
+            p_string = g_strconcat (profits, " <span foreground='", summary->negative_color, "'>", checked_string, "</span>", nullptr);
         else
-            p_string = g_strconcat (profits, " ", checked_string, NULL);
+            p_string = g_strconcat (profits, " ", checked_string, nullptr);
 
-        g_object_set (cell, "markup", p_string, NULL);
+        g_object_set (cell, "markup", p_string, nullptr);
         g_free (p_string);
         g_free (checked_string);
     }
@@ -639,7 +639,7 @@ gnc_main_window_summary_new (void)
 
     retval->component_id = gnc_register_gui_component (WINDOW_SUMMARYBAR_CM_CLASS,
                            summarybar_refresh_handler,
-                           NULL, retval);
+                           nullptr, retval);
     gnc_gui_component_watch_entity_type (retval->component_id,
                                          GNC_ID_ACCOUNT,
                                          QOF_EVENT_DESTROY
@@ -659,7 +659,7 @@ gnc_main_window_summary_new (void)
         gtk_cell_layout_pack_start (GTK_CELL_LAYOUT(retval->totals_combo), textRenderer, TRUE);
 
         g_object_set_data (G_OBJECT(textRenderer), "view_column", GINT_TO_POINTER (i));
-        gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT(retval->totals_combo), textRenderer, cdf, retval, NULL);
+        gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT(retval->totals_combo), textRenderer, cdf, retval, nullptr);
     }
 
     gtk_container_set_border_width (GTK_CONTAINER (retval->hbox), 2);
@@ -673,7 +673,7 @@ gnc_main_window_summary_new (void)
 
     gnc_main_window_summary_refresh(retval);
 
-    retval->cnxn_id =  gnc_prefs_register_cb (GNC_PREFS_GROUP, NULL,
+    retval->cnxn_id =  gnc_prefs_register_cb (GNC_PREFS_GROUP, nullptr,
                        reinterpret_cast<gpointer>(prefs_changed_cb), retval);
 
     return retval->hbox;

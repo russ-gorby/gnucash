@@ -128,7 +128,7 @@ static gboolean autosave_confirm(GtkWidget *toplevel)
                            _("Yes, _always"), YES_ALWAYS,
                            _("No, n_ever"), NO_NEVER,
                            _("_No, not this time"), NO_NOT_THIS_TIME,
-                           NULL);
+                           nullptr);
     gtk_dialog_set_default_response( GTK_DIALOG(dialog), NO_NOT_THIS_TIME);
 
     /* Run the modal dialog */
@@ -191,7 +191,7 @@ static gboolean autosave_timeout_cb(gpointer user_data)
         return FALSE;
 
     /* Store the current toplevel window for later use. */
-    GtkWidget *toplevel = GTK_WIDGET (gnc_ui_get_main_window (NULL));
+    GtkWidget *toplevel = GTK_WIDGET (gnc_ui_get_main_window (nullptr));
 
     /* Lookup preference to show an explanatory dialog, if wanted. */
     bool show_explanation =
@@ -217,7 +217,7 @@ static gboolean autosave_timeout_cb(gpointer user_data)
 
         gnc_file_save (GTK_WINDOW (toplevel));
 
-        gnc_main_window_set_progressbar_window(NULL);
+        gnc_main_window_set_progressbar_window(nullptr);
 
         /* Return FALSE so that the timeout is automatically destroyed and
            the function will not be called again. However, at least in my

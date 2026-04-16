@@ -35,14 +35,14 @@
 #define MARKUP_STRING "<span size='small'>%s</span>"
 #define GNC_PREF_SHOW_SPLASH "show-splash-screen"
 
-static GtkWidget * splash = NULL;
-static GtkWidget * progress = NULL;
-static GtkWidget * progress_bar = NULL;
+static GtkWidget * splash = nullptr;
+static GtkWidget * progress = nullptr;
+static GtkWidget * progress_bar = nullptr;
 
 static void
 splash_destroy_cb (GtkWidget *object, gpointer user_data)
 {
-    splash = NULL;
+    splash = nullptr;
 }
 
 static gboolean
@@ -75,7 +75,7 @@ gnc_show_splash_screen (void)
     gtk_widget_set_name (GTK_WIDGET(splash), "gnc-id-splash");
 
     g_signal_connect (splash, "destroy",
-                      G_CALLBACK (splash_destroy_cb), NULL);
+                      G_CALLBACK (splash_destroy_cb), nullptr);
 
     gtk_window_set_title (GTK_WINDOW (splash), "GnuCash");
     gtk_window_set_position (GTK_WINDOW (splash), GTK_WIN_POS_CENTER);
@@ -90,7 +90,7 @@ gnc_show_splash_screen (void)
         return;
     }
 
-    frame = gtk_frame_new (NULL);
+    frame = gtk_frame_new (nullptr);
     vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
     gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
@@ -98,14 +98,14 @@ gnc_show_splash_screen (void)
 
     ver_string = g_strdup_printf ("%s: %s, %s: %s", _("Version"),
                                   gnc_version(), _("Build ID"), gnc_build_id());
-    version = gtk_label_new(NULL);
+    version = gtk_label_new(nullptr);
     markup = g_markup_printf_escaped(MARKUP_STRING, ver_string);
     gtk_label_set_markup(GTK_LABEL(version), markup);
     g_free(markup);
     g_free(ver_string);
     separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
 
-    progress = gtk_label_new(NULL);
+    progress = gtk_label_new(nullptr);
     /* the set_max_width avoids "bumping" of the splash screen
        if a long string is given in gnc_update_splash_screen();
        presumably it would be better to inhibit size change of the
@@ -128,7 +128,7 @@ gnc_show_splash_screen (void)
 
     gtk_widget_add_events(splash, GDK_BUTTON_PRESS_MASK);
     g_signal_connect(splash, "button_press_event",
-                     G_CALLBACK(button_press_cb), NULL);
+                     G_CALLBACK(button_press_cb), nullptr);
 
     gtk_window_set_auto_startup_notification (FALSE);
     gtk_widget_show_all (splash);
@@ -145,9 +145,9 @@ gnc_destroy_splash_screen (void)
     if (splash)
     {
         gtk_widget_destroy (splash);
-        progress = NULL;
-        progress_bar = NULL;
-        splash = NULL;
+        progress = nullptr;
+        progress_bar = nullptr;
+        splash = nullptr;
     }
 }
 

@@ -84,7 +84,7 @@ typedef struct _GncPluginMenuAdditionsPerWindow
  *  plugin. */
 static GActionEntry gnc_plugin_actions [] =
 {
-    { "AdditionsAction", gnc_plugin_menu_additions_action_new_cb, "s", NULL, NULL },
+    { "AdditionsAction", gnc_plugin_menu_additions_action_new_cb, "s", nullptr, nullptr },
 };
 /** The number of actions provided by this plugin. */
 static guint gnc_plugin_n_actions = G_N_ELEMENTS(gnc_plugin_actions);
@@ -143,10 +143,10 @@ gnc_plugin_menu_additions_finalize (GObject *object)
 GncPlugin *
 gnc_plugin_menu_additions_new (void) noexcept
 {
-    GncPlugin *plugin_page = NULL;
+    GncPlugin *plugin_page = nullptr;
 
     ENTER("");
-    plugin_page = GNC_PLUGIN (g_object_new (GNC_TYPE_PLUGIN_MENU_ADDITIONS, NULL));
+    plugin_page = GNC_PLUGIN (g_object_new (GNC_TYPE_PLUGIN_MENU_ADDITIONS, nullptr));
     LEAVE("plugin %p", plugin_page);
     return plugin_page;
 }
@@ -158,7 +158,7 @@ gnc_plugin_menu_additions_new (void) noexcept
 static SCM
 gnc_main_window_to_scm (GncMainWindow *window)
 {
-    static swig_type_info * main_window_type = NULL;
+    static swig_type_info * main_window_type = nullptr;
 
     if (!window)
         return SCM_BOOL_F;
@@ -231,7 +231,7 @@ gnc_menu_additions_sort (ExtensionInfo *a, ExtensionInfo *b)
 static gpointer
 gnc_menu_additions_init_accel_table (gpointer unused)
 {
-    return g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+    return g_hash_table_new_full(g_str_hash, g_str_equal, nullptr, g_free);
 }
 
 
@@ -255,7 +255,7 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
         return;
     }
 
-    if (!g_utf8_validate(info->action_label, -1, NULL))
+    if (!g_utf8_validate(info->action_label, -1, nullptr))
     {
         g_warning ("Extension menu label '%s' is not valid utf8.", info->action_label);
         info->accel_assigned = TRUE;
@@ -265,7 +265,7 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
 
     /* Was an accelerator pre-assigned in the source? */
     const gchar *ptr = g_utf8_strchr (info->action_label, -1, '_');
-    if (ptr == NULL)
+    if (ptr == nullptr)
     {
         LEAVE("not preassigned");
         return;
@@ -276,9 +276,9 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
 
     /* Now build a new map. Old one freed automatically. */
     auto map = static_cast<gchar *>(g_hash_table_lookup(table, info->path));
-    if (map == NULL)
+    if (map == nullptr)
         map = const_cast<gchar *>("");
-    gchar *new_map = g_strconcat(map, accel_key, (gchar *)NULL);
+    gchar *new_map = g_strconcat(map, accel_key, (gchar *)nullptr);
     DEBUG("path '%s', map '%s' -> '%s'", info->path, map, new_map);
     g_hash_table_replace(table, info->path, new_map);
 
@@ -303,7 +303,7 @@ static void
 gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
 {
     gchar buf[16];
-    const gchar *ptr = NULL;
+    const gchar *ptr = nullptr;
     gboolean map_allocated = FALSE;
 
     ENTER("Checking %s/%s [%s]", info->path, info->action_label, info->action_name);
@@ -317,7 +317,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     auto map = static_cast<gchar *>(
         g_hash_table_lookup(table, info->path)
     );
-    if (map == NULL)
+    if (map == nullptr)
     {
         map = g_strdup("");
         map_allocated = TRUE;
@@ -337,7 +337,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
             break;
     }
 
-    if (ptr == NULL)
+    if (ptr == nullptr)
     {
         /* Ran out of characters. Nothing to do. */
         info->accel_assigned = TRUE;
@@ -352,7 +352,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     /* Now build a new string in the form "<start>_<end>". */
     gchar *start = g_strndup (info->action_label, ptr - info->action_label);
     DEBUG("start %p, len %ld, text '%s'", start, g_utf8_strlen(start, -1), start);
-    gchar *new_label = g_strconcat(start, "_", ptr, (gchar *)NULL);
+    gchar *new_label = g_strconcat(start, "_", ptr, (gchar *)nullptr);
     g_free(start);
     DEBUG("label '%s' -> '%s'", info->action_label, new_label);
 
@@ -364,7 +364,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     info->action_label = new_label;
 
     /* Now build a new map. Old one freed automatically. */
-    gchar *new_map = g_strconcat(map, buf, (gchar *)NULL);
+    gchar *new_map = g_strconcat(map, buf, (gchar *)nullptr);
     DEBUG("map '%s' -> '%s'", map, new_map);
     g_hash_table_replace(table, info->path, new_map);
 
@@ -379,11 +379,11 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
 static GMenuItem *
 setup_gmenu_item_with_tooltip (ExtensionInfo *ext_info)
 {
-    GMenuItem *gmenu_item = NULL;
+    GMenuItem *gmenu_item = nullptr;
 
     if (g_strcmp0 (ext_info->typeStr, "menuitem") == 0)
     {
-        gmenu_item = g_menu_item_new (ext_info->action_label, NULL);
+        gmenu_item = g_menu_item_new (ext_info->action_label, nullptr);
         g_menu_item_set_action_and_target_value (gmenu_item, "gnc-plugin-menu-additions-actions.AdditionsAction",
                                                  g_variant_new_string (ext_info->action_name));
 
@@ -413,7 +413,7 @@ static void
 gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
                                    GncPluginMenuAdditionsPerWindow *per_window)
 {
-    GMenuItem *gmenu_item = NULL;
+    GMenuItem *gmenu_item = nullptr;
 
     DEBUG("Adding %s/%s [%s] as [%s]", ext_info->path, ext_info->action_label,
            ext_info->action_name, ext_info->typeStr );
@@ -423,7 +423,7 @@ gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
     if (g_str_has_suffix (ext_info->path, _("_Custom")))
         return;
 
-    gchar *full_path = g_strconcat (ext_info->path, "/", ext_info->action_label, NULL);
+    gchar *full_path = g_strconcat (ext_info->path, "/", ext_info->action_label, nullptr);
 
     auto item_path = static_cast<GMenuItem *>(
         g_hash_table_lookup (per_window->build_menu_hash, ext_info->path)
@@ -453,7 +453,7 @@ gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
        with the original action_label so the gmenu_item can be found */
     if (ext_info->action_label_original)
     {
-        gchar *full_path_original = g_strconcat (ext_info->path, "/", ext_info->action_label_original, NULL);
+        gchar *full_path_original = g_strconcat (ext_info->path, "/", ext_info->action_label_original, nullptr);
         g_hash_table_insert (per_window->build_menu_hash, g_strdup (full_path_original), gmenu_item);
         g_object_ref (gmenu_item);
         g_free (full_path_original);
@@ -481,7 +481,7 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
 {
     GncPluginMenuAdditionsPerWindow per_window;
     static GOnce accel_table_init = G_ONCE_INIT;
-    static GHashTable *table = NULL;
+    static GHashTable *table = nullptr;
     GSList *menu_list;
     GMenuModel *menubar_model = gnc_main_window_get_menu_model (window);
     GncMenuModelSearch *gsm = g_new0 (GncMenuModelSearch, 1);
@@ -490,7 +490,7 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
 
     GncPluginMenuAdditions *menu_plugin = GNC_PLUGIN_MENU_ADDITIONS (plugin);
     if (!menu_plugin->item_hash)
-        menu_plugin->item_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+        menu_plugin->item_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, nullptr);
 
     per_window.item_hash = menu_plugin->item_hash;
     per_window.build_menu_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
@@ -501,7 +501,7 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
 
     /* Assign accelerators */
     table = static_cast<GHashTable *>(
-        g_once (&accel_table_init, gnc_menu_additions_init_accel_table, NULL)
+        g_once (&accel_table_init, gnc_menu_additions_init_accel_table, nullptr)
     );
     g_slist_foreach (menu_list,
                     (GFunc)gnc_menu_additions_do_preassigned_accel, table);
@@ -512,13 +512,13 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
                      &per_window);
 
     // add the report menu to the window
-    gsm->search_action_label = NULL;
+    gsm->search_action_label = nullptr;
     gsm->search_action_name = "ReportsPlaceholder0";
-    gsm->search_action_target = NULL;
+    gsm->search_action_target = nullptr;
 
     if (gnc_menubar_model_find_item (menubar_model, gsm))
     {
-        g_menu_insert_section (G_MENU(gsm->model), gsm->index, NULL, G_MENU_MODEL(per_window.report_menu));
+        g_menu_insert_section (G_MENU(gsm->model), gsm->index, nullptr, G_MENU_MODEL(per_window.report_menu));
     }
     else
         PERR("Could not find 'ReportsAction' in menu model");
@@ -558,7 +558,7 @@ gnc_plugin_menu_additions_remove_from_window (GncPlugin *plugin,
     simple_action_group = gnc_main_window_get_action_group (window, PLUGIN_ACTIONS_NAME);
 
     if (simple_action_group && !gnc_main_window_just_plugin_prefs (window))
-        gtk_widget_insert_action_group (GTK_WIDGET(window), PLUGIN_ACTIONS_NAME, NULL);
+        gtk_widget_insert_action_group (GTK_WIDGET(window), PLUGIN_ACTIONS_NAME, nullptr);
 
     LEAVE(" ");
 }

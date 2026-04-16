@@ -59,7 +59,7 @@ dqv_clear_booklist (DialogQueryView *dqv)
     for (node = dqv->books; node; node = node->next)
         guid_free ((GncGUID*)node->data);
     g_list_free (dqv->books);
-    dqv->books = NULL;
+    dqv->books = nullptr;
 }
 
 static void
@@ -153,7 +153,7 @@ close_handler (gpointer data)
     auto dqv = static_cast<DialogQueryView *>(data);
 
     g_return_if_fail (dqv);
-    gnc_dialog_query_view_delete_cb (GTK_DIALOG(dqv->dialog), NULL, dqv);
+    gnc_dialog_query_view_delete_cb (GTK_DIALOG(dqv->dialog), nullptr, dqv);
 }
 
 static void
@@ -230,9 +230,9 @@ gnc_dialog_query_view_new (GtkWindow *parent, GList *param_list, Query *q, const
     /* build the query list */
     dqv->qview = gnc_query_view_new (param_list, q);
 
-    frame = gtk_frame_new(NULL);
+    frame = gtk_frame_new(nullptr);
 
-    scrollWin = gtk_scrolled_window_new (NULL, NULL);
+    scrollWin = gtk_scrolled_window_new (nullptr, nullptr);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrollWin),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
@@ -306,7 +306,7 @@ void gnc_dialog_query_view_set_buttons (DialogQueryView *dqv,
     int i;
 
     if (!dqv || !buttons) return;
-    g_return_if_fail (dqv->buttons == NULL);
+    g_return_if_fail (dqv->buttons == nullptr);
 
     dqv->buttons = buttons;
     dqv->user_data = user_data;
@@ -358,11 +358,11 @@ gnc_dialog_query_view_create (GtkWindow *parent, GList *param_list, Query *q,
     DialogQueryView *dqv;
 
     if (!param_list || !q)
-        return NULL;
+        return nullptr;
 
     dqv = gnc_dialog_query_view_new (parent, param_list, q, pref_group);
     if (!dqv)
-        return NULL;
+        return nullptr;
 
     if (title)
         gnc_dialog_query_view_set_title (dqv, title);

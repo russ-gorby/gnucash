@@ -126,7 +126,7 @@ GncSxInstanceDenseCalAdapter*
 gnc_sx_instance_dense_cal_adapter_new(GncSxInstanceModel *instances)
 {
     auto adapter = static_cast<GncSxInstanceDenseCalAdapter *>(
-        g_object_new(GNC_TYPE_SX_INSTANCE_DENSE_CAL_ADAPTER, NULL)
+        g_object_new(GNC_TYPE_SX_INSTANCE_DENSE_CAL_ADAPTER, nullptr)
     );
     adapter->instances = instances;
     g_object_ref(G_OBJECT(adapter->instances));
@@ -150,8 +150,8 @@ gsidca_get_contained(GncDenseCalModel *model)
 {
     GncSxInstanceDenseCalAdapter *adapter = GNC_SX_INSTANCE_DENSE_CAL_ADAPTER(model);
     //"removing return gnc_g_list_map(instances->sxes, sx_to_tag, null);
-    GList *list = NULL, *sxes;
-    for (sxes = gnc_sx_instance_model_get_sx_instances_list (adapter->instances); sxes != NULL; sxes = sxes->next)
+    GList *list = nullptr, *sxes;
+    for (sxes = gnc_sx_instance_model_get_sx_instances_list (adapter->instances); sxes != nullptr; sxes = sxes->next)
     {
         GncSxInstances *sx_instances = (GncSxInstances*)sxes->data;
         if (xaccSchedXactionGetEnabled(sx_instances->sx))
@@ -167,8 +167,8 @@ gsidca_get_name(GncDenseCalModel *model, guint tag)
     GncSxInstanceDenseCalAdapter *adapter = GNC_SX_INSTANCE_DENSE_CAL_ADAPTER(model);
     GncSxInstances *insts
     = (GncSxInstances*)g_list_find_custom(gnc_sx_instance_model_get_sx_instances_list (adapter->instances), GUINT_TO_POINTER(tag), gsidca_find_sx_with_tag)->data;
-    if (insts == NULL)
-        return NULL;
+    if (insts == nullptr)
+        return nullptr;
     return xaccSchedXactionGetName(insts->sx);
 }
 
@@ -181,8 +181,8 @@ gsidca_get_info(GncDenseCalModel *model, guint tag)
     gchar *schedule_str;
     GncSxInstances *insts
     = (GncSxInstances*)g_list_find_custom(gnc_sx_instance_model_get_sx_instances_list(adapter->instances), GUINT_TO_POINTER(tag), gsidca_find_sx_with_tag)->data;
-    if (insts == NULL)
-        return NULL;
+    if (insts == nullptr)
+        return nullptr;
     schedule = gnc_sx_get_schedule(insts->sx);
     schedule_str = recurrenceListToCompactString(schedule);
     return schedule_str;
@@ -195,7 +195,7 @@ gsidca_get_instance_count(GncDenseCalModel *model, guint tag)
     // g_list_find(instances->sxes, {sx_to_tag, tag}).length();
     GncSxInstances *insts
     = (GncSxInstances*)g_list_find_custom(gnc_sx_instance_model_get_sx_instances_list(adapter->instances), GUINT_TO_POINTER(tag), gsidca_find_sx_with_tag)->data;
-    if (insts == NULL)
+    if (insts == nullptr)
         return 0;
     return g_list_length(insts->instance_list);
 }
@@ -207,7 +207,7 @@ gsidca_get_instance(GncDenseCalModel *model, guint tag, gint instance_index, GDa
     GncSxInstance *inst;
     GncSxInstances *insts
     = (GncSxInstances*)g_list_find_custom(gnc_sx_instance_model_get_sx_instances_list(adapter->instances), GUINT_TO_POINTER(tag), gsidca_find_sx_with_tag)->data;
-    if (insts == NULL)
+    if (insts == nullptr)
         return;
     inst = (GncSxInstance*)g_list_nth_data(insts->instance_list, instance_index);
     g_date_valid(&inst->date);
@@ -219,21 +219,21 @@ static void
 gnc_sx_instance_dense_cal_adapter_dispose(GObject *obj)
 {
     GncSxInstanceDenseCalAdapter *adapter;
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj != nullptr);
     adapter = GNC_SX_INSTANCE_DENSE_CAL_ADAPTER(obj);
     // g_return_if_fail(!adapter->disposed);
     if (adapter->disposed) return;
     adapter->disposed = TRUE;
 
     g_object_unref(G_OBJECT(adapter->instances));
-    adapter->instances = NULL;
+    adapter->instances = nullptr;
 
     G_OBJECT_CLASS(gnc_sx_instance_dense_cal_adapter_parent_class)->dispose(obj);
 }
 
 static void gnc_sx_instance_dense_cal_adapter_finalize(GObject *obj)
 {
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj != nullptr);
     // nop
     G_OBJECT_CLASS(gnc_sx_instance_dense_cal_adapter_parent_class)->finalize(obj);
 }

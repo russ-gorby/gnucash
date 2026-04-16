@@ -101,9 +101,9 @@ gnc_restore_window_size(const char *group, GtkWindow *window, GtkWindow *parent)
 
     ENTER("");
 
-    g_return_if_fail(group != NULL);
-    g_return_if_fail(window != NULL);
-    g_return_if_fail(parent != NULL);
+    g_return_if_fail(group != nullptr);
+    g_return_if_fail(window != nullptr);
+    g_return_if_fail(parent != nullptr);
 
     if (!gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_SAVE_GEOMETRY))
         return;
@@ -154,7 +154,7 @@ gnc_restore_window_size(const char *group, GtkWindow *window, GtkWindow *parent)
         else
         {
             /* preference is at default value -1,-1,-1,-1 */
-            if (parent != NULL)
+            if (parent != nullptr)
             {
                 gint parent_wpos[2], parent_wsize[2], window_wsize[2];
                 gtk_window_get_position (GTK_WINDOW(parent), &parent_wpos[0], &parent_wpos[1]);
@@ -206,8 +206,8 @@ gnc_save_window_size(const char *group, GtkWindow *window) noexcept
 
     ENTER("");
 
-    g_return_if_fail(group != NULL);
-    g_return_if_fail(window != NULL);
+    g_return_if_fail(group != nullptr);
+    g_return_if_fail(window != nullptr);
 
     if (!gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_SAVE_GEOMETRY))
         return;
@@ -246,11 +246,11 @@ gnc_window_adjust_for_screen(GtkWindow * window) noexcept
 
     ENTER("");
 
-    if (window == NULL)
+    if (window == nullptr)
         return;
 
     g_return_if_fail(GTK_IS_WINDOW(window));
-    if (gtk_widget_get_window (GTK_WIDGET(window)) == NULL)
+    if (gtk_widget_get_window (GTK_WIDGET(window)) == nullptr)
         return;
 
     win = gtk_widget_get_window (GTK_WIDGET(window));
@@ -435,7 +435,7 @@ gnc_gdate_in_valid_range (GDate *test_date, gboolean warn) noexcept
         gchar *dialog_msg = _("The entered date is out of the range "
                   "01/01/1400 - 31/12/9999, resetting to this year");
         gchar *dialog_title = _("Date out of range");
-        GtkWidget *dialog = gtk_message_dialog_new (gnc_ui_get_main_window (NULL),
+        GtkWidget *dialog = gtk_message_dialog_new (gnc_ui_get_main_window (nullptr),
                                static_cast<GtkDialogFlags>(0),
                                GTK_MESSAGE_ERROR,
                                GTK_BUTTONS_OK,
@@ -458,9 +458,9 @@ gnc_handle_date_accelerator (GdkEventKey *event,
 {
     GDate gdate;
 
-    g_return_val_if_fail (event != NULL, FALSE);
-    g_return_val_if_fail (tm != NULL, FALSE);
-    g_return_val_if_fail (date_str != NULL, FALSE);
+    g_return_val_if_fail (event != nullptr, FALSE);
+    g_return_val_if_fail (tm != nullptr, FALSE);
+    g_return_val_if_fail (date_str != nullptr, FALSE);
 
     if (event->type != GDK_KEY_PRESS)
         return FALSE;
@@ -615,7 +615,7 @@ gnc_handle_date_accelerator (GdkEventKey *event,
  *   GtkBuilder support functions
  *-------------------------------------------------------------------------*/
 
-GModule *allsymbols = NULL;
+GModule *allsymbols = nullptr;
 
 /* gnc_builder_add_from_file:
  *
@@ -626,22 +626,22 @@ GModule *allsymbols = NULL;
 gboolean
 gnc_builder_add_from_file (GtkBuilder *builder, const char *filename, const char *root) noexcept
 {
-    GError* error = NULL;
+    GError* error = nullptr;
     char *fname;
     gchar *gnc_builder_dir;
     gboolean result;
 
-    g_return_val_if_fail (builder != NULL, FALSE);
-    g_return_val_if_fail (filename != NULL, FALSE);
-    g_return_val_if_fail (root != NULL, FALSE);
+    g_return_val_if_fail (builder != nullptr, FALSE);
+    g_return_val_if_fail (filename != nullptr, FALSE);
+    g_return_val_if_fail (root != nullptr, FALSE);
 
     gnc_builder_dir = gnc_path_get_gtkbuilderdir ();
-    fname = g_build_filename(gnc_builder_dir, filename, (char *)NULL);
+    fname = g_build_filename(gnc_builder_dir, filename, (char *)nullptr);
     g_free (gnc_builder_dir);
 
     {
         gchar *localroot = g_strdup(root);
-        gchar *objects[] = { localroot, NULL };
+        gchar *objects[] = { localroot, nullptr };
         result = gtk_builder_add_objects_from_file (builder, fname, objects, &error);
         if (!result)
         {
@@ -672,10 +672,10 @@ gnc_builder_connect_full_func(GtkBuilder *builder,
     GCallback func;
     GCallback *p_func = &func;
 
-    if (allsymbols == NULL)
+    if (allsymbols == nullptr)
     {
         /* get a handle on the main executable -- use this to find symbols */
-        allsymbols = g_module_open(NULL, static_cast<GModuleFlags>(0));
+        allsymbols = g_module_open(nullptr, static_cast<GModuleFlags>(0));
     }
 
     if (!g_module_symbol(allsymbols, handler_name, (gpointer *)p_func))
@@ -684,9 +684,9 @@ gnc_builder_connect_full_func(GtkBuilder *builder,
         /* Fallback to dlsym -- necessary for *BSD linkers */
         func = dlsym(RTLD_DEFAULT, handler_name);
 #else
-        func = NULL;
+        func = nullptr;
 #endif
-        if (func == NULL)
+        if (func == nullptr)
         {
             PWARN("ggaff: could not find signal handler '%s'.", handler_name);
             return;
@@ -698,7 +698,7 @@ gnc_builder_connect_full_func(GtkBuilder *builder,
                                  connect_object, flags);
     else
         g_signal_connect_data(signal_object, signal_name, func,
-                              user_data, NULL , flags);
+                              user_data, nullptr , flags);
 }
 /*--------------------------------------------------------------------------
  * End of GtkBuilder utilities
@@ -717,9 +717,9 @@ gnc_gtk_dialog_add_button (GtkWidget *dialog, const gchar *label, const gchar *i
 
         image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON);
         gtk_button_set_image (GTK_BUTTON(button), image);
-        g_object_set (button, "always-show-image", TRUE, NULL);
+        g_object_set (button, "always-show-image", TRUE, nullptr);
     }
-    g_object_set (button, "can-default", TRUE, NULL);
+    g_object_set (button, "can-default", TRUE, nullptr);
     gtk_widget_show_all(button);
     gtk_dialog_add_action_widget(GTK_DIALOG(dialog), button, response);
 }
@@ -753,7 +753,7 @@ gnc_dialog_run (GtkDialog *dialog, const gchar *pref_name) noexcept
     if (GTK_IS_MESSAGE_DIALOG(dialog))
     {
         GtkMessageType type;
-        g_object_get(dialog, "message-type", &type, (gchar*)NULL);
+        g_object_get(dialog, "message-type", &type, (gchar*)nullptr);
         ask = (type == GTK_MESSAGE_QUESTION || type == GTK_MESSAGE_WARNING);
     }
     perm = gtk_check_button_new_with_mnemonic

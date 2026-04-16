@@ -170,7 +170,7 @@ typedef gboolean (*gnc_tree_view_owner_filter_func)(GncOwner *owner, gpointer da
  *
  *  @param destroy A function to destroy the data block.  This
  *  function will be called when the filter is destroyed.  may be
- *  NULL.
+ *  nullptr.
  */
 void gnc_tree_view_owner_set_filter (GncTreeViewOwner *owner_view,
                                      gnc_tree_view_owner_filter_func func,
@@ -231,7 +231,7 @@ GncOwner * gnc_tree_view_owner_get_owner_from_iter (GtkTreeModel *model,
  *
  *  @param view A pointer to an owner tree view.
  *
- *  @return The selected owner, or NULL if no owner was selected.
+ *  @return The selected owner, or nullptr if no owner was selected.
  */
 GncOwner * gnc_tree_view_owner_get_selected_owner (GncTreeViewOwner *view);
 

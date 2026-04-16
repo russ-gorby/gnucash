@@ -107,7 +107,7 @@ new_tax_table_check_entry (NewTaxTable *ntt, GError **error)
     GNCPrintAmountInfo print_info;
     gnc_numeric value;
     gint result;
-    GError *tmp_error = NULL;
+    GError *tmp_error = nullptr;
 
     if (ntt->type == GNC_AMT_TYPE_VALUE)
     {
@@ -144,11 +144,11 @@ static gboolean
 new_tax_table_ok_cb (NewTaxTable *ntt)
 {
     TaxTableWindow *ttw;
-    const char *name = NULL;
+    const char *name = nullptr;
     char *message;
     Account *acc;
     gnc_numeric amount;
-    GError *error = NULL;
+    GError *error = nullptr;
 
     g_return_val_if_fail (ntt, FALSE);
     ttw = ntt->ttw;
@@ -159,7 +159,7 @@ new_tax_table_ok_cb (NewTaxTable *ntt)
     if (ntt->new_table)
     {
         name = gtk_entry_get_text (GTK_ENTRY(ntt->name_entry));
-        if (name == NULL || *name == '\0')
+        if (name == nullptr || *name == '\0')
         {
             message = _("You must provide a name for this Tax Table.");
             gnc_error_dialog (GTK_WINDOW(ntt->dialog), "%s", message);
@@ -199,7 +199,7 @@ new_tax_table_ok_cb (NewTaxTable *ntt)
 
     /* verify the account */
     acc = gnc_tree_view_account_get_selected_account (GNC_TREE_VIEW_ACCOUNT(ntt->acct_tree));
-    if (acc == NULL)
+    if (acc == nullptr)
     {
         message = _("You must choose a Tax Account.");
         gnc_error_dialog (GTK_WINDOW(ntt->dialog), "%s", message);
@@ -260,21 +260,21 @@ combo_changed (GtkWidget *widget, NewTaxTable *ntt)
     index = gtk_combo_box_get_active (GTK_COMBO_BOX(widget));
     ntt->type = index + 1;
 
-    new_tax_table_check_entry (ntt, NULL);
+    new_tax_table_check_entry (ntt, nullptr);
 }
 
 static void
 tax_table_account_selection_changed_cb (GtkTreeSelection *treeselection,
                                         NewTaxTable *ntt)
 {
-    new_tax_table_check_entry (ntt, NULL);
+    new_tax_table_check_entry (ntt, nullptr);
 }
 
 static GncTaxTable *
 new_tax_table_dialog (TaxTableWindow *ttw, gboolean new_table,
                       GncTaxTableEntry *entry, const char *name)
 {
-    GncTaxTable *created_table = NULL;
+    GncTaxTable *created_table = nullptr;
     NewTaxTable *ntt;
     GtkBuilder *builder;
     GtkWidget *box, *widget, *combo;
@@ -282,8 +282,8 @@ new_tax_table_dialog (TaxTableWindow *ttw, gboolean new_table,
     gint response, index;
     GtkTreeSelection *selection;
 
-    if (!ttw) return NULL;
-    if (new_table && entry) return NULL;
+    if (!ttw) return nullptr;
+    if (new_table && entry) return nullptr;
 
     ntt = g_new0 (NewTaxTable, 1);
     ntt->ttw = ttw;
@@ -410,8 +410,8 @@ static void
 tax_table_entries_refresh (TaxTableWindow *ttw)
 {
     GtkTreeIter iter;
-    GtkTreePath *path = NULL;
-    GtkTreeRowReference *reference = NULL;
+    GtkTreePath *path = nullptr;
+    GtkTreeRowReference *reference = nullptr;
 
     g_return_if_fail (ttw);
 
@@ -421,7 +421,7 @@ tax_table_entries_refresh (TaxTableWindow *ttw)
     /* Clear the list */
     GncTaxTableEntry *selected_entry = ttw->current_entry;
     gtk_list_store_clear (store);
-    if (ttw->current_table == NULL)
+    if (ttw->current_table == nullptr)
         return;
 
     /* Add the items to the list */
@@ -452,7 +452,7 @@ tax_table_entries_refresh (TaxTableWindow *ttw)
                                                   gnc_default_print_info (TRUE)));
             break;
          default:
-             row_text[1] = NULL;
+             row_text[1] = nullptr;
              break;
         }
 
@@ -484,7 +484,7 @@ tax_table_entries_refresh (TaxTableWindow *ttw)
         {
             GtkTreeSelection *selection = gtk_tree_view_get_selection (view);
             gtk_tree_selection_select_path (selection, path);
-            gtk_tree_view_scroll_to_cell (view, path, NULL, TRUE, 0.5, 0.0);
+            gtk_tree_view_scroll_to_cell (view, path, nullptr, TRUE, 0.5, 0.0);
             gtk_tree_path_free (path);
         }
     }
@@ -494,8 +494,8 @@ static void
 tax_table_window_refresh (TaxTableWindow *ttw)
 {
     GtkTreeIter iter;
-    GtkTreePath *path = NULL;
-    GtkTreeRowReference *reference = NULL;
+    GtkTreePath *path = nullptr;
+    GtkTreeRowReference *reference = nullptr;
     GncTaxTable *saved_current_table = ttw->current_table;
 
     g_return_if_fail (ttw);
@@ -549,7 +549,7 @@ tax_table_window_refresh (TaxTableWindow *ttw)
         {
             GtkTreeSelection *selection = gtk_tree_view_get_selection (view);
             gtk_tree_selection_select_path (selection, path);
-            gtk_tree_view_scroll_to_cell (view, path, NULL, TRUE, 0.5, 0.0);
+            gtk_tree_view_scroll_to_cell (view, path, nullptr, TRUE, 0.5, 0.0);
             gtk_tree_path_free (path);
         }
     }
@@ -579,7 +579,7 @@ tax_table_selection_changed (GtkTreeSelection *selection,
     if (table != ttw->current_table)
     {
         ttw->current_table = table;
-        ttw->current_entry = NULL;
+        ttw->current_entry = nullptr;
     }
     /* And force a refresh of the entries */
     tax_table_entries_refresh (ttw);
@@ -590,14 +590,14 @@ tax_table_entry_selection_changed (GtkTreeSelection *selection,
                                    gpointer          user_data)
 {
     auto ttw = static_cast<TaxTableWindow *>(user_data);
-    GtkTreeModel *model = NULL;
+    GtkTreeModel *model = nullptr;
     GtkTreeIter iter;
 
     g_return_if_fail (ttw);
 
     if (!gtk_tree_selection_get_selected (selection, &model, &iter))
     {
-        ttw->current_entry = NULL;
+        ttw->current_entry = nullptr;
         return;
     }
 
@@ -612,14 +612,14 @@ tax_table_entry_row_activated (GtkTreeView       *tree_view,
 {
     auto ttw = static_cast<TaxTableWindow *>(user_data);
 
-    new_tax_table_dialog (ttw, FALSE, ttw->current_entry, NULL);
+    new_tax_table_dialog (ttw, FALSE, ttw->current_entry, nullptr);
 }
 
 void
 tax_table_new_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
 {
     g_return_if_fail (ttw);
-    new_tax_table_dialog (ttw, TRUE, NULL, NULL);
+    new_tax_table_dialog (ttw, TRUE, nullptr, nullptr);
 }
 
 
@@ -662,7 +662,7 @@ static const char
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           _("_Cancel"), GTK_RESPONSE_CANCEL,
                                           button_name, GTK_RESPONSE_OK,
-                                          NULL);
+                                          nullptr);
     gtk_dialog_set_default_response (GTK_DIALOG(dialog), GTK_RESPONSE_OK);
 
     dvbox = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
@@ -671,7 +671,7 @@ static const char
     if (gtk_dialog_run (GTK_DIALOG(dialog)) != GTK_RESPONSE_OK)
     {
         gtk_widget_destroy (dialog);
-        return NULL;
+        return nullptr;
     }
 
     text = g_strdup (gtk_entry_get_text (GTK_ENTRY(textbox)));
@@ -737,8 +737,8 @@ tax_table_delete_table_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
         gnc_suspend_gui_refresh ();
         gncTaxTableBeginEdit (ttw->current_table);
         gncTaxTableDestroy (ttw->current_table);
-        ttw->current_table = NULL;
-        ttw->current_entry = NULL;
+        ttw->current_table = nullptr;
+        ttw->current_entry = nullptr;
         gnc_resume_gui_refresh ();
     }
 }
@@ -749,7 +749,7 @@ tax_table_new_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
     g_return_if_fail (ttw);
     if (!ttw->current_table)
         return;
-    new_tax_table_dialog (ttw, FALSE, NULL, NULL);
+    new_tax_table_dialog (ttw, FALSE, nullptr, nullptr);
 }
 
 void
@@ -758,7 +758,7 @@ tax_table_edit_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
     g_return_if_fail (ttw);
     if (!ttw->current_entry)
         return;
-    new_tax_table_dialog (ttw, FALSE, ttw->current_entry, NULL);
+    new_tax_table_dialog (ttw, FALSE, ttw->current_entry, nullptr);
 }
 
 void
@@ -786,7 +786,7 @@ tax_table_delete_entry_cb (GtkButton *button, TaxTableWindow *ttw) noexcept
         gncTaxTableEntryDestroy (ttw->current_entry);
         gncTaxTableChanged (ttw->current_table);
         gncTaxTableCommitEdit (ttw->current_table);
-        ttw->current_entry = NULL;
+        ttw->current_entry = nullptr;
         gnc_resume_gui_refresh ();
     }
 }
@@ -841,7 +841,7 @@ tax_table_window_destroy_cb (GtkWidget *widget, gpointer data) noexcept
     if (ttw->dialog)
     {
         gtk_widget_destroy (ttw->dialog);
-        ttw->dialog = NULL;
+        ttw->dialog = nullptr;
     }
     g_free (ttw);
 }
@@ -867,14 +867,14 @@ find_handler (gpointer find_data, gpointer data)
     auto ttw = static_cast<TaxTableWindow *>(data);
     auto book = static_cast<QofBook *>(find_data);
 
-    return (ttw != NULL && ttw->book == book);
+    return (ttw != nullptr && ttw->book == book);
 }
 
 /* Create a tax-table window */
 TaxTableWindow *
 gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book) noexcept
 {
-    if (!book) return NULL;
+    if (!book) return nullptr;
 
     /*
      * Find an existing tax-table window.  If found, bring it to
@@ -927,8 +927,8 @@ gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book) noexcept
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes ("", renderer,
              "text", TAX_TABLE_COL_NAME,
-             NULL);
-    g_object_set (G_OBJECT(column), "reorderable", TRUE, NULL);
+             nullptr);
+    g_object_set (G_OBJECT(column), "reorderable", TRUE, nullptr);
     gtk_tree_view_append_column (view, column);
     gtk_tree_view_column_set_sort_column_id (column, TAX_TABLE_COL_NAME);
 
@@ -951,8 +951,8 @@ gnc_ui_tax_table_window_new (GtkWindow *parent, QofBook *book) noexcept
     renderer = gtk_cell_renderer_text_new ();
     column = gtk_tree_view_column_new_with_attributes ("", renderer,
              "text", TAX_ENTRY_COL_NAME,
-             NULL);
-    g_object_set (G_OBJECT(column), "reorderable", TRUE, NULL);
+             nullptr);
+    g_object_set (G_OBJECT(column), "reorderable", TRUE, nullptr);
     gtk_tree_view_append_column (view, column);
     gtk_tree_view_column_set_sort_column_id (column, TAX_ENTRY_COL_NAME);
 
@@ -989,10 +989,10 @@ gnc_ui_tax_table_new_from_name (GtkWindow *parent, QofBook *book, const char *na
 {
     TaxTableWindow *ttw;
 
-    if (!book) return NULL;
+    if (!book) return nullptr;
 
     ttw = gnc_ui_tax_table_window_new (parent, book);
-    if (!ttw) return NULL;
+    if (!ttw) return nullptr;
 
-    return new_tax_table_dialog (ttw, TRUE, NULL, name);
+    return new_tax_table_dialog (ttw, TRUE, nullptr, name);
 }

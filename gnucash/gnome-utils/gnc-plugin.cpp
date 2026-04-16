@@ -211,7 +211,7 @@ gnc_plugin_remove_from_window (GncPlugin *plugin,
 const gchar *
 gnc_plugin_get_name (GncPlugin *plugin)
 {
-    g_return_val_if_fail (GNC_IS_PLUGIN (plugin), NULL);
+    g_return_val_if_fail (GNC_IS_PLUGIN (plugin), nullptr);
     return (GNC_PLUGIN_GET_CLASS(plugin)->plugin_name);
 }
 
@@ -229,8 +229,8 @@ void
 gnc_plugin_init_short_names (GtkWidget *toolbar,
                              GncToolBarShortNames *toolbar_labels)
 {
-    g_return_if_fail (toolbar != NULL);
-    g_return_if_fail (toolbar_labels != NULL);
+    g_return_if_fail (toolbar != nullptr);
+    g_return_if_fail (toolbar_labels != nullptr);
 
     for (gint i = 0; (toolbar_labels[i].action_name); i++)
     {
@@ -250,7 +250,7 @@ void
 gnc_plugin_set_actions_enabled (GActionMap *action_map,
                                 const gchar **action_names, gboolean enable)
 {
-    g_return_if_fail (action_map != NULL);
+    g_return_if_fail (action_map != nullptr);
 
     for (gint i = 0; action_names[i]; i++)
     {

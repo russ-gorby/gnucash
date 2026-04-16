@@ -86,7 +86,7 @@ gnc_sx_list_tree_model_adapter_class_init (GncSxListTreeModelAdapterClass *klass
                       G_TYPE_FROM_CLASS(obj_class),
                       G_SIGNAL_RUN_LAST,
                       0,
-                      NULL, NULL,
+                      nullptr, nullptr,
                       g_cclosure_marshal_VOID__VOID,
                       G_TYPE_NONE, 0);
 }
@@ -353,9 +353,9 @@ _name_comparator (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer 
     a_inst = gsltma_get_sx_instances_from_orig_iter (adapter, a);
     b_inst = gsltma_get_sx_instances_from_orig_iter (adapter, b);
 
-    if (a_inst == NULL && b_inst == NULL) return 0;
-    if (a_inst == NULL) return 1;
-    if (b_inst == NULL) return -1;
+    if (a_inst == nullptr && b_inst == nullptr) return 0;
+    if (a_inst == nullptr) return 1;
+    if (b_inst == nullptr) return -1;
 
     a_caseless = g_utf8_casefold (xaccSchedXactionGetName (a_inst->sx), -1);
     b_caseless = g_utf8_casefold (xaccSchedXactionGetName (b_inst->sx), -1);
@@ -375,9 +375,9 @@ _freq_comparator (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer 
     a_inst = gsltma_get_sx_instances_from_orig_iter (adapter, a);
     b_inst = gsltma_get_sx_instances_from_orig_iter (adapter, b);
 
-    if (a_inst == NULL && b_inst == NULL) return 0;
-    if (a_inst == NULL) return 1;
-    if (b_inst == NULL) return -1;
+    if (a_inst == nullptr && b_inst == nullptr) return 0;
+    if (a_inst == nullptr) return 1;
+    if (b_inst == nullptr) return -1;
 
     return recurrenceListCmp (gnc_sx_get_schedule (a_inst->sx), gnc_sx_get_schedule (b_inst->sx));
 }
@@ -448,15 +448,15 @@ gnc_sx_list_tree_model_adapter_init (GncSxListTreeModelAdapter *adapter)
 
     // setup sorting
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE(adapter->real), SXLTMA_COL_NAME,
-                                     _name_comparator, adapter, NULL);
+                                     _name_comparator, adapter, nullptr);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE(adapter->real), SXLTMA_COL_ENABLED,
-                                     _enabled_comparator, adapter, NULL);
+                                     _enabled_comparator, adapter, nullptr);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE(adapter->real), SXLTMA_COL_FREQUENCY,
-                                     _freq_comparator, adapter, NULL);
+                                     _freq_comparator, adapter, nullptr);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE(adapter->real), SXLTMA_COL_LAST_OCCUR,
-                                     _last_occur_comparator, adapter, NULL);
+                                     _last_occur_comparator, adapter, nullptr);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE(adapter->real), SXLTMA_COL_NEXT_OCCUR,
-                                     _next_occur_comparator, adapter, NULL);
+                                     _next_occur_comparator, adapter, nullptr);
 
     gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(adapter->real),
                                           SXLTMA_COL_NAME, GTK_SORT_ASCENDING);
@@ -478,7 +478,7 @@ gnc_sx_list_tree_model_adapter_init (GncSxListTreeModelAdapter *adapter)
 static void
 _format_conditional_date (const GDate *date, char *date_buf, int buf_max_length)
 {
-    if (date == NULL || !g_date_valid (date))
+    if (date == nullptr || !g_date_valid (date))
         g_stpcpy (date_buf, _("never"));
     else
         qof_print_gdate (date_buf, buf_max_length, date);
@@ -490,7 +490,7 @@ gsltma_populate_tree_store (GncSxListTreeModelAdapter *model)
     GtkTreeIter iter;
     GList *list;
 
-    for (list = gnc_sx_instance_model_get_sx_instances_list (model->instances); list != NULL; list = list->next)
+    for (list = gnc_sx_instance_model_get_sx_instances_list (model->instances); list != nullptr; list = list->next)
     {
         GncSxInstances *instances = (GncSxInstances*)list->data;
         gchar *frequency_str;
@@ -506,7 +506,7 @@ gsltma_populate_tree_store (GncSxListTreeModelAdapter *model)
         _format_conditional_date (&instances->next_instance_date,
                                   next_occur_date_buf, MAX_DATE_LENGTH);
 
-        gtk_tree_store_append (model->orig, &iter, NULL);
+        gtk_tree_store_append (model->orig, &iter, nullptr);
         gtk_tree_store_set (model->orig, &iter,
                             SXLTMA_COL_NAME, xaccSchedXactionGetName (instances->sx),
                             SXLTMA_COL_ENABLED, xaccSchedXactionGetEnabled (instances->sx),
@@ -551,7 +551,7 @@ gnc_sx_list_tree_model_adapter_new (GncSxInstanceModel *instances)
 {
     GncSxListTreeModelAdapter *rtn;
 
-    rtn = GNC_SX_LIST_TREE_MODEL_ADAPTER(g_object_new (GNC_TYPE_SX_LIST_TREE_MODEL_ADAPTER, NULL));
+    rtn = GNC_SX_LIST_TREE_MODEL_ADAPTER(g_object_new (GNC_TYPE_SX_LIST_TREE_MODEL_ADAPTER, nullptr));
     rtn->instances = instances;
     g_object_ref (G_OBJECT(rtn->instances));
 
@@ -578,7 +578,7 @@ gsltma_get_sx_instances_from_orig_iter (GncSxListTreeModelAdapter *model, GtkTre
     if (gtk_tree_path_get_depth (path) > 1)
     {
         gtk_tree_path_free (path);
-        return NULL;
+        return nullptr;
     }
     indices = gtk_tree_path_get_indices (path);
     index = indices[0];
@@ -602,18 +602,18 @@ gnc_sx_list_tree_model_adapter_dispose (GObject *obj)
 {
     GncSxListTreeModelAdapter *adapter;
 
-    g_return_if_fail (obj != NULL);
+    g_return_if_fail (obj != nullptr);
     adapter = GNC_SX_LIST_TREE_MODEL_ADAPTER(obj);
 
     if (adapter->disposed) return;
     adapter->disposed = TRUE;
 
     g_object_unref (G_OBJECT(adapter->instances));
-    adapter->instances = NULL;
+    adapter->instances = nullptr;
     g_object_unref (G_OBJECT(adapter->real));
-    adapter->real = NULL;
+    adapter->real = nullptr;
     g_object_unref (G_OBJECT(adapter->orig));
-    adapter->orig = NULL;
+    adapter->orig = nullptr;
 
     G_OBJECT_CLASS(gnc_sx_list_tree_model_adapter_parent_class)->dispose (obj);
 }
@@ -621,6 +621,6 @@ gnc_sx_list_tree_model_adapter_dispose (GObject *obj)
 static void
 gnc_sx_list_tree_model_adapter_finalize (GObject *obj)
 {
-    g_return_if_fail (obj != NULL);
+    g_return_if_fail (obj != nullptr);
     G_OBJECT_CLASS(gnc_sx_list_tree_model_adapter_parent_class)->finalize (obj);
 }

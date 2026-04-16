@@ -1374,7 +1374,7 @@ gnc_main_window_quit(GncMainWindow *window)
             priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
 
             // if there are no pages destroy window
-            if (priv->installed_pages == NULL)
+            if (priv->installed_pages == nullptr)
                 gtk_widget_destroy (GTK_WIDGET(window));
         }
         /* remove the preference callbacks from the main window */
@@ -1412,7 +1412,7 @@ gnc_main_window_delete_event (GtkWidget *window,
         gtk_dialog_add_buttons (GTK_DIALOG(dialog),
                               _("_Cancel"), GTK_RESPONSE_CANCEL,
                               _("_OK"), GTK_RESPONSE_YES,
-                               (gchar *)NULL);
+                               (gchar *)nullptr);
         gtk_dialog_set_default_response (GTK_DIALOG(dialog), GTK_RESPONSE_YES);
         response = gnc_dialog_run (GTK_DIALOG(dialog), GNC_PREF_WARN_CLOSING_WINDOW_QUESTION);
         gtk_widget_destroy (dialog);
@@ -1721,7 +1721,7 @@ static gchar *generate_statusbar_lastmodified_message()
             GFileInfo *info = g_file_query_info (file,
                                                  G_FILE_ATTRIBUTE_TIME_MODIFIED,
                                                  G_FILE_QUERY_INFO_NONE,
-                                                 NULL, NULL);
+                                                 nullptr, nullptr);
 
             if (info && g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_TIME_MODIFIED))
             {
@@ -2536,9 +2536,9 @@ main_window_update_page_set_read_only_icon (GncPluginPage *page,
 {
     GncMainWindow *window;
     GtkWidget *tab_widget;
-    GtkWidget *image = NULL;
+    GtkWidget *image = nullptr;
     GList *children;
-    gchar *image_name = NULL;
+    gchar *image_name = nullptr;
     const gchar *icon_name;
 
     ENTER(" ");
@@ -2578,7 +2578,7 @@ main_window_update_page_set_read_only_icon (GncPluginPage *page,
         return;
     }
 
-    g_object_get (image, "icon-name", &image_name, NULL);
+    g_object_get (image, "icon-name", &image_name, nullptr);
 
     if (read_only)
         icon_name = "changes-prevent-symbolic";
@@ -3012,7 +3012,7 @@ gnc_main_window_key_press_event (GtkWidget *widget, GdkEventKey *event, gpointer
                                           GTK_WIDGET(priv->notebook),
                                           GDK_GRAVITY_SOUTH,
                                           GDK_GRAVITY_SOUTH,
-                                          NULL);
+                                          nullptr);
                 return TRUE;
             }
         }
@@ -3055,7 +3055,7 @@ gnc_main_window_new (void) noexcept
     // set up a callback for notebook navigation
     g_signal_connect (G_OBJECT(window), "key-press-event",
                       G_CALLBACK(gnc_main_window_key_press_event),
-                      NULL);
+                      nullptr);
 
     return window;
 }
@@ -3531,7 +3531,7 @@ update_menu_model (GncMainWindow *window, const gchar *ui_filename,
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
 
     gtk_builder_set_translation_domain (builder, PROJECT_NAME);
-    res_name = g_strconcat (GNUCASH_RESOURCE_PREFIX "/", ui_filename, NULL);
+    res_name = g_strconcat (GNUCASH_RESOURCE_PREFIX "/", ui_filename, nullptr);
 
     gtk_builder_add_from_resource (builder, res_name, &error);
     g_free (res_name);
@@ -3552,7 +3552,7 @@ update_menu_model (GncMainWindow *window, const gchar *ui_filename,
         gsm->search_action_target = nullptr;
 
         if (gnc_menubar_model_find_item (priv->menubar_model, gsm))
-            g_menu_insert_section (G_MENU(gsm->model), gsm->index, NULL, G_MENU_MODEL(menu_model_part));
+            g_menu_insert_section (G_MENU(gsm->model), gsm->index, nullptr, G_MENU_MODEL(menu_model_part));
         else
             PERR("Could not find '%s' in menu model", ui_updates[i]);
     }
@@ -3827,7 +3827,7 @@ gnc_main_window_update_toolbar (GncMainWindow *window, GncPluginPage *page,
         if (!priv->toolbar)
             priv->toolbar = (GtkWidget *)gtk_builder_get_object (builder, "mainwin-toolbar");
 
-        g_object_set (priv->toolbar, "toolbar-style", GTK_TOOLBAR_BOTH, NULL);
+        g_object_set (priv->toolbar, "toolbar-style", GTK_TOOLBAR_BOTH, nullptr);
         gtk_container_add (GTK_CONTAINER(priv->menu_dock), priv->toolbar);
         g_free (toolbar_name);
     }
@@ -4242,7 +4242,7 @@ gnc_main_window_setup_window (GncMainWindow *window)
     gtk_widget_show (GTK_WIDGET(priv->menubar));
 
     priv->toolbar = (GtkWidget *)gtk_builder_get_object (builder, "mainwin-toolbar");
-    g_object_set (priv->toolbar, "toolbar-style", GTK_TOOLBAR_BOTH, NULL);
+    g_object_set (priv->toolbar, "toolbar-style", GTK_TOOLBAR_BOTH, nullptr);
     gtk_container_add (GTK_CONTAINER(priv->menu_dock), GTK_WIDGET(priv->toolbar));
     gtk_widget_show (GTK_WIDGET(priv->toolbar));
 
@@ -4366,7 +4366,7 @@ gnc_quartz_set_menu (GncMainWindow* window)
         gtk_widget_hide (GTK_WIDGET(item));
 
     quit_closure = g_cclosure_new (G_CALLBACK (gnc_quartz_should_quit),
-                                   window, NULL);
+                                   window, nullptr);
     gtk_accel_group_connect (priv->accel_group, 'q', GDK_META_MASK,
                              GTK_ACCEL_MASK, quit_closure);
 
@@ -5176,7 +5176,7 @@ gnc_main_window_cmd_help_tutorial (GSimpleAction *simple,
                                    gpointer       user_data)
 {
     GncMainWindow *window = (GncMainWindow*)user_data;
-    gnc_gnome_help (GTK_WINDOW(window), DF_GUIDE, NULL);
+    gnc_gnome_help (GTK_WINDOW(window), DF_GUIDE, nullptr);
 }
 
 static void
@@ -5185,7 +5185,7 @@ gnc_main_window_cmd_help_contents (GSimpleAction *simple,
                                    gpointer       user_data)
 {
     GncMainWindow *window = (GncMainWindow*)user_data;
-    gnc_gnome_help (GTK_WINDOW(window), DF_MANUAL, NULL);
+    gnc_gnome_help (GTK_WINDOW(window), DF_MANUAL, nullptr);
 }
 
 /** This is a helper function to find a data file and suck it into

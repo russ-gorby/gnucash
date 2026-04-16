@@ -57,7 +57,7 @@ G_DECLARE_FINAL_TYPE (GncTreeViewCommodity, gnc_tree_view_commodity, GNC, TREE_V
  *
  *  @param first_property_name Pairs of property name/value settings
  *  for the newly created object.  Terminate the properties with a
- *  single NULL argument.
+ *  single nullptr argument.
  *
  *  @return A pointer to a new commodity tree view.
  */
@@ -129,7 +129,7 @@ typedef gboolean (*gnc_tree_view_commodity_cm_filter_func)(gnc_commodity*, gpoin
  *
  *  @param destroy A function to destroy the data block.  This
  *  function will be called when the filter is destroyed.  may be
- *  NULL.
+ *  nullptr.
  */
 void gnc_tree_view_commodity_set_filter (GncTreeViewCommodity *view,
         gnc_tree_view_commodity_ns_filter_func ns_func,
@@ -175,7 +175,7 @@ gnc_commodity * gnc_tree_view_commodity_get_cursor_commodity (GncTreeViewCommodi
  *
  *  @param view A pointer to an commodity tree view.
  *
- *  @return The selected commodity, or NULL if no commodity was selected.
+ *  @return The selected commodity, or nullptr if no commodity was selected.
  */
 gnc_commodity * gnc_tree_view_commodity_get_selected_commodity  (GncTreeViewCommodity *view);
 
@@ -188,7 +188,7 @@ gnc_commodity * gnc_tree_view_commodity_get_selected_commodity  (GncTreeViewComm
  *
  *  @param view A pointer to an commodity tree view.
  *
- *  @return The selected namespace, or NULL if no namespace was selected.
+ *  @return The selected namespace, or nullptr if no namespace was selected.
  */
 gnc_commodity_namespace * gnc_tree_view_commodity_get_selected_namespace (GncTreeViewCommodity *view);
 

@@ -162,7 +162,7 @@ gnc_add_css_file (void) noexcept
     if (var)
     {
         gchar *str;
-        str = g_build_filename (var, "gtk-3.0.css", (char *)NULL);
+        str = g_build_filename (var, "gtk-3.0.css", (char *)nullptr);
         gtk_css_provider_load_from_path (provider_user, str, &error);
         g_free (str);
     }
@@ -183,7 +183,7 @@ gnc_gnome_help (GtkWindow *parent, const char *dir, const char *detail) noexcept
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSString *subdir = [NSString stringWithUTF8String: dir];
     NSString *tag;
-    NSURL *url = NULL;
+    NSURL *url = nullptr;
 
     if (detail)
         tag  = [NSString stringWithUTF8String: detail];
@@ -192,7 +192,7 @@ gnc_gnome_help (GtkWindow *parent, const char *dir, const char *detail) noexcept
 
     if (![[NSBundle mainBundle] bundleIdentifier])
     {
-        /* If bundleIdentifier is NULL, then we're running from the
+        /* If bundleIdentifier is nullptr, then we're running from the
          * commandline and must construct a file path to the resource. We can
          * still get the resource path, but it will point to the "bin"
          * directory so we chop that off, break up what's left into pieces,
@@ -236,7 +236,7 @@ gnc_gnome_help (GtkWindow *parent, const char *dir, const char *detail) noexcept
                 path = [docs_dir stringByAppendingPathComponent: this_lang];
                 paths = [path completePathIntoString: &completed_path
                          caseSensitive: FALSE
-                         matchesIntoArray: NULL filterTypes: NULL];
+                         matchesIntoArray: nullptr filterTypes: nullptr];
                 if (paths > 1 &&
                     [[NSFileManager defaultManager]
                      fileExistsAtPath: completed_path
@@ -313,13 +313,13 @@ void
 gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor) noexcept
 {
     const gchar * const *lang;
-    gchar *pkgdatadir, *fullpath, *found = NULL;
+    gchar *pkgdatadir, *fullpath, *found = nullptr;
 
     pkgdatadir = gnc_path_get_pkgdatadir ();
     for (lang = g_get_language_names (); *lang; lang++)
     {
         fullpath = g_build_filename (pkgdatadir, "help", *lang, file_name,
-                                     (gchar*) NULL);
+                                     (gchar*) nullptr);
         if (g_file_test (fullpath, G_FILE_TEST_IS_REGULAR))
         {
             found = g_strdup (fullpath);
@@ -344,25 +344,25 @@ gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor) no
 void
 gnc_gnome_help (GtkWindow *parent, const char *file_name, const char *anchor) noexcept
 {
-    GError *error = NULL;
-    gchar *uri = NULL;
+    GError *error = nullptr;
+    gchar *uri = nullptr;
     gboolean success = TRUE;
 
     if (anchor)
-        uri = g_strconcat ("help:", file_name, "/", anchor, NULL);
+        uri = g_strconcat ("help:", file_name, "/", anchor, nullptr);
     else
-        uri = g_strconcat ("help:", file_name, NULL);
+        uri = g_strconcat ("help:", file_name, nullptr);
 
     DEBUG ("Attempting to opening help uri %s", uri);
 
     if (uri)
-        success = gtk_show_uri_on_window (NULL, uri, gtk_get_current_event_time (), &error);
+        success = gtk_show_uri_on_window (nullptr, uri, gtk_get_current_event_time (), &error);
 
     g_free (uri);
     if (success)
         return;
 
-    g_assert(error != NULL);
+    g_assert(error != nullptr);
     {
         gnc_error_dialog (parent, "%s\n%s", _(msg_no_help_found), _(msg_no_help_reason));
     }
@@ -404,26 +404,26 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 void
 gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 {
-    wchar_t *winuri = NULL;
-    gchar *filename = NULL;
+    wchar_t *winuri = nullptr;
+    gchar *filename = nullptr;
     /* ShellExecuteW open doesn't decode http escapes if it's passed a
      * file URI so we have to do it. */
     if (gnc_uri_is_file_uri (uri))
     {
         gchar *uri_scheme = gnc_uri_get_scheme (uri);
-        filename = gnc_doclink_get_unescape_uri (NULL, uri, uri_scheme);
-        winuri = (wchar_t *)g_utf8_to_utf16(filename, -1, NULL, NULL, NULL);
+        filename = gnc_doclink_get_unescape_uri (nullptr, uri, uri_scheme);
+        winuri = (wchar_t *)g_utf8_to_utf16(filename, -1, nullptr, nullptr, nullptr);
         g_free (uri_scheme);
     }
     else
-        winuri = (wchar_t *)g_utf8_to_utf16(uri, -1, NULL, NULL, NULL);
+        winuri = (wchar_t *)g_utf8_to_utf16(uri, -1, nullptr, nullptr, nullptr);
 
     if (winuri)
     {
         wchar_t *wincmd = (wchar_t *)g_utf8_to_utf16("open", -1,
-                                 NULL, NULL, NULL);
-        if ((INT_PTR)ShellExecuteW(NULL, wincmd, winuri,
-                       NULL, NULL, SW_SHOWNORMAL) <= 32)
+                                 nullptr, nullptr, nullptr);
+        if ((INT_PTR)ShellExecuteW(nullptr, wincmd, winuri,
+                       nullptr, nullptr, SW_SHOWNORMAL) <= 32)
         {
             const gchar *message =
             _("GnuCash could not find the linked document.");
@@ -439,7 +439,7 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 void
 gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 {
-    GError *error = NULL;
+    GError *error = nullptr;
     gboolean success;
 
     if (!uri)
@@ -447,21 +447,21 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
 
     DEBUG ("Attempting to open uri %s", uri);
 
-    success = gtk_show_uri_on_window (NULL, uri, gtk_get_current_event_time (), &error);
+    success = gtk_show_uri_on_window (nullptr, uri, gtk_get_current_event_time (), &error);
 
     if (success)
         return;
 
-    g_assert (error != NULL);
+    g_assert (error != nullptr);
     {
-        gchar *error_uri = NULL;
+        gchar *error_uri = nullptr;
         const gchar *message =
             _("GnuCash could not open the linked document:");
 
         if (gnc_uri_is_file_uri (uri))
         {
             gchar *uri_scheme = gnc_uri_get_scheme (uri);
-            error_uri = gnc_doclink_get_unescape_uri (NULL, uri, uri_scheme);
+            error_uri = gnc_doclink_get_unescape_uri (nullptr, uri, uri_scheme);
             g_free (uri_scheme);
         }
         else
@@ -481,7 +481,7 @@ gnc_launch_doclink (GtkWindow *parent, const char *uri) noexcept
  *   returns a GtkWidget given a pixmap filename                    *
  *                                                                  *
  * Args: none                                                       *
- * Returns: GtkWidget or NULL if there was a problem                *
+ * Returns: GtkWidget or nullptr if there was a problem                *
  \*******************************************************************/
 GtkWidget *
 gnc_gnome_get_pixmap (const char *name) noexcept
@@ -489,16 +489,16 @@ gnc_gnome_get_pixmap (const char *name) noexcept
     GtkWidget *pixmap;
     char *fullname;
 
-    g_return_val_if_fail (name != NULL, NULL);
+    g_return_val_if_fail (name != nullptr, nullptr);
 
     fullname = gnc_filepath_locate_pixmap (name);
-    if (fullname == NULL)
-        return NULL;
+    if (fullname == nullptr)
+        return nullptr;
 
     DEBUG ("Loading pixmap file %s", fullname);
 
     pixmap = gtk_image_new_from_file (fullname);
-    if (pixmap == NULL)
+    if (pixmap == nullptr)
     {
         PERR ("Could not load pixmap");
     }
@@ -512,26 +512,26 @@ gnc_gnome_get_pixmap (const char *name) noexcept
  *   returns a GdkImlibImage object given a pixmap filename         *
  *                                                                  *
  * Args: none                                                       *
- * Returns: GdkPixbuf or NULL if there was a problem                *
+ * Returns: GdkPixbuf or nullptr if there was a problem                *
  \*******************************************************************/
 GdkPixbuf *
 gnc_gnome_get_gdkpixbuf (const char *name) noexcept
 {
     GdkPixbuf *pixbuf;
-    GError *error = NULL;
+    GError *error = nullptr;
     char *fullname;
 
-    g_return_val_if_fail (name != NULL, NULL);
+    g_return_val_if_fail (name != nullptr, nullptr);
 
     fullname = gnc_filepath_locate_pixmap (name);
-    if (fullname == NULL)
-        return NULL;
+    if (fullname == nullptr)
+        return nullptr;
 
     DEBUG ("Loading pixbuf file %s", fullname);
     pixbuf = gdk_pixbuf_new_from_file (fullname, &error);
-    if (error != NULL)
+    if (error != nullptr)
     {
-        g_assert (pixbuf == NULL);
+        g_assert (pixbuf == nullptr);
         PERR ("Could not load pixbuf: %s", error->message);
         g_error_free (error);
     }
@@ -580,7 +580,7 @@ gnc_ui_start_event_loop (void) noexcept
     gnome_is_running = TRUE;
 
     id = g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE, 10000, /* 10 secs */
-                             gnc_ui_check_events, NULL, NULL);
+                             gnc_ui_check_events, nullptr, nullptr);
 
     scm_call_1(scm_c_eval_string("gnc:set-ui-status"), SCM_BOOL_T);
 
@@ -600,7 +600,7 @@ gnc_ui_start_event_loop (void) noexcept
 GncMainWindow *
 gnc_gui_init(void) noexcept
 {
-    static GncMainWindow *main_window = NULL;
+    static GncMainWindow *main_window = nullptr;
 
     ENTER ("");
 
@@ -625,22 +625,22 @@ gnc_gui_init(void) noexcept
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_FORMAT,
                            reinterpret_cast<gpointer>(gnc_configure_date_format),
-                           NULL);
+                           nullptr);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_COMPL_THISYEAR,
                            reinterpret_cast<gpointer>(gnc_configure_date_completion),
-                           NULL);
+                           nullptr);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_COMPL_SLIDING,
                            reinterpret_cast<gpointer>(gnc_configure_date_completion),
-                           NULL);
+                           nullptr);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_DATE_BACKMONTHS,
                            reinterpret_cast<gpointer>(gnc_configure_date_completion),
-                           NULL);
+                           nullptr);
     gnc_prefs_register_group_cb (GNC_PREFS_GROUP_GENERAL,
                                 reinterpret_cast<gpointer>(gnc_gui_refresh_all),
-                                NULL);
+                                nullptr);
 
     gnc_file_set_shutdown_callback (gnc_shutdown);
 
@@ -653,20 +653,20 @@ gnc_gui_init(void) noexcept
     gchar *map = gnc_build_userdata_path(ACCEL_MAP_NAME);
     if (!g_file_test (map, G_FILE_TEST_EXISTS))
     {
-        gchar *text = NULL;
+        gchar *text = nullptr;
         gsize length;
         gchar *map_source;
         gchar *data_dir = gnc_path_get_pkgdatadir();
 #ifdef MAC_INTEGRATION
-        map_source = g_build_filename (data_dir, "ui", "accelerator-map-osx", NULL);
+        map_source = g_build_filename (data_dir, "ui", "accelerator-map-osx", nullptr);
 #else
-        map_source = g_build_filename (data_dir, "ui", "accelerator-map", NULL);
+        map_source = g_build_filename (data_dir, "ui", "accelerator-map", nullptr);
 #endif /* MAC_INTEGRATION */
 
-        if (map_source && g_file_get_contents (map_source, &text, &length, NULL))
+        if (map_source && g_file_get_contents (map_source, &text, &length, nullptr))
         {
             if (length)
-                g_file_set_contents (map, text, length, NULL);
+                g_file_set_contents (map, text, length, nullptr);
             g_free (text);
         }
         g_free (map_source);
@@ -702,22 +702,22 @@ gnc_gui_destroy (void)
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_FORMAT,
                                      reinterpret_cast<gpointer>(gnc_configure_date_format),
-                                     NULL);
+                                     nullptr);
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_COMPL_THISYEAR,
                                      reinterpret_cast<gpointer>(gnc_configure_date_completion),
-                                     NULL);
+                                     nullptr);
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_COMPL_SLIDING,
                                      reinterpret_cast<gpointer>(gnc_configure_date_completion),
-                                     NULL);
+                                     nullptr);
         gnc_prefs_remove_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                      GNC_PREF_DATE_BACKMONTHS,
                                      reinterpret_cast<gpointer>(gnc_configure_date_completion),
-                                     NULL);
+                                     nullptr);
         gnc_prefs_remove_group_cb_by_func (GNC_PREFS_GROUP_GENERAL,
                                            reinterpret_cast<gpointer>(gnc_gui_refresh_all),
-                                           NULL);
+                                           nullptr);
 
         gnc_ui_util_remove_registered_prefs ();
         gnc_prefs_remove_registered ();
@@ -751,9 +751,9 @@ gnc_shutdown (int exit_status) noexcept
     {
         if (!gnome_is_terminating)
         {
-            if (gnc_file_query_save (gnc_ui_get_main_window (NULL), FALSE))
+            if (gnc_file_query_save (gnc_ui_get_main_window (nullptr), FALSE))
             {
-                gnc_hook_run(HOOK_UI_SHUTDOWN, NULL);
+                gnc_hook_run(HOOK_UI_SHUTDOWN, nullptr);
                 gnc_gui_shutdown();
             }
         }
@@ -761,7 +761,7 @@ gnc_shutdown (int exit_status) noexcept
     else
     {
         gnc_gui_destroy();
-        gnc_hook_run(HOOK_SHUTDOWN, NULL);
+        gnc_hook_run(HOOK_SHUTDOWN, nullptr);
         gnc_engine_shutdown();
         exit(exit_status);
     }

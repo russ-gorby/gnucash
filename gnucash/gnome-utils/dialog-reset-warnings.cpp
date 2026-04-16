@@ -373,7 +373,7 @@ gnc_reset_warnings_dialog (GtkWindow *parent)
 
     ENTER("");
     if (gnc_forall_gui_components(DIALOG_RESET_WARNINGS_CM_CLASS,
-                                  show_handler, NULL))
+                                  show_handler, nullptr))
     {
         LEAVE("existing window");
         return;
@@ -420,7 +420,7 @@ gnc_reset_warnings_dialog (GtkWindow *parent)
     gnc_restore_window_size(GNC_PREFS_GROUP, GTK_WINDOW(rw_dialog->dialog), parent);
 
     gnc_register_gui_component (DIALOG_RESET_WARNINGS_CM_CLASS,
-                                NULL, close_handler, rw_dialog);
+                                nullptr, close_handler, rw_dialog);
 
     gtk_widget_show(GTK_WIDGET(rw_dialog->dialog));
 

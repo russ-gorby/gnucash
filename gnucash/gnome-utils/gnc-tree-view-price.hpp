@@ -57,7 +57,7 @@ G_DECLARE_FINAL_TYPE (GncTreeViewPrice, gnc_tree_view_price, GNC, TREE_VIEW_PRIC
  *
  *  @param first_property_name Pairs of property name/value settings
  *  for the newly created object.  Terminate the properties with a
- *  single NULL argument.
+ *  single nullptr argument.
  *
  *  @return A pointer to a new price tree view.
  */
@@ -109,7 +109,7 @@ void gnc_tree_view_price_add_kvp_column (GncTreeViewPrice *view,
  *
  *  @param destroy A function to destroy the data block.  This
  *  function will be called when the filter is destroyed.  may be
- *  NULL.
+ *  nullptr.
  */
 typedef gboolean (*gnc_tree_view_price_ns_filter_func)(gnc_commodity_namespace*, gpointer data);
 typedef gboolean (*gnc_tree_view_price_cm_filter_func)(gnc_commodity *, gpointer data);
@@ -146,7 +146,7 @@ GNCPrice * gnc_tree_view_price_get_cursor_price (GncTreeViewPrice *view);
  *
  *  @param view A pointer to an price tree view.
  *
- *  @return The selected price, or NULL if no price was selected.
+ *  @return The selected price, or nullptr if no price was selected.
  */
 GNCPrice * gnc_tree_view_price_get_selected_price (GncTreeViewPrice *view);
 
@@ -179,7 +179,7 @@ void gnc_tree_view_price_set_selected_price (GncTreeViewPrice *view,
  *
  *  @param view A pointer to an price tree view.
  *
- *  @return A list of prices, or NULL if no price was selected.
+ *  @return A list of prices, or nullptr if no price was selected.
  */
 GList * gnc_tree_view_price_get_selected_prices (GncTreeViewPrice *view);
 
@@ -193,7 +193,7 @@ GList * gnc_tree_view_price_get_selected_prices (GncTreeViewPrice *view);
  *
  *  @param view A pointer to an price tree view.
  *
- *  @return A list of commodities, or NULL if no commodity was selected.
+ *  @return A list of commodities, or nullptr if no commodity was selected.
  */
 GList * gnc_tree_view_price_get_selected_commodities (GncTreeViewPrice *view);
 

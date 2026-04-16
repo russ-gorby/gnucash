@@ -50,11 +50,11 @@ static void gnc_gobject_weak_cb (gpointer user_data, GObject *object);
 static GHashTable*
 gnc_gobject_tracking_table (void)
 {
-    static GHashTable *singleton = NULL;
+    static GHashTable *singleton = nullptr;
 
     if (!singleton)
     {
-        singleton = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+        singleton = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, nullptr);
     }
     return singleton;
 }
@@ -111,7 +111,7 @@ gnc_gobject_tracking_dump (void) noexcept
     if (g_hash_table_size(table) > 0)
     {
         PINFO("The following objects remain alive:");
-        g_hash_table_foreach_remove(table, (GHRFunc)gnc_gobject_dump_list, NULL);
+        g_hash_table_foreach_remove(table, (GHRFunc)gnc_gobject_dump_list, nullptr);
     }
     //printf("Leave %s:\n", G_STRFUNC);
 }
@@ -141,7 +141,7 @@ gnc_gobject_tracking_remember (GObject *object) noexcept
     list = g_list_append(list, object);
     g_hash_table_insert(table, g_strdup(name), list);
 
-    g_object_weak_ref(object, gnc_gobject_weak_cb, NULL);
+    g_object_weak_ref(object, gnc_gobject_weak_cb, nullptr);
     //printf("Leave %s:\n", G_STRFUNC);
 }
 
@@ -190,7 +190,7 @@ void
 gnc_gobject_tracking_forget (GObject *object) noexcept
 {
     if (gnc_gobject_tracking_forget_internal(object))
-        g_object_weak_unref(object, gnc_gobject_weak_cb, NULL);
+        g_object_weak_unref(object, gnc_gobject_weak_cb, nullptr);
 }
 
 

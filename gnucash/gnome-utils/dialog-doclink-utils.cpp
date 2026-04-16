@@ -48,7 +48,7 @@ static gchar *
 convert_uri_to_abs_path (const gchar *path_head, const gchar *uri,
                          gchar *uri_scheme, gboolean return_uri)
 {
-    gchar *ret_value = NULL;
+    gchar *ret_value = nullptr;
 
     if (!uri_scheme) // relative path
     {
@@ -56,7 +56,7 @@ convert_uri_to_abs_path (const gchar *path_head, const gchar *uri,
         gchar *file_path = gnc_file_path_absolute (path, uri);
 
         if (return_uri)
-            ret_value = gnc_uri_create_uri ("file", NULL, 0, NULL, NULL, file_path);
+            ret_value = gnc_uri_create_uri ("file", nullptr, 0, nullptr, nullptr, file_path);
         else
             ret_value = g_strdup (file_path);
 
@@ -78,7 +78,7 @@ gchar *
 gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri,
                               gchar *uri_scheme) noexcept
 {
-    gchar *display_str = NULL;
+    gchar *display_str = nullptr;
 
     if (uri && *uri)
     {
@@ -86,9 +86,9 @@ gnc_doclink_get_unescape_uri (const gchar *path_head, const gchar *uri,
         gchar *file_path = convert_uri_to_abs_path (path_head, uri, uri_scheme, FALSE);
 
         if (file_path)
-            display_str = g_uri_unescape_string (file_path, NULL);
+            display_str = g_uri_unescape_string (file_path, nullptr);
         else
-            display_str = g_uri_unescape_string (uri, NULL);
+            display_str = g_uri_unescape_string (uri, nullptr);
 
         g_free (file_path);
 
@@ -104,7 +104,7 @@ gchar *
 gnc_doclink_get_use_uri (const gchar *path_head, const gchar *uri,
                          gchar *uri_scheme) noexcept
 {
-    gchar *use_str = NULL;
+    gchar *use_str = nullptr;
 
     if (uri && *uri)
     {
@@ -139,10 +139,10 @@ gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro) noexcept
 {
     auto transaction = static_cast<Transaction*>(trans);
     const gchar *uri = xaccTransGetDocLink (transaction); // get the existing uri
-    const gchar *part = NULL;
+    const gchar *part = nullptr;
 
     if (!uri)
-        return NULL;
+        return nullptr;
 
     if (g_str_has_prefix (uri, "file:") && !g_str_has_prefix (uri,"file://"))
     {
@@ -168,7 +168,7 @@ gnc_doclink_convert_trans_link_uri (gpointer trans, gboolean book_ro) noexcept
 static gchar *
 doclink_get_path_head_and_set (gboolean *path_head_set)
 {
-    gchar *ret_path = NULL;
+    gchar *ret_path = nullptr;
     gchar *path_head = gnc_prefs_get_string (GNC_PREFS_GROUP_GENERAL, GNC_DOC_LINK_PATH_HEAD);
     *path_head_set = FALSE;
 
@@ -182,14 +182,14 @@ doclink_get_path_head_and_set (gboolean *path_head_set)
         const gchar *doc = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
 
         if (doc)
-            ret_path = gnc_uri_create_uri ("file", NULL, 0, NULL, NULL, doc);
+            ret_path = gnc_uri_create_uri ("file", nullptr, 0, nullptr, nullptr, doc);
         else
-            ret_path = gnc_uri_create_uri ("file", NULL, 0, NULL, NULL, gnc_userdata_dir ());
+            ret_path = gnc_uri_create_uri ("file", nullptr, 0, nullptr, nullptr, gnc_userdata_dir ());
     }
     // make sure there is a trailing '/'
     if (!g_str_has_suffix (ret_path, "/"))
     {
-        gchar *folder_with_slash = g_strconcat (ret_path, "/", NULL);
+        gchar *folder_with_slash = g_strconcat (ret_path, "/", nullptr);
         g_free (ret_path);
         ret_path = g_strdup (folder_with_slash);
         g_free (folder_with_slash);
@@ -219,7 +219,7 @@ gnc_doclink_set_path_head_label (GtkWidget *path_head_label,
                                  const gchar *prefix) noexcept
 {
     gboolean path_head_set = FALSE;
-    gchar *path_head = NULL;
+    gchar *path_head = nullptr;
     gchar *scheme;
     gchar *path_head_str;
     gchar *path_head_text;
@@ -233,7 +233,7 @@ gnc_doclink_set_path_head_label (GtkWidget *path_head_label,
         path_head = doclink_get_path_head_and_set (&path_head_set);
 
     scheme = gnc_uri_get_scheme (path_head);
-    path_head_str = gnc_doclink_get_unescape_uri (NULL, path_head, scheme);
+    path_head_str = gnc_doclink_get_unescape_uri (nullptr, path_head, scheme);
 
     if (path_head_set)
     {
@@ -414,7 +414,7 @@ gnc_doclink_pref_path_head_changed (GtkWindow *parent,
     gnc_builder_add_from_file (builder, "dialog-doclink.glade", "link_path_head_changed_dialog");
     dialog = GTK_WIDGET(gtk_builder_get_object (builder, "link_path_head_changed_dialog"));
 
-    if (parent != NULL)
+    if (parent != nullptr)
         gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(parent));
 
     // Set the name and style context for this widget so it can be easily manipulated with css

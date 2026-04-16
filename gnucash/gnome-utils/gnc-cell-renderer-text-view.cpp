@@ -125,22 +125,22 @@ gcrtv_start_editing (GtkCellRenderer      *cell,
                      GtkCellRendererState  flags)
 {
     GncCellRendererTextView *cell_tv = GNC_CELL_RENDERER_TEXT_VIEW(cell);
-    gchar *text = NULL;
+    gchar *text = nullptr;
     gboolean iseditable;
 
-    g_object_get (G_OBJECT(cell_tv), "editable", &iseditable, NULL);
+    g_object_get (G_OBJECT(cell_tv), "editable", &iseditable, nullptr);
 
-    /* If the cell isn't editable we return NULL. */
+    /* If the cell isn't editable we return nullptr. */
     if (iseditable == FALSE)
-        return NULL;
+        return nullptr;
 
-    auto editable = static_cast<GtkWidget *>(g_object_new (GNC_TYPE_CELL_VIEW, NULL));
+    auto editable = static_cast<GtkWidget *>(g_object_new (GNC_TYPE_CELL_VIEW, nullptr));
 
     g_signal_connect (editable, "button-press-event",
                       G_CALLBACK(gcrtv_button_press_event),
-                      NULL);
+                      nullptr);
 
-    g_object_get (G_OBJECT(cell), "text", &text, NULL);
+    g_object_get (G_OBJECT(cell), "text", &text, nullptr);
 
     gnc_cell_view_set_text (GNC_CELL_VIEW(editable), text);
 
@@ -169,6 +169,6 @@ GtkCellRenderer *
 gnc_cell_renderer_text_view_new (void)
 {
     return static_cast<GtkCellRenderer *>(
-        g_object_new (GNC_TYPE_CELL_RENDERER_TEXT_VIEW, NULL)
+        g_object_new (GNC_TYPE_CELL_RENDERER_TEXT_VIEW, nullptr)
     );
 }

@@ -45,7 +45,7 @@ struct _Getters
 /* This static indicates the debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
 
-static GSList *extension_list = NULL;
+static GSList *extension_list = nullptr;
 static Getters getters = {0, 0, 0, 0, 0, 0};
 
 GSList *
@@ -81,7 +81,7 @@ gnc_extension_type (SCM extension, GNCMenuItemTypes *type)
     initialize_getters();
 
     string = gnc_scm_call_1_symbol_to_string(getters.type, extension);
-    if (string == NULL)
+    if (string == nullptr)
     {
         PERR("bad type");
         return FALSE;
@@ -193,7 +193,7 @@ gnc_extension_path (SCM extension, char **fullpath)
 
     for (i = 1; i < num_strings; i++)
     {
-        if (strings[i] != NULL)
+        if (strings[i] != nullptr)
         {
             g_free(strings[i]);
         }
@@ -251,7 +251,7 @@ gnc_extension_invoke_cb (SCM extension, SCM window) noexcept
 static gboolean
 gnc_create_extension_info (SCM extension)
 {
-    gchar *typeStr = NULL;
+    gchar *typeStr = nullptr;
 
     ExtensionInfo *ext_info = g_new0 (ExtensionInfo, 1);
     ext_info->extension = extension;
@@ -267,7 +267,7 @@ gnc_create_extension_info (SCM extension)
     gchar *name = gnc_extension_name (extension);
     gchar *guid = gnc_extension_guid (extension);
     ext_info->action_label = g_strdup (gettext (name));
-    ext_info->action_label_original = NULL;
+    ext_info->action_label_original = nullptr;
     ext_info->action_name = gnc_ext_gen_action_name (guid);
     ext_info->action_tooltip = gnc_extension_documentation (extension);
     g_free (name);
@@ -339,9 +339,9 @@ gnc_add_scm_extension (SCM extension) noexcept
 void
 gnc_extensions_shutdown (void) noexcept
 {
-    g_slist_foreach(extension_list, cleanup_extension_info, NULL);
+    g_slist_foreach(extension_list, cleanup_extension_info, nullptr);
 
     g_slist_free(extension_list);
 
-    extension_list = NULL;
+    extension_list = nullptr;
 }

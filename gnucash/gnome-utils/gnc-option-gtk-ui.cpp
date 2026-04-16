@@ -262,13 +262,13 @@ public:
 template<> void
 create_option_widget<GncOptionUIType::TEXT> (GncOption& option, GtkGrid *page_box, int row)
 {
-    auto scroll = gtk_scrolled_window_new(NULL, NULL);
+    auto scroll = gtk_scrolled_window_new(nullptr, nullptr);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
                                    GTK_POLICY_NEVER,
                                    GTK_POLICY_AUTOMATIC);
     gtk_container_set_border_width(GTK_CONTAINER(scroll), 2);
 
-    auto frame = gtk_frame_new(NULL);
+    auto frame = gtk_frame_new(nullptr);
     gtk_container_add(GTK_CONTAINER(frame), scroll);
 
     auto enclosing = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
@@ -359,7 +359,7 @@ create_option_widget<GncOptionUIType::COMMODITY> (GncOption& option, GtkGrid *pa
     auto widget = gnc_general_select_new(GNC_GENERAL_SELECT_TYPE_SELECT,
                                          gnc_commodity_edit_get_string,
                                          gnc_commodity_edit_new_select,
-                                         NULL);
+                                         nullptr);
 
     auto ui_item{std::make_unique<GncGtkCommodityUIItem>(widget)};
     option.set_ui_item(std::move(ui_item));
@@ -374,7 +374,7 @@ create_multichoice_widget(GncOption& option)
 {
     auto num_values = option.num_permissible_values();
 
-    g_return_val_if_fail(num_values >= 0, NULL);
+    g_return_val_if_fail(num_values >= 0, nullptr);
     auto renderer = gtk_cell_renderer_text_new();
     auto store = gtk_list_store_new(1, G_TYPE_STRING);
     /* Add values to the list store, entry and tooltip */
@@ -468,7 +468,7 @@ private:
 };
 
 AbsoluteDateEntry::AbsoluteDateEntry(GncOption& option) :
-    m_entry{GNC_DATE_EDIT(gnc_date_edit_new(time(NULL), FALSE, FALSE))}
+    m_entry{GNC_DATE_EDIT(gnc_date_edit_new(time(nullptr), FALSE, FALSE))}
 {
     auto entry = GNC_DATE_EDIT(m_entry)->date_entry;
     m_handler_id = g_signal_connect(G_OBJECT(entry), "changed",
@@ -594,7 +594,7 @@ static void date_set_relative_cb(GtkWidget *widget, gpointer data1);
 
 BothDateEntry::BothDateEntry(GncOption& option) :
     m_widget{gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5)},
-    m_abs_button{gtk_radio_button_new(NULL)},
+    m_abs_button{gtk_radio_button_new(nullptr)},
     m_abs_entry{std::make_unique<AbsoluteDateEntry>(option)},
     m_rel_button{
         gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(m_abs_button))},
@@ -760,7 +760,7 @@ create_date_option_widget(GncOption& option, GtkGrid *page_box, int row)
     else
     {
         enclosing = gtk_frame_new(nullptr);
-        g_object_set(G_OBJECT(widget), "margin", 3, NULL);
+        g_object_set(G_OBJECT(widget), "margin", 3, nullptr);
 
         gtk_container_add (GTK_CONTAINER(enclosing), widget);
     }
@@ -836,7 +836,7 @@ account_select_children_cb(GtkWidget *widget, gpointer data)
 {
     GncOption* option = static_cast<decltype(option)>(data);
     GncTreeViewAccount *tree_view;
-    GList *acct_list = NULL, *acct_iter = NULL;
+    GList *acct_list = nullptr, *acct_iter = nullptr;
 
     tree_view = GNC_TREE_VIEW_ACCOUNT(option_get_gtk_widget (option));
     acct_list = gnc_tree_view_account_get_selected_accounts (tree_view);
@@ -974,7 +974,7 @@ create_account_widget(GncOption& option, char *name)
         gnc_tree_view_account_set_view_info (GNC_TREE_VIEW_ACCOUNT (tree), &avi);
     }
 
-    scroll_win = gtk_scrolled_window_new(NULL, NULL);
+    scroll_win = gtk_scrolled_window_new(nullptr, nullptr);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll_win),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
@@ -1096,7 +1096,7 @@ create_option_widget<GncOptionUIType::ACCOUNT_SEL> (GncOption& option,
     auto acct_type_list{option.account_type_list()};
     auto widget{gnc_account_sel_new()};
     gnc_account_sel_set_acct_filters(GNC_ACCOUNT_SEL(widget),
-                                     acct_type_list, NULL);
+                                     acct_type_list, nullptr);
     g_list_free(acct_type_list);
 
     // gnc_account_sel doesn't emit a changed signal
@@ -1207,7 +1207,7 @@ create_list_widget(GncOption& option, char *name)
     auto renderer = gtk_cell_renderer_text_new();
     auto column = gtk_tree_view_column_new_with_attributes("", renderer,
                                                            "text", 0,
-                                                           NULL);
+                                                           nullptr);
     gtk_tree_view_append_column(view, column);
     gtk_tree_view_set_headers_visible(view, FALSE);
 
@@ -1256,7 +1256,7 @@ create_list_widget(GncOption& option, char *name)
     g_signal_connect(G_OBJECT(button), "clicked",
                      G_CALLBACK(list_set_default_cb), &option);
 
-    g_object_set (G_OBJECT(hbox), "margin", 3, NULL);
+    g_object_set (G_OBJECT(hbox), "margin", 3, nullptr);
 
     return frame;
 }
@@ -1441,7 +1441,7 @@ create_option_widget<GncOptionUIType::FONT> (GncOption& option, GtkGrid *page_bo
                  "use-font", TRUE,
                  "show-style", TRUE,
                  "show-size", TRUE,
-                 (char *)NULL);
+                 (char *)nullptr);
 
     option.set_ui_item(std::make_unique<GncGtkFontUIItem>(widget));
     option.set_ui_item_from_option();
@@ -1455,16 +1455,16 @@ create_option_widget<GncOptionUIType::FONT> (GncOption& option, GtkGrid *page_bo
 static void
 update_preview_cb (GtkFileChooser *chooser, void* data)
 {
-    g_return_if_fail(chooser != NULL);
+    g_return_if_fail(chooser != nullptr);
 
     ENTER("chooser %p", chooser);
     auto filename = gtk_file_chooser_get_preview_filename(chooser);
     DEBUG("chooser preview name is %s.", filename ? filename : "(null)");
-    if (filename == NULL)
+    if (filename == nullptr)
     {
         filename = g_strdup(static_cast<const char*>(g_object_get_data(G_OBJECT(chooser), LAST_SELECTION)));
         DEBUG("using last selection of %s", filename ? filename : "(null)");
-        if (filename == NULL)
+        if (filename == nullptr)
         {
             LEAVE("no usable name");
             return;
@@ -1472,9 +1472,9 @@ update_preview_cb (GtkFileChooser *chooser, void* data)
     }
 
     auto image = GTK_IMAGE(gtk_file_chooser_get_preview_widget(chooser));
-    auto pixbuf = gdk_pixbuf_new_from_file_at_size(filename, 128, 128, NULL);
+    auto pixbuf = gdk_pixbuf_new_from_file_at_size(filename, 128, 128, nullptr);
     g_free(filename);
-    auto have_preview = (pixbuf != NULL);
+    auto have_preview = (pixbuf != nullptr);
 
     gtk_image_set_from_pixbuf(image, pixbuf);
     if (pixbuf)
@@ -1540,7 +1540,7 @@ create_option_widget<GncOptionUIType::PIXMAP> (GncOption& option,
     g_object_set(G_OBJECT(widget),
                  "width-chars", 30,
                  "preview-widget", gtk_image_new(),
-                 (char *)NULL);
+                 (char *)nullptr);
     option.set_ui_item(std::make_unique<GncGtkPixmapUIItem>(widget));
     option.set_ui_item_from_option();
 
@@ -1630,11 +1630,11 @@ static GtkWidget *
 create_radiobutton_widget(char *name, GncOption& option)
 {
     GtkWidget *frame, *box;
-    GtkWidget *widget = NULL;
+    GtkWidget *widget = nullptr;
 
     auto num_values{option.num_permissible_values()};
 
-    g_return_val_if_fail(num_values >= 0, NULL);
+    g_return_val_if_fail(num_values >= 0, nullptr);
 
     /* Create our button frame */
     frame = gtk_frame_new (name);
@@ -1655,7 +1655,7 @@ create_radiobutton_widget(char *name, GncOption& option)
         widget =
             gtk_radio_button_new_with_label_from_widget (widget ?
                                                          GTK_RADIO_BUTTON (widget) :
-                                                         NULL,
+                                                         nullptr,
                                                          label && *label ? _(label) : "");
         g_object_set_data (G_OBJECT (widget), "gnc_radiobutton_index",
                            GINT_TO_POINTER (i));
@@ -1674,7 +1674,7 @@ create_option_widget<GncOptionUIType::RADIOBUTTON> (GncOption& option, GtkGrid *
      gtk_box_set_homogeneous (GTK_BOX (enclosing), FALSE);
      set_name_label(option, page_box, row, true);
      set_tool_tip(option, enclosing);
-     auto widget = create_radiobutton_widget(NULL, option);
+     auto widget = create_radiobutton_widget(nullptr, option);
      gtk_box_pack_start(GTK_BOX(enclosing), widget, FALSE, FALSE, 0);
      gtk_widget_show_all(enclosing);
      grid_attach_widget(page_box, enclosing, row);
@@ -1756,7 +1756,7 @@ PlotSize::PlotSize(GncOption& option) :
     m_adj_px{GTK_ADJUSTMENT(g_object_ref(gtk_adjustment_new(1000.0, 110.0, 10000.0, 10.0, 250.0, 0.0)))}
 {
     gtk_box_set_homogeneous(GTK_BOX(m_widget), FALSE);
-    g_object_set (G_OBJECT(m_widget), "margin", 3, NULL);
+    g_object_set (G_OBJECT(m_widget), "margin", 3, nullptr);
     set_tool_tip(option, m_widget);
     gtk_box_pack_start(GTK_BOX(m_widget), GTK_WIDGET(m_pixel_button), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(m_widget), GTK_WIDGET(m_percent_button), FALSE, FALSE, 0);
@@ -1848,7 +1848,7 @@ create_option_widget<GncOptionUIType::PLOT_SIZE> (GncOption& option,
                                                   GtkGrid *page_box, int row)
 {
 
-    auto enclosing = gtk_frame_new(NULL);
+    auto enclosing = gtk_frame_new(nullptr);
     gtk_widget_set_halign (GTK_WIDGET(enclosing), GTK_ALIGN_START);
     set_name_label(option, page_box, row, false);
 
@@ -1881,7 +1881,7 @@ create_budget_widget(GncOption& option)
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(cb), cr, TRUE);
 
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(cb), cr, "text",
-                                   BUDGET_NAME_COLUMN, NULL);
+                                   BUDGET_NAME_COLUMN, nullptr);
     return GTK_WIDGET(cb);
 }
 

@@ -207,10 +207,10 @@ static const gchar *finish_convert_string = N_(
 static QofLogModule log_module = GNC_MOD_ASSISTANT;
 
 /* window containing a progress bar */
-static GtkWidget *progress_window = NULL;
-static GtkProgressBar *progress_bar = NULL;
+static GtkWidget *progress_window = nullptr;
+static GtkProgressBar *progress_bar = nullptr;
 
-/* this is used for a static tree of system encodings. encoding may be NULL.
+/* this is used for a static tree of system encodings. encoding may be nullptr.
    parent declares how often to go up in the path of the previous element and use
    that as parent, e.g. 0 -> child of previous, 1 -> same level as previous */
 typedef struct
@@ -221,9 +221,9 @@ typedef struct
 } system_encoding_type;
 static system_encoding_type system_encodings [] =
 {
-    { N_("Unicode"),                                NULL,          2 },
+    { N_("Unicode"),                                nullptr,          2 },
     {    "UTF-8",                                   "UTF-8",       0 },
-    { N_("European"),                               NULL,          2 },
+    { N_("European"),                               nullptr,          2 },
     { N_("ISO-8859-1 (West European)"),             "ISO-8859-1",  0 },
     { N_("ISO-8859-2 (East European)"),             "ISO-8859-2",  1 },
     { N_("ISO-8859-3 (South European)"),            "ISO-8859-3",  1 },
@@ -239,7 +239,7 @@ static system_encoding_type system_encodings [] =
     { N_("ISO-8859-14 (Celtic)"),                   "ISO-8859-14", 1 },
     { N_("ISO-8859-15 (West European, Euro sign)"), "ISO-8859-15", 1 },
     { N_("ISO-8859-16 (South-East European)"),      "ISO-8859-16", 1 },
-    { N_("Cyrillic"),                               NULL,          2 },
+    { N_("Cyrillic"),                               nullptr,          2 },
     { N_("KOI8-R (Russian)"),                       "KOI8-R",      0 },
     { N_("KOI8-U (Ukrainian)"),                     "KOI8-U",      1 },
 };
@@ -384,7 +384,7 @@ gxi_data_destroy (GncXmlImportData *data)
     if (data->filename)
     {
         g_free (data->filename);
-        data->filename = NULL;
+        data->filename = nullptr;
     }
 
     gxi_session_destroy (data);
@@ -393,19 +393,19 @@ gxi_data_destroy (GncXmlImportData *data)
     if (data->choices)
     {
         g_hash_table_destroy (data->choices);
-        data->choices = NULL;
+        data->choices = nullptr;
     }
 
     if (data->string_box)
     {
         gtk_widget_destroy (data->string_box);
-        data->string_box = NULL;
+        data->string_box = nullptr;
     }
 
     if (data->assistant)
     {
         gtk_widget_destroy (data->assistant);
-        data->assistant = NULL;
+        data->assistant = nullptr;
     }
 }
 
@@ -422,7 +422,7 @@ conv_free (conv_type *conv)
 static conv_type *
 conv_copy (const conv_type *conv)
 {
-    conv_type *new_type = NULL;
+    conv_type *new_type = nullptr;
     if (conv)
     {
         new_type = g_new(conv_type, 1);
@@ -450,7 +450,7 @@ get_decoded_string (const ambiguous_type *amb, const GQuark enc)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -499,7 +499,7 @@ ambiguous_list_insert (gchar *byte_sequence, GList *conv_list,
 {
     ambiguous_type *amb = g_new (ambiguous_type, 1);
     amb->byte_sequence = g_strdup (byte_sequence);
-    amb->conv_list = NULL;
+    amb->conv_list = nullptr;
     for (GList *iter = g_list_last (conv_list); iter; iter = iter->prev)
     {
         amb->conv_list =
@@ -516,7 +516,7 @@ ambiguous_free (ambiguous_type *amb)
     if (amb)
     {
         g_free (amb->byte_sequence);
-        g_list_foreach (amb->conv_list, (GFunc) conv_free, NULL);
+        g_list_foreach (amb->conv_list, (GFunc) conv_free, nullptr);
         g_list_free (amb->conv_list);
         g_free (amb);
     }
@@ -528,18 +528,18 @@ gxi_ambiguous_info_destroy (GncXmlImportData *data)
     if (data->unique)
     {
         g_hash_table_destroy (data->unique);
-        data->unique = NULL;
+        data->unique = nullptr;
     }
     if (data->ambiguous_ht)
     {
         g_hash_table_destroy (data->ambiguous_ht);
-        data->ambiguous_ht = NULL;
+        data->ambiguous_ht = nullptr;
     }
     if (data->ambiguous_list)
     {
-        g_list_foreach (data->ambiguous_list, (GFunc) ambiguous_free, NULL);
+        g_list_foreach (data->ambiguous_list, (GFunc) ambiguous_free, nullptr);
         g_list_free (data->ambiguous_list);
-        data->ambiguous_list = NULL;
+        data->ambiguous_list = nullptr;
     }
 }
 
@@ -551,7 +551,7 @@ gxi_session_destroy (GncXmlImportData *data)
         xaccLogDisable ();
         qof_session_destroy (data->session);
         xaccLogEnable ();
-        data->session = NULL;
+        data->session = nullptr;
     }
 }
 
@@ -591,7 +591,7 @@ subst_insert_amb (gchar *byte_sequence, GList *conv_list, GncXmlImportData *data
         {
             /* no conversion available, stop filling of subst */
             g_hash_table_destroy (data->subst);
-            data->subst = NULL;
+            data->subst = nullptr;
         }
     }
 }
@@ -621,7 +621,7 @@ gxi_update_progress_bar (const gchar *message, double percentage)
 
     if (percentage < 0)
     {
-        gtk_progress_bar_set_text (progress_bar, NULL);
+        gtk_progress_bar_set_text (progress_bar, nullptr);
         gtk_progress_bar_set_fraction (progress_bar, 0.0);
         gtk_widget_hide (progress_window);
     }
@@ -666,7 +666,7 @@ gxi_update_default_enc_combo (GncXmlImportData *data)
 static void
 gxi_update_summary_label (GncXmlImportData *data)
 {
-    gchar *string = NULL;
+    gchar *string = nullptr;
     gboolean show = FALSE;
 
     if (data->n_unassigned)
@@ -753,12 +753,12 @@ gxi_update_string_box (GncXmlImportData *data)
         renderer = gtk_cell_renderer_text_new ();
         gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
         gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
-                                        "text", WORD_COL_STRING, NULL);
+                                        "text", WORD_COL_STRING, nullptr);
 
         /* add default string, if possible */
         amb = (ambiguous_type*) word_iter->data;
         utf8 = get_decoded_string (amb, data->default_encoding);
-        default_iter = NULL;
+        default_iter = nullptr;
         if (utf8)
         {
             string = g_strdup_printf ("%s (default)", utf8);
@@ -773,7 +773,7 @@ gxi_update_string_box (GncXmlImportData *data)
         /* user has selected this previously */
         conv = (conv_type*) g_hash_table_lookup (data->choices, amb->byte_sequence);
         chosen_encoding = (conv) ? conv->encoding : 0;
-        chosen_iter = NULL;
+        chosen_iter = nullptr;
 
         /* loop through conversions */
         for (conv_iter = amb->conv_list; conv_iter; conv_iter = conv_iter->next)
@@ -878,7 +878,7 @@ gxi_string_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data)
     GList *found, *default_conv;
     gboolean is_active;
     ambiguous_type *amb;
-    conv_type *prev_conv, *curr_conv = NULL;
+    conv_type *prev_conv, *curr_conv = nullptr;
     gpointer ptr;
     GQuark prev_enc, curr_enc;
 
@@ -992,7 +992,7 @@ gxi_check_file (GncXmlImportData *data)
         enc_string = g_ascii_strup (locale_enc, -1);
         enc_ptr = GUINT_TO_POINTER (g_quark_from_string (enc_string));
         g_free (enc_string);
-        data->encodings = g_list_append (NULL, enc_ptr);
+        data->encodings = g_list_append (nullptr, enc_ptr);
 
         /* add utf-8 */
         if (!is_utf8)
@@ -1043,7 +1043,7 @@ gxi_check_file (GncXmlImportData *data)
 
     /* analyze file */
     data->n_impossible = gnc_xml2_find_ambiguous (
-                             data->filename, data->encodings, &data->unique, &data->ambiguous_ht, NULL);
+                             data->filename, data->encodings, &data->unique, &data->ambiguous_ht, nullptr);
 
     if (data->n_impossible != -1)
     {
@@ -1057,11 +1057,11 @@ gxi_check_file (GncXmlImportData *data)
 static gboolean
 gxi_parse_file (GncXmlImportData *data)
 {
-    QofSession *session = NULL;
+    QofSession *session = nullptr;
     QofBook *book;
     QofBackend *backend;
     QofBackendError io_err = ERR_BACKEND_NO_ERR;
-    gchar *message = NULL;
+    gchar *message = nullptr;
     gboolean success = FALSE;
 
     if (data->n_unassigned || data->n_impossible)
@@ -1077,7 +1077,7 @@ gxi_parse_file (GncXmlImportData *data)
 
     /* create a temporary QofSession */
     gxi_session_destroy (data);
-    session = qof_session_new (NULL);
+    session = qof_session_new (nullptr);
     data->session = session;
     qof_session_begin (session, data->filename, SESSION_READ_ONLY);
     io_err = qof_session_get_error (session);
@@ -1090,7 +1090,7 @@ gxi_parse_file (GncXmlImportData *data)
     xaccLogDisable ();
     gxi_update_progress_bar (_("Reading file…"), 0.0);
     qof_session_load (session, gxi_update_progress_bar);
-    gxi_update_progress_bar (NULL, -1.0);
+    gxi_update_progress_bar (nullptr, -1.0);
     xaccLogEnable ();
 
     io_err = qof_session_get_error (session);
@@ -1113,7 +1113,7 @@ gxi_parse_file (GncXmlImportData *data)
 
     gxi_update_progress_bar (_("Parsing file…"), 0.0);
     success = gnc_xml2_parse_with_subst (backend, book, data->subst);
-    gxi_update_progress_bar (NULL, -1.0);
+    gxi_update_progress_bar (nullptr, -1.0);
 
     if (success)
         data->session = session;
@@ -1125,7 +1125,7 @@ cleanup_parse_file:
     if (data->subst)
     {
         g_hash_table_destroy (data->subst);
-        data->subst = NULL;
+        data->subst = nullptr;
     }
     if (message)
     {
@@ -1145,7 +1145,7 @@ gxi_save_file (GncXmlImportData *data)
 
     gxi_update_progress_bar (_("Writing file…"), 0.0);
     qof_session_save (data->session, gxi_update_progress_bar);
-    gxi_update_progress_bar (NULL, -1.0);
+    gxi_update_progress_bar (nullptr, -1.0);
 
     io_err = qof_session_get_error (data->session);
 
@@ -1198,8 +1198,8 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data)
                             ENC_COL_QUARK, enc_iter->data, -1);
     }
     gtk_tree_view_insert_column_with_attributes (
-        data->selected_encs_view, -1, NULL,
-        gtk_cell_renderer_text_new (), "text", ENC_COL_STRING, NULL);
+        data->selected_encs_view, -1, nullptr,
+        gtk_cell_renderer_text_new (), "text", ENC_COL_STRING, nullptr);
     gtk_tree_view_set_model (data->selected_encs_view,
                              GTK_TREE_MODEL (list_store));
     g_object_unref (list_store);
@@ -1215,7 +1215,7 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data)
         if (first_encoding)
         {
             /* first system encoding */
-            parent_ptr = NULL;
+            parent_ptr = nullptr;
             first_encoding = false;
         }
         else
@@ -1231,11 +1231,11 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data)
                 else
                 {
                     /* no parent to toplevel element */
-                    parent_ptr = NULL;
+                    parent_ptr = nullptr;
                 }
         }
 
-        gpointer enc_ptr = NULL;
+        gpointer enc_ptr = nullptr;
         if (system_enc.encoding)
             enc_ptr = GUINT_TO_POINTER (g_quark_from_string (system_enc.encoding));
 
@@ -1244,8 +1244,8 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data)
                             gettext (system_enc.text), ENC_COL_QUARK, enc_ptr, -1);
     }
     gtk_tree_view_insert_column_with_attributes (
-        data->available_encs_view, -1, NULL,
-        gtk_cell_renderer_text_new (), "text", ENC_COL_STRING, NULL);
+        data->available_encs_view, -1, nullptr,
+        gtk_cell_renderer_text_new (), "text", ENC_COL_STRING, nullptr);
     gtk_tree_view_set_model (data->available_encs_view,
                              GTK_TREE_MODEL (tree_store));
     g_object_unref (tree_store);
@@ -1276,7 +1276,7 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data)
     g_object_unref(G_OBJECT(builder));
 
     gtk_widget_destroy (dialog);
-    data->encodings_dialog = NULL;
+    data->encodings_dialog = nullptr;
 }
 
 static void

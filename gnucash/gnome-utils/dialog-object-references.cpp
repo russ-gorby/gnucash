@@ -62,7 +62,7 @@ gnc_ui_object_references_show( const gchar* explanation_text, GList* objlist )
 
     /* Set up the list store */
     store = gtk_list_store_new( 1, G_TYPE_STRING );
-    for ( node = objlist; node != NULL; node = node->next )
+    for ( node = objlist; node != nullptr; node = node->next )
     {
         auto inst = static_cast<QofInstance *>(node->data);
         GtkTreeIter iter;
@@ -74,7 +74,7 @@ gnc_ui_object_references_show( const gchar* explanation_text, GList* objlist )
     /* Set up the list view */
     listview = gtk_tree_view_new_with_model( GTK_TREE_MODEL(store) );
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes( "Object", renderer, "text", 0, NULL );
+    column = gtk_tree_view_column_new_with_attributes( "Object", renderer, "text", 0, nullptr );
     gtk_tree_view_append_column( GTK_TREE_VIEW(listview), column );
 
     box = GTK_WIDGET(gtk_builder_get_object (builder, "hbox_list" ));

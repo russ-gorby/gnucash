@@ -65,7 +65,7 @@ gnc_cell_view_init (GncCellView *cv)
     cv->editing_canceled = FALSE;
 
     cv->text_view = static_cast<GtkWidget*>(
-        g_object_new (GTK_TYPE_TEXT_VIEW, "accepts-tab", FALSE, NULL)
+        g_object_new (GTK_TYPE_TEXT_VIEW, "accepts-tab", FALSE, nullptr)
     );
     cv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW(cv->text_view));
 
@@ -210,7 +210,7 @@ gcv_remove_tooltip (GncCellView *cv)
 {
     if (cv->tooltip_id > 0)
     {
-        gtk_widget_set_tooltip_text (GTK_WIDGET(cv->text_view), NULL);
+        gtk_widget_set_tooltip_text (GTK_WIDGET(cv->text_view), nullptr);
         cv->tooltip_id = 0;
     }
     return FALSE;
@@ -267,7 +267,7 @@ gnc_cell_view_get_text (GncCellView *cv)
 {
     GtkTextIter siter, eiter;
 
-    g_return_val_if_fail (GNC_IS_CELL_VIEW(cv), NULL);
+    g_return_val_if_fail (GNC_IS_CELL_VIEW(cv), nullptr);
 
     gtk_text_buffer_get_bounds (cv->buffer, &siter, &eiter);
 
