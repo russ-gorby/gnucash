@@ -34,7 +34,7 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
-#include <string.h>
+#include <cstring>
 
 #include "gnc-gkeyfile-utils.h"
 #include "gnc-file.h"

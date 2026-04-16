@@ -19,7 +19,7 @@
 
 #include <config.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "gnc-component-manager.h"
 #include "qof.h"

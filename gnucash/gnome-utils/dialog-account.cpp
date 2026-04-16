@@ -30,7 +30,7 @@
 #ifdef G_OS_WIN32
 #include <pow.h>
 #endif
-#include <string.h>
+#include <cstring>
 
 #include "Transaction.h"
 #include "dialog-account.h"

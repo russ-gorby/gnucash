@@ -34,8 +34,8 @@
 #include <config.h>
 
 #include <gtk/gtk.h>
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 #include "gnc-date-format.h"
 #include "dialog-utils.h"

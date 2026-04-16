@@ -30,7 +30,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <math.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include "gnc-date.h"
 #include "dialog-utils.h"
 #include <qoflog.h>

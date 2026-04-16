@@ -25,8 +25,8 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <string.h>
-#include <stdarg.h>
+#include <cstring>
+#include <cstdarg>
 
 #include "gnc-engine.h"
 #include "qof.h"

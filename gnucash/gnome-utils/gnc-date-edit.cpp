@@ -38,10 +38,10 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
-#include <string.h>
-#include <stdlib.h> /* atoi */
+#include <cstring>
+#include <cstdlib> /* atoi */
 #include <ctype.h> /* isdigit */
-#include <stdio.h>
+#include <cstdio>
 
 #include "gnc-date.h"
 #include "gnc-engine.h"

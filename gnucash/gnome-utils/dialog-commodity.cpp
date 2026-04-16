@@ -38,7 +38,7 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "dialog-commodity.h"
 #include "dialog-utils.h"

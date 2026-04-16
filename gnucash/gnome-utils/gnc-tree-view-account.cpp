@@ -27,7 +27,7 @@
 #include <stdbool.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <string.h>
+#include <cstring>
 
 #include "gnc-tree-view.h"
 #include "gnc-tree-model-account.hpp"

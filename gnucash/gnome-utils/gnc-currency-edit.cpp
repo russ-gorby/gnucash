@@ -50,9 +50,9 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "gnc-currency-edit.h"
 #include "gnc-commodity.h"

@@ -32,9 +32,9 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "gnc-general-select.h"
 #include "dialog-utils.h"

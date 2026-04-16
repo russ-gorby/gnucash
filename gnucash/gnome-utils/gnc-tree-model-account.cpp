@@ -27,7 +27,7 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <string.h>
+#include <cstring>
 
 #include "gnc-tree-model-account.hpp"
 #include "gnc-component-manager.h"

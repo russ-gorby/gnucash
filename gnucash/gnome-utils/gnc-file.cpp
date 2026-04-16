@@ -24,8 +24,8 @@
 #include <stdbool.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <errno.h>
-#include <string.h>
+#include <cerrno>
+#include <cstring>
 
 #include "dialog-utils.h"
 #include "assistant-xml-encoding.hpp"

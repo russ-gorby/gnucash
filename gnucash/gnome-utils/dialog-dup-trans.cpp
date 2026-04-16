@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "dialog-dup-trans.h"
 #include "dialog-utils.h"

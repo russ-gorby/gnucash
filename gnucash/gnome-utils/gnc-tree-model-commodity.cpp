@@ -38,7 +38,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <string.h>
+#include <cstring>
 
 #include "gnc-tree-model-commodity.hpp"
 #include "gnc-component-manager.h"
