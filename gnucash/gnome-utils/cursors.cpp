@@ -26,11 +26,11 @@
 #include "gnc-ui.h"
 
 
-typedef enum
+enum GNCCursorType
 {
     GNC_CURSOR_NORMAL = -1,
     GNC_CURSOR_BUSY   = GDK_WATCH
-} GNCCursorType;
+};
 
 
 /********************************************************************\

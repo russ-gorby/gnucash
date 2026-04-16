@@ -60,12 +60,12 @@ static gint current_tip_number = -1;
 /* This static indicates the debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
 
-typedef struct
+struct TotdDialog
 {
     GtkWidget   *dialog;
     GtkTextView *textview;
     GtkWidget   *showcheck_button;
-} TotdDialog;
+};
 
 
 /***********************************************************************

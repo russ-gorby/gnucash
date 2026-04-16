@@ -39,7 +39,7 @@
 #include "window-main-summarybar.hpp"
 #include "dialog-utils.h"
 
-typedef struct
+struct GNCMainSummary
 {
     GtkWidget    *hbox;
     GtkWidget    *totals_combo;
@@ -49,7 +49,7 @@ typedef struct
     gboolean      combo_popped;
     gboolean      show_negative_color;
     gchar        *negative_color;
-} GNCMainSummary;
+};
 
 #define WINDOW_SUMMARYBAR_CM_CLASS "summary-bar"
 
@@ -68,13 +68,13 @@ typedef struct
  * @todo This structure and the non-GUI code that computes it's values
  * should move into the engine.
  **/
-typedef struct
+struct GNCCurrencyAcc
 {
     gnc_commodity * currency;
     gnc_numeric assets;
     gnc_numeric profits;
     gint total_mode;
-} GNCCurrencyAcc;
+};
 
 
 /* defines for total_mode in GNCCurrencyAcc and GNCCurrencyItem */
@@ -85,14 +85,14 @@ typedef struct
 
 
 /** options for summarybar **/
-typedef struct
+struct GNCSummarybarOptions
 {
     gnc_commodity *default_currency;
     gboolean grand_total;
     gboolean non_currency;
     time64 start_date;
     time64 end_date;
-} GNCSummarybarOptions;
+};
 
 /**
  * Get the existing currency accumulator matching the given currency and

@@ -64,7 +64,7 @@ static QofLogModule log_module = GNC_MOD_GUI;
 static GNCShutdownCB shutdown_cb = nullptr;
 static gint save_in_progress = 0;
 
-typedef bool (*CharToBool)(const char*);
+using CharToBool = bool (*)(const char*);
 
 static bool datafile_filter (const GtkFileFilterInfo* info, CharToBool checker)
 {

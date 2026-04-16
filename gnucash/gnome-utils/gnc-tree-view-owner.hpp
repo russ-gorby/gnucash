@@ -48,16 +48,15 @@ G_DECLARE_FINAL_TYPE (GncTreeViewOwner, gnc_tree_view_owner, GNC, TREE_VIEW_OWNE
 #define GNC_TREE_VIEW_OWNER_NAME            "GncTreeViewOwner"
 
 /* typedefs & structures */
-typedef struct OwnerViewInfo_s     OwnerViewInfo;
 
 
-struct OwnerViewInfo_s
+struct OwnerViewInfo
 {
     gboolean show_inactive;
 };
 
 
-typedef struct
+struct OwnerFilterDialog
 {
     GtkWidget    *dialog;
     GncTreeViewOwner  *tree_view;
@@ -65,7 +64,7 @@ typedef struct
     gboolean     original_show_inactive;
     gboolean     show_zero_total;
     gboolean     original_show_zero_total;
-} OwnerFilterDialog;
+};
 
 #define GNC_OWNER_TREE_NAME_COL                 "name"
 #define GNC_OWNER_TREE_TYPE_COL                 "type"
@@ -128,13 +127,11 @@ GtkTreeView *gnc_tree_view_owner_new (GncOwnerType owner_type);
 /** @name Owner Tree View Configuration
  @{ */
 
-typedef gchar * (*GncTreeViewOwnerColumnSource) (GncOwner *owner,
-        GtkTreeViewColumn *col,
-        GtkCellRenderer *cell);
+using GncTreeViewOwnerColumnSource = gchar * (*) (GncOwner *,
+        GtkTreeViewColumn *, GtkCellRenderer *);
 
-typedef void (*GncTreeViewOwnerColumnTextEdited) (GncOwner *owner,
-        GtkTreeViewColumn *col,
-        const gchar *new_text);
+using GncTreeViewOwnerColumnTextEdited =  void (*) (GncOwner *,
+        GtkTreeViewColumn *, const gchar *);
 
 /** @} */
 
@@ -150,7 +147,7 @@ typedef void (*GncTreeViewOwnerColumnTextEdited) (GncOwner *owner,
  *
  *  @return TRUE if the owner should be displayed.
  */
-typedef gboolean (*gnc_tree_view_owner_filter_func)(GncOwner *owner, gpointer data);
+using gnc_tree_view_owner_filter_func = gboolean (*)(GncOwner *, gpointer);
 
 
 /** This function attaches a filter function to the given owner

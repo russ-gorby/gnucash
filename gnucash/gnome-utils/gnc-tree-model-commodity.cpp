@@ -1027,11 +1027,11 @@ gnc_tree_model_commodity_get_iter_from_namespace (GncTreeModelCommodity *model,
 /*  Commodity Tree Model - Engine Event Handling Functions  */
 /************************************************************/
 
-typedef struct _remove_data
+struct remove_data
 {
     GncTreeModelCommodity *model;
     GtkTreePath           *path;
-} remove_data;
+};
 
 static GSList *pending_removals = nullptr;
 

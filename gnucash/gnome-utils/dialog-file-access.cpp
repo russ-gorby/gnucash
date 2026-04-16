@@ -48,7 +48,7 @@ static QofLogModule log_module = GNC_MOD_GUI;
 #define FILE_ACCESS_SAVE_AS 1
 #define FILE_ACCESS_EXPORT  2
 
-typedef struct FileAccessWindow
+struct FileAccessWindow
 {
     /* Parts of the dialog */
     int type;
@@ -64,7 +64,7 @@ typedef struct FileAccessWindow
     GtkEntry            *tf_database;
     GtkEntry            *tf_username;
     GtkEntry            *tf_password;
-} FileAccessWindow;
+};
 
 extern "C"
 {

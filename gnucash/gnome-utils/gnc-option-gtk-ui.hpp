@@ -42,7 +42,7 @@
 *  @return pointer to the widget.
 */
 
-typedef void (*WidgetCreateFunc)(GncOption&, GtkGrid*, int);
+using WidgetCreateFunc = void (*)(GncOption&, GtkGrid*, int);
 
 /** @class GncOptionUIFactory
  *  Factory class that keeps track of which GncOptionValueType needs which

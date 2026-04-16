@@ -102,8 +102,7 @@ static gchar **gnc_tree_view_get_column_order (GncTreeView *view,
         gsize *length);
 
 /** Private Data Structure ***********************************************/
-
-typedef struct GncTreeViewPrivate
+struct GncTreeViewPrivate
 {
     /* Column selection menu related values */
     GtkTreeViewColumn *column_menu_column;
@@ -125,7 +124,7 @@ typedef struct GncTreeViewPrivate
     gulong             columns_changed_cb_id;
     gulong             sort_column_changed_cb_id;
     gulong             size_allocate_cb_id;
-} GncTreeViewPrivate;
+};
 
 G_DEFINE_TYPE_WITH_CODE(GncTreeView, gnc_tree_view, GTK_TYPE_TREE_VIEW,
                           G_ADD_PRIVATE(GncTreeView))

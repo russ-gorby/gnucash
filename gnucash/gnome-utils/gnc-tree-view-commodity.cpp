@@ -482,13 +482,13 @@ gnc_tree_view_commodity_get_iter_from_commodity (GncTreeViewCommodity *view,
 /*          Commodity Tree View Visibility Filter           */
 /************************************************************/
 
-typedef struct
+struct filter_user_data
 {
     gnc_tree_view_commodity_ns_filter_func user_ns_fn;
     gnc_tree_view_commodity_cm_filter_func user_cm_fn;
     gpointer                               user_data;
     GDestroyNotify                         user_destroy;
-} filter_user_data;
+};
 
 static void
 gnc_tree_view_commodity_filter_destroy (gpointer data)

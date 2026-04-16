@@ -69,7 +69,7 @@ struct _GncPluginMenuAdditions
 
 /** Per-window private data for this plugin.  This plugin is unique in
  *  that it manages its own menu items. */
-typedef struct _GncPluginMenuAdditionsPerWindow
+struct GncPluginMenuAdditionsPerWindow
 {
     /** The menu/toolbar action information associated with a specific
         window.  This plugin must maintain its own data because of the
@@ -78,7 +78,7 @@ typedef struct _GncPluginMenuAdditionsPerWindow
     GHashTable     *build_menu_hash;
     GMenu          *report_menu;
     GMenu          *sub_menu;
-} GncPluginMenuAdditionsPerWindow;
+};
 
 /** An array of all of the actions provided by the account tree
  *  plugin. */

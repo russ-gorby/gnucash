@@ -53,11 +53,11 @@
 #define DIALOG_TRANSFER_CM_CLASS "dialog-transfer"
 #define GNC_PREFS_GROUP "dialogs.transfer"
 
-typedef enum
+enum XferDirection
 {
     XFER_DIALOG_FROM,
     XFER_DIALOG_TO
-} XferDirection;
+};
 
 
 /* This static indicates the debugging module that this .o belongs to.  */
@@ -130,24 +130,23 @@ struct _xferDialog
 };
 
 /** Structure passed to "filter tree accounts" function to provide it information */
-typedef struct
+struct AccountTreeFilterInfo
 {
     /** Show income/expense accounts in tree */
     gboolean show_inc_exp;
 
     /** Show hidden accounts in tree */
     gboolean show_hidden;
-} AccountTreeFilterInfo;
+};
 
 static AccountTreeFilterInfo *from_info = nullptr;
 static AccountTreeFilterInfo *to_info   = nullptr;
 
-struct _acct_list_item
+struct acct_list_item
 {
     char *acct_full_name;
     Account *acct;
 };
-typedef struct _acct_list_item acct_list_item;
 
 
 /** Prototypes ***************************************************/
@@ -222,14 +221,14 @@ round_price(gnc_commodity *from, gnc_commodity *to, gnc_numeric value)
     return value;
 }
 
-typedef enum
+enum PriceDate
 {
     SAME_DAY,
     NEAREST,
     LATEST
-} PriceDate;
+};
 
-typedef struct
+struct PriceReq
 {
     GNCPrice *price;
     GNCPriceDB *pricedb;
@@ -237,7 +236,7 @@ typedef struct
     gnc_commodity *to;
     time64 time;
     gboolean reverse;
-} PriceReq;
+};
 
 static void
 price_request_from_xferData(PriceReq *pr, XferDialog *xd)

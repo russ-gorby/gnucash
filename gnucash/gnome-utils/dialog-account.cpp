@@ -65,13 +65,13 @@ enum account_cols
     NUM_ACCOUNT_COLS
 };
 
-typedef enum
+enum AccountDialogType
 {
     NEW_ACCOUNT,
     EDIT_ACCOUNT
-} AccountDialogType;
+};
 
-typedef struct _AccountWindow
+struct AccountWindow
 {
     QofBook   *book;
     gboolean   modal;
@@ -132,9 +132,9 @@ typedef struct _AccountWindow
 
     GObject *selection;
     gulong handler_id;
-} AccountWindow;
+};
 
-typedef struct _RenumberDialog
+struct RenumberDialog
 {
     GtkWidget *dialog;
     GtkWidget *prefix;
@@ -145,7 +145,7 @@ typedef struct _RenumberDialog
 
     Account   *parent;
     gint       num_children;
-} RenumberDialog;
+};
 
 /** Static Globals *******************************************************/
 static QofLogModule log_module = GNC_MOD_GUI;

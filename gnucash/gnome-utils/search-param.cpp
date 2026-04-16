@@ -39,9 +39,7 @@ static void gnc_search_param_simple_finalize (GObject *obj);
 
 static void gnc_search_param_compound_finalize (GObject *obj);
 
-typedef struct _GNCSearchParamPrivate GNCSearchParamPrivate;
-
-struct _GNCSearchParamPrivate
+struct GNCSearchParamPrivate
 {
     const char *        title;
     GtkJustification    justify;

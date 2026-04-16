@@ -42,7 +42,7 @@ static QofLogModule log_module = GNC_MOD_PREFS;
 #define DIALOG_RESET_WARNINGS_CM_CLASS  "reset-warnings"
 #define TIPS_STRING                     "tips"
 
-typedef struct
+struct RWDialog
 {
     GtkWidget   *dialog;
     GtkWidget   *perm_vbox_label;
@@ -52,7 +52,7 @@ typedef struct
     GtkWidget   *buttonbox;
     GtkWidget   *nolabel;
     GtkWidget   *applybutton;
-} RWDialog;
+};
 
 extern "C" {
 /*

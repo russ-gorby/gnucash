@@ -46,7 +46,7 @@
 G_DECLARE_FINAL_TYPE (GncTreeModelAccount, gnc_tree_model_account, GNC, TREE_MODEL_ACCOUNT, GncTreeModel)
 #define GNC_TREE_MODEL_ACCOUNT_NAME            "GncTreeModelAccount"
 
-typedef enum
+enum GncTreeModelAccountColumn
 {
     GNC_TREE_MODEL_ACCOUNT_COL_NAME,
     GNC_TREE_MODEL_ACCOUNT_COL_TYPE,
@@ -93,7 +93,7 @@ typedef enum
     GNC_TREE_MODEL_ACCOUNT_COL_COLOR_TOTAL_PERIOD,
 
     GNC_TREE_MODEL_ACCOUNT_NUM_COLUMNS
-} GncTreeModelAccountColumn;
+};
 
 /** Clear the tree model account cached values.
  *

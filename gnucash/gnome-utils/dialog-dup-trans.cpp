@@ -36,7 +36,7 @@
 /* This static indicates the debugging module that this .o belongs to.  */
 G_GNUC_UNUSED static QofLogModule log_module = G_LOG_DOMAIN;
 
-typedef struct
+struct DupTransDialog
 {
     GtkWidget * dialog;
 
@@ -53,7 +53,7 @@ typedef struct
     GtkWidget *num_label;             // GtkLabel
     GtkWidget *tnum_label;            // GtkLabel
     GtkWidget *link_label;            // GtkLabel
-} DupTransDialog;
+};
 
 /* Parses the string value and returns true if it is a
  * number. In that case, *num is set to the value parsed.

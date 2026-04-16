@@ -100,7 +100,7 @@ constexpr int CHECKBOX_NAMES_SIZE = sizeof(CHECKBOX_NAMES) / sizeof(CHECKBOX_NAM
  * transaction or budgeting category, for instance], manipulating a FreqSpec
  * object in the process.
  **/
-typedef struct _GncFrequency
+struct _GncFrequency
 {
     GtkBox	     widget;
     GtkBox          *vb;
@@ -108,7 +108,8 @@ typedef struct _GncFrequency
     GtkComboBox     *freqComboBox;
     GNCDateEdit     *startDate;
     GtkBuilder      *builder;
-} GncFrequency;
+};
+typedef struct _GncFrequency GncFrequency; // for G_DECLARE_FINAL_TYPE()
 
 G_DEFINE_TYPE (GncFrequency, gnc_frequency, GTK_TYPE_BOX)
 

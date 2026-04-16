@@ -269,14 +269,14 @@ gnc_doclink_set_path_head_label (GtkWidget *path_head_label,
 
 /* =================================================================== */
 
-typedef struct
+struct DoclinkUpdate
 {
     const gchar *old_path_head_uri;
     gboolean     change_old;
     const gchar *new_path_head_uri;
     gboolean     change_new;
     gboolean     book_ro;
-}DoclinkUpdate;
+};
 
 static void
 update_invoice_uri (QofInstance* data, gpointer user_data)

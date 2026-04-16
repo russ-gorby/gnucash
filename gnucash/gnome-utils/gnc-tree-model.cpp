@@ -40,10 +40,10 @@ static void gnc_tree_model_constructed (GObject *object);
 static void gnc_tree_model_finalize (GObject *object);
 
 /** The instance private data for a generic tree model. */
-typedef struct GncTreeModelPrivate
+struct GncTreeModelPrivate
 {
     gpointer dummy;
-} GncTreeModelPrivate;
+};
 
 G_DEFINE_TYPE_WITH_CODE(GncTreeModel, gnc_tree_model, G_TYPE_OBJECT,
 		        G_ADD_PRIVATE(GncTreeModel))

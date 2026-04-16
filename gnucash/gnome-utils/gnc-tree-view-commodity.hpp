@@ -104,8 +104,8 @@ void gnc_tree_view_commodity_add_kvp_column (GncTreeViewCommodity *view,
 /** @name Commodity Tree View Filtering
  @{ */
 
-typedef gboolean (*gnc_tree_view_commodity_ns_filter_func)(gnc_commodity_namespace*, gpointer data);
-typedef gboolean (*gnc_tree_view_commodity_cm_filter_func)(gnc_commodity*, gpointer data);
+using gnc_tree_view_commodity_ns_filter_func = gboolean (*)(gnc_commodity_namespace*, gpointer);
+using gnc_tree_view_commodity_cm_filter_func = gboolean (*)(gnc_commodity*, gpointer);
 
 /** This function attaches a filter function to the given commodity
  *  tree.  This function will be called for each commodity that the view

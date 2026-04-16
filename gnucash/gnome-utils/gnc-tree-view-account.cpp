@@ -1499,11 +1499,11 @@ gnc_tree_view_account_set_selected_account (GncTreeViewAccount *view,
 }
 
 /* Information re selection process */
-typedef struct
+struct GncTreeViewSelectionInfo
 {
     GList* return_list;
     GncTreeViewAccount* view;
-} GncTreeViewSelectionInfo;
+};
 
 /*
  * This helper function is called once for each row in the tree view
@@ -2357,12 +2357,12 @@ account_filter_dialog_create(AccountFilterDialog *fd, GncPluginPage *page) noexc
 #define ACCOUNT_TYPES          "Account_Types"
 
 
-typedef struct foo
+struct bar_t
 {
     GKeyFile *key_file;
     const gchar *group_name;
     int count;
-} bar_t;
+};
 
 /** Save information about an expanded row.  This function is called
  *  via a gtk_tree_view_map_expanded_rows, which calls it once per

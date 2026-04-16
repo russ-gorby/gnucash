@@ -41,11 +41,11 @@
  * file. A future commit will separate the session code from the UI code in this
  * file.
  */
-typedef struct
+struct conv_type
 {
     GQuark encoding;
     gchar* utf8_string;
-} conv_type;
+};
 
 extern "C" gint gnc_xml2_find_ambiguous (const gchar* filename,
                                          GList* encodings,
@@ -63,7 +63,7 @@ extern "C" gboolean gnc_xml2_parse_with_subst (QofBackend* xml_be, QofBook* book
  * - as pointer, containing above gquark, used in lists
  */
 
-typedef struct
+struct GncXmlImportData
 {
     GtkWidget *assistant;               /* assistant */
     gboolean  canceled;                 /* we are canceled */
@@ -112,14 +112,14 @@ typedef struct
 
     gchar *filename;
     QofSession *session;
-} GncXmlImportData;
+};
 
 /* used for the string combos, see ambiguous_free */
-typedef struct
+struct ambiguous_type
 {
     gchar *byte_sequence;
     GList *conv_list;
-} ambiguous_type;
+};
 
 enum
 {
@@ -213,12 +213,13 @@ static GtkProgressBar *progress_bar = nullptr;
 /* this is used for a static tree of system encodings. encoding may be nullptr.
    parent declares how often to go up in the path of the previous element and use
    that as parent, e.g. 0 -> child of previous, 1 -> same level as previous */
-typedef struct
+struct system_encoding_type
 {
     const gchar *text;
     const gchar *encoding;
     const gint parent;
-} system_encoding_type;
+};
+
 static system_encoding_type system_encodings [] =
 {
     { N_("Unicode"),                                nullptr,          2 },

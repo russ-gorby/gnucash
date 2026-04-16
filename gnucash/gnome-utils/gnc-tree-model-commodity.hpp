@@ -48,7 +48,7 @@ G_DECLARE_FINAL_TYPE (GncTreeModelCommodity, gnc_tree_model_commodity, GNC, TREE
 #define GNC_TREE_MODEL_COMMODITY_NAME            "GncTreeModelCommodity"
 
 
-typedef enum
+enum GncTreeModelCommodityColumn
 {
     GNC_TREE_MODEL_COMMODITY_COL_NAMESPACE,
     GNC_TREE_MODEL_COMMODITY_COL_MNEMONIC,
@@ -68,7 +68,7 @@ typedef enum
     GNC_TREE_MODEL_COMMODITY_COL_VISIBILITY,
 
     GNC_TREE_MODEL_COMMODITY_NUM_COLUMNS
-} GncTreeModelCommodityColumn;
+};
 
 /** @name Account Tree Model Constructors
  @{ */

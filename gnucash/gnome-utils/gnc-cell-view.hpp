@@ -32,10 +32,8 @@
 #define GNC_IS_CELL_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((obj), GNC_TYPE_CELL_VIEW))
 #define GNC_CELL_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GNC_TYPE_CELL_VIEW, GncCellViewClass))
 
-typedef struct _GncCellView      GncCellView;
-typedef struct _GncCellViewClass GncCellViewClass;
 
-struct _GncCellView
+struct GncCellView
 {
     GtkEventBox    parent;
 
@@ -49,7 +47,7 @@ struct _GncCellView
     gboolean       editing_canceled;
 };
 
-struct _GncCellViewClass
+struct GncCellViewClass
 {
     GtkEventBoxClass parent_class;
 };

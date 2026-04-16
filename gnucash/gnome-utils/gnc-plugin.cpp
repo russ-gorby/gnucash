@@ -53,10 +53,10 @@ static void gnc_plugin_finalize   (GObject *object);
 
 /** The instance private data for a menu-only plugin.  This data
  *  structure is unused. */
-typedef struct GncPluginPrivate
+struct GncPluginPrivate
 {
     gpointer dummy;
-} GncPluginPrivate;
+};
 
 G_DEFINE_TYPE_WITH_CODE(GncPlugin, gnc_plugin, G_TYPE_OBJECT,
                         G_ADD_PRIVATE(GncPlugin))

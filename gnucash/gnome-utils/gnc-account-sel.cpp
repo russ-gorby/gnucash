@@ -737,11 +737,11 @@ gnc_account_sel_new (void) noexcept
     return GTK_WIDGET(gas);
 }
 
-typedef struct
+struct gas_find_data
 {
     GNCAccountSel *gas;
     Account       *acct;
-} gas_find_data;
+};
 
 static gboolean
 gnc_account_sel_find_account (GtkTreeModel *fmodel,

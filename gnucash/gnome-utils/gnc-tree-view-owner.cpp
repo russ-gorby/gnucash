@@ -816,11 +816,11 @@ gnc_tree_view_owner_set_selected_owner (GncTreeViewOwner *view,
 }
 
 /* Information re selection process */
-typedef struct
+struct GncTreeViewSelectionInfo
 {
     GList* return_list;
     GncTreeViewOwner* view;
-} GncTreeViewSelectionInfo;
+};
 
 #if 0 /* Not Used */
 /*
@@ -1157,11 +1157,11 @@ owner_filter_dialog_create(OwnerFilterDialog *fd, GncPluginPage *page)
 #define SHOW_INACTIVE_LABEL  "ShowInactive"
 #define SHOW_ZERO_LABEL      "ShowZeroTotal"
 
-typedef struct foo
+struct bar_t
 {
     GKeyFile *key_file;
     const gchar *group_name;
-} bar_t;
+};
 
 /** Save information about the selected row.  Its job is to write the
  *  full owner name of the row out to the state file.

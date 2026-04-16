@@ -48,7 +48,7 @@ G_DECLARE_FINAL_TYPE (GncTreeModelPrice, gnc_tree_model_price, GNC, TREE_MODEL_P
 #define GNC_TREE_MODEL_PRICE_NAME            "GncTreeModelPrice"
 
 
-typedef enum
+enum GncTreeModelPriceColumn
 {
     GNC_TREE_MODEL_PRICE_COL_COMMODITY,
     GNC_TREE_MODEL_PRICE_COL_CURRENCY,
@@ -62,7 +62,7 @@ typedef enum
     /* internal hidden columns */
     GNC_TREE_MODEL_PRICE_COL_VISIBILITY,
     GNC_TREE_MODEL_PRICE_NUM_COLUMNS
-} GncTreeModelPriceColumn;
+};
 
 /** @name Account Tree Model Constructors
  @{ */

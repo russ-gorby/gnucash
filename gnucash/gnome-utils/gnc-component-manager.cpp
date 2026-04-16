@@ -30,21 +30,21 @@
 
 #define CM_DEBUG 0
 
-typedef struct
+struct EntityTypeEventInfo
 {
     QofIdType entity_type;
     QofEventId event_mask;
-} EntityTypeEventInfo;
+};
 
-typedef struct
+struct ComponentEventInfo
 {
     GHashTable * event_masks;
     GHashTable * entity_events;
 
     gboolean match;
-} ComponentEventInfo;
+};
 
-typedef struct
+struct ComponentInfo
 {
     GNCComponentRefreshHandler refresh_handler;
     GNCComponentCloseHandler close_handler;
@@ -55,7 +55,7 @@ typedef struct
     char *component_class;
     gint component_id;
     gpointer session;
-} ComponentInfo;
+};
 
 
 /** Static Variables ************************************************/

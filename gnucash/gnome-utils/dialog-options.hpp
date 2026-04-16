@@ -39,7 +39,7 @@
 
 class GncOptionsDialog;
 
-typedef void (* GncOptionsDialogCallback)(GncOptionsDialog*, void* data);
+using GncOptionsDialogCallback = void (*)(GncOptionsDialog*, void*);
 
 class GncOptionsDialog
 {

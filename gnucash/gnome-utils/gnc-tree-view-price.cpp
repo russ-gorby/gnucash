@@ -492,14 +492,14 @@ gnc_tree_view_price_get_iter_from_price (GncTreeViewPrice *view,
 /*          Price Tree View Visibility Filter           */
 /************************************************************/
 
-typedef struct
+struct filter_user_data
 {
     gnc_tree_view_price_ns_filter_func user_ns_fn;
     gnc_tree_view_price_cm_filter_func user_cm_fn;
     gnc_tree_view_price_pc_filter_func user_pc_fn;
     gpointer                           user_data;
     GDestroyNotify                     user_destroy;
-} filter_user_data;
+};
 
 static void
 gnc_tree_view_price_filter_destroy (gpointer data)

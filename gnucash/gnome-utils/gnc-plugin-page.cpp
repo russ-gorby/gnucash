@@ -82,7 +82,7 @@ static guint signals[LAST_SIGNAL] = { 0 };
 
 
 /** The instance private data for a content plugin. */
-typedef struct _GncPluginPagePrivate
+struct GncPluginPagePrivate
 {
     /** The group of all actions provided by this plugin. */
     char *ui_description;
@@ -106,7 +106,7 @@ typedef struct _GncPluginPagePrivate
     gulong page_changed_id;
     guint  focus_source_id;
 
-} GncPluginPagePrivate;
+};
 
 G_DEFINE_TYPE_WITH_CODE(GncPluginPage, gnc_plugin_page, G_TYPE_OBJECT,
                 G_ADD_PRIVATE(GncPluginPage))

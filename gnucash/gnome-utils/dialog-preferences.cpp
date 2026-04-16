@@ -105,7 +105,7 @@ gboolean gnc_preferences_delete_event_cb (GtkWidget *widget,
 
 /** This data structure holds the information for a single addition to
  *  the preferences dialog. */
-typedef struct addition_t
+struct addition
 {
     /** The relative name of the file where the glade data for this
      *  addition can be found. */
@@ -120,7 +120,7 @@ typedef struct addition_t
     /** TRUE if this addition represents a full page in the preferences
      *  dialog.  FALSE if this page may be combined with other pages. */
     gboolean full_page;
-} addition;
+};
 
 /** A list of all additions that have been made to the preferences
  *  dialog.  The data fields for this list are ::addition data

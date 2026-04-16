@@ -87,7 +87,7 @@ struct _taxtable_window
     QofSession       *session;
 };
 
-typedef struct _new_taxtable
+struct NewTaxTable
 {
     GtkWidget *dialog;
     GtkWidget *name_entry;
@@ -99,7 +99,7 @@ typedef struct _new_taxtable
     GncTaxTableEntry *entry;
     gint              type;
     gboolean          new_table;
-} NewTaxTable;
+};
 
 static gboolean
 new_tax_table_check_entry (NewTaxTable *ntt, GError **error)

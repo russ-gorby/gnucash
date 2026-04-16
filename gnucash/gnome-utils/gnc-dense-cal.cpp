@@ -144,10 +144,10 @@ static void gdc_add_tag_markings (GncDenseCal *cal, guint tag);
 static void gdc_add_markings (GncDenseCal *cal);
 static void gdc_remove_markings (GncDenseCal *cal);
 
-typedef struct _gdc_month_coords
+struct gdc_month_coords
 {
     gint x, y;
-} gdc_month_coords;
+};
 
 struct _GncDenseCal
 {
@@ -207,8 +207,9 @@ struct _GncDenseCal
 
     int disposed; /* private */
 };
+typedef struct _GncDenseCal GncDenseCal; // for G_DECLARE_FINAL_TYPE()
 
-typedef struct _gdc_mark_data
+struct gdc_mark_data
 {
     gchar *name;
     gchar *info;
@@ -217,7 +218,7 @@ typedef struct _gdc_mark_data
      * A GList of the dcal->marks indexes containing this mark.
      **/
     GList *ourMarks;
-} gdc_mark_data;
+};
 
 G_DEFINE_TYPE(GncDenseCal, gnc_dense_cal, GTK_TYPE_BOX)
 

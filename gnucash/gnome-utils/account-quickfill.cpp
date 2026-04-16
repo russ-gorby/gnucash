@@ -51,7 +51,7 @@ static void listen_for_account_events (QofInstance* entity,
  * accounts).
  */
 
-typedef struct
+struct QFB
 {
     QuickFill* qf;
     gboolean load_list_store;
@@ -61,7 +61,7 @@ typedef struct
     gint  listener;
     AccountBoolCB dont_add_cb;
     gpointer dont_add_data;
-} QFB;
+};
 
 static void
 shared_quickfill_destroy (QofBook* book, gpointer key, gpointer user_data)
@@ -82,11 +82,11 @@ shared_quickfill_destroy (QofBook* book, gpointer key, gpointer user_data)
 }
 
 
-typedef struct find_data
+struct find_data
 {
     GList* accounts;
     GList* refs;
-} find_data;
+};
 
 static gboolean
 shared_quickfill_find_accounts (GtkTreeModel* model,

@@ -103,8 +103,8 @@ struct commodity_window
     gnc_commodity *edit_commodity;
 };
 
-typedef struct select_commodity_window SelectCommodityWindow;
-typedef struct commodity_window CommodityWindow;
+using SelectCommodityWindow = select_commodity_window;
+using CommodityWindow = commodity_window;
 
 /* The commodity selection window */
 static SelectCommodityWindow *

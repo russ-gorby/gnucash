@@ -31,8 +31,7 @@
 #include "gnc-menu-extensions.h"
 #include "gnc-ui.h"
 
-typedef struct _Getters Getters;
-struct _Getters
+struct Getters
 {
     SCM type;
     SCM name;

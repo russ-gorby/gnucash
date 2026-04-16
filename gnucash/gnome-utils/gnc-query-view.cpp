@@ -44,9 +44,7 @@ enum
     LAST_SIGNAL
 };
 
-typedef struct _GNCQueryViewPrivate GNCQueryViewPrivate;
-
-struct _GNCQueryViewPrivate
+struct GNCQueryViewPrivate
 {
     const QofParam *get_guid;
     gint        component_id;
@@ -558,10 +556,10 @@ gnc_query_view_get_selected_entry (GNCQueryView *qview) noexcept
     return entry;
 }
 
-typedef struct
+struct acc_data
 {
     GList *entries;
-} acc_data;
+};
 
 static void
 accumulate_entries (GtkTreeModel *model, GtkTreePath *path,

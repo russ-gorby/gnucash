@@ -1272,11 +1272,11 @@ gnc_tree_model_price_get_iter_from_namespace (GncTreeModelPrice *model,
 /*    Price Tree Model - Engine Event Handling Functions    */
 /************************************************************/
 
-typedef struct _remove_data
+struct remove_data
 {
     GncTreeModelPrice *model;
     GtkTreePath       *path;
-} remove_data;
+};
 
 static GSList *pending_removals = nullptr;
 

@@ -111,9 +111,9 @@ void gnc_tree_view_price_add_kvp_column (GncTreeViewPrice *view,
  *  function will be called when the filter is destroyed.  may be
  *  nullptr.
  */
-typedef gboolean (*gnc_tree_view_price_ns_filter_func)(gnc_commodity_namespace*, gpointer data);
-typedef gboolean (*gnc_tree_view_price_cm_filter_func)(gnc_commodity *, gpointer data);
-typedef gboolean (*gnc_tree_view_price_pc_filter_func)(GNCPrice *, gpointer data);
+using gnc_tree_view_price_ns_filter_func = gboolean (*)(gnc_commodity_namespace*, gpointer);
+using gnc_tree_view_price_cm_filter_func = gboolean (*)(gnc_commodity *, gpointer);
+using gnc_tree_view_price_pc_filter_func = gboolean (*)(GNCPrice *, gpointer);
 void gnc_tree_view_price_set_filter (GncTreeViewPrice *view,
                                      gnc_tree_view_price_ns_filter_func ns_func,
                                      gnc_tree_view_price_cm_filter_func cm_func,

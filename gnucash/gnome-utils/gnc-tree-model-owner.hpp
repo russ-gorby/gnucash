@@ -46,7 +46,7 @@ G_DECLARE_FINAL_TYPE (GncTreeModelOwner, gnc_tree_model_owner, GNC, TREE_MODEL_O
 #define GNC_TREE_MODEL_OWNER_NAME            "GncTreeModelOwner"
 
 
-typedef enum
+enum GncTreeModelOwnerColumn
 {
     GNC_TREE_MODEL_OWNER_COL_NAME,
     GNC_TREE_MODEL_OWNER_COL_TYPE,
@@ -71,7 +71,7 @@ typedef enum
     GNC_TREE_MODEL_OWNER_COL_COLOR_BALANCE,
 
     GNC_TREE_MODEL_OWNER_NUM_COLUMNS
-} GncTreeModelOwnerColumn;
+};
 
 /** @name Owner Tree Model Constructors
  @{ */
