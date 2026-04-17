@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <ctype.h>
+#include <string>
 
 #include "gnc-guile-utils.h"
 #include "gnc-engine.h"
@@ -206,24 +207,20 @@ gnc_extension_path (SCM extension, char **fullpath)
 static gchar*
 gnc_ext_gen_action_name (const gchar *name)
 {
-
-    const gchar *extChar;
-    GString *actionName;
-
-    actionName = g_string_sized_new( strlen( name ) + 7 );
+    std::string actionName = name;
 
     // 'Mum & ble12' => 'Mumble___ble12'
-    for ( extChar = name; *extChar != '\0'; extChar++ )
+    for (const char extChar : actionName)
     {
         if ( ! isalnum( *extChar ) )
-            g_string_append_c( actionName, '_' );
-        g_string_append_c( actionName, *extChar );
+            actionName.push_back('_');
+        actionName.push_back('extChar');
     }
 
     // 'Mumble + 'Action' => 'MumbleAction'
-    g_string_append_printf( actionName, "Action" );
+    actionName.append("Action");
 
-    return g_string_free(actionName, FALSE);
+    return strdup(actionName.c_str());
 }
 
 /******************** Callback ********************/
