@@ -143,12 +143,18 @@ enum
 };
 
 
-void gxi_prepare_cb (GtkAssistant  *assistant, GtkWidget *page, GncXmlImportData  *data);
-void gxi_cancel_cb (GtkAssistant  *gtkassistant, GncXmlImportData *data);
-void gxi_finish_cb (GtkAssistant  *gtkassistant, GncXmlImportData *data);
+extern "C"
+{
 
-void gxi_conversion_prepare (GtkAssistant *assistant, gpointer data );
-void gxi_conversion_next (GtkAssistant *assistant,  gpointer data);
+void gxi_prepare_cb (GtkAssistant  *assistant, GtkWidget *page, GncXmlImportData  *data) noexcept;
+void gxi_cancel_cb (GtkAssistant  *gtkassistant, GncXmlImportData *data) noexcept;
+void gxi_finish_cb (GtkAssistant  *gtkassistant, GncXmlImportData *data) noexcept;
+
+// gxi_conversion_prepare, gxi_conversion_next are not called externally, should they be static?
+void gxi_conversion_prepare (GtkAssistant *assistant, gpointer data ) noexcept;
+void gxi_conversion_next (GtkAssistant *assistant,  gpointer data) noexcept;
+
+}
 
 static void gxi_data_destroy (GncXmlImportData *data);
 static void gxi_ambiguous_info_destroy (GncXmlImportData *data);
@@ -165,13 +171,24 @@ static void gxi_update_conversion_forward (GncXmlImportData *data);
 
 static void gxi_default_enc_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data);
 static void gxi_string_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data);
-void gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data);
-void gxi_available_enc_activated_cb (GtkTreeView *view, GtkTreePath *path, GtkTreeViewColumn *column, GncXmlImportData *data);
-void gxi_add_enc_clicked_cb (GtkButton *button, GncXmlImportData *data);
-void gxi_custom_enc_activate_cb (GtkEntry *entry, GncXmlImportData *data);
-void gxi_add_custom_enc_clicked_cb (GtkButton *button, GncXmlImportData *data);
-void gxi_selected_enc_activated_cb (GtkTreeView *view, GtkTreePath *path, GtkTreeViewColumn *column, GncXmlImportData *data);
-void gxi_remove_enc_clicked_cb (GtkButton *button, GncXmlImportData *data);
+
+extern "C"
+{
+
+void gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept;
+// gxi_available_enc_activated_cb is not called externally, should they be static?
+void gxi_available_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
+    GtkTreeViewColumn *column, GncXmlImportData *data) noexcept;
+void gxi_add_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept;
+// gxi_custom_enc_activate_cb is not called externally, should they be static?
+void gxi_custom_enc_activate_cb (GtkEntry *entry, GncXmlImportData *data) noexcept;
+void gxi_add_custom_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept;
+// gxi_selected_enc_activated_cb is not called externally, should they be static?
+void gxi_selected_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
+    GtkTreeViewColumn *column, GncXmlImportData *data) noexcept;
+void gxi_remove_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept;
+
+}
 
 /* Translators: Run the assistant in your language to see GTK's translation of the button labels. */
 static const gchar *encodings_doc_string = N_(
@@ -246,7 +263,7 @@ static system_encoding_type system_encodings [] =
 };
 
 void gxi_prepare_cb (GtkAssistant  *assistant, GtkWidget *page,
-                     GncXmlImportData  *data)
+                     GncXmlImportData  *data) noexcept
 {
     switch (gtk_assistant_get_current_page(assistant))
     {
@@ -262,7 +279,7 @@ void gxi_prepare_cb (GtkAssistant  *assistant, GtkWidget *page,
 }
 
 void
-gxi_finish_cb (GtkAssistant *assistant, GncXmlImportData *data)
+gxi_finish_cb (GtkAssistant *assistant, GncXmlImportData *data) noexcept
 {
     gtk_main_quit();
 }
@@ -281,7 +298,7 @@ gxi_update_conversion_forward (GncXmlImportData *data)
 }
 
 void
-gxi_cancel_cb (GtkAssistant *gtkassistant, GncXmlImportData *data)
+gxi_cancel_cb (GtkAssistant *gtkassistant, GncXmlImportData *data) noexcept
 {
     gnc_suspend_gui_refresh ();
     data->canceled = TRUE;
@@ -834,7 +851,7 @@ gxi_update_string_box (GncXmlImportData *data)
 }
 
 void
-gxi_conversion_prepare (GtkAssistant *assistant, gpointer user_data )
+gxi_conversion_prepare (GtkAssistant *assistant, gpointer user_data ) noexcept
 {
     auto data = static_cast<GncXmlImportData *>(user_data);
 
@@ -971,7 +988,7 @@ gxi_string_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data)
 }
 
 void
-gxi_conversion_next (GtkAssistant *assistant, gpointer user_data)
+gxi_conversion_next (GtkAssistant *assistant, gpointer user_data) noexcept
 {
     auto data = static_cast<GncXmlImportData *>(user_data);
     gxi_parse_file (data);
@@ -1168,7 +1185,7 @@ gxi_save_file (GncXmlImportData *data)
  *                         *
  **************************/
 void
-gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data)
+gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept
 {
     GtkTreeIter iter, parent, *parent_ptr;
 
@@ -1327,7 +1344,7 @@ gxi_add_encoding (GncXmlImportData *data, gpointer encoding_ptr)
 }
 
 void
-gxi_add_enc_clicked_cb (GtkButton *button, GncXmlImportData *data)
+gxi_add_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept
 {
     GtkTreeSelection *selection;
     GtkTreeModel *model;
@@ -1373,7 +1390,7 @@ gxi_remove_enc_clicked_cb (GtkButton *button, GncXmlImportData *data)
 void
 gxi_available_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
                                 GtkTreeViewColumn *column,
-                                GncXmlImportData *data)
+                                GncXmlImportData *data) noexcept
 {
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -1389,7 +1406,7 @@ gxi_available_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
 }
 
 void
-gxi_custom_enc_activate_cb (GtkEntry *entry, GncXmlImportData *data)
+gxi_custom_enc_activate_cb (GtkEntry *entry, GncXmlImportData *data) noexcept
 {
     const gchar *enc_string;
 
