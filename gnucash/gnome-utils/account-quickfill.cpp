@@ -30,7 +30,7 @@
 /* This static indicates the debugging module that this .o belongs to. */
 static QofLogModule log_module = GNC_MOD_REGISTER;
 
-static void shared_quickfill_pref_changed (gpointer prefs, gchar* pref,
+static void shared_quickfill_pref_changed (gpointer prefs, char* pref,
                                            gpointer qfb);
 static void listen_for_account_events (QofInstance* entity,
                                        QofEventId event_type,
@@ -54,11 +54,11 @@ static void listen_for_account_events (QofInstance* entity,
 struct QFB
 {
     QuickFill* qf;
-    gboolean load_list_store;
+    bool load_list_store;
     GtkListStore* list_store;
     QofBook* book;
     Account* root;
-    gint  listener;
+    int  listener;
     AccountBoolCB dont_add_cb;
     gpointer dont_add_data;
 };
@@ -120,7 +120,7 @@ load_shared_qf_cb (Account* account, gpointer data)
 
     if (qfb->dont_add_cb)
     {
-        gboolean skip = (qfb->dont_add_cb) (account, qfb->dont_add_data);
+        bool skip = (qfb->dont_add_cb) (account, qfb->dont_add_data);
         if (skip)
             return;
     }
@@ -142,16 +142,16 @@ load_shared_qf_cb (Account* account, gpointer data)
 }
 
 static void
-shared_quickfill_pref_changed (gpointer prefs, gchar* pref, gpointer user_data)
+shared_quickfill_pref_changed (gpointer prefs, char* pref, gpointer user_data)
 {
     auto qfb = static_cast<QFB *>(user_data);
 
     /* Reload the quickfill */
     gnc_quickfill_purge (qfb->qf);
     gtk_list_store_clear (qfb->list_store);
-    qfb->load_list_store = TRUE;
+    qfb->load_list_store = true;
     gnc_account_foreach_descendant (qfb->root, load_shared_qf_cb, qfb);
-    qfb->load_list_store = FALSE;
+    qfb->load_list_store = false;
 }
 
 
@@ -162,16 +162,14 @@ static QFB*
 build_shared_quickfill (QofBook* book, Account* root, const char* key,
                         AccountBoolCB cb, gpointer data)
 {
-    QFB* qfb;
-
-    qfb = g_new0 (QFB, 1);
+    QFB *qfb = g_new0 (QFB, 1);
     qfb->qf = gnc_quickfill_new();
     qfb->book = book;
     qfb->root = root;
     qfb->listener = 0;
     qfb->dont_add_cb = cb;
     qfb->dont_add_data = data;
-    qfb->load_list_store = TRUE;
+    qfb->load_list_store = true;
     qfb->list_store      = gtk_list_store_new (NUM_ACCOUNT_COLUMNS,
                                                G_TYPE_STRING, G_TYPE_POINTER);
 
@@ -186,7 +184,7 @@ build_shared_quickfill (QofBook* book, Account* root, const char* key,
                            qfb);
 
     gnc_account_foreach_descendant (root, load_shared_qf_cb, qfb);
-    qfb->load_list_store = FALSE;
+    qfb->load_list_store = false;
 
     qfb->listener = qof_event_register_handler (listen_for_account_events, qfb);
 
@@ -282,7 +280,7 @@ listen_for_account_events (QofInstance* entity, QofEventId event_type,
          * store.  Otherwise its a simple update of the name string. */
         for (tmp = data.refs; tmp; tmp = g_list_next (tmp))
         {
-            gchar* old_name = nullptr, *new_name = nullptr;
+            char* old_name = nullptr, *new_name = nullptr;
             path = gtk_tree_row_reference_get_path (
                 static_cast<GtkTreeRowReference *>(tmp->data)
             );

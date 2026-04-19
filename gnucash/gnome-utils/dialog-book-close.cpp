@@ -73,7 +73,7 @@ struct CloseBookWindow
     const char* desc;
 
     /* Component registration */
-    gint component_manager_id;
+    int component_manager_id;
 };
 
 struct CloseAccountsCB
@@ -82,7 +82,7 @@ struct CloseAccountsCB
     Account* base_acct;
     GNCAccountType acct_type;
     GHashTable* txns;
-    guint hash_size;
+    unsigned int hash_size;
 };
 
 struct CACBTransactionList
@@ -163,8 +163,7 @@ static void finish_txn_cb(gnc_commodity* cmdty,
                           CACBTransactionList* txn,
                           CloseAccountsCB* cacb)
 {
-    Account* acc;
-    Split* split;
+    Account *acc = nullptr;
 
     g_return_if_fail(cmdty);
     g_return_if_fail(txn);
@@ -204,7 +203,7 @@ static void finish_txn_cb(gnc_commodity* cmdty,
     /* Create the split for the Equity account to balance out
      * all the accounts of this.  Use the "total".
      */
-    split = xaccMallocSplit(cacb->cbw->book);
+    Split *split = xaccMallocSplit(cacb->cbw->book);
     xaccSplitSetParent(split, txn->txn);
     xaccAccountBeginEdit(acc);
     xaccAccountInsertSplit(acc, split);
@@ -217,12 +216,10 @@ static void close_accounts_of_type(CloseBookWindow* cbw,
                                    Account* acct,
                                    GNCAccountType acct_type)
 {
-    CloseAccountsCB cacb;
-    Account* root_acct;
-
     g_return_if_fail(cbw);
     g_return_if_fail(acct);
 
+    CloseAccountsCB cacb{};
     cacb.cbw = cbw;
     cacb.base_acct = acct;
     cacb.acct_type = acct_type;
@@ -231,7 +228,7 @@ static void close_accounts_of_type(CloseBookWindow* cbw,
                                       nullptr, g_free);
 
     /* Iterate through all accounts and set up the balancing splits */
-    root_acct = gnc_book_get_root_account(cbw->book);
+    Account *root_acct = gnc_book_get_root_account(cbw->book);
     gnc_account_foreach_descendant(root_acct, close_accounts_cb, &cacb);
 
     /* now iterate through the transactions and handle each currency */
@@ -320,19 +317,14 @@ gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) 
 
 void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
 {
-    CloseBookWindow *cbw;
-    GtkBuilder* builder;
-    GtkWidget* box;
-    GList* equity_list = nullptr;
-
     g_return_if_fail(book);
 
-    cbw = g_new0(CloseBookWindow, 1);
+    CloseBookWindow *cbw = g_new0(CloseBookWindow, 1);
     g_return_if_fail(cbw);
     cbw->book = book;
 
     /* Open the dialog */
-    builder = gtk_builder_new();
+    GtkBuilder *builder = gtk_builder_new();
     gnc_builder_add_from_file (builder, "dialog-book-close.glade", "close_book_dialog");
     cbw->dialog = GTK_WIDGET(gtk_builder_get_object (builder,  "close_book_dialog"));
 
@@ -346,11 +338,12 @@ void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
     PINFO("Closed Book Window is %p, Dialog is %p", cbw, cbw->dialog);
 
     /* close date */
-    box = GTK_WIDGET(gtk_builder_get_object (builder,  "date_box"));
+    GtkWidget *box = GTK_WIDGET(gtk_builder_get_object (builder,  "date_box"));
     cbw->close_date_widget = gnc_date_edit_new(gnc_time (nullptr), FALSE, FALSE);
     gtk_box_pack_start(GTK_BOX(box), cbw->close_date_widget, TRUE, TRUE, 0);
 
     /* income acct */
+    GList *equity_list = nullptr;
     equity_list = g_list_prepend(equity_list, GINT_TO_POINTER(ACCT_TYPE_EQUITY));
     box = GTK_WIDGET(gtk_builder_get_object (builder, "income_acct_box"));
     cbw->income_acct_widget = gnc_account_sel_new();

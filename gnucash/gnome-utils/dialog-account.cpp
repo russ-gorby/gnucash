@@ -31,6 +31,7 @@
 #include <pow.h>
 #endif
 #include <cstring>
+#include <cstdint>
 
 #include "Transaction.h"
 #include "dialog-account.h"
@@ -73,17 +74,17 @@ enum AccountDialogType
 
 struct AccountWindow
 {
-    QofBook   *book;
-    gboolean   modal;
+    QofBook *book;
+    gboolean modal;
     GtkWidget *dialog;
 
     AccountDialogType dialog_type;
 
-    GncGUID  account;
+    GncGUID account;
     Account *created_account;
 
-    gchar **subaccount_names;
-    gchar **next_name;
+    char **subaccount_names;
+    char **next_name;
 
     GNCAccountType type;
 
@@ -100,7 +101,7 @@ struct AccountWindow
     dialog_commodity_mode commodity_mode;
     GtkWidget            *account_scu;
 
-    guint32        valid_types;
+    std::uint32_t        valid_types;
     GNCAccountType preferred_account_type;
     GtkWidget     *type_combo;
     GtkTreeView   *parent_tree;
@@ -128,10 +129,10 @@ struct AccountWindow
     GtkWidget *hidden_button;
     GtkWidget *auto_interest_button;
 
-    gint component_id;
+    int component_id;
 
     GObject *selection;
-    gulong handler_id;
+    unsigned long handler_id;
 };
 
 struct RenumberDialog
@@ -144,7 +145,7 @@ struct RenumberDialog
     GtkWidget *example2;
 
     Account   *parent;
-    gint       num_children;
+    int       num_children;
 };
 
 /** Static Globals *******************************************************/
@@ -286,24 +287,19 @@ gnc_account_opening_balance_button_update (AccountWindow *aw, gnc_commodity *com
 static void
 gnc_account_to_ui (AccountWindow *aw)
 {
-    Account *account;
-    gnc_commodity * commodity;
-    const char *string;
     GdkRGBA color;
-    gboolean flag, nonstd_scu;
-    gint index;
+    int index = 0;
     gnc_numeric balance_limit;
-    gboolean    balance_limit_valid;
 
     ENTER("%p", aw);
-    account = aw_get_account (aw);
+    Account *account = aw_get_account (aw);
     if (!account)
     {
         LEAVE("no account");
         return;
     }
 
-    string = xaccAccountGetName (account);
+    const char *string = xaccAccountGetName (account);
     if (string == nullptr)
         string = "";
     gtk_entry_set_text (GTK_ENTRY(aw->name_entry), string);
@@ -323,12 +319,12 @@ gnc_account_to_ui (AccountWindow *aw)
 
     gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER(aw->color_entry_button), &color);
 
-    commodity = xaccAccountGetCommodity (account);
+    gnc_commodity *commodity = xaccAccountGetCommodity (account);
     gnc_general_select_set_selected (GNC_GENERAL_SELECT(aw->commodity_edit),
                                      commodity);
     gnc_account_commodity_from_type (aw, FALSE);
 
-    nonstd_scu = xaccAccountGetNonStdSCU (account);
+    bool nonstd_scu = xaccAccountGetNonStdSCU (account);
     if (nonstd_scu)
     {
         index = xaccAccountGetCommoditySCUi (account);
@@ -353,7 +349,7 @@ gnc_account_to_ui (AccountWindow *aw)
 
     gnc_account_opening_balance_button_update (aw, commodity);
 
-    flag = xaccAccountGetIsOpeningBalance (account);
+    gboolean flag = xaccAccountGetIsOpeningBalance (account);
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(aw->opening_balance_button),
                                   flag);
 
@@ -376,7 +372,7 @@ gnc_account_to_ui (AccountWindow *aw)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(aw->include_balance_sub_accts),
                                   flag);
 
-    balance_limit_valid = xaccAccountGetHigherBalanceLimit (account, &balance_limit);
+    gboolean balance_limit_valid = xaccAccountGetHigherBalanceLimit (account, &balance_limit);
     if (balance_limit_valid)
     {
         if (aw->balance_is_reversed)
@@ -415,9 +411,6 @@ gnc_account_create_transfer_balance (QofBook *book,
                                      gnc_numeric balance,
                                      time64 date)
 {
-    Transaction *trans;
-    Split *split;
-
     if (gnc_numeric_zero_p (balance))
         return TRUE;
 
@@ -427,7 +420,7 @@ gnc_account_create_transfer_balance (QofBook *book,
     xaccAccountBeginEdit (account);
     xaccAccountBeginEdit (transfer);
 
-    trans = xaccMallocTransaction (book);
+    Transaction *trans = xaccMallocTransaction (book);
 
     xaccTransBeginEdit (trans);
 
@@ -435,7 +428,7 @@ gnc_account_create_transfer_balance (QofBook *book,
     xaccTransSetDatePostedSecsNormalized (trans, date);
     xaccTransSetDescription (trans, _("Opening Balance"));
 
-    split = xaccMallocSplit (book);
+    Split *split = xaccMallocSplit (book);
 
     xaccTransAppendSplit (trans, split);
     xaccAccountInsertSplit (account, split);
@@ -464,23 +457,12 @@ gnc_account_create_transfer_balance (QofBook *book,
 static void
 gnc_ui_to_account (AccountWindow *aw)
 {
-    Account *account;
-    gnc_commodity *commodity;
-    Account *parent_account;
-    const char *old_string;
-    const char *string;
     GdkRGBA color;
-    gboolean flag;
-    gnc_numeric balance;
     gnc_numeric balance_limit;
-    gint higher_balance_limit_valid;
-    gint lower_balance_limit_valid;
-    gboolean use_equity, nonstd;
-    time64 date;
-    gint index, old_scu, new_scu;
+    int old_scu = 0;
     GtkTextIter start, end;
 
-    account = aw_get_account (aw);
+    Account *account = aw_get_account (aw);
     if (!account)
     {
         LEAVE("no account");
@@ -501,8 +483,8 @@ gnc_ui_to_account (AccountWindow *aw)
 
     last_used_account_type = aw->type;
 
-    string = gtk_entry_get_text (GTK_ENTRY(aw->name_entry));
-    old_string = xaccAccountGetName (account);
+    const char *string = gtk_entry_get_text (GTK_ENTRY(aw->name_entry));
+    const char *old_string = xaccAccountGetName (account);
     if (g_strcmp0 (string, old_string) != 0)
         xaccAccountSetName (account, string);
 
@@ -530,7 +512,7 @@ gnc_ui_to_account (AccountWindow *aw)
     }
     g_free (new_string);
 
-    commodity = (gnc_commodity *)
+    gnc_commodity *commodity = (gnc_commodity *)
                 gnc_general_select_get_selected (GNC_GENERAL_SELECT(aw->commodity_edit));
     if (commodity &&
             !gnc_commodity_equiv (commodity, xaccAccountGetCommodity (account)))
@@ -543,11 +525,11 @@ gnc_ui_to_account (AccountWindow *aw)
         old_scu = xaccAccountGetCommoditySCU (account);
     }
 
-    index = gtk_combo_box_get_active (GTK_COMBO_BOX(aw->account_scu));
-    nonstd = (index != 0);
+    int index = gtk_combo_box_get_active (GTK_COMBO_BOX(aw->account_scu));
+    gboolean nonstd = (index != 0);
     if (nonstd != xaccAccountGetNonStdSCU (account))
         xaccAccountSetNonStdSCU (account, nonstd);
-    new_scu = (nonstd ? pow (10, index - 1) : gnc_commodity_get_fraction (commodity));
+    int new_scu = (nonstd ? pow (10, index - 1) : gnc_commodity_get_fraction (commodity));
     if (old_scu != new_scu)
         xaccAccountSetCommoditySCU (account, new_scu);
 
@@ -565,7 +547,7 @@ gnc_ui_to_account (AccountWindow *aw)
         xaccAccountSetNotes (account, new_string);
     g_free (new_string);
 
-    flag = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(aw->opening_balance_button));
+    gboolean flag = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(aw->opening_balance_button));
     if (xaccAccountGetIsOpeningBalance (account) != flag)
         xaccAccountSetIsOpeningBalance (account, flag);
 
@@ -585,7 +567,7 @@ gnc_ui_to_account (AccountWindow *aw)
     if (xaccAccountGetAutoInterest (account) != flag)
         xaccAccountSetAutoInterest (account, flag);
 
-    parent_account = gnc_tree_view_account_get_selected_account (GNC_TREE_VIEW_ACCOUNT(aw->parent_tree));
+    Account *parent_account = gnc_tree_view_account_get_selected_account (GNC_TREE_VIEW_ACCOUNT(aw->parent_tree));
 
     if (parent_account == nullptr)
         parent_account = gnc_book_get_root_account (aw->book);
@@ -597,7 +579,7 @@ gnc_ui_to_account (AccountWindow *aw)
 
     xaccAccountSetIncludeSubAccountBalances (account, flag);
 
-    higher_balance_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(
+    int higher_balance_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(
                                                                 aw->higher_balance_limit_edit),
                                                                 &balance_limit, TRUE, nullptr);
 
@@ -620,7 +602,7 @@ gnc_ui_to_account (AccountWindow *aw)
             xaccAccountClearHigherBalanceLimit (account);
     }
 
-    lower_balance_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(
+    int lower_balance_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(
                                                                aw->lower_balance_limit_edit),
                                                                &balance_limit, TRUE, nullptr);
 
@@ -648,7 +630,7 @@ gnc_ui_to_account (AccountWindow *aw)
 
     xaccAccountCommitEdit (account);
 
-    balance = gnc_amount_edit_get_amount (GNC_AMOUNT_EDIT(aw->opening_balance_edit));
+    gnc_numeric balance = gnc_amount_edit_get_amount (GNC_AMOUNT_EDIT(aw->opening_balance_edit));
 
     if (gnc_numeric_zero_p (balance))
     {
@@ -659,9 +641,9 @@ gnc_ui_to_account (AccountWindow *aw)
     if (gnc_reverse_balance (account))
         balance = gnc_numeric_neg (balance);
 
-    date = gnc_date_edit_get_date (GNC_DATE_EDIT(aw->opening_balance_date_edit));
+    time64 date = gnc_date_edit_get_date (GNC_DATE_EDIT(aw->opening_balance_date_edit));
 
-    use_equity = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(aw->opening_equity_radio));
+    bool use_equity = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(aw->opening_equity_radio));
 
     if (use_equity)
     {
@@ -715,14 +697,12 @@ set_children_types (Account *account, GNCAccountType type)
 static void
 make_children_compatible (AccountWindow *aw)
 {
-    Account *account;
-
     g_return_if_fail (aw);
 
     if (aw->dialog_type == NEW_ACCOUNT)
         return;
 
-    account = aw_get_account (aw);
+    Account *account = aw_get_account (aw);
     g_return_if_fail (account);
 
     if (xaccAccountTypesCompatible (aw->type, xaccAccountGetType (account)))
@@ -746,10 +726,6 @@ gnc_finish_ok (AccountWindow *aw)
     /* do it all again, if needed */
     if ((aw->dialog_type == NEW_ACCOUNT) && aw->next_name && *aw->next_name)
     {
-        gnc_commodity *commodity;
-        Account *parent;
-        Account *account;
-
         /* Drop the old parent_tree so we can update it with an up to date one */
         gtk_container_remove (GTK_CONTAINER(aw->parent_scroll), GTK_WIDGET(aw->parent_tree));
         aw->parent_tree = gnc_tree_view_account_new (TRUE);
@@ -759,8 +735,8 @@ gnc_finish_ok (AccountWindow *aw)
         aw_connect_selection_changed (aw);
         gnc_suspend_gui_refresh ();
 
-        parent = aw_get_account (aw);
-        account = xaccMallocAccount (aw->book);
+        Account *parent = aw_get_account (aw);
+        Account *account = xaccMallocAccount (aw->book);
         aw->account = *xaccAccountGetGUID (account);
         aw->type = xaccAccountGetType (parent);
 
@@ -771,7 +747,7 @@ gnc_finish_ok (AccountWindow *aw)
 
         gnc_account_window_set_name (aw);
 
-        commodity = xaccAccountGetCommodity (parent);
+        gnc_commodity *commodity = xaccAccountGetCommodity (parent);
         gnc_general_select_set_selected (GNC_GENERAL_SELECT(aw->commodity_edit),
                                          commodity);
         gnc_account_commodity_from_type (aw, FALSE);
@@ -826,15 +802,10 @@ add_children_to_expander (GObject *object, GParamSpec *param_spec, gpointer data
 static gboolean
 verify_children_compatible (AccountWindow *aw)
 {
-    Account *account;
-    GtkWidget *dialog, *vbox, *hbox, *label, *expander;
-    gchar *str;
-    gboolean result;
-
     if (aw == nullptr)
         return FALSE;
 
-    account = aw_get_account (aw);
+    Account *account = aw_get_account (aw);
     if (!account)
         return FALSE;
 
@@ -847,7 +818,7 @@ verify_children_compatible (AccountWindow *aw)
     auto flags = static_cast<GtkDialogFlags>(
         GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL
     );
-    dialog = gtk_dialog_new_with_buttons ("",
+    GtkWidget *dialog = gtk_dialog_new_with_buttons ("",
                                         GTK_WINDOW(aw->dialog),
                                         flags,
                                         _("_Cancel"), GTK_RESPONSE_CANCEL,
@@ -856,9 +827,9 @@ verify_children_compatible (AccountWindow *aw)
 
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW(dialog), TRUE);
 
-    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+    GtkWidget *hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
     gtk_box_set_homogeneous (GTK_BOX(hbox), FALSE);
-    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+    GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
     gtk_box_set_homogeneous (GTK_BOX(vbox), FALSE);
 
     gtk_box_pack_start (GTK_BOX(hbox),
@@ -866,7 +837,7 @@ verify_children_compatible (AccountWindow *aw)
                         GTK_ICON_SIZE_DIALOG), FALSE, FALSE, 0);
 
     /* primary label */
-    label = gtk_label_new (_("Give the children the same type?"));
+    GtkWidget *label = gtk_label_new (_("Give the children the same type?"));
     gtk_label_set_line_wrap (GTK_LABEL(label), TRUE);
     gtk_label_set_selectable (GTK_LABEL(label), TRUE);
     gnc_label_set_alignment (label, 0.0, 0.0);
@@ -877,9 +848,9 @@ verify_children_compatible (AccountWindow *aw)
     gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
     /* secondary label */
-    str = g_strdup_printf (_("The children of the edited account have to be "
-                             "changed to type \"%s\" to make them compatible."),
-                           xaccAccountGetTypeStr (aw->type));
+    char *str = g_strdup_printf (_("The children of the edited account have to be "
+                                 "changed to type \"%s\" to make them compatible."),
+                                 xaccAccountGetTypeStr (aw->type));
     label = gtk_label_new (str);
     g_free (str);
     gtk_label_set_line_wrap (GTK_LABEL(label), TRUE);
@@ -888,7 +859,7 @@ verify_children_compatible (AccountWindow *aw)
     gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
     /* children */
-    expander = gtk_expander_new_with_mnemonic (_("_Show children accounts"));
+    GtkWidget *expander = gtk_expander_new_with_mnemonic (_("_Show children accounts"));
     gtk_expander_set_spacing (GTK_EXPANDER(expander), 6);
     g_signal_connect (G_OBJECT(expander), "notify::expanded",
                       G_CALLBACK(add_children_to_expander), account);
@@ -908,7 +879,7 @@ verify_children_compatible (AccountWindow *aw)
 
     gtk_dialog_set_default_response (GTK_DIALOG(dialog), GTK_RESPONSE_OK);
 
-    result = (gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK);
+    gboolean result = (gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK);
 
     gtk_widget_destroy (dialog);
 
@@ -942,22 +913,17 @@ gnc_filter_parent_accounts (Account *account, gpointer data)
 static gboolean
 gnc_common_ok (AccountWindow *aw)
 {
-    Account *root, *account, *parent;
-    gnc_commodity * commodity;
-    gchar *fullname, *fullname_parent;
-    const gchar *name, *separator;
-    gboolean higher_limit_valid;
+    Account *account = nullptr;
     gnc_numeric higher_balance_limit;
-    gboolean lower_limit_valid;
     gnc_numeric lower_balance_limit;
 
     ENTER("aw %p", aw);
-    root = gnc_book_get_root_account (aw->book);
+    Account *root = gnc_book_get_root_account (aw->book);
 
-    separator = gnc_get_account_separator_string ();
+    const gchar *separator = gnc_get_account_separator_string ();
 
     /* check for valid name */
-    name = gtk_entry_get_text (GTK_ENTRY(aw->name_entry));
+    const gchar *name = gtk_entry_get_text (GTK_ENTRY(aw->name_entry));
     if (g_strcmp0 (name, "") == 0)
     {
         const char *message = _("The account must be given a name.");
@@ -967,7 +933,7 @@ gnc_common_ok (AccountWindow *aw)
     }
 
     /* check for a duplicate name */
-    parent = gnc_tree_view_account_get_selected_account
+    Account *parent = gnc_tree_view_account_get_selected_account
              (GNC_TREE_VIEW_ACCOUNT(aw->parent_tree));
     if (parent == nullptr)
     {
@@ -975,8 +941,8 @@ gnc_common_ok (AccountWindow *aw)
     }
     else
     {
-        fullname_parent = gnc_account_get_full_name (parent);
-        fullname = g_strconcat (fullname_parent, separator, name, nullptr);
+        gchar *fullname_parent = gnc_account_get_full_name (parent);
+        gchar *fullname = g_strconcat (fullname_parent, separator, name, nullptr);
 
         account = gnc_account_lookup_by_full_name (root, fullname);
 
@@ -1021,7 +987,7 @@ gnc_common_ok (AccountWindow *aw)
     }
 
     /* check for commodity */
-    commodity = (gnc_commodity *)
+    gnc_commodity *commodity = (gnc_commodity *)
                 gnc_general_select_get_selected (GNC_GENERAL_SELECT(aw->commodity_edit));
     if (!commodity)
     {
@@ -1032,16 +998,16 @@ gnc_common_ok (AccountWindow *aw)
     }
 
     /* check for higher balance limit greater than lower */
-    higher_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(aw->higher_balance_limit_edit),
+    bool higher_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(aw->higher_balance_limit_edit),
                                                         &higher_balance_limit, TRUE, nullptr);
 
-    lower_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(aw->lower_balance_limit_edit),
+    bool lower_limit_valid = gnc_amount_edit_expr_is_valid (GNC_AMOUNT_EDIT(aw->lower_balance_limit_edit),
                                                        &lower_balance_limit, TRUE, nullptr);
 
-    if ((lower_limit_valid == 0) && (higher_limit_valid == 0))
+    if ((! lower_limit_valid) && (! higher_limit_valid))
     {
-        gint compare = gnc_numeric_compare (higher_balance_limit,
-                                            lower_balance_limit);
+        int compare = gnc_numeric_compare (higher_balance_limit,
+                                           lower_balance_limit);
 
         if ((compare == 0) && (!gnc_numeric_zero_p (higher_balance_limit)))
         {
@@ -1066,11 +1032,9 @@ gnc_common_ok (AccountWindow *aw)
 static void
 gnc_edit_account_ok (AccountWindow *aw)
 {
-    Account *account;
-
     ENTER("aw %p", aw);
 
-    account = aw_get_account (aw);
+    Account *account = aw_get_account (aw);
     if (!account)
     {
         LEAVE(" ");
@@ -1096,8 +1060,6 @@ gnc_edit_account_ok (AccountWindow *aw)
 static void
 gnc_new_account_ok (AccountWindow *aw)
 {
-    gnc_numeric balance;
-
     ENTER("aw %p", aw);
 
     if (!gnc_common_ok (aw))
@@ -1115,13 +1077,11 @@ gnc_new_account_ok (AccountWindow *aw)
         return;
     }
 
-    balance = gnc_amount_edit_get_amount (GNC_AMOUNT_EDIT(aw->opening_balance_edit));
+    gnc_numeric balance = gnc_amount_edit_get_amount (GNC_AMOUNT_EDIT(aw->opening_balance_edit));
 
     if (!gnc_numeric_zero_p (balance))
     {
-        gboolean use_equity;
-
-        use_equity = gtk_toggle_button_get_active
+        gboolean use_equity = gtk_toggle_button_get_active
                      (GTK_TOGGLE_BUTTON(aw->opening_equity_radio));
 
         if (!use_equity)
@@ -1147,7 +1107,7 @@ gnc_new_account_ok (AccountWindow *aw)
 
 static void
 gnc_account_window_response_cb (GtkDialog *dialog,
-                                gint response,
+                                int response,
                                 gpointer data)
 {
     auto aw = static_cast<AccountWindow *>(data);
@@ -1249,7 +1209,7 @@ static void
 gnc_account_parent_changed_cb (GObject *selection, gpointer data)
 {
     auto aw = static_cast<AccountWindow *>(data);
-    guint32 types, old_types;
+    std::uint32_t types, old_types;
     bool combo_set = false;
 
     g_return_if_fail (aw);
@@ -1321,7 +1281,7 @@ gnc_account_type_combo_changed_cb (GtkComboBox *combo, gpointer data)
 
     g_return_if_fail (aw != nullptr);
 
-    bool sensitive = false;
+    gboolean sensitive = FALSE;
 
     GNCAccountType type_id = gnc_tree_model_account_types_get_active_combo (combo);
 
@@ -1334,7 +1294,7 @@ gnc_account_type_combo_changed_cb (GtkComboBox *combo, gpointer data)
         aw->type = type_id;
         aw->preferred_account_type = type_id;
 
-        gnc_account_commodity_from_type (aw, true);
+        gnc_account_commodity_from_type (aw, TRUE);
 
         sensitive = (aw->type != ACCT_TYPE_EQUITY &&
                      aw->type != ACCT_TYPE_CURRENCY &&
@@ -1538,7 +1498,7 @@ opening_equity_cb (GtkWidget *w, gpointer data) noexcept
 {
     auto aw = static_cast<AccountWindow *>(data);
 
-    bool use_equity = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+    gboolean use_equity = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
     gtk_widget_set_sensitive (aw->transfer_account_scroll, !use_equity);
 }
@@ -2008,7 +1968,7 @@ gnc_ui_new_accounts_from_name_with_defaults (GtkWindow *parent,
     Account *created_account = nullptr;
     gchar ** subaccount_names;
     gint response;
-    gboolean done = FALSE;
+    bool done = false;
 
     ENTER("name %s, valid %p, commodity %p, account %p",
           name, valid_types, default_commodity, parent_acct);
@@ -2046,11 +2006,11 @@ gnc_ui_new_accounts_from_name_with_defaults (GtkWindow *parent,
             break;
 
         case GTK_RESPONSE_HELP:
-            done = FALSE;
+            done = false;
             break;
 
         default:
-            done = TRUE;
+            done = true;
             break;
         }
     }
@@ -2313,21 +2273,16 @@ gnc_account_renumber_response_cb (GtkDialog *dialog,
 void
 gnc_account_renumber_create_dialog (GtkWidget *window, Account *account) noexcept
 {
-    RenumberDialog *data;
-    GtkBuilder *builder;
-    GtkWidget *widget;
-    gchar *string, *fullname;
-
     /* This is a safety check; the menu item calling this dialog
      * should be disabled if the account has no children.
      */
     g_return_if_fail (gnc_account_n_children (account) > 0);
 
-    data = g_new (RenumberDialog, 1);
+    RenumberDialog *data = g_new (RenumberDialog, 1);
     data->parent = account;
     data->num_children = gnc_account_n_children (account);
 
-    builder = gtk_builder_new ();
+    GtkBuilder *builder = gtk_builder_new ();
     gnc_builder_add_from_file (builder, "dialog-account.glade", "interval_adjustment");
     gnc_builder_add_from_file (builder, "dialog-account.glade", "digit_spin_adjustment");
     gnc_builder_add_from_file (builder, "dialog-account.glade", "account_renumber_dialog");
@@ -2337,9 +2292,9 @@ gnc_account_renumber_create_dialog (GtkWidget *window, Account *account) noexcep
     g_object_set_data_full (G_OBJECT(data->dialog), "builder", builder,
                             g_object_unref);
 
-    widget = GTK_WIDGET(gtk_builder_get_object (builder, "header_label"));
-    fullname = gnc_account_get_full_name (account);
-    string = g_strdup_printf (_("Renumber the immediate sub-accounts of '%s'?"),
+    GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "header_label"));
+    char *fullname = gnc_account_get_full_name (account);
+    char *string = g_strdup_printf (_("Renumber the immediate sub-accounts of '%s'?"),
                               fullname);
     gtk_label_set_text (GTK_LABEL(widget), string);
     g_free (string);
@@ -2405,36 +2360,25 @@ enable_box_cb (GtkToggleButton *toggle_button, gpointer user_data)
 void
 gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) noexcept
 {
-    GtkWidget *dialog;
-    GtkBuilder *builder;
-    GtkWidget *label;
-    GtkWidget *color_button, *over_write, *color_button_default;
-    GtkWidget *enable_color, *enable_placeholder, *enable_hidden;
-    GtkWidget *color_box, *placeholder_box, *hidden_box;
-    GtkWidget *placeholder_button, *hidden_button;
-
-    gchar *string, *fullname;
-    const char *color_string;
     gchar *old_color_string = nullptr;
     GdkRGBA color;
-    gint response;
 
     // check if we actually do have sub accounts
     g_return_if_fail (gnc_account_n_children (account) > 0);
 
-    builder = gtk_builder_new ();
+    GtkBuilder *builder = gtk_builder_new ();
     gnc_builder_add_from_file (builder, "dialog-account.glade", "account_cascade_dialog");
-    dialog = GTK_WIDGET(gtk_builder_get_object (builder, "account_cascade_dialog"));
+    GtkWidget *dialog = GTK_WIDGET(gtk_builder_get_object (builder, "account_cascade_dialog"));
     gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(window));
 
     // Color section
-    enable_color = GTK_WIDGET(gtk_builder_get_object (builder, "enable_cascade_color"));
-    color_box = GTK_WIDGET(gtk_builder_get_object (builder, "color_box"));
+    GtkWidget *enable_color = GTK_WIDGET(gtk_builder_get_object (builder, "enable_cascade_color"));
+    GtkWidget *color_box = GTK_WIDGET(gtk_builder_get_object (builder, "color_box"));
 
-    label = GTK_WIDGET(gtk_builder_get_object (builder, "color_label"));
-    over_write = GTK_WIDGET(gtk_builder_get_object (builder, "replace_check"));
-    color_button = GTK_WIDGET(gtk_builder_get_object (builder, "color_button"));
-    color_button_default = GTK_WIDGET(gtk_builder_get_object (builder, "color_button_default"));
+    GtkWidget *label = GTK_WIDGET(gtk_builder_get_object (builder, "color_label"));
+    GtkWidget *over_write = GTK_WIDGET(gtk_builder_get_object (builder, "replace_check"));
+    GtkWidget *color_button = GTK_WIDGET(gtk_builder_get_object (builder, "color_button"));
+    GtkWidget *color_button_default = GTK_WIDGET(gtk_builder_get_object (builder, "color_button_default"));
 
     gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER(color_button), FALSE);
 
@@ -2444,14 +2388,14 @@ gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) noex
     g_signal_connect (G_OBJECT(color_button_default), "clicked",
                       G_CALLBACK(default_color_button_cb), (gpointer)color_button);
 
-    fullname = gnc_account_get_full_name (account);
-    string = g_strdup_printf (_( "Set the account color for account '%s' "
+    char *fullname = gnc_account_get_full_name (account);
+    char *string = g_strdup_printf (_( "Set the account color for account '%s' "
                                  "including all sub-accounts to the selected color"),
                               fullname);
     gtk_label_set_text (GTK_LABEL(label), string);
     g_free (string);
 
-    color_string = xaccAccountGetColor (account); // get existing account color
+    const char *color_string = xaccAccountGetColor (account); // get existing account color
 
     if (!color_string)
         color_string = DEFAULT_COLOR;
@@ -2465,10 +2409,10 @@ gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) noex
     gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER(color_button), &color);
 
     // Placeholder section
-    enable_placeholder = GTK_WIDGET(gtk_builder_get_object (builder, "enable_cascade_placeholder"));
-    placeholder_box = GTK_WIDGET(gtk_builder_get_object (builder, "placeholder_box"));
+    GtkWidget *enable_placeholder = GTK_WIDGET(gtk_builder_get_object (builder, "enable_cascade_placeholder"));
+    GtkWidget *placeholder_box = GTK_WIDGET(gtk_builder_get_object (builder, "placeholder_box"));
     label = GTK_WIDGET(gtk_builder_get_object (builder, "placeholder_label"));
-    placeholder_button = GTK_WIDGET(gtk_builder_get_object (builder, "placeholder_check_button"));
+    GtkWidget *placeholder_button = GTK_WIDGET(gtk_builder_get_object (builder, "placeholder_check_button"));
     g_signal_connect (G_OBJECT(enable_placeholder), "toggled",
                       G_CALLBACK(enable_box_cb), (gpointer)placeholder_box);
 
@@ -2479,10 +2423,10 @@ gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) noex
     g_free (string);
 
     // Hidden section
-    enable_hidden = GTK_WIDGET(gtk_builder_get_object (builder, "enable_cascade_hidden"));
-    hidden_box = GTK_WIDGET(gtk_builder_get_object (builder, "hidden_box"));
+    GtkWidget *enable_hidden = GTK_WIDGET(gtk_builder_get_object (builder, "enable_cascade_hidden"));
+    GtkWidget *hidden_box = GTK_WIDGET(gtk_builder_get_object (builder, "hidden_box"));
     label = GTK_WIDGET(gtk_builder_get_object (builder, "hidden_label"));
-    hidden_button = GTK_WIDGET(gtk_builder_get_object (builder, "hidden_check_button"));
+    GtkWidget *hidden_button = GTK_WIDGET(gtk_builder_get_object (builder, "hidden_check_button"));
     g_signal_connect (G_OBJECT(enable_hidden), "toggled",
                       G_CALLBACK(enable_box_cb), (gpointer)hidden_box);
 
@@ -2501,7 +2445,7 @@ gnc_account_cascade_properties_dialog (GtkWidget *window, Account *account) noex
 
     gtk_widget_show_all (dialog);
 
-    response = gtk_dialog_run (GTK_DIALOG(dialog));
+    int response = gtk_dialog_run (GTK_DIALOG(dialog));
 
     if (response == GTK_RESPONSE_OK)
     {

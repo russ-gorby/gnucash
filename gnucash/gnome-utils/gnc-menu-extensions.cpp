@@ -212,9 +212,9 @@ gnc_ext_gen_action_name (const gchar *name)
     // 'Mum & ble12' => 'Mumble___ble12'
     for (const char extChar : actionName)
     {
-        if ( ! isalnum( *extChar ) )
+        if ( ! isalnum( extChar ) )
             actionName.push_back('_');
-        actionName.push_back('extChar');
+        actionName.push_back(extChar);
     }
 
     // 'Mumble + 'Action' => 'MumbleAction'

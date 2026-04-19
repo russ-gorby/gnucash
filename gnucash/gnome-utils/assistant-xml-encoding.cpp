@@ -44,7 +44,7 @@
 struct conv_type
 {
     GQuark encoding;
-    gchar* utf8_string;
+    char* utf8_string;
 };
 
 extern "C" gint gnc_xml2_find_ambiguous (const gchar* filename,
@@ -66,7 +66,7 @@ extern "C" gboolean gnc_xml2_parse_with_subst (QofBackend* xml_be, QofBook* book
 struct GncXmlImportData
 {
     GtkWidget *assistant;               /* assistant */
-    gboolean  canceled;                 /* we are canceled */
+    bool  canceled;                     /* we are canceled */
     GtkWidget *default_encoding_combo;  /* top combo on conversion page */
     GtkWidget *default_encoding_hbox;   /* Encoding Hbox */
     GtkWidget *summary_label;           /* label on conversion page */
@@ -101,23 +101,23 @@ struct GncXmlImportData
 
     /* number of byte sequences that have multiple possible conversions, but not in
        the default encoding. and the user has not decided yet, of course. */
-    gint n_unassigned;
+    int n_unassigned;
 
     /* number of byte sequences without any reasonable interpretation */
-    gint n_impossible;
+    int n_impossible;
 
     /* hash table that maps byte sequences to other byte sequences to be replaced
        by them. */
     GHashTable *subst;
 
-    gchar *filename;
+    char *filename;
     QofSession *session;
 };
 
 /* used for the string combos, see ambiguous_free */
 struct ambiguous_type
 {
-    gchar *byte_sequence;
+    char *byte_sequence;
     GList *conv_list;
 };
 
@@ -163,7 +163,7 @@ static void gxi_check_file (GncXmlImportData *data);
 static void gxi_sort_ambiguous_list (GncXmlImportData *data);
 static gboolean gxi_parse_file (GncXmlImportData *data);
 static gboolean gxi_save_file (GncXmlImportData *data);
-static void gxi_update_progress_bar (const gchar *message, double percentage);
+static void gxi_update_progress_bar (const char *message, double percentage);
 static void gxi_update_default_enc_combo (GncXmlImportData *data);
 static void gxi_update_summary_label (GncXmlImportData *data);
 static void gxi_update_string_box (GncXmlImportData *data);
@@ -190,8 +190,11 @@ void gxi_remove_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexc
 
 }
 
+// private internal function only callled by C++
+gboolean gnc_xml_convert_single_file (const gchar *filename);
+
 /* Translators: Run the assistant in your language to see GTK's translation of the button labels. */
-static const gchar *encodings_doc_string = N_(
+static const char *encodings_doc_string = N_(
             "\nThe file you are trying to load is from an older version of "
             "GnuCash. The file format in the older versions was missing the "
             "detailed specification of the character encoding being used. This "
@@ -212,9 +215,9 @@ static const gchar *encodings_doc_string = N_(
             "Press \"Next\" now to select the correct character encoding for "
             "your data file.\n");
 
-static const gchar *encodings_doc_page_title = N_("Ambiguous character encoding");
+static const char *encodings_doc_page_title = N_("Ambiguous character encoding");
 
-static const gchar *finish_convert_string = N_(
+static const char *finish_convert_string = N_(
             "The file has been loaded successfully. If you click \"Apply\" it will be saved "
             "and reloaded into the main application. That way you will have a working "
             "file as backup in the same directory.\n\n"
@@ -232,9 +235,9 @@ static GtkProgressBar *progress_bar = nullptr;
    that as parent, e.g. 0 -> child of previous, 1 -> same level as previous */
 struct system_encoding_type
 {
-    const gchar *text;
-    const gchar *encoding;
-    const gint parent;
+    const char *text;
+    const char *encoding;
+    const int parent;
 };
 
 static system_encoding_type system_encodings [] =
@@ -288,7 +291,7 @@ static void
 gxi_update_conversion_forward (GncXmlImportData *data)
 {
     GtkAssistant *assistant = GTK_ASSISTANT(data->assistant);
-    gint num = gtk_assistant_get_current_page (assistant);
+    int num = gtk_assistant_get_current_page (assistant);
     GtkWidget *page = gtk_assistant_get_nth_page (assistant, num);
 
     if (data->n_unassigned || data->n_impossible)
@@ -301,24 +304,21 @@ void
 gxi_cancel_cb (GtkAssistant *gtkassistant, GncXmlImportData *data) noexcept
 {
     gnc_suspend_gui_refresh ();
-    data->canceled = TRUE;
+    data->canceled = true;
     gnc_resume_gui_refresh ();
     gtk_main_quit();
 }
 
 /***************************************************/
 
+// private internal function with C++ linkage
 gboolean
 gnc_xml_convert_single_file (const gchar *filename)
 {
-    GncXmlImportData *data;
-    GtkWidget *widget;
-    GtkBuilder *builder;
-    gboolean success;
-
-    data = g_new0 (GncXmlImportData, 1);
+    gboolean success = FALSE;
+    GncXmlImportData *data = g_new0 (GncXmlImportData, 1);
     data->filename = gnc_uri_get_path (filename);
-    data->canceled = FALSE;
+    data->canceled = false;
 
     /* gather ambiguous info */
     gxi_check_file (data);
@@ -336,7 +336,7 @@ gnc_xml_convert_single_file (const gchar *filename)
     else
     {
         /* common assistant initialization */
-        builder = gtk_builder_new();
+        GtkBuilder *builder = gtk_builder_new();
         gnc_builder_add_from_file  (builder , "assistant-xml-encoding.glade", "assistant_xml_encoding");
         data->assistant = GTK_WIDGET(gtk_builder_get_object (builder, "assistant_xml_encoding"));
 
@@ -356,7 +356,7 @@ gnc_xml_convert_single_file (const gchar *filename)
                                       gtk_assistant_get_nth_page (GTK_ASSISTANT(data->assistant), 0),
                                       gettext(encodings_doc_page_title));
 
-        widget = GTK_WIDGET(gtk_builder_get_object (builder, "start_page"));
+        GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "start_page"));
         gtk_label_set_text (GTK_LABEL(widget), gettext (encodings_doc_string));
 
         /* conversion page */
@@ -383,7 +383,7 @@ gnc_xml_convert_single_file (const gchar *filename)
         if (data->canceled)
             success = FALSE;
         else
-            success = gxi_save_file (data);
+            success = gxi_save_file(data);
     }
 
     /* destroy all the data variables */
@@ -450,13 +450,13 @@ conv_copy (const conv_type *conv)
     return new_type;
 }
 
-static gint
+static int
 conv_enc_cmp (const conv_type *conv, const GQuark *enc)
 {
     return conv->encoding - *enc;
 }
 
-static const gchar *
+static const char *
 get_decoded_string (const ambiguous_type *amb, const GQuark enc)
 {
     GList *found = g_list_find_custom (amb->conv_list, &enc,
@@ -472,12 +472,12 @@ get_decoded_string (const ambiguous_type *amb, const GQuark enc)
     }
 }
 
-static gint
+static int
 ambiguous_cmp (const ambiguous_type *a, const ambiguous_type *b,
                GncXmlImportData *data)
 {
-    const gchar *string_a = get_decoded_string (a, data->default_encoding);
-    const gchar *string_b = get_decoded_string (b, data->default_encoding);
+    const char *string_a = get_decoded_string (a, data->default_encoding);
+    const char *string_b = get_decoded_string (b, data->default_encoding);
 
     if (string_a)
     {
@@ -512,7 +512,7 @@ ambiguous_cmp (const ambiguous_type *a, const ambiguous_type *b,
 }
 
 static void
-ambiguous_list_insert (gchar *byte_sequence, GList *conv_list,
+ambiguous_list_insert (char *byte_sequence, GList *conv_list,
                        GncXmlImportData *data)
 {
     ambiguous_type *amb = g_new (ambiguous_type, 1);
@@ -582,7 +582,7 @@ gxi_sort_ambiguous_list (GncXmlImportData *data)
 }
 
 static void
-subst_insert_amb (gchar *byte_sequence, GList *conv_list, GncXmlImportData *data)
+subst_insert_amb (char *byte_sequence, GList *conv_list, GncXmlImportData *data)
 {
     if (!data->subst)
         return;
@@ -601,7 +601,7 @@ subst_insert_amb (gchar *byte_sequence, GList *conv_list, GncXmlImportData *data
         if (default_conv)
         {
             /* default conversion */
-            gchar *default_utf8 = ((conv_type*) default_conv->data)->utf8_string;
+            char *default_utf8 = ((conv_type*) default_conv->data)->utf8_string;
             g_hash_table_insert (data->subst, g_strdup (byte_sequence),
                                  g_strdup (default_utf8));
         }
@@ -615,7 +615,7 @@ subst_insert_amb (gchar *byte_sequence, GList *conv_list, GncXmlImportData *data
 }
 
 static void
-subst_insert_unique (gchar *byte_sequence, conv_type *conv,
+subst_insert_unique (char *byte_sequence, conv_type *conv,
                      GncXmlImportData *data)
 {
     if (!data->subst)
@@ -625,7 +625,7 @@ subst_insert_unique (gchar *byte_sequence, conv_type *conv,
 }
 
 static void
-gxi_update_progress_bar (const gchar *message, double percentage)
+gxi_update_progress_bar (const char *message, double percentage)
 {
     if (!progress_window)
     {
@@ -657,16 +657,13 @@ gxi_update_progress_bar (const gchar *message, double percentage)
 static void
 gxi_update_default_enc_combo (GncXmlImportData *data)
 {
-    GtkComboBoxText *combo;
-    GList *enc_iter;
-
     /* add encodings list */
     if (data->default_encoding_combo)
         gtk_widget_destroy (data->default_encoding_combo);
     data->default_encoding_combo = gtk_combo_box_text_new();
-    combo = GTK_COMBO_BOX_TEXT (data->default_encoding_combo);
+    GtkComboBoxText *combo = GTK_COMBO_BOX_TEXT (data->default_encoding_combo);
 
-    for (enc_iter = data->encodings; enc_iter; enc_iter = enc_iter->next)
+    for (GList *enc_iter = data->encodings; enc_iter; enc_iter = enc_iter->next)
     {
         gtk_combo_box_text_append_text (
             combo, g_quark_to_string (GPOINTER_TO_UINT (enc_iter->data)));
@@ -684,8 +681,8 @@ gxi_update_default_enc_combo (GncXmlImportData *data)
 static void
 gxi_update_summary_label (GncXmlImportData *data)
 {
-    gchar *string = nullptr;
-    gboolean show = FALSE;
+    char *string = nullptr;
+    bool show = false;
 
     if (data->n_unassigned)
     {
@@ -695,7 +692,7 @@ gxi_update_summary_label (GncXmlImportData *data)
                          _("There are %d unassigned and %d undecodable words. "
                            "Please add encodings."),
                          data->n_unassigned, data->n_impossible);
-            show = TRUE;
+            show = true;
         }
         else
         {
@@ -703,7 +700,7 @@ gxi_update_summary_label (GncXmlImportData *data)
                          _("There are %d unassigned words. "
                            "Please decide on them or add encodings."),
                          data->n_unassigned);
-            show = TRUE;
+            show = true;
         }
     }
     else
@@ -714,11 +711,11 @@ gxi_update_summary_label (GncXmlImportData *data)
                          _("There are %d undecodable words. "
                            "Please add encodings."),
                          data->n_impossible);
-            show = TRUE;
+            show = true;
         }
         else
         {
-            show = FALSE;
+            show = false;
         }
     }
 
@@ -737,46 +734,34 @@ gxi_update_summary_label (GncXmlImportData *data)
 static void
 gxi_update_string_box (GncXmlImportData *data)
 {
-    gchar *string;
-    const gchar *utf8;
-    GtkBox *vbox;
-    GtkComboBox *combo;
-    GtkListStore *store;
-    GList *word_iter, *conv_iter;
-    GtkCellRenderer *renderer;
-    GtkTreeIter iter;
-    GQuark chosen_encoding;
-    GtkTreeIter *chosen_iter, *default_iter;
-    ambiguous_type *amb;
-    conv_type *conv;
-
     if (data->string_box)
         gtk_widget_destroy (data->string_box);
 
     data->string_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
     gtk_box_set_homogeneous (GTK_BOX (data->string_box), FALSE);
 
-    vbox = GTK_BOX (data->string_box);
+    GtkBox *vbox = GTK_BOX (data->string_box);
 
     data->n_unassigned = 0;
 
     /* loop through words */
-    for (word_iter = data->ambiguous_list; word_iter; word_iter = word_iter->next)
+    for (GList *word_iter = data->ambiguous_list; word_iter; word_iter = word_iter->next)
     {
-
-        store = gtk_list_store_new (WORD_NUM_COLS, G_TYPE_STRING, G_TYPE_POINTER);
-        combo = GTK_COMBO_BOX (gtk_combo_box_new_with_model (
+        char *string = nullptr;
+        GtkTreeIter iter;
+        GtkListStore *store = gtk_list_store_new (WORD_NUM_COLS, G_TYPE_STRING, G_TYPE_POINTER);
+        GtkComboBox *combo = GTK_COMBO_BOX (gtk_combo_box_new_with_model (
                                    GTK_TREE_MODEL (store)));
         g_object_unref (store);
-        renderer = gtk_cell_renderer_text_new ();
+        GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
         gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
         gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
                                         "text", WORD_COL_STRING, nullptr);
 
         /* add default string, if possible */
-        amb = (ambiguous_type*) word_iter->data;
-        utf8 = get_decoded_string (amb, data->default_encoding);
-        default_iter = nullptr;
+        ambiguous_type *amb = (ambiguous_type*) word_iter->data;
+        const char *utf8 = get_decoded_string (amb, data->default_encoding);
+        GtkTreeIter *default_iter = nullptr;
         if (utf8)
         {
             string = g_strdup_printf ("%s (default)", utf8);
@@ -789,12 +774,12 @@ gxi_update_string_box (GncXmlImportData *data)
         }
 
         /* user has selected this previously */
-        conv = (conv_type*) g_hash_table_lookup (data->choices, amb->byte_sequence);
-        chosen_encoding = (conv) ? conv->encoding : 0;
-        chosen_iter = nullptr;
+        conv_type *conv = (conv_type*) g_hash_table_lookup (data->choices, amb->byte_sequence);
+        GQuark chosen_encoding = (conv) ? conv->encoding : 0;
+        GtkTreeIter *chosen_iter = nullptr;
 
         /* loop through conversions */
-        for (conv_iter = amb->conv_list; conv_iter; conv_iter = conv_iter->next)
+        for (GList *conv_iter = amb->conv_list; conv_iter; conv_iter = conv_iter->next)
         {
             conv = (conv_type*) conv_iter->data;
             string = g_strdup_printf ("%s (%s)", conv->utf8_string,
@@ -863,15 +848,14 @@ static void
 gxi_default_enc_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data)
 {
     GtkTreeIter iter;
-    gchar *enc_string;
-    GQuark curr_enc;
+    char *enc_string;
 
     if (!gtk_combo_box_get_active_iter (combo, &iter))
         return;
 
     gtk_tree_model_get (gtk_combo_box_get_model (combo), &iter,
                         0, &enc_string, -1);
-    curr_enc = g_quark_from_string (enc_string);
+    GQuark curr_enc = g_quark_from_string (enc_string);
     g_free (enc_string);
 
     if (data->default_encoding == curr_enc)
@@ -893,23 +877,21 @@ static void
 gxi_string_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data)
 {
     GtkTreeIter iter;
-    GList *found, *default_conv;
-    gboolean is_active;
-    ambiguous_type *amb;
-    conv_type *prev_conv, *curr_conv = nullptr;
+    GList *found;
+    conv_type *curr_conv = nullptr;
     gpointer ptr;
     GQuark prev_enc, curr_enc;
 
-    amb = (ambiguous_type*) g_object_get_data (G_OBJECT (combo), "ambiguous");
-    prev_conv = (conv_type*) g_hash_table_lookup (data->choices,
+    ambiguous_type *amb = (ambiguous_type*) g_object_get_data (G_OBJECT (combo), "ambiguous");
+    conv_type *prev_conv = (conv_type*) g_hash_table_lookup (data->choices,
                 amb->byte_sequence);
     if (prev_conv)
         prev_enc = prev_conv->encoding;
 
-    default_conv = g_list_find_custom (amb->conv_list, &data->default_encoding,
+    GList *default_conv = g_list_find_custom (amb->conv_list, &data->default_encoding,
                                        (GCompareFunc) conv_enc_cmp);
 
-    is_active = gtk_combo_box_get_active_iter (combo, &iter);
+    bool is_active = gtk_combo_box_get_active_iter (combo, &iter);
     if (is_active)
     {
         gtk_tree_model_get (gtk_combo_box_get_model (combo), &iter,
@@ -925,7 +907,7 @@ gxi_string_combo_changed_cb (GtkComboBox *combo, GncXmlImportData *data)
         {
             /* should not happen */
             PERR("invalid string selection");
-            is_active = FALSE;
+            is_active = false;
         }
     }
 
@@ -999,16 +981,12 @@ gxi_check_file (GncXmlImportData *data)
 {
     if (!data->encodings)
     {
-        gboolean is_utf8;
-        const gchar *locale_enc;
-        gchar *enc_string, **enc_array, **enc_cursor;
-        gpointer enc_ptr;
-        GIConv iconv;
+        const char *locale_enc;
 
         /* first locale encoding */
-        is_utf8 = g_get_charset (&locale_enc);
-        enc_string = g_ascii_strup (locale_enc, -1);
-        enc_ptr = GUINT_TO_POINTER (g_quark_from_string (enc_string));
+        gboolean is_utf8 = g_get_charset (&locale_enc);
+        char *enc_string = g_ascii_strup (locale_enc, -1);
+        gpointer enc_ptr = GUINT_TO_POINTER (g_quark_from_string (enc_string));
         g_free (enc_string);
         data->encodings = g_list_append (nullptr, enc_ptr);
 
@@ -1022,10 +1000,10 @@ gxi_check_file (GncXmlImportData *data)
         /* Translators: Please insert encodings here that are typically used in your
            locale, separated by spaces. No need for ASCII or UTF-8, check 'locale -m'
            for assistance with spelling. */
-        enc_array = g_strsplit (_("ISO-8859-1 KOI8-U"), " ", 0);
+        char **enc_array = g_strsplit (_("ISO-8859-1 KOI8-U"), " ", 0);
 
         /* loop through typical encodings */
-        for (enc_cursor = enc_array; *enc_cursor; enc_cursor++)
+        for (char **enc_cursor = enc_array; *enc_cursor; enc_cursor++)
         {
             if (!**enc_cursor) continue;
             enc_string = g_ascii_strup (*enc_cursor, -1);
@@ -1034,7 +1012,7 @@ gxi_check_file (GncXmlImportData *data)
             if (!g_list_find (data->encodings, enc_ptr))
             {
                 /* test whether we like this encoding */
-                iconv = g_iconv_open ("UTF-8", enc_string);
+                GIConv iconv = g_iconv_open ("UTF-8", enc_string);
                 if (iconv != (GIConv) - 1)
                     /* we like it */
                     data->encodings = g_list_append (data->encodings, enc_ptr);
@@ -1075,15 +1053,31 @@ gxi_check_file (GncXmlImportData *data)
 static gboolean
 gxi_parse_file (GncXmlImportData *data)
 {
-    QofSession *session = nullptr;
-    QofBook *book;
-    QofBackend *backend;
     QofBackendError io_err = ERR_BACKEND_NO_ERR;
-    gchar *message = nullptr;
+    char *message = nullptr;
     gboolean success = FALSE;
 
+    auto cleanup = [data, &message, &success]() {
+        if (data->subst)
+        {
+            g_hash_table_destroy (data->subst);
+            data->subst = nullptr;
+        }
+        if (message != nullptr)
+        {
+            gnc_error_dialog (GTK_WINDOW (data->assistant), "%s", message);
+        }
+        if (!success)
+        {
+            gxi_session_destroy (data);
+        }
+    };
+
     if (data->n_unassigned || data->n_impossible)
-        goto cleanup_parse_file;
+    {
+        cleanup();
+        return success;
+    }
 
     /* fill subst hash table with byte sequence substitutions */
     data->subst = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
@@ -1091,18 +1085,22 @@ gxi_parse_file (GncXmlImportData *data)
     g_hash_table_foreach (data->unique, (GHFunc) subst_insert_unique, data);
 
     if (!data->subst)
-        goto cleanup_parse_file;
+    {
+        cleanup();
+        return success;
+    }
 
     /* create a temporary QofSession */
     gxi_session_destroy (data);
-    session = qof_session_new (nullptr);
+    QofSession *session = qof_session_new (nullptr);
     data->session = session;
     qof_session_begin (session, data->filename, SESSION_READ_ONLY);
     io_err = qof_session_get_error (session);
     if (io_err != ERR_BACKEND_NO_ERR)
     {
         message = _("The file could not be reopened.");
-        goto cleanup_parse_file;
+        cleanup();
+        return success;
     }
 
     xaccLogDisable ();
@@ -1116,21 +1114,23 @@ gxi_parse_file (GncXmlImportData *data)
     {
         /* loaded successfully now. strange, but ok */
         success = TRUE;
-        goto cleanup_parse_file;
+        cleanup();
+        return success;
     }
     else if (io_err != ERR_FILEIO_NO_ENCODING)
     {
         /* another error, cannot handle this here */
         message = _("The file could not be reopened.");
-        goto cleanup_parse_file;
+        cleanup();
+        return success;
     }
 
     qof_session_pop_error (session);
-    book = qof_session_get_book (session);
-    backend = qof_book_get_backend (book);
+    QofBook *book = qof_session_get_book (session);
+    QofBackend *backend = qof_book_get_backend (book);
 
     gxi_update_progress_bar (_("Parsing file…"), 0.0);
-    success = gnc_xml2_parse_with_subst (backend, book, data->subst);
+    success = gnc_xml2_parse_with_subst(backend, book, data->subst);
     gxi_update_progress_bar (nullptr, -1.0);
 
     if (success)
@@ -1138,34 +1138,20 @@ gxi_parse_file (GncXmlImportData *data)
     else
         message = _("There was an error parsing the file.");
 
-cleanup_parse_file:
-
-    if (data->subst)
-    {
-        g_hash_table_destroy (data->subst);
-        data->subst = nullptr;
-    }
-    if (message)
-    {
-        gnc_error_dialog (GTK_WINDOW (data->assistant), "%s", message);
-    }
-    if (!success)
-        gxi_session_destroy (data);
-
+    cleanup();
     return success;
 }
 
 static gboolean
 gxi_save_file (GncXmlImportData *data)
 {
-    QofBackendError io_err;
     g_return_val_if_fail (data && data->session, FALSE);
 
     gxi_update_progress_bar (_("Writing file…"), 0.0);
     qof_session_save (data->session, gxi_update_progress_bar);
     gxi_update_progress_bar (nullptr, -1.0);
 
-    io_err = qof_session_get_error (data->session);
+    QofBackendError io_err = qof_session_get_error (data->session);
 
     if (io_err == ERR_BACKEND_NO_ERR)
     {
@@ -1187,8 +1173,7 @@ gxi_save_file (GncXmlImportData *data)
 void
 gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept
 {
-    GtkTreeIter iter, parent, *parent_ptr;
-
+    GtkTreeIter iter;
     GtkBuilder *builder = gtk_builder_new();
     gnc_builder_add_from_file (builder, "assistant-xml-encoding.glade", "encodings_dialog");
     GtkWidget *dialog = GTK_WIDGET(gtk_builder_get_object (builder, "encodings_dialog"));
@@ -1210,7 +1195,7 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data) noexce
     GtkListStore *list_store = gtk_list_store_new (ENC_NUM_COLS, G_TYPE_STRING, G_TYPE_POINTER);
     for (GList *enc_iter = data->encodings; enc_iter; enc_iter = enc_iter->next)
     {
-        const gchar *encoding = g_quark_to_string (GPOINTER_TO_UINT (enc_iter->data));
+        const char *encoding = g_quark_to_string (GPOINTER_TO_UINT (enc_iter->data));
         gtk_list_store_append (list_store, &iter);
         gtk_list_store_set (list_store, &iter, ENC_COL_STRING, encoding,
                             ENC_COL_QUARK, enc_iter->data, -1);
@@ -1230,14 +1215,15 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data) noexce
     for (const auto& system_enc : system_encodings)
 
     {
+        GtkTreeIter *parent_ptr = nullptr;
         if (first_encoding)
         {
             /* first system encoding */
-            parent_ptr = nullptr;
             first_encoding = false;
         }
         else
         {
+            GtkTreeIter parent;
             parent_ptr = &iter;
             for (int j = 0; j < system_enc.parent; j++)
                 if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (tree_store),
@@ -1300,13 +1286,10 @@ gxi_edit_encodings_clicked_cb (GtkButton *button, GncXmlImportData *data) noexce
 static void
 gxi_add_encoding (GncXmlImportData *data, gpointer encoding_ptr)
 {
-    GIConv iconv;
-    const gchar *message;
-    gchar *enc_string;
-    GtkListStore *store;
+    const char *message = nullptr;
     GtkTreeIter iter;
 
-    enc_string = g_ascii_strup (
+    char *enc_string = g_ascii_strup (
                      g_quark_to_string (GPOINTER_TO_UINT (encoding_ptr)), -1);
     encoding_ptr = GUINT_TO_POINTER (g_quark_from_string (enc_string));
 
@@ -1318,7 +1301,7 @@ gxi_add_encoding (GncXmlImportData *data, gpointer encoding_ptr)
     }
 
     /* test whether we like this encoding */
-    iconv = g_iconv_open ("UTF-8", enc_string);
+    GIConv iconv = g_iconv_open ("UTF-8", enc_string);
     if (iconv == (GIConv) - 1)
     {
         g_iconv_close (iconv);
@@ -1331,7 +1314,7 @@ gxi_add_encoding (GncXmlImportData *data, gpointer encoding_ptr)
 
     /* add to the list */
     data->encodings = g_list_append (data->encodings, encoding_ptr);
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (data->selected_encs_view));
+    GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (data->selected_encs_view));
     gtk_list_store_append (store, &iter);
     gtk_list_store_set (store, &iter, ENC_COL_STRING, enc_string,
                         ENC_COL_QUARK, encoding_ptr, -1);
@@ -1346,12 +1329,11 @@ gxi_add_encoding (GncXmlImportData *data, gpointer encoding_ptr)
 void
 gxi_add_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept
 {
-    GtkTreeSelection *selection;
     GtkTreeModel *model;
     GtkTreeIter iter;
     gpointer enc_ptr;
 
-    selection = gtk_tree_view_get_selection (data->available_encs_view);
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (data->available_encs_view);
     if (!gtk_tree_selection_get_selected (selection, &model, &iter))
         return;
     gtk_tree_model_get (model, &iter, ENC_COL_QUARK, &enc_ptr, -1);
@@ -1375,13 +1357,12 @@ gxi_remove_encoding (GncXmlImportData *data, GtkTreeModel *model,
 }
 
 void
-gxi_remove_enc_clicked_cb (GtkButton *button, GncXmlImportData *data)
+gxi_remove_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept
 {
-    GtkTreeSelection *selection;
     GtkTreeModel *model;
     GtkTreeIter iter;
 
-    selection = gtk_tree_view_get_selection (data->selected_encs_view);
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (data->selected_encs_view);
     if (!gtk_tree_selection_get_selected (selection, &model, &iter))
         return;
     gxi_remove_encoding (data, model, &iter);
@@ -1392,11 +1373,10 @@ gxi_available_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
                                 GtkTreeViewColumn *column,
                                 GncXmlImportData *data) noexcept
 {
-    GtkTreeModel *model;
     GtkTreeIter iter;
     gpointer enc_ptr;
 
-    model = gtk_tree_view_get_model (data->available_encs_view);
+    GtkTreeModel *model = gtk_tree_view_get_model (data->available_encs_view);
     if (!gtk_tree_model_get_iter (model, &iter, path))
         return;
     gtk_tree_model_get (model, &iter, ENC_COL_QUARK, &enc_ptr, -1);
@@ -1408,16 +1388,14 @@ gxi_available_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
 void
 gxi_custom_enc_activate_cb (GtkEntry *entry, GncXmlImportData *data) noexcept
 {
-    const gchar *enc_string;
-
-    enc_string = gtk_entry_get_text (entry);
+    const char *enc_string = gtk_entry_get_text (entry);
     if (!enc_string)
         return;
     gxi_add_encoding (data, GUINT_TO_POINTER (g_quark_from_string (enc_string)));
 }
 
 void
-gxi_add_custom_enc_clicked_cb (GtkButton *button, GncXmlImportData *data)
+gxi_add_custom_enc_clicked_cb (GtkButton *button, GncXmlImportData *data) noexcept
 {
     GtkWidget *entry = data->custom_enc_entry;
     gxi_custom_enc_activate_cb (GTK_ENTRY (entry), data);
@@ -1425,12 +1403,11 @@ gxi_add_custom_enc_clicked_cb (GtkButton *button, GncXmlImportData *data)
 
 void
 gxi_selected_enc_activated_cb (GtkTreeView *view, GtkTreePath *path,
-                               GtkTreeViewColumn *column, GncXmlImportData *data)
+                               GtkTreeViewColumn *column, GncXmlImportData *data) noexcept
 {
-    GtkTreeModel *model;
     GtkTreeIter iter;
 
-    model = gtk_tree_view_get_model (data->selected_encs_view);
+    GtkTreeModel *model = gtk_tree_view_get_model (data->selected_encs_view);
     if (!gtk_tree_model_get_iter (model, &iter, path))
         return;
     gxi_remove_encoding (data, model, &iter);
