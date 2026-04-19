@@ -78,7 +78,7 @@ struct CloseBookWindow
 
 struct CloseAccountsCB
 {
-    struct CloseBookWindow* cbw;
+    CloseBookWindow* cbw;
     Account* base_acct;
     GNCAccountType acct_type;
     GHashTable* txns;
@@ -92,18 +92,18 @@ struct CACBTransactionList
     gnc_numeric total;
 };
 
-static struct CACBTransactionList*
-find_or_create_txn(struct CloseAccountsCB* cacb, gnc_commodity* cmdty)
+static CACBTransactionList*
+find_or_create_txn(CloseAccountsCB* cacb, gnc_commodity* cmdty)
 {
     g_return_val_if_fail(cacb, nullptr);
     g_return_val_if_fail(cmdty, nullptr);
 
-    auto txn = static_cast<struct CACBTransactionList *>(
+    auto txn = static_cast<CACBTransactionList *>(
         g_hash_table_lookup(cacb->txns, cmdty)
     );
     if (!txn)
     {
-        txn = g_new0(struct CACBTransactionList, 1);
+        txn = g_new0(CACBTransactionList, 1);
         txn->cmdty = cmdty;
         txn->total = gnc_numeric_zero();
         txn->txn = xaccMallocTransaction(cacb->cbw->book);
@@ -128,7 +128,7 @@ find_or_create_txn(struct CloseAccountsCB* cacb, gnc_commodity* cmdty)
  */
 static void close_accounts_cb(Account *a, gpointer data)
 {
-    auto cacb = static_cast<struct CloseAccountsCB *>(data);
+    auto cacb = static_cast<CloseAccountsCB *>(data);
 
     g_return_if_fail(a);
     g_return_if_fail(cacb);
@@ -145,7 +145,7 @@ static void close_accounts_cb(Account *a, gpointer data)
     gnc_commodity *acct_commodity = gnc_account_or_default_currency(a, nullptr);
     g_assert(acct_commodity);
 
-    struct CACBTransactionList *txn = find_or_create_txn(cacb, acct_commodity);
+    CACBTransactionList *txn = find_or_create_txn(cacb, acct_commodity);
     g_assert(txn);
 
     Split *split = xaccMallocSplit(cacb->cbw->book);
@@ -160,8 +160,8 @@ static void close_accounts_cb(Account *a, gpointer data)
 
 
 static void finish_txn_cb(gnc_commodity* cmdty,
-                          struct CACBTransactionList* txn,
-                          struct CloseAccountsCB* cacb)
+                          CACBTransactionList* txn,
+                          CloseAccountsCB* cacb)
 {
     Account* acc;
     Split* split;
@@ -213,11 +213,11 @@ static void finish_txn_cb(gnc_commodity* cmdty,
     xaccTransCommitEdit(txn->txn);
 }
 
-static void close_accounts_of_type(struct CloseBookWindow* cbw,
+static void close_accounts_of_type(CloseBookWindow* cbw,
                                    Account* acct,
                                    GNCAccountType acct_type)
 {
-    struct CloseAccountsCB cacb;
+    CloseAccountsCB cacb;
     Account* root_acct;
 
     g_return_if_fail(cbw);
@@ -252,7 +252,7 @@ static void close_handler(gpointer data)
 
 static void destroy_cb(GObject *object, gpointer data)
 {
-    auto cbw = static_cast<struct CloseBookWindow *>(
+    auto cbw = static_cast<CloseBookWindow *>(
         g_object_get_data(G_OBJECT(object), "CloseBookWindow")
     );
 
@@ -274,7 +274,7 @@ gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) 
 
     g_return_if_fail(dialog);
 
-    auto cbw = static_cast<struct CloseBookWindow *>(
+    auto cbw = static_cast<CloseBookWindow *>(
         g_object_get_data(G_OBJECT(dialog), "CloseBookWindow")
     );
     g_return_if_fail(cbw);
@@ -320,14 +320,14 @@ gnc_book_close_response_cb(GtkDialog *dialog, gint response, GtkDialog *unused) 
 
 void gnc_ui_close_book (QofBook* book, GtkWindow *parent) noexcept
 {
-    struct CloseBookWindow *cbw;
+    CloseBookWindow *cbw;
     GtkBuilder* builder;
     GtkWidget* box;
     GList* equity_list = nullptr;
 
     g_return_if_fail(book);
 
-    cbw = g_new0(struct CloseBookWindow, 1);
+    cbw = g_new0(CloseBookWindow, 1);
     g_return_if_fail(cbw);
     cbw->book = book;
 

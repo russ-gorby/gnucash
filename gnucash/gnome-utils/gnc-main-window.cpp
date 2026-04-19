@@ -1830,7 +1830,7 @@ struct menu_update
  */
 static void
 gnc_main_window_update_one_menu_action (GncMainWindow *window,
-                                        struct menu_update *data)
+                                        menu_update *data)
 {
     GncMainWindowPrivate *priv;
     GncMenuModelSearch *gsm = g_new0 (GncMenuModelSearch, 1);
@@ -1939,7 +1939,7 @@ gnc_main_window_update_radio_button (GncMainWindow *window)
 static void
 gnc_main_window_update_menu_item (GncMainWindow *window)
 {
-    struct menu_update data;
+    menu_update data{};
     gchar **strings, *title, *expanded;
     gsize index;
 
@@ -1996,7 +1996,7 @@ gnc_main_window_update_menu_item (GncMainWindow *window)
 static void
 gnc_main_window_update_all_menu_items (void)
 {
-    struct menu_update data;
+    menu_update data;
 
     ENTER("");
     /* First update the entries for all existing windows */

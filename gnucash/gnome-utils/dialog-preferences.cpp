@@ -556,7 +556,7 @@ gnc_prefs_find_page (GtkNotebook *notebook, const gchar *name)
 static void
 gnc_prefs_get_grid_size (GtkWidget *child, gpointer data)
 {
-    auto copydata = static_cast<struct copy_data *>(data);
+    auto copydata = static_cast<copy_data *>(data);
     gint top, left, height, width;
 
     gtk_container_child_get (GTK_CONTAINER(copydata->grid_to), child,
@@ -590,7 +590,7 @@ static void
 gnc_prefs_move_grid_entry (GtkWidget *child,
                             gpointer data)
 {
-    auto copydata = static_cast<struct copy_data *>(data);
+    auto copydata = static_cast<copy_data *>(data);
     gint top, left, height, width;
     gint topm, bottomm, leftm, rightm;
 
@@ -643,7 +643,7 @@ gnc_preferences_build_page (gpointer data,
                             gpointer user_data)
 {
     GtkWidget *label = nullptr;
-    struct copy_data copydata = {nullptr, nullptr, 0, 0};
+    copy_data copydata = {nullptr, nullptr, 0, 0};
 
     ENTER("add_in %p, dialog %p", data, user_data);
     auto add_in = static_cast<addition *>(data);
